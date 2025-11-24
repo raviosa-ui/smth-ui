@@ -7,7 +7,7 @@
   <meta name="description" content="Caption Counter with adaptive, hybrid previews for Instagram/Twitter/Bio/YouTube, keywords, hook analyzer and fixer." />
   <link rel="stylesheet" href="style.css">
   <style>
-    /* Scoped page styles - hybrid previews (fast + realistic) */
+    /* Scoped page styles - hybrid previews (fast + realistic) + collapsible FAQ */
     :root{--preview-bg:#0b1220;--mock-card:#0f1726}
     .tool-wrap{margin-top:18px}
     .editor{background:var(--card);padding:14px;border-radius:14px;box-shadow:0 6px 18px rgba(2,6,23,0.5)}
@@ -73,11 +73,25 @@
     .yt-shorts .yt-top{display:flex;gap:12px;align-items:center;flex-wrap:wrap}
     .yt-thumb{width:84px;height:84px;border-radius:8px;overflow:hidden;background:#000;flex:0 0 84px;display:grid;place-items:center}
     .yt-thumb img{width:100%;height:100%;object-fit:cover;display:block}
-    /* NEW: emoji placeholder */
     .yt-thumb .emoji { font-size:38px; line-height:1; display:grid; place-items:center; }
     .yt-channel{font-weight:700}
     .yt-caption{white-space:pre-wrap;margin-top:10px;color:var(--text);font-size:15px}
     .yt-note{margin-top:8px;color:var(--muted);font-size:13px}
+
+    /* ---------- COLLAPSIBLE FAQ ---------- */
+    .faq-wrap{max-width:900px;margin:20px auto 60px;padding:12px;border-radius:12px;background:transparent}
+    .faq-wrap details{background:var(--card);border:1px solid rgba(255,255,255,0.03);padding:12px;border-radius:10px;margin-bottom:10px}
+    .faq-wrap summary{list-style:none;cursor:pointer;display:flex;align-items:center;justify-content:space-between;gap:12px}
+    .faq-wrap summary::-webkit-details-marker{display:none}
+    .faq-q{font-weight:700;color:var(--text);font-size:15px}
+    .faq-a{color:var(--muted);margin-top:8px;line-height:1.6}
+    .faq-meta{font-size:13px;color:var(--muted)}
+    /* open indicator */
+    .faq-indicator{width:28px;height:28px;border-radius:6px;background:linear-gradient(90deg,var(--accent-from),var(--accent-to));display:grid;place-items:center;color:#041027;font-weight:700}
+    @media(max-width:520px){
+      .faq-wrap{padding:8px}
+      .faq-q{font-size:14px}
+    }
 
     /* small helpers */
     .visually-hidden{position:absolute !important;left:-9999px;width:1px;height:1px;overflow:hidden}
@@ -267,13 +281,151 @@
         </div>
       </section>
 
-      <article class="content-area" aria-labelledby="whycap" style="margin-top:18px">
-        <h3 id="whycap">Why use this Caption Counter?</h3>
-        <p>SocialMediaToolsHub combines counting, platform previews and quick fixes so your captions look right before you post.</p>
-      </article>
+      <!-- COLLAPSIBLE FAQ: inserted here -->
+      <section class="faq-wrap" aria-labelledby="faq-title">
+        <h2 id="faq-title" style="color:var(--text);margin:0 0 10px">Frequently asked questions — Caption Counter</h2>
+
+        <details open>
+          <summary>
+            <div class="faq-q">What does the Caption Counter tool do?</div>
+            <div class="faq-indicator">?</div>
+          </summary>
+          <div class="faq-a">
+            The Caption Counter on <strong>SocialMediaToolsHub</strong> helps creators write accurate captions with a live character/word/line/emoji count, platform-aware previews (Instagram, bio, Twitter/X, YouTube Shorts), keyword highlights and hook strength analysis. It also offers fixes, saving and export for content planning.
+          </div>
+        </details>
+
+        <details>
+          <summary>
+            <div class="faq-q">How is this counter different from a basic character counter?</div>
+            <div class="faq-indicator">!</div>
+          </summary>
+          <div class="faq-a">
+            Unlike basic counters, this tool provides:
+            <ul>
+              <li>Platform-specific limits and previews</li>
+              <li>Keyword extraction that ignores common words</li>
+              <li>First-line hook analysis and suggestions</li>
+              <li>Auto-truncate, save/export history, and auto fixes (cleaning spaces/line breaks)</li>
+            </ul>
+          </div>
+        </details>
+
+        <details>
+          <summary>
+            <div class="faq-q">What platform limits are used?</div>
+            <div class="faq-indicator">i</div>
+          </summary>
+          <div class="faq-a">
+            Current defaults used by the tool:
+            <ul>
+              <li><strong>Instagram caption</strong> — 2,200 characters</li>
+              <li><strong>Instagram bio</strong> — 150 characters</li>
+              <li><strong>Twitter/X</strong> — 280 characters</li>
+              <li><strong>YouTube Shorts</strong> — 5,000 characters</li>
+            </ul>
+            You can also set a <em>custom limit</em> in the preset controls.
+          </div>
+        </details>
+
+        <details>
+          <summary>
+            <div class="faq-q">What is "Auto truncate"?</div>
+            <div class="faq-indicator">↔</div>
+          </summary>
+          <div class="faq-a">
+            When enabled, the editor automatically trims input to the chosen platform's character limit as you type or paste. This prevents accidentally writing over the platform limit.
+          </div>
+        </details>
+
+        <details>
+          <summary>
+            <div class="faq-q">How does the live preview behave for each platform?</div>
+            <div class="faq-indicator">▤</div>
+          </summary>
+          <div class="faq-a">
+            < preview adapts depending on the preset selected:
+            <ul>
+              <li><strong>Instagram</strong> — shows a post-style preview with a “... more” indicator at ~125 characters.</li>
+              <li><strong>Instagram bio</strong> — shows a compact profile-like block with avatar, stats and bio text.</li>
+              <li><strong>Twitter/X</strong> — shows a tweet-style card with name, handle and meta area; preview truncates at 280 characters.</li>
+              <li><strong>YouTube Shorts</strong> — shows thumbnail, channel and the first few lines of the caption as in the upload view.</li>
+            </ul>
+          </div>
+        </details>
+
+        <details>
+          <summary>
+            <div class="faq-q">What is the First-line hook analysis?</div>
+            <div class="faq-indicator">⚡</div>
+          </summary>
+          <div class="faq-a">
+            The tool checks the first 125 characters for attention signals: questions, emoji, power words (stop, new, urgent), call-to-action words, and appropriate length. It scores the line and labels it as <strong>Strong</strong>, <strong>Okay</strong> or <strong>Weak</strong> and offers a short suggestion when improvement is possible.
+          </div>
+        </details>
+
+        <details>
+          <summary>
+            <div class="faq-q">What does "Fix Caption" change?</div>
+            <div class="faq-indicator">🔧</div>
+          </summary>
+          <div class="faq-a">
+            The fixed function:
+            <ul>
+              <li>Removes unusual invisible characters</li>
+              <li>Normalises line breaks</li>
+              <li>Collapses repeated blank lines</li>
+              <li>Fixes spaces before punctuation</li>
+            </ul>
+            It does not rewrite content — only cleans formatting.
+          </div>
+        </details>
+
+        <details>
+          <summary>
+            <div class="faq-q">How do Top Keywords work?</div>
+            <div class="faq-indicator">🔎</div>
+          </summary>
+          <div class="faq-a">
+            The tool lowercases your caption, removes punctuation, excludes common stopwords (the, a, in, for...), and counts remaining tokens. The most frequent words are shown so you can spot themes or candidates for hashtags.
+          </div>
+        </details>
+
+        <details>
+          <summary>
+            <div class="faq-q">How many captions can I save in history?</div>
+            <div class="faq-indicator">💾</div>
+          </summary>
+          <div class="faq-a">
+            Up to <strong>30</strong> captions are stored locally in your browser storage. Older entries are dropped when the cap is reached. Use the Export button to download all saved captions as a text file.
+          </div>
+        </details>
+
+        <details>
+          <summary>
+            <div class="faq-q">Is my text uploaded anywhere?</div>
+            <div class="faq-indicator">🔒</div>
+          </summary>
+          <div class="faq-a">
+            No. Everything runs <strong>locally in your browser</strong>. No login, no servers. Saved captions stay in your browser's local storage.
+          </div>
+        </details>
+
+        <details>
+          <summary>
+            <div class="faq-q">Can I use this for other platforms?</div>
+            <div class="faq-indicator">♻</div>
+          </summary>
+          <div class="faq-a">
+            Yes — you can pick a custom limit or use the Twitter / YouTube presets. The preview is tailored for those platforms, but the counting and cleaning features work for any text-based platform.
+          </div>
+        </details>
+
+      </section>
+
     </main>
 
-    <footer>© 2025 SocialMediaToolsHub. Built for speed.</footer>
+    <footer style="margin-top:20px">© 2025 SocialMediaToolsHub. Built for speed.</footer>
   </div>
 
   <script>
@@ -318,7 +470,7 @@
     const hookScoreEl = document.getElementById('hook-score');
     const kwTable = document.getElementById('kw-table');
 
-    const STORAGE_KEY = 'smt_caption_history_v4';
+    const STORAGE_KEY = 'smt_caption_history_v5';
     const HISTORY_LIMIT = 30;
     const SEE_MORE_LIMIT = 125;
 
@@ -521,6 +673,19 @@
       limitInput.value = PRESETS['instagram'].limit;
       renderHistory();
       updateCounts();
+
+      // Collapsible FAQ accordion: ensure only one details open at a time
+      const faqDetails = Array.from(document.querySelectorAll('.faq-wrap details'));
+      faqDetails.forEach(d => {
+        d.addEventListener('toggle', function(){
+          if(!d.open) return;
+          faqDetails.forEach(other => { if(other !== d) other.open = false; });
+          // smooth scroll into view on small screens when opened
+          if (window.innerWidth <= 520) {
+            setTimeout(()=> d.scrollIntoView({behavior:'smooth', block:'center'}), 160);
+          }
+        });
+      });
     })();
 
     /* ----------------- Events ----------------- */
