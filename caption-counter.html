@@ -4,12 +4,58 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
   <title>Caption Counter — SocialMediaToolsHub</title>
-  <meta name="description" content="Caption Counter with adaptive, hybrid previews for Instagram/Twitter/Bio/YouTube, keywords, hook analyzer and fixer." />
-  <link rel="stylesheet" href="style.css">
+  <meta name="description" content="Caption Counter with platform previews for Instagram captions and bios, Twitter/X posts, YouTube Shorts title & description. Count characters, words, emojis, extract keywords, analyse first-line hooks, save/export history and auto-truncate." />
+  <!-- FAQ structured data for search engines -->
+  <script type="application/ld+json">
+  {
+    "@context":"https://schema.org",
+    "@type":"FAQPage",
+    "mainEntity":[
+      {"@type":"Question","name":"What are Instagram caption limits and best practices?","acceptedAnswer":{"@type":"Answer","text":"Instagram allows up to 2,200 characters, but the first ~125 characters are crucial because Instagram shows a '…more' link. Put your hook/CTA in the first 100–125 characters, use line breaks and place essential hashtags carefully."}},
+      {"@type":"Question","name":"What's the Instagram bio character limit and tips for bios?","acceptedAnswer":{"@type":"Answer","text":"Instagram bios are limited to 150 characters. Use the bio preview to check how your handle, line breaks and emojis render. Prioritise key info (who you are + value) and include one link or a link service if you need multiple destinations."}},
+      {"@type":"Question","name":"How does Twitter/X character counting work?","acceptedAnswer":{"@type":"Answer","text":"Twitter/X posts are limited to 280 characters. Mentions, hashtags and emojis count as characters. Use the preview to check truncation and reduce long URLs or move extra details to a thread."}},
+      {"@type":"Question","name":"Why are emojis counted separately and how do they affect length?","acceptedAnswer":{"@type":"Answer","text":"Emojis are counted as characters and often count as one visual token but multiple Unicode codepoints. Our emoji counter helps you track heavy emoji usage so your caption stays within platform limits and maintains readability."}},
+      {"@type":"Question","name":"What are the YouTube options: Title (Shorts) vs Description?","acceptedAnswer":{"@type":"Answer","text":"There are two YouTube presets: YouTube Title (Shorts) — 100 characters for the short upload title; and YouTube Description — full description up to 5,000 characters. Use the title for a sharp hook and the description for more context, links, and timestamps."}},
+      {"@type":"Question","name":"What are Top Keywords and how do they help with captions?","acceptedAnswer":{"@type":"Answer","text":"Top Keywords extracts meaningful words from your caption and excludes common stopwords. This helps you spot themes to convert into hashtags, improve discoverability, and make captions keyword-rich without stuffing."}},
+      {"@type":"Question","name":"How does the first-line hook analysis improve engagement?","acceptedAnswer":{"@type":"Answer","text":"The first-line hook analysis scores the first 125 characters for elements that stop the scroll: questions, emojis, power words and CTAs. A strong hook increases clicks, saves and comment rates. Use the suggested chips to add a question or short CTA to boost engagement."}},
+      {"@type":"Question","name":"What does Auto truncate do and when should I use it?","acceptedAnswer":{"@type":"Answer","text":"Auto truncate prevents writing beyond the selected platform limit by trimming text as you type or paste. Use it when composing platform-specific captions (e.g., Twitter/X or YouTube Title) to ensure your final copy won't be cut off when posting."}},
+      {"@type":"Question","name":"How do I clean and fix formatting with Fix Caption?","acceptedAnswer":{"@type":"Answer","text":"Fix Caption removes invisible characters, normalises line breaks, collapses extra blank lines and trims stray spaces before punctuation. It preserves your words but ensures captions post cleanly across Instagram, Twitter/X and YouTube."}},
+      {"@type":"Question","name":"How many captions can I save and can I export them?","acceptedAnswer":{"@type":"Answer","text":"Your browser stores up to 30 saved captions locally. Use the Export feature to download them as a text file for content calendars, scheduling tools, or team handoffs. Saved captions remain in local storage unless you clear history."}},
+      {"@type":"Question","name":"Does SocialMediaToolsHub collect my captions or data?","acceptedAnswer":{"@type":"Answer","text":"No. All processing — counting, previews, keyword extraction and hook analysis — is performed locally in your browser. SocialMediaToolsHub does not send captions to external servers, and saved entries remain in local storage on your device."}},
+      {"@type":"Question","name":"Best practices for hashtags, mentions and URLs in captions?","acceptedAnswer":{"@type":"Answer","text":"Keep hashtags relevant and concise — Instagram allows up to 30 hashtags but quality beats quantity. Mentions count as characters, so use handles sparingly in the first line. URLs count fully toward character limits and are not clickable in captions; put important links in your profile bio or use link services and add them to the first comment if needed."}}
+    ]
+  }
+  </script>
+
   <style>
-    /* Scoped page styles - hybrid previews (fast + realistic) + collapsible FAQ */
-    :root{--preview-bg:#0b1220;--mock-card:#0f1726}
-    .tool-wrap{margin-top:18px}
+    :root{
+      --bg:#0f172a; --card:#1e293b; --text:#f8fafc; --muted:#94a3b8;
+      --border:#334155; --accent-from:#38bdf8; --accent-to:#818cf8;
+      --r-lg:24px; --r-md:16px; --trans:260ms cubic-bezier(.2,.9,.3,1);
+      font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+      -webkit-font-smoothing:antialiased;
+    }
+    *{box-sizing:border-box}
+    html,body{height:100%}
+    body{margin:0;background:var(--bg);color:var(--text);line-height:1.45;padding:20px;-webkit-tap-highlight-color:transparent}
+    a{text-decoration:none;color:inherit}
+    .container{max-width:1120px;margin:0 auto}
+
+    /* Header */
+    .header{display:flex;align-items:center;justify-content:space-between;padding:10px 6px;gap:12px}
+    .brand{display:flex;gap:10px;font-weight:600;font-size:18px;white-space:nowrap}
+    .logo-text{background:linear-gradient(90deg,var(--accent-from),var(--accent-to));-webkit-background-clip:text;color:transparent;-webkit-text-fill-color:transparent}
+    .topnav{display:flex;gap:10px;font-size:14px;flex-wrap:wrap}
+    .topnav a{padding:8px 10px;border-radius:10px;color:var(--muted);transition:var(--trans)}
+    .topnav a:hover{color:var(--text);background:rgba(255,255,255,0.02)}
+
+    /* Hero */
+    .hero{background:var(--card);border-radius:var(--r-lg);padding:20px;margin-top:16px;box-shadow:0 6px 22px rgba(3,7,18,0.6),inset 0 1px rgba(255,255,255,0.01)}
+    .hero-inner{display:flex;flex-direction:column;text-align:center;gap:18px}
+    .hero h1{margin:0;font-size:20px}
+    .lead{color:var(--muted);margin:10px 0 18px;font-size:15px}
+
+    /* Editor & Controls */
     .editor{background:var(--card);padding:14px;border-radius:14px;box-shadow:0 6px 18px rgba(2,6,23,0.5)}
     textarea.counter-area{width:100%;min-height:160px;padding:12px;border-radius:10px;border:1px solid rgba(255,255,255,0.03);background:transparent;color:var(--text);resize:vertical;font-size:15px}
     .meta-row{display:flex;flex-wrap:wrap;gap:10px;align-items:center;justify-content:space-between;margin-top:10px}
@@ -20,88 +66,73 @@
     .controls{display:flex;gap:8px;flex-wrap:wrap}
     .btn{padding:8px 10px;border-radius:10px;border:1px solid rgba(255,255,255,0.04);background:transparent;color:var(--text);cursor:pointer}
     .btn:hover{transform:translateY(-3px)}
-    .toggle{display:inline-flex;align-items:center;gap:6px}
-    .history-list{margin-top:12px;display:flex;flex-direction:column;gap:8px;max-height:220px;overflow:auto;padding-right:6px}
-    .history-item{background:rgba(255,255,255,0.02);padding:8px;border-radius:10px;display:flex;justify-content:space-between;gap:8px;align-items:flex-start}
-    .history-item .text{font-size:13px;color:var(--muted);max-width:68ch;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 
     .work-area{display:flex;flex-direction:column;gap:12px;margin-top:12px}
     .panel{border-radius:12px;padding:12px;background:var(--card);border:1px solid rgba(255,255,255,0.02)}
-    .preview-panel{background:linear-gradient(180deg,var(--preview-bg),transparent);padding:14px;border-radius:12px;color:var(--text)}
+    .preview-panel{background:linear-gradient(180deg,#0b1220,transparent);padding:14px;border-radius:12px;color:var(--text)}
     .grid-2{display:grid;grid-template-columns:1fr;gap:12px}
     @media(min-width:900px){ .work-area{flex-direction:row;align-items:flex-start} .grid-2{grid-template-columns:1fr 420px} .editor{min-height:320px} }
 
-    /* shared mock styles */
-    .mock-card{background:var(--mock-card);padding:12px;border-radius:12px;border:1px solid rgba(255,255,255,0.02)}
-    .muted{color:var(--muted);font-size:13px}
-    .preview-header{display:flex;align-items:center;justify-content:space-between;gap:8px}
-    .preview-badge{padding:6px 8px;border-radius:10px;font-weight:700;font-size:13px}
-
-    /* ---------- INSTAGRAM POST (compact) ---------- */
+    /* Previews */
     .ig-post .ig-header{display:flex;align-items:center;gap:10px}
     .ig-avatar{width:44px;height:44px;border-radius:50%;background:linear-gradient(90deg,var(--accent-from),var(--accent-to));display:grid;place-items:center;font-weight:700;color:#041027;flex:0 0 44px}
     .ig-username{font-weight:700}
     .ig-caption{white-space:pre-wrap;margin-top:10px;color:var(--text);font-size:15px}
     .ig-see{color:var(--muted);margin-top:6px}
 
-    /* ---------- INSTAGRAM BIO / PROFILE (hybrid realistic) ---------- */
     .ig-bio .profile-top{display:flex;gap:14px;align-items:flex-start;flex-wrap:wrap}
     .profile-avatar{width:84px;height:84px;border-radius:50%;background:linear-gradient(90deg,var(--accent-from),var(--accent-to));display:grid;place-items:center;font-weight:700;color:#041027;font-size:18px;flex:0 0 84px}
     .profile-stats{display:flex;gap:12px;margin-top:6px;flex-wrap:wrap}
     .stat{display:flex;flex-direction:column;align-items:center;min-width:60px}
-    .stat .num{font-weight:700}
     .bio-text{margin-top:8px;color:var(--text);font-size:14px;white-space:pre-wrap;word-break:break-word}
-    .profile-buttons{display:flex;gap:8px;margin-top:10px;flex-wrap:wrap}
     .btn-ghost{padding:8px 12px;border-radius:8px;border:1px solid rgba(255,255,255,0.06);background:transparent;color:var(--text);white-space:nowrap}
+    @media(max-width:520px){ .preview-panel{padding:10px} .profile-avatar{width:64px;height:64px;flex:0 0 64px;font-size:16px} .profile-stats{gap:8px} .stat{min-width:48px} }
 
-    /* ensure bio preview doesn't expand beyond container on small screens */
-    @media(max-width:520px){
-      .preview-panel{padding:10px}
-      .profile-avatar{width:64px;height:64px;flex:0 0 64px;font-size:16px}
-      .profile-stats{gap:8px}
-      .stat{min-width:48px}
-    }
-
-    /* ---------- TWITTER (hybrid tweet) ---------- */
     .tweet .tweet-header{display:flex;gap:10px;align-items:flex-start}
     .tweet-avatar{width:44px;height:44px;border-radius:50%;background:linear-gradient(90deg,var(--accent-from),var(--accent-to));display:grid;place-items:center;font-weight:700;color:#041027;flex:0 0 44px}
     .tweet-name{font-weight:700}
     .tweet-text{margin-top:8px;white-space:pre-wrap;color:var(--text);font-size:15px}
     .tweet-meta{display:flex;gap:8px;color:var(--muted);font-size:13px;margin-top:8px}
 
-    /* ---------- YOUTUBE SHORTS CAPTION (hybrid) ---------- */
     .yt-shorts .yt-top{display:flex;gap:12px;align-items:center;flex-wrap:wrap}
     .yt-thumb{width:84px;height:84px;border-radius:8px;overflow:hidden;background:#000;flex:0 0 84px;display:grid;place-items:center}
-    .yt-thumb img{width:100%;height:100%;object-fit:cover;display:block}
     .yt-thumb .emoji { font-size:38px; line-height:1; display:grid; place-items:center; }
     .yt-channel{font-weight:700}
     .yt-caption{white-space:pre-wrap;margin-top:10px;color:var(--text);font-size:15px}
+    .yt-caption.yt-title{font-weight:700;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
     .yt-note{margin-top:8px;color:var(--muted);font-size:13px}
 
-    /* ---------- COLLAPSIBLE FAQ ---------- */
-    .faq-wrap{max-width:900px;margin:20px auto 60px;padding:12px;border-radius:12px;background:transparent}
+    /* Keywords table */
+    .keywords-grid{display:grid;grid-template-columns:1fr 220px;gap:12px;align-items:start}
+    @media(max-width:640px){ .keywords-grid{grid-template-columns:1fr} }
+
+    .kw-table{width:100%;border-collapse:collapse;margin-top:8px}
+    .kw-table td{padding:6px 8px;vertical-align:middle}
+    .kw-table thead td{font-weight:700;color:var(--text);padding-bottom:8px}
+    .kw-table td:first-child{min-width:140px;max-width:360px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;font-weight:600}
+    .kw-table td:last-child{width:56px;text-align:right;color:var(--muted)}
+
+    /* FAQ */
+    .faq-wrap{max-width:900px;margin:20px auto 60px;padding:12px;border-radius:12px}
     .faq-wrap details{background:var(--card);border:1px solid rgba(255,255,255,0.03);padding:12px;border-radius:10px;margin-bottom:10px}
     .faq-wrap summary{list-style:none;cursor:pointer;display:flex;align-items:center;justify-content:space-between;gap:12px}
     .faq-wrap summary::-webkit-details-marker{display:none}
     .faq-q{font-weight:700;color:var(--text);font-size:15px}
     .faq-a{color:var(--muted);margin-top:8px;line-height:1.6}
-    .faq-meta{font-size:13px;color:var(--muted)}
-    /* open indicator */
     .faq-indicator{width:28px;height:28px;border-radius:6px;background:linear-gradient(90deg,var(--accent-from),var(--accent-to));display:grid;place-items:center;color:#041027;font-weight:700}
-    @media(max-width:520px){
-      .faq-wrap{padding:8px}
-      .faq-q{font-size:14px}
-    }
+    @media(max-width:520px){ .faq-wrap{padding:8px} .faq-q{font-size:14px} }
 
-    /* small helpers */
     .visually-hidden{position:absolute !important;left:-9999px;width:1px;height:1px;overflow:hidden}
   </style>
 </head>
 <body>
   <div class="container">
+    <!-- Hidden reference image (your uploaded file) -->
+    <img src="/mnt/data/smth error.png" alt="reference" style="display:none" />
+
     <header class="header" role="banner">
-      <div class="brand"><span>⚡</span><span class="logo-text">SocialMediaToolsHub</span></div>
-      <nav class="topnav" role="navigation"><a href="index.html">Home</a></nav>
+      <div class="brand" aria-label="logo"><span>⚡</span><span class="logo-text">SocialMediaToolsHub</span></div>
+      <nav class="topnav" role="navigation" aria-label="primary"><a href="index.html">Home</a></nav>
     </header>
 
     <main>
@@ -109,7 +140,7 @@
         <div class="hero-inner">
           <div class="hero-copy">
             <h1 id="cap-title">Caption Counter</h1>
-            <p class="lead">Adaptive preview, keyword insights and hook analysis — now with hybrid, realistic previews for each platform.</p>
+            <p class="lead">Adaptive preview, keyword insights and hook analysis — hybrid previews for each platform.</p>
           </div>
         </div>
       </section>
@@ -119,7 +150,7 @@
           <label class="small" for="caption">Write your caption below</label>
           <textarea id="caption" class="counter-area" placeholder="Paste or type your caption..."></textarea>
 
-          <div class="meta-row" aria-hidden="false">
+          <div class="meta-row">
             <div class="meta-left">
               <div class="pill small">Chars: <strong id="char-count">0</strong></div>
               <div class="pill small">Words: <strong id="word-count">0</strong></div>
@@ -133,8 +164,8 @@
                   <option value="instagram">Instagram caption</option>
                   <option value="bio">Instagram bio / profile</option>
                   <option value="twitter">Twitter/X</option>
-                  <option value="youtube">YouTube Description (5000)</option>
-<option value="youtube_title">YouTube Title (Shorts) — 100</option>
+                  <option value="youtube_title">YouTube Title (Shorts) — 100</option>
+                  <option value="youtube">YouTube Description — 5000</option>
                   <option value="custom">Custom...</option>
                 </select>
               </label>
@@ -164,17 +195,27 @@
                 <div class="keywords panel" aria-live="polite">
                   <div style="display:flex;justify-content:space-between;align-items:center">
                     <div class="small">Top keywords</div>
-                    <div class="muted small">Excludes common words</div>
+                    <div class="muted small">Example: <strong>travel (5)</strong></div>
                   </div>
-                  <div style="display:flex;justify-content:space-between;align-items:center;margin-top:8px">
-                    <div class="muted">Example: <strong>travel (5)</strong></div>
-                    <div class="muted" style="font-size:12px">If no keywords appear, try typing a longer caption</div>
+
+                  <div class="keywords-grid" style="margin-top:8px">
+                    <div>
+                      <table class="kw-table" id="kw-table">
+                        <thead><tr><td>Keyword</td><td style="text-align:right">Count</td></tr></thead>
+                        <tbody></tbody>
+                      </table>
+                      <div class="muted" style="margin-top:8px;font-size:12px">Common words like "the, a, in, for" are excluded</div>
+                    </div>
+
+                    <div class="keywords-helper" aria-hidden="true">
+                      <div style="font-weight:700;margin-bottom:6px">Excludes common words</div>
+                      <div>Stopwords are ignored so the keywords list highlights meaningful terms. Try typing longer captions to reveal more keywords. Click a keyword in the future to copy it as a quick hashtag (coming soon).</div>
+                    </div>
                   </div>
-                  <table class="kw-table" id="kw-table" style="margin-top:8px"></table>
                 </div>
 
                 <div class="hook panel" style="margin-top:10px">
-                  <div style="flex:1">
+                  <div>
                     <div class="small">First-line hook analysis (first 125 chars)</div>
                     <div id="hook-text" style="font-weight:600;margin-top:6px;color:var(--text)">No input yet</div>
                     <div id="hook-tip" class="muted" style="margin-top:6px">Short advice will appear here.</div>
@@ -207,7 +248,6 @@
                     </div>
                   </div>
 
-                  <!-- Instagram post preview -->
                   <div id="preview-instagram" class="mock-card ig-post" style="margin-top:12px;display:block">
                     <div class="ig-header">
                       <div class="ig-avatar">SM</div>
@@ -220,7 +260,6 @@
                     <div id="ig-see" class="ig-see"></div>
                   </div>
 
-                  <!-- Instagram bio/profile preview -->
                   <div id="preview-bio" class="mock-card ig-bio" style="margin-top:12px;display:none">
                     <div class="profile-top">
                       <div class="profile-avatar">SM</div>
@@ -245,7 +284,6 @@
                     <div id="bio-text" class="bio-text">No bio yet</div>
                   </div>
 
-                  <!-- Twitter/X preview -->
                   <div id="preview-twitter" class="mock-card tweet" style="margin-top:12px;display:none">
                     <div class="tweet-header">
                       <div class="tweet-avatar">SMTH</div>
@@ -260,7 +298,6 @@
                     </div>
                   </div>
 
-                  <!-- YouTube Shorts caption preview (emoji thumbnail) -->
                   <div id="preview-youtube" class="mock-card yt-shorts" style="margin-top:12px;display:none">
                     <div class="yt-top">
                       <div class="yt-thumb"><div class="emoji" aria-hidden="true">🍿</div></div>
@@ -270,156 +307,82 @@
                       </div>
                     </div>
                     <div id="yt-caption" class="yt-caption">No caption yet</div>
-                    <div class="yt-note">Shorts caption preview — shows how your short's caption will appear in the upload screen.</div>
+                    <div class="yt-note">Shorts caption preview — choose "YouTube Title (Shorts)" for a 100-char title or "YouTube Description" for the full description field (5,000 chars).</div>
                   </div>
 
                   <div style="margin-top:10px" class="muted">Hybrid previews are lightweight and emulate real layout elements from each platform.</div>
                 </div>
               </div>
+
             </div>
           </div>
 
         </div>
       </section>
 
-      <!-- COLLAPSIBLE FAQ: inserted here -->
+      <!-- COLLAPSIBLE FAQ: starts collapsed -->
       <section class="faq-wrap" aria-labelledby="faq-title">
         <h2 id="faq-title" style="color:var(--text);margin:0 0 10px">Frequently asked questions — Caption Counter</h2>
 
-        <details open>
-          <summary>
-            <div class="faq-q">What does the Caption Counter tool do?</div>
-            <div class="faq-indicator">?</div>
-          </summary>
-          <div class="faq-a">
-            The Caption Counter on <strong>SocialMediaToolsHub</strong> helps creators write accurate captions with a live character/word/line/emoji count, platform-aware previews (Instagram, bio, Twitter/X, YouTube Shorts), keyword highlights and hook strength analysis. It also offers fixes, saving and export for content planning.
-          </div>
+        <!-- 12 keyword-rich questions (all collapsed by default) -->
+        <details>
+          <summary><div class="faq-q">What are Instagram caption limits and best practices?</div><div class="faq-indicator">1</div></summary>
+          <div class="faq-a">Instagram allows up to <strong>2,200 characters</strong>. The first ~125 characters are crucial because of the "…more" link. Put hooks/CTAs early and use line breaks for readability.</div>
         </details>
 
         <details>
-          <summary>
-            <div class="faq-q">How is this counter different from a basic character counter?</div>
-            <div class="faq-indicator">!</div>
-          </summary>
-          <div class="faq-a">
-            Unlike basic counters, this tool provides:
-            <ul>
-              <li>Platform-specific limits and previews</li>
-              <li>Keyword extraction that ignores common words</li>
-              <li>First-line hook analysis and suggestions</li>
-              <li>Auto-truncate, save/export history, and auto fixes (cleaning spaces/line breaks)</li>
-            </ul>
-          </div>
+          <summary><div class="faq-q">What's the Instagram bio character limit and tips for bios?</div><div class="faq-indicator">2</div></summary>
+          <div class="faq-a">Instagram bios are 150 characters. Use the bio preview to verify handle, emojis and spacing. Prioritise your key info and a single link.</div>
         </details>
 
         <details>
-          <summary>
-            <div class="faq-q">What platform limits are used?</div>
-            <div class="faq-indicator">i</div>
-          </summary>
-          <div class="faq-a">
-            Current defaults used by the tool:
-            <ul>
-              <li><strong>Instagram caption</strong> — 2,200 characters</li>
-              <li><strong>Instagram bio</strong> — 150 characters</li>
-              <li><strong>Twitter/X</strong> — 280 characters</li>
-              <li><strong>YouTube Shorts</strong> — 5,000 characters</li>
-            </ul>
-            You can also set a <em>custom limit</em> in the preset controls.
-          </div>
+          <summary><div class="faq-q">How does Twitter/X character counting work?</div><div class="faq-indicator">3</div></summary>
+          <div class="faq-a">Twitter/X posts are 280 characters. Mentions, hashtags and emojis count; use the preview to check truncation and move extra info to a thread.</div>
         </details>
 
         <details>
-          <summary>
-            <div class="faq-q">What is "Auto truncate"?</div>
-            <div class="faq-indicator">↔</div>
-          </summary>
-          <div class="faq-a">
-            When enabled, the editor automatically trims input to the chosen platform's character limit as you type or paste. This prevents accidentally writing over the platform limit.
-          </div>
+          <summary><div class="faq-q">Why are emojis counted separately and how do they affect length?</div><div class="faq-indicator">4</div></summary>
+          <div class="faq-a">Emojis count as characters and can use multiple codepoints. The emoji counter helps manage heavy emoji use to avoid exceeding limits.</div>
         </details>
 
         <details>
-          <summary>
-            <div class="faq-q">How does the live preview behave for each platform?</div>
-            <div class="faq-indicator">▤</div>
-          </summary>
-          <div class="faq-a">
-            < preview adapts depending on the preset selected:
-            <ul>
-              <li><strong>Instagram</strong> — shows a post-style preview with a “... more” indicator at ~125 characters.</li>
-              <li><strong>Instagram bio</strong> — shows a compact profile-like block with avatar, stats and bio text.</li>
-              <li><strong>Twitter/X</strong> — shows a tweet-style card with name, handle and meta area; preview truncates at 280 characters.</li>
-              <li><strong>YouTube Shorts</strong> — shows thumbnail, channel and the first few lines of the caption as in the upload view.</li>
-            </ul>
-          </div>
+          <summary><div class="faq-q">What are the YouTube options: Title (Shorts) vs Description?</div><div class="faq-indicator">5</div></summary>
+          <div class="faq-a">Two presets: <strong>YouTube Title (Shorts)</strong> — 100 chars for the short title, and <strong>YouTube Description</strong> — 5,000 chars for full descriptions. Use the title for hooks and the description for links and timestamps.</div>
         </details>
 
         <details>
-          <summary>
-            <div class="faq-q">What is the First-line hook analysis?</div>
-            <div class="faq-indicator">⚡</div>
-          </summary>
-          <div class="faq-a">
-            The tool checks the first 125 characters for attention signals: questions, emoji, power words (stop, new, urgent), call-to-action words, and appropriate length. It scores the line and labels it as <strong>Strong</strong>, <strong>Okay</strong> or <strong>Weak</strong> and offers a short suggestion when improvement is possible.
-          </div>
+          <summary><div class="faq-q">What are Top Keywords and how do they help with captions?</div><div class="faq-indicator">6</div></summary>
+          <div class="faq-a">Top Keywords extracts meaningful words and ignores stopwords. Use keywords for hashtags and to shape your caption's theme without keyword stuffing.</div>
         </details>
 
         <details>
-          <summary>
-            <div class="faq-q">What does "Fix Caption" change?</div>
-            <div class="faq-indicator">🔧</div>
-          </summary>
-          <div class="faq-a">
-            The fixed function:
-            <ul>
-              <li>Removes unusual invisible characters</li>
-              <li>Normalises line breaks</li>
-              <li>Collapses repeated blank lines</li>
-              <li>Fixes spaces before punctuation</li>
-            </ul>
-            It does not rewrite content — only cleans formatting.
-          </div>
+          <summary><div class="faq-q">How does the first-line hook analysis improve engagement?</div><div class="faq-indicator">7</div></summary>
+          <div class="faq-a">The tool checks the first 125 chars for questions, emojis, power words and CTAs and rates hook strength. Adding a question or short CTA often boosts engagement.</div>
         </details>
 
         <details>
-          <summary>
-            <div class="faq-q">How do Top Keywords work?</div>
-            <div class="faq-indicator">🔎</div>
-          </summary>
-          <div class="faq-a">
-            The tool lowercases your caption, removes punctuation, excludes common stopwords (the, a, in, for...), and counts remaining tokens. The most frequent words are shown so you can spot themes or candidates for hashtags.
-          </div>
+          <summary><div class="faq-q">What does Auto truncate do and when should I use it?</div><div class="faq-indicator">8</div></summary>
+          <div class="faq-a">Auto truncate trims text to the selected platform limit as you type. Use it when you need platform-safe captions (e.g., Twitter or YouTube Title).</div>
         </details>
 
         <details>
-          <summary>
-            <div class="faq-q">How many captions can I save in history?</div>
-            <div class="faq-indicator">💾</div>
-          </summary>
-          <div class="faq-a">
-            Up to <strong>30</strong> captions are stored locally in your browser storage. Older entries are dropped when the cap is reached. Use the Export button to download all saved captions as a text file.
-          </div>
+          <summary><div class="faq-q">How do I clean and fix formatting with Fix Caption?</div><div class="faq-indicator">9</div></summary>
+          <div class="faq-a">Fix Caption removes invisible characters, normalises line breaks, collapses extra blank lines and trims spaces before punctuation for cleaner posts.</div>
         </details>
 
         <details>
-          <summary>
-            <div class="faq-q">Is my text uploaded anywhere?</div>
-            <div class="faq-indicator">🔒</div>
-          </summary>
-          <div class="faq-a">
-            No. Everything runs <strong>locally in your browser</strong>. No login, no servers. Saved captions stay in your browser's local storage.
-          </div>
+          <summary><div class="faq-q">How many captions can I save and can I export them?</div><div class="faq-indicator">10</div></summary>
+          <div class="faq-a">You can save up to 30 captions locally. Export downloads saved captions as a text file for planning and scheduling.</div>
         </details>
 
         <details>
-          <summary>
-            <div class="faq-q">Can I use this for other platforms?</div>
-            <div class="faq-indicator">♻</div>
-          </summary>
-          <div class="faq-a">
-            Yes — you can pick a custom limit or use the Twitter / YouTube presets. The preview is tailored for those platforms, but the counting and cleaning features work for any text-based platform.
-          </div>
+          <summary><div class="faq-q">Does SocialMediaToolsHub collect my captions or data?</div><div class="faq-indicator">11</div></summary>
+          <div class="faq-a">No. All processing runs locally in your browser. Saved captions remain in local storage and are not uploaded.</div>
+        </details>
+
+        <details>
+          <summary><div class="faq-q">Best practices for hashtags, mentions and URLs in captions?</div><div class="faq-indicator">12</div></summary>
+          <div class="faq-a">Keep hashtags relevant (Instagram allows up to 30). Mentions count as characters. URLs are not clickable in captions — use your bio or link services for important links.</div>
         </details>
 
       </section>
@@ -431,7 +394,7 @@
 
   <script>
   (function(){
-    /* ----------------- Elements ----------------- */
+    /* Elements */
     const ta = document.getElementById('caption');
     const charCount = document.getElementById('char-count');
     const wordCount = document.getElementById('word-count');
@@ -469,29 +432,28 @@
     const hookBadge = document.getElementById('hook-badge');
     const hookChips = document.getElementById('hook-chips');
     const hookScoreEl = document.getElementById('hook-score');
-    const kwTable = document.getElementById('kw-table');
+    const kwTbody = document.querySelector('#kw-table tbody');
 
-    const STORAGE_KEY = 'smt_caption_history_v5';
+    const STORAGE_KEY = 'smt_caption_history_v9';
     const HISTORY_LIMIT = 30;
     const SEE_MORE_LIMIT = 125;
 
     const PRESETS = {
-  instagram: { limit: 2200, preview: 'instagram' },
-  bio: { limit: 150, preview: 'bio' },
-  twitter: { limit: 280, preview: 'twitter' },
-  youtube: { limit: 5000, preview: 'youtube' },       // description (keep)
-  youtube_title: { limit: 100, preview: 'youtube' },  // shorts title (new)
-  custom: { limit: 2200, preview: 'instagram' }
-};
+      instagram: { limit: 2200, preview: 'instagram' },
+      bio: { limit: 150, preview: 'bio' },
+      twitter: { limit: 280, preview: 'twitter' },
+      youtube: { limit: 5000, preview: 'youtube' },       // description
+      youtube_title: { limit: 100, preview: 'youtube' },  // short title
+      custom: { limit: 2200, preview: 'instagram' }
+    };
 
-
-    /* ----------------- Utilities ----------------- */
+    /* Utilities */
     function countWords(s){ if(!s || !s.trim()) return 0; return s.trim().split(/\s+/).length }
     function countLines(s){ if(!s) return 0; return s.split(/\r?\n/).length }
     function countEmojis(s){ try{ const r = s.match(/\p{Extended_Pictographic}/gu); return r? r.length: 0;}catch(e){ const r = s.match(/[\uD800-\uDBFF][\uDC00-\uDFFF]/g); return r? r.length:0 } }
     function escapeHtml(s){ return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
 
-    /* ----------------- Keywords ----------------- */
+    /* Keywords + stopwords */
     const STOPWORDS = new Set(['the','a','an','and','or','but','is','are','to','for','of','in','on','with','it','this','that','you','your','as','be','by','at','from','our','we','will','i','me','my','so','if','then','too','not','have','s','t','m']);
     function updateKeywords(text){
       const s = String(text || '').toLowerCase();
@@ -506,26 +468,30 @@
         freq[w] = (freq[w] || 0) + 1;
       }
       const arr = Object.keys(freq).map(k=>({k,v:freq[k]})).sort((a,b)=>b.v - a.v).slice(0,10);
-      kwTable.innerHTML = '';
-      if(arr.length === 0){ kwTable.innerHTML = '<tr><td class="muted">No keywords yet</td><td></td></tr>'; return; }
+      kwTbody.innerHTML = '';
+      if(arr.length === 0){
+        const tr = document.createElement('tr');
+        tr.innerHTML = `<td class="muted">No keywords yet</td><td></td>`;
+        kwTbody.appendChild(tr);
+        return;
+      }
       arr.forEach(it=>{
-        const r = document.createElement('tr');
-        r.innerHTML = `<td>${escapeHtml(it.k)}</td><td style="text-align:right;color:var(--muted)">${it.v}</td>`;
-        kwTable.appendChild(r);
+        const tr = document.createElement('tr');
+        tr.innerHTML = `<td title="${escapeHtml(it.k)}">${escapeHtml(it.k)}</td><td style="text-align:right;color:var(--muted)">${it.v}</td>`;
+        kwTbody.appendChild(tr);
       });
       const note = document.createElement('tr');
       note.innerHTML = `<td class="muted" colspan="2" style="padding-top:6px;font-size:12px">Common words like "the, a, in, for" are excluded</td>`;
-      kwTable.appendChild(note);
+      kwTbody.appendChild(note);
     }
 
-    /* ----------------- Hook Analyzer ----------------- */
+    /* Hook analyzer */
     function analyzeHook(text){
       const first = (text || '').slice(0, SEE_MORE_LIMIT).trim();
       if(!first){
         hookText.textContent = 'No input yet';
         hookTip.textContent = 'Start typing to get hook feedback';
         hookBadge.textContent = '—';
-        hookBadge.className = 'badge badge-weak';
         hookChips.innerHTML = '';
         hookScoreEl.textContent = '0';
         return;
@@ -576,7 +542,7 @@
       if(score < 3) hookTip.textContent = 'Suggestion: Start with a short question or strong verb; add an emoji or clear action.';
     }
 
-    /* ----------------- Fixer ----------------- */
+    /* Fixer */
     function fixCaption(text){
       if(!text) return '';
       const cleaned = text.replace(/\u00A0/g,' ').replace(/[\u200B-\u200F\uFEFF]/g,'');
@@ -588,7 +554,7 @@
       return t;
     }
 
-    /* ----------------- History ----------------- */
+    /* History */
     function loadHistory(){ try{ const raw = localStorage.getItem(STORAGE_KEY); return raw ? JSON.parse(raw) : []; }catch(e){ return [] } }
     function saveHistoryArr(arr){ try{ localStorage.setItem(STORAGE_KEY, JSON.stringify(arr)); }catch(e){} }
     function renderHistory(){
@@ -611,7 +577,7 @@
       });
     }
 
-    /* ----------------- Preview switch + render ----------------- */
+    /* Preview switch + render */
     function getPreviewMode(){ const p = preset.value || 'instagram'; return p === 'custom' ? PRESETS['instagram'].preview : PRESETS[p].preview; }
     function getPresetLimit(){ const p = preset.value || 'instagram'; return p === 'custom' ? Number(limitInput.value) || 2200 : PRESETS[p].limit; }
 
@@ -626,7 +592,7 @@
       const v = ta.value || '';
       const mode = getPreviewMode();
       const limit = getPresetLimit();
-      previewModeLabel.textContent = 'Platform: ' + (mode==='instagram'?'Instagram':mode==='bio'?'Instagram bio':mode==='twitter'?'Twitter/X':'YouTube Shorts');
+      previewModeLabel.textContent = 'Platform: ' + (mode==='instagram'?'Instagram':mode==='bio'?'Instagram bio':mode==='twitter'?'Twitter/X':'YouTube');
       limitBadge.textContent = 'Limit: ' + limit;
       showTemplate(mode);
 
@@ -651,13 +617,20 @@
         if(v.length > allowed){ if(meta) meta.textContent = 'Over ' + allowed + ' characters — preview truncated.'; }
         else { if(meta) meta.textContent = '0 replies · 0 retweets · 0 likes'; }
       } else if(mode === 'youtube'){
-        const lines = (v || '').split(/\r?\n/);
-        const firstN = lines.slice(0,3).join('\n');
-        ytCaption.textContent = firstN || (v || 'No description yet');
+        if(preset.value === 'youtube_title'){
+          const title = (v || '').replace(/\r?\n/g,' ').trim().slice(0, PRESETS['youtube_title'].limit);
+          ytCaption.classList.add('yt-title');
+          ytCaption.textContent = title || 'No title yet';
+        } else {
+          ytCaption.classList.remove('yt-title');
+          const lines = (v || '').split(/\r?\n/);
+          const firstN = lines.slice(0,3).join('\n');
+          ytCaption.textContent = firstN || (v || 'No description yet');
+        }
       }
     }
 
-    /* ----------------- Counts & init ----------------- */
+    /* Counts & init */
     function updateCounts(){
       const v = ta.value || '';
       charCount.textContent = v.length;
@@ -677,13 +650,12 @@
       renderHistory();
       updateCounts();
 
-      // Collapsible FAQ accordion: ensure only one details open at a time
+      // FAQ accordion: open one at a time on toggle
       const faqDetails = Array.from(document.querySelectorAll('.faq-wrap details'));
       faqDetails.forEach(d => {
         d.addEventListener('toggle', function(){
           if(!d.open) return;
           faqDetails.forEach(other => { if(other !== d) other.open = false; });
-          // smooth scroll into view on small screens when opened
           if (window.innerWidth <= 520) {
             setTimeout(()=> d.scrollIntoView({behavior:'smooth', block:'center'}), 160);
           }
@@ -691,7 +663,7 @@
       });
     })();
 
-    /* ----------------- Events ----------------- */
+    /* Events */
     ta.addEventListener('input', function(){
       if(truncate.checked){
         const lim = Number(limitInput.value) || getPresetLimit();
