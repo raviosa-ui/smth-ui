@@ -4,10 +4,11 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
   <title>Caption Counter — SocialMediaToolsHub</title>
-  <meta name="description" content="Caption Counter: live characters, words, lines, emoji count. Presets for Instagram, Twitter, YouTube and custom limits." />
+  <meta name="description" content="Caption Counter with live preview, see-more simulation, fixer, keyword counter and hook analyzer." />
   <link rel="stylesheet" href="style.css">
   <style>
-    /* page-specific styles (small & performant) */
+    /* === Page-specific styles (minimal + responsive) === */
+    :root{--preview-bg:#0b1220;--mock-card:#0f1726}
     .tool-wrap{margin-top:18px}
     .editor{background:var(--card);padding:14px;border-radius:14px;box-shadow:0 6px 18px rgba(2,6,23,0.5)}
     textarea.counter-area{width:100%;min-height:160px;padding:12px;border-radius:10px;border:1px solid rgba(255,255,255,0.03);background:transparent;color:var(--text);resize:vertical;font-size:15px}
@@ -23,25 +24,36 @@
     .history-list{margin-top:12px;display:flex;flex-direction:column;gap:8px;max-height:220px;overflow:auto;padding-right:6px}
     .history-item{background:rgba(255,255,255,0.02);padding:8px;border-radius:10px;display:flex;justify-content:space-between;gap:8px;align-items:flex-start}
     .history-item .text{font-size:13px;color:var(--muted);max-width:68ch;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-    @media(min-width:640px){ .meta-row{gap:14px} .controls{gap:10px} textarea.counter-area{min-height:220px} }
 
-    /* Accordion (FAQ) */
-    .faq-wrap{margin-top:20px;max-width:900px;margin-left:auto;margin-right:auto}
-    .accordion-item{background:var(--card);border-radius:12px;margin-bottom:10px;border:1px solid rgba(255,255,255,0.02);overflow:hidden}
-    .accordion-button{
-      display:flex;align-items:center;justify-content:space-between;width:100%;
-      padding:12px 14px;background:transparent;border:0;color:var(--text);
-      cursor:pointer;font-weight:600;font-size:15px;
-    }
-    .accordion-button .qtext{text-align:left}
-    .accordion-button .icon{font-size:16px;color:var(--muted);margin-left:12px;flex-shrink:0}
-    .accordion-content{
-      padding:0 14px;max-height:0;overflow:hidden;transition:max-height .24s ease, padding .18s ease;
-      color:var(--muted);font-size:14px;line-height:1.6;
-    }
-    .accordion-content.open{padding:12px 14px 16px 14px}
-    .accordion-content.open.max{ max-height:1200px; }
-    .accordion-button:focus{outline:2px solid rgba(129,140,248,0.12);outline-offset:2px}
+    /* Split layout with preview */
+    .work-area{display:flex;flex-direction:column;gap:12px;margin-top:12px}
+    .panel{border-radius:12px;padding:12px;background:var(--card);border:1px solid rgba(255,255,255,0.02)}
+    .preview-panel{background:linear-gradient(180deg,var(--preview-bg),transparent);padding:14px;border-radius:12px;color:var(--text)}
+    .mock-post{background:var(--mock-card);padding:12px;border-radius:12px;border:1px solid rgba(255,255,255,0.02);max-width:680px}
+    .mock-header{display:flex;align-items:center;gap:10px;margin-bottom:8px}
+    .mock-avatar{width:44px;height:44px;border-radius:50%;background:linear-gradient(90deg,var(--accent-from),var(--accent-to));display:grid;place-items:center;font-weight:700;color:#041027}
+    .mock-username{font-weight:700}
+    .mock-caption{white-space:pre-wrap;font-size:15px;margin-top:8px;color:var(--text)}
+    .see-more{color:var(--muted);font-size:13px;margin-top:6px}
+    .grid-2{display:grid;grid-template-columns:1fr;gap:12px}
+    @media(min-width:900px){ .work-area{flex-direction:row;align-items:flex-start} .grid-2{grid-template-columns:1fr 360px} .editor{min-height:320px} }
+
+    /* Keyword box */
+    .keywords{margin-top:10px;background:rgba(255,255,255,0.02);padding:10px;border-radius:10px}
+    .kw-table{width:100%;border-collapse:collapse;font-size:13px}
+    .kw-table td{padding:6px 8px;color:var(--muted)}
+    .kw-table td:first-child{color:var(--text);font-weight:600}
+
+    /* Hook analyzer */
+    .hook{margin-top:10px;padding:10px;border-radius:10px;background:rgba(255,255,255,0.01);display:flex;align-items:center;justify-content:space-between;gap:8px}
+    .hook .badge{padding:6px 8px;border-radius:8px;font-weight:700}
+    .badge-strong{background:linear-gradient(90deg,var(--accent-from),var(--accent-to));color:#041027}
+    .badge-ok{background:rgba(129,140,248,0.12);color:var(--text)}
+    .badge-weak{background:rgba(255,69,58,0.12);color:#ffb4a9}
+
+    /* small helpers */
+    .muted{color:var(--muted);font-size:13px}
+    .visually-hidden{position:absolute !important;left:-9999px;width:1px;height:1px;overflow:hidden}
   </style>
 </head>
 <body>
@@ -56,13 +68,13 @@
         <div class="hero-inner">
           <div class="hero-copy">
             <h1 id="cap-title">Caption Counter</h1>
-            <p class="lead">Live character, word, line and emoji counts. Presets and custom limits for any platform.</p>
+            <p class="lead">Enhanced caption tools — preview, fix, analyze and export faster on SocialMediaToolsHub.</p>
           </div>
         </div>
       </section>
 
       <section class="tools tool-wrap" aria-labelledby="tool-title">
-        <div class="editor" role="region" aria-label="Caption counter editor">
+        <div class="editor panel" role="region" aria-label="Caption counter editor">
           <label class="small" for="caption">Write your caption below</label>
           <textarea id="caption" class="counter-area" placeholder="Paste or type your caption..."></textarea>
 
@@ -95,464 +107,343 @@
             <div class="controls">
               <button id="copy" class="btn">Copy</button>
               <button id="download" class="btn">Download</button>
-              <button id="save" class="btn">Save to history</button>
+              <button id="save" class="btn">Save</button>
               <button id="clear" class="btn">Clear</button>
+              <button id="fix" class="btn">Fix Caption</button>
             </div>
 
             <div class="small" id="remaining-text">Remaining: <strong id="remaining">2200</strong></div>
           </div>
 
-          <div style="margin-top:14px">
-            <div class="small" style="margin-bottom:8px">History (saved captions)</div>
-            <div class="history-list" id="history"></div>
-            <div style="margin-top:8px">
-              <button id="export-history" class="btn">Export history</button>
-              <button id="clear-history" class="btn">Clear history</button>
+          <div class="work-area" style="margin-top:12px">
+            <div class="grid-2">
+              <!-- LEFT: Editor + insights -->
+              <div>
+                <div class="keywords panel" aria-live="polite">
+                  <div style="display:flex;justify-content:space-between;align-items:center">
+                    <div class="small">Top keywords</div>
+                    <div class="muted">Excludes common words</div>
+                  </div>
+                  <table class="kw-table" id="kw-table" style="margin-top:8px">
+                    <!-- populated by JS -->
+                  </table>
+                </div>
+
+                <div class="hook" style="margin-top:10px">
+                  <div>
+                    <div class="small">First-line hook analysis (first 125 chars)</div>
+                    <div id="hook-text" style="font-weight:600;margin-top:6px;color:var(--text)">No input yet</div>
+                    <div id="hook-tip" class="muted" style="margin-top:6px">Short advice will appear here.</div>
+                  </div>
+                  <div id="hook-badge" class="badge badge-weak">—</div>
+                </div>
+
+                <div style="margin-top:12px" class="muted">History & tools</div>
+                <div class="history-list" id="history"></div>
+                <div style="margin-top:8px;display:flex;gap:8px">
+                  <button id="export-history" class="btn">Export</button>
+                  <button id="clear-history" class="btn">Clear history</button>
+                </div>
+              </div>
+
+              <!-- RIGHT: Live visual preview -->
+              <div>
+                <div class="preview-panel panel" aria-live="polite">
+                  <div style="display:flex;justify-content:space-between;align-items:center">
+                    <div class="small">Live Preview</div>
+                    <div class="small muted">See More simulation: <strong>125</strong> chars</div>
+                  </div>
+
+                  <div class="mock-post" id="mock-post" style="margin-top:10px">
+                    <div class="mock-header">
+                      <div class="mock-avatar" aria-hidden="true">SM</div>
+                      <div>
+                        <div class="mock-username">socialmediatoolshub</div>
+                        <div class="muted" style="font-size:13px">Demo · <span id="mock-time">now</span></div>
+                      </div>
+                    </div>
+
+                    <div id="mock-caption" class="mock-caption" aria-live="polite">No caption yet</div>
+                    <div id="mock-see" class="see-more muted" aria-hidden="true"></div>
+                  </div>
+
+                  <div style="margin-top:10px" class="muted">This preview simulates how captions appear on Instagram and demonstrates the "see more" split at ~125 characters.</div>
+                </div>
+              </div>
             </div>
-            <div class="small" style="margin-top:8px;color:var(--muted)">Stored locally in your browser — max <strong>30</strong> items. Clearing browser data will remove the history.</div>
           </div>
+
         </div>
       </section>
 
-      <!-- Collapsible FAQ built from approved content -->
-      <section class="faq-wrap" aria-labelledby="faq-heading">
-        <h2 id="faq-heading" style="margin:0 0 10px 0;color:var(--text)">Frequently Asked Questions — Caption Counter</h2>
-
-        <div class="accordion-item">
-          <button class="accordion-button" aria-expanded="false">
-            <span class="qtext">What does the Caption Counter on SocialMediaToolsHub actually do?</span>
-            <span class="icon">+</span>
-          </button>
-          <div class="accordion-content" aria-hidden="true">
-            <p>It measures your caption in real time — characters, words, lines and emoji — so you instantly know whether your text fits Instagram, Twitter, YouTube or any platform you choose.</p>
-          </div>
-        </div>
-
-        <div class="accordion-item">
-          <button class="accordion-button" aria-expanded="false">
-            <span class="qtext">Which platforms does this tool support?</span>
-            <span class="icon">+</span>
-          </button>
-          <div class="accordion-content" aria-hidden="true">
-            <p>The Caption Counter on SocialMediaToolsHub includes presets for Instagram captions, Instagram bios, Twitter/X posts and YouTube descriptions. You can also set your own custom limit to fit other platforms.</p>
-          </div>
-        </div>
-
-        <div class="accordion-item">
-          <button class="accordion-button" aria-expanded="false">
-            <span class="qtext">Do emoji count as one character or more?</span>
-            <span class="icon">+</span>
-          </button>
-          <div class="accordion-content" aria-hidden="true">
-            <p>Every emoji counts as one character inside our tool, even the ones made from multiple Unicode parts. The counter is designed to mirror common platform behaviors.</p>
-          </div>
-        </div>
-
-        <div class="accordion-item">
-          <button class="accordion-button" aria-expanded="false">
-            <span class="qtext">Do hashtags and mentions count toward the character limit?</span>
-            <span class="icon">+</span>
-          </button>
-          <div class="accordion-content" aria-hidden="true">
-            <p>Yes. Every symbol counts — the # in hashtags and the @ in mentions count just like letters and punctuation. SocialMediaToolsHub counts them as individual characters.</p>
-          </div>
-        </div>
-
-        <div class="accordion-item">
-          <button class="accordion-button" aria-expanded="false">
-            <span class="qtext">Do spaces and line breaks count as characters?</span>
-            <span class="icon">+</span>
-          </button>
-          <div class="accordion-content" aria-hidden="true">
-            <p>Yes — spaces and each new line are counted. This matches how platforms treat spacing in captions and helps you preview exactly how your text will appear.</p>
-          </div>
-        </div>
-
-        <div class="accordion-item">
-          <button class="accordion-button" aria-expanded="false">
-            <span class="qtext">What does the “Auto Truncate” feature do?</span>
-            <span class="icon">+</span>
-          </button>
-          <div class="accordion-content" aria-hidden="true">
-            <p>When Auto Truncate is enabled, the caption is automatically shortened to the selected limit as you type or paste. Use it when you want to ensure your caption never exceeds a platform’s maximum.</p>
-          </div>
-        </div>
-
-        <div class="accordion-item">
-          <button class="accordion-button" aria-expanded="false">
-            <span class="qtext">What limits do your presets use?</span>
-            <span class="icon">+</span>
-          </button>
-          <div class="accordion-content" aria-hidden="true">
-            <p>SocialMediaToolsHub preset limits are: Instagram caption — 2,200; Instagram bio — 150; Twitter/X — 280; YouTube description — 5,000. You can always choose a custom number if you need a different limit.</p>
-          </div>
-        </div>
-
-        <div class="accordion-item">
-          <button class="accordion-button" aria-expanded="false">
-            <span class="qtext">Can I choose my own character limit?</span>
-            <span class="icon">+</span>
-          </button>
-          <div class="accordion-content" aria-hidden="true">
-            <p>Yes. Select "Custom" in the preset dropdown and enter any limit in the Limit field. This makes the counter flexible for any platform or personal rule.</p>
-          </div>
-        </div>
-
-        <div class="accordion-item">
-          <button class="accordion-button" aria-expanded="false">
-            <span class="qtext">How does the tool count words?</span>
-            <span class="icon">+</span>
-          </button>
-          <div class="accordion-content" aria-hidden="true">
-            <p>Words are counted by splitting on spaces. Extra spaces don’t create extra words — the tool ignores blank fragments when counting words.</p>
-          </div>
-        </div>
-
-        <div class="accordion-item">
-          <button class="accordion-button" aria-expanded="false">
-            <span class="qtext">How does the line counter work?</span>
-            <span class="icon">+</span>
-          </button>
-          <div class="accordion-content" aria-hidden="true">
-            <p>Each time you press Enter, the line count increases. If you paste text with several paragraphs, each paragraph increases the line counter accordingly.</p>
-          </div>
-        </div>
-
-        <div class="accordion-item">
-          <button class="accordion-button" aria-expanded="false">
-            <span class="qtext">What does “Remaining” mean?</span>
-            <span class="icon">+</span>
-          </button>
-          <div class="accordion-content" aria-hidden="true">
-            <p>“Remaining” shows how many characters are left before you hit the chosen limit. If it shows a negative number, you have exceeded the limit.</p>
-          </div>
-        </div>
-
-        <div class="accordion-item">
-          <button class="accordion-button" aria-expanded="false">
-            <span class="qtext">How does History work on SocialMediaToolsHub?</span>
-            <span class="icon">+</span>
-          </button>
-          <div class="accordion-content" aria-hidden="true">
-            <p>Saved captions are stored locally in your browser only. You can restore, copy, or delete saved items without anything leaving your device. It’s a private workspace for your drafts.</p>
-          </div>
-        </div>
-
-        <div class="accordion-item">
-          <button class="accordion-button" aria-expanded="false">
-            <span class="qtext">How many captions can I save?</span>
-            <span class="icon">+</span>
-          </button>
-          <div class="accordion-content" aria-hidden="true">
-            <p>Up to 30 captions can be saved. When the list exceeds 30, older entries are removed automatically so the tool stays fast on your device.</p>
-          </div>
-        </div>
-
-        <div class="accordion-item">
-          <button class="accordion-button" aria-expanded="false">
-            <span class="qtext">What does “Export History” do?</span>
-            <span class="icon">+</span>
-          </button>
-          <div class="accordion-content" aria-hidden="true">
-            <p>Export History downloads all saved captions as a single `.txt` file. It’s useful for backups or moving your drafts to another device or app.</p>
-          </div>
-        </div>
-
-        <div class="accordion-item">
-          <button class="accordion-button" aria-expanded="false">
-            <span class="qtext">Does the tool work offline?</span>
-            <span class="icon">+</span>
-          </button>
-          <div class="accordion-content" aria-hidden="true">
-            <p>Yes. After the page loads, everything runs in your browser and continues to work offline — counting, saving and exporting are local actions.</p>
-          </div>
-        </div>
-
-        <div class="accordion-item">
-          <button class="accordion-button" aria-expanded="false">
-            <span class="qtext">Does SocialMediaToolsHub store my captions on a server?</span>
-            <span class="icon">+</span>
-          </button>
-          <div class="accordion-content" aria-hidden="true">
-            <p>No. Your captions remain in your browser only. SocialMediaToolsHub does not send or store your drafts on a server.</p>
-          </div>
-        </div>
-
-        <div class="accordion-item">
-          <button class="accordion-button" aria-expanded="false">
-            <span class="qtext">Why use presets instead of typing the limit manually?</span>
-            <span class="icon">+</span>
-          </button>
-          <div class="accordion-content" aria-hidden="true">
-            <p>Presets automatically set the correct limits for popular platforms, preventing accidental oversize captions and saving time. You can switch to a custom limit whenever you need to.</p>
-          </div>
-        </div>
-
-        <div class="accordion-item">
-          <button class="accordion-button" aria-expanded="false">
-            <span class="qtext">What happens if I paste a caption that's too long?</span>
-            <span class="icon">+</span>
-          </button>
-          <div class="accordion-content" aria-hidden="true">
-            <p>If Auto Truncate is on, the caption is trimmed immediately to the limit. If it’s off, the counter shows how many characters you are over so you can edit manually.</p>
-          </div>
-        </div>
-
-        <div class="accordion-item">
-          <button class="accordion-button" aria-expanded="false">
-            <span class="qtext">Can I download my caption as a text file?</span>
-            <span class="icon">+</span>
-          </button>
-          <div class="accordion-content" aria-hidden="true">
-            <p>Yes — use the Download button to save your caption as a `.txt` file for safekeeping or later reuse.</p>
-          </div>
-        </div>
-
-        <div class="accordion-item">
-          <button class="accordion-button" aria-expanded="false">
-            <span class="qtext">Does this tool support long YouTube descriptions?</span>
-            <span class="icon">+</span>
-          </button>
-          <div class="accordion-content" aria-hidden="true">
-            <p>Yes. The YouTube preset supports up to 5,000 characters, which is ideal for long descriptions with timestamps and links.</p>
-          </div>
-        </div>
-
-        <div class="accordion-item">
-          <button class="accordion-button" aria-expanded="false">
-            <span class="qtext">Can I copy my caption with one click?</span>
-            <span class="icon">+</span>
-          </button>
-          <div class="accordion-content" aria-hidden="true">
-            <p>Yes — the Copy button copies everything in the editor to your clipboard instantly.</p>
-          </div>
-        </div>
-
-        <div class="accordion-item">
-          <button class="accordion-button" aria-expanded="false">
-            <span class="qtext">Does the tool count invisible characters?</span>
-            <span class="icon">+</span>
-          </button>
-          <div class="accordion-content" aria-hidden="true">
-            <p>Yes. Hidden characters, invisible spaces, line breaks and unusual Unicode symbols are included in the count so you always see an accurate total.</p>
-          </div>
-        </div>
-
-        <div class="accordion-item">
-          <button class="accordion-button" aria-expanded="false">
-            <span class="qtext">Is the Caption Counter mobile-friendly?</span>
-            <span class="icon">+</span>
-          </button>
-          <div class="accordion-content" aria-hidden="true">
-            <p>Yes. The interface is optimized for mobile devices and small screens — it’s fast, touch-friendly and designed for quick editing on the go.</p>
-          </div>
-        </div>
-
-        <div class="accordion-item">
-          <button class="accordion-button" aria-expanded="false">
-            <span class="qtext">Why should creators use SocialMediaToolsHub?</span>
-            <span class="icon">+</span>
-          </button>
-          <div class="accordion-content" aria-hidden="true">
-            <p>SocialMediaToolsHub keeps your drafts private (stored only in your browser), is very fast, and offers useful presets and history features tailored for creators who publish across multiple platforms.</p>
-          </div>
-        </div>
-
-      </section>
+      <!-- FAQ (kept small to focus on features) -->
+      <article class="content-area" aria-labelledby="whycap" style="margin-top:18px">
+        <h3 id="whycap">Why use this Caption Counter?</h3>
+        <p>SocialMediaToolsHub combines fast counting with real previews, automatic caption fixing, keyword insights and a hook tester — all in your browser, offline and private.</p>
+      </article>
     </main>
 
     <footer>© 2025 SocialMediaToolsHub. Built for speed.</footer>
   </div>
 
+  <!-- JS: All features (compact, fast) -->
   <script>
-    (function(){
-      /* ---------- Caption Counter logic ---------- */
-      const ta = document.getElementById('caption');
-      const charCount = document.getElementById('char-count');
-      const wordCount = document.getElementById('word-count');
-      const lineCount = document.getElementById('line-count');
-      const emojiCount = document.getElementById('emoji-count');
-      const preset = document.getElementById('preset');
-      const limitInput = document.getElementById('limit');
-      const truncate = document.getElementById('truncate');
-      const remainingEl = document.getElementById('remaining');
-      const copyBtn = document.getElementById('copy');
-      const downloadBtn = document.getElementById('download');
-      const saveBtn = document.getElementById('save');
-      const clearBtn = document.getElementById('clear');
-      const historyEl = document.getElementById('history');
-      const exportHistory = document.getElementById('export-history');
-      const clearHistory = document.getElementById('clear-history');
-      const STORAGE_KEY = 'smt_caption_history_v1';
+  (function(){
+    // Elements
+    const ta = document.getElementById('caption');
+    const charCount = document.getElementById('char-count');
+    const wordCount = document.getElementById('word-count');
+    const lineCount = document.getElementById('line-count');
+    const emojiCount = document.getElementById('emoji-count');
+    const preset = document.getElementById('preset');
+    const limitInput = document.getElementById('limit');
+    const truncate = document.getElementById('truncate');
+    const remainingEl = document.getElementById('remaining');
+    const copyBtn = document.getElementById('copy');
+    const downloadBtn = document.getElementById('download');
+    const saveBtn = document.getElementById('save');
+    const clearBtn = document.getElementById('clear');
+    const fixBtn = document.getElementById('fix');
+    const historyEl = document.getElementById('history');
+    const exportHistory = document.getElementById('export-history');
+    const clearHistoryBtn = document.getElementById('clear-history');
 
-      function countWords(s){ if(!s || !s.trim()) return 0; return s.trim().split(/\s+/).length }
-      function countLines(s){ if(!s) return 0; return s.split(/\r?\n/).length }
-      function countEmojis(s){
-        try{
-          const emojiRegex = /\p{Extended_Pictographic}/gu;
-          const matches = s.match(emojiRegex);
-          return matches? matches.length:0;
-        }catch(e){ return 0; }
+    const mockCaption = document.getElementById('mock-caption');
+    const mockSee = document.getElementById('mock-see');
+    const hookText = document.getElementById('hook-text');
+    const hookTip = document.getElementById('hook-tip');
+    const hookBadge = document.getElementById('hook-badge');
+    const kwTable = document.getElementById('kw-table');
+
+    const STORAGE_KEY = 'smt_caption_history_v2';
+    const HISTORY_LIMIT = 30;
+    const SEE_MORE_LIMIT = 125; // IG preview threshold
+
+    // Utilities
+    function countWords(s){ if(!s || !s.trim()) return 0; return s.trim().split(/\s+/).length }
+    function countLines(s){ if(!s) return 0; return s.split(/\r?\n/).length }
+    function countEmojis(s){
+      try{
+        const emojiRegex = /\p{Extended_Pictographic}/gu;
+        const matches = s.match(emojiRegex);
+        return matches? matches.length:0;
+      }catch(e){ return 0; }
+    }
+
+    function updateCounts(){
+      const v = ta.value || '';
+      charCount.textContent = v.length;
+      wordCount.textContent = countWords(v);
+      lineCount.textContent = countLines(v);
+      emojiCount.textContent = countEmojis(v);
+      const limit = Number(limitInput.value) || 0;
+      const remaining = limit - v.length;
+      remainingEl.textContent = remaining >= 0 ? remaining : ('-' + Math.abs(remaining));
+      updatePreview();
+      updateKeywords(v);
+      analyzeHook(v);
+    }
+
+    function applyTruncate(){
+      const limit = Number(limitInput.value) || 0;
+      if(truncate.checked && limit>0 && ta.value.length > limit){
+        ta.value = ta.value.slice(0, limit);
       }
+    }
 
-      function updateCounts(){
-        let v = ta.value || '';
-        const chars = v.length;
-        const words = countWords(v);
-        const lines = countLines(v);
-        const emojis = countEmojis(v);
+    // History
+    function loadHistory(){ try{ const raw = localStorage.getItem(STORAGE_KEY); return raw ? JSON.parse(raw) : []; }catch(e){ return [] } }
+    function saveHistoryArr(arr){ try{ localStorage.setItem(STORAGE_KEY, JSON.stringify(arr)); }catch(e){} }
+    function renderHistory(){
+      historyEl.innerHTML = '';
+      const arr = loadHistory();
+      if(arr.length===0){ historyEl.innerHTML = '<div class="small" style="color:var(--muted)">No saved captions.</div>'; return; }
+      arr.forEach(item=>{
+        const node = document.createElement('div'); node.className='history-item';
+        const text = document.createElement('div'); text.className='text'; text.textContent = item.text;
+        const actions = document.createElement('div'); actions.style.display='flex'; actions.style.gap='6px';
+        const restore = document.createElement('button'); restore.className='btn'; restore.textContent='Restore';
+        const copy = document.createElement('button'); copy.className='btn'; copy.textContent='Copy';
+        const del = document.createElement('button'); del.className='btn'; del.textContent='Del';
+        restore.onclick = ()=>{ ta.value = item.text; updateCounts(); };
+        copy.onclick = ()=>{ navigator.clipboard?.writeText(item.text).then(()=>{ alert('Copied!') }).catch(()=>{ alert('Could not copy') }) };
+        del.onclick = ()=>{ const newArr = loadHistory().filter(h=>h.id !== item.id); saveHistoryArr(newArr); renderHistory(); };
+        actions.appendChild(restore); actions.appendChild(copy); actions.appendChild(del);
+        node.appendChild(text); node.appendChild(actions);
+        historyEl.appendChild(node);
+      });
+    }
 
-        charCount.textContent = chars;
-        wordCount.textContent = words;
-        lineCount.textContent = lines;
-        emojiCount.textContent = emojis;
-
-        const limit = Number(limitInput.value) || 0;
-        const remaining = limit - chars;
-        remainingEl.textContent = remaining >= 0 ? remaining : ('-' + Math.abs(remaining));
+    // Preview (See more simulation)
+    function updatePreview(){
+      const v = ta.value || '';
+      const preview = v.length > SEE_MORE_LIMIT ? v.slice(0, SEE_MORE_LIMIT) : v;
+      mockCaption.textContent = preview || 'No caption yet';
+      if(v.length > SEE_MORE_LIMIT){
+        mockSee.textContent = '... more';
+        mockSee.setAttribute('aria-hidden','false');
+      } else {
+        mockSee.textContent = '';
+        mockSee.setAttribute('aria-hidden','true');
       }
+      // mock time
+      document.getElementById('mock-time').textContent = 'now';
+    }
 
-      function applyTruncate(){
-        const limit = Number(limitInput.value) || 0;
-        if(truncate.checked && limit>0){
-          if(ta.value.length > limit){
-            ta.value = ta.value.slice(0, limit);
-          }
-        }
-      }
-
-      function loadHistory(){
-        try{ const raw = localStorage.getItem(STORAGE_KEY); return raw ? JSON.parse(raw) : []; }catch(e){ return [] }
-      }
-      function saveHistoryArr(arr){ try{ localStorage.setItem(STORAGE_KEY, JSON.stringify(arr)); }catch(e){} }
-      function renderHistory(){
-        historyEl.innerHTML = '';
-        const arr = loadHistory();
-        if(arr.length===0){ historyEl.innerHTML = '<div class="small" style="color:var(--muted)">No saved captions.</div>'; return; }
-        arr.forEach(item=>{
-          const node = document.createElement('div'); node.className='history-item';
-          const text = document.createElement('div'); text.className='text'; text.textContent = item.text;
-          const actions = document.createElement('div'); actions.style.display='flex'; actions.style.gap='6px';
-          const restore = document.createElement('button'); restore.className='btn'; restore.textContent='Restore';
-          const copy = document.createElement('button'); copy.className='btn'; copy.textContent='Copy';
-          const del = document.createElement('button'); del.className='btn'; del.textContent='Del';
-          restore.onclick = ()=>{ ta.value = item.text; updateCounts(); };
-          copy.onclick = ()=>{ navigator.clipboard?.writeText(item.text).then(()=>{ alert('Copied!') }).catch(()=>{ alert('Could not copy') }) };
-          del.onclick = ()=>{ const newArr = loadHistory().filter(h=>h.id !== item.id); saveHistoryArr(newArr); renderHistory(); };
-          actions.appendChild(restore); actions.appendChild(copy); actions.appendChild(del);
-          node.appendChild(text); node.appendChild(actions);
-          historyEl.appendChild(node);
-        });
-      }
-
-      (function init(){
-        limitInput.value = preset.value;
-        renderHistory();
-        updateCounts();
-      })();
-
-      ta.addEventListener('input', function(){
-        if(truncate.checked){ applyTruncate(); }
-        updateCounts();
+    // Keyword frequency (basic, excludes small stopwords)
+    const STOPWORDS = new Set(['the','a','an','and','or','but','is','are','to','for','of','in','on','with','it','this','that','you','your','as','be','by','at','from','our','we','will']);
+    function updateKeywords(text){
+      const s = text.toLowerCase().replace(/[^\p{L}\p{N}\s#@]/gu,' ');
+      const parts = s.split(/\s+/).filter(Boolean);
+      const freq = {};
+      parts.forEach(p=>{
+        if(STOPWORDS.has(p)) return;
+        // strip punctuation on ends
+        const w = p.replace(/^[^0-9#@]+|[^0-9#@]+$/g,'');
+        if(!w) return;
+        freq[w] = (freq[w]||0) + 1;
       });
+      // make array and sort
+      const arr = Object.keys(freq).map(k=>({k,v:freq[k]})).sort((a,b)=>b.v - a.v).slice(0,10);
+      // render
+      kwTable.innerHTML = '';
+      if(arr.length===0){ kwTable.innerHTML = '<tr><td class="muted">No keywords yet</td><td></td></tr>'; return; }
+      arr.forEach(it=>{ const r = document.createElement('tr'); r.innerHTML = `<td>${escapeHtml(it.k)}</td><td style="text-align:right;color:var(--muted)">${it.v}</td>`; kwTable.appendChild(r); });
+    }
 
-      preset.addEventListener('change', function(){
-        if(preset.value === 'custom'){ limitInput.focus(); return; }
-        limitInput.value = preset.value;
-        updateCounts();
-      });
+    // simple HTML escape
+    function escapeHtml(s){ return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
 
-      limitInput.addEventListener('input', function(){ updateCounts(); });
+    // Hook analyzer — inspects first 125 chars
+    function analyzeHook(text){
+      const first = (text || '').slice(0, SEE_MORE_LIMIT).trim();
+      if(!first){ hookText.textContent = 'No input yet'; hookTip.textContent = 'Start typing to get hook feedback'; hookBadge.textContent='—'; hookBadge.className='badge badge-weak'; return; }
 
-      copyBtn.addEventListener('click', function(){
-        const text = ta.value || '';
-        if(!text) return alert('Nothing to copy');
-        if(navigator.clipboard && navigator.clipboard.writeText){
-          navigator.clipboard.writeText(text).then(()=>{ alert('Copied!') }).catch(()=>{ alert('Could not copy') });
-        } else {
-          const t = document.createElement('textarea'); t.value = text; document.body.appendChild(t); t.select();
-          try{ document.execCommand('copy'); alert('Copied!') }catch(e){ alert('Could not copy') }finally{ document.body.removeChild(t) }
-        }
-      });
+      // signals
+      const hasQuestion = first.includes('?');
+      const hasEmoji = (/\p{Extended_Pictographic}/u).test(first);
+      const hasCTA = /\b(save|tap|watch|click|link|follow|share|buy|shop|subscribe)\b/i.test(first);
+      const hasPower = /\b(stop|wait|warning|alert|don’t|must|now|today|new|exclusive|free)\b/i.test(first);
+      const lengthScore = first.length >= 20 && first.length <= 125;
 
-      downloadBtn.addEventListener('click', function(){
-        const text = ta.value || '';
-        const blob = new Blob([text], {type:'text/plain;charset=utf-8'});
-        const url = URL.createObjectURL(blob);
-        const a = document.createElement('a'); a.href = url; a.download = 'caption.txt';
-        document.body.appendChild(a); a.click(); a.remove(); URL.revokeObjectURL(url);
-      });
+      // score
+      let score = 0;
+      if(hasQuestion) score += 2;
+      if(hasEmoji) score += 1;
+      if(hasCTA) score += 2;
+      if(hasPower) score += 2;
+      if(lengthScore) score += 1;
 
-      saveBtn.addEventListener('click', function(){
-        const text = ta.value || '';
-        if(!text.trim()) return alert('Nothing to save');
-        const arr = loadHistory();
-        arr.unshift({ id: Date.now(), text: text });
-        if(arr.length>30) arr.length = 30;
-        saveHistoryArr(arr);
-        renderHistory();
-      });
+      // rating
+      let rating = 'Weak hook';
+      let tip = 'Try starting with a question, emoji, or bold statement in the first line.';
+      let cls = 'badge-weak';
+      if(score >= 6){ rating = 'Strong hook'; tip = 'Great — the first line invites clicks. Keep it concise.'; cls = 'badge-strong'; }
+      else if(score >= 3){ rating = 'Okay hook'; tip = 'Good start — consider adding a clear action or an emotion word.'; cls = 'badge-ok'; }
 
-      clearBtn.addEventListener('click', function(){ ta.value=''; updateCounts(); });
+      hookText.textContent = first.length > 60 ? first.slice(0,60) + '…' : first;
+      hookTip.textContent = tip;
+      hookBadge.textContent = rating;
+      hookBadge.className = 'badge ' + cls;
+    }
 
-      exportHistory.addEventListener('click', function(){
-        const arr = loadHistory().map(h=>h.text).join('\n\n---\n\n');
-        const blob = new Blob([arr], { type:'text/plain' });
-        const url = URL.createObjectURL(blob);
-        const a = document.createElement('a'); a.href = url; a.download = 'captions-history.txt';
-        document.body.appendChild(a); a.click(); a.remove(); URL.revokeObjectURL(url);
-      });
+    // Auto-fixer: trims, normalizes spaces, removes duplicate empty lines, replaces NBSP, normalize punctuation spacing
+    function fixCaption(text){
+      if(!text) return '';
+      // 1. replace non-breaking spaces and weird unicode spaces with regular space
+      const cleaned = text.replace(/\u00A0/g,' ').replace(/[\u200B-\u200F\uFEFF]/g,'');
+      // 2. normalize line endings
+      let t = cleaned.replace(/\r\n/g,'\n').replace(/\r/g,'\n');
+      // 3. collapse multiple spaces into single (but preserve double-newline for paragraph breaks)
+      t = t.split('\n').map(ln=>ln.replace(/[ \t]+/g,' ').trimEnd()).join('\n');
+      // 4. remove more than one consecutive blank line
+      t = t.replace(/\n{3,}/g,'\n\n');
+      // 5. trim overall
+      t = t.trim();
+      // 6. normalize spaces before punctuation (remove space before .,!?)
+      t = t.replace(/\s+([.,!?;:])/g,'$1');
+      return t;
+    }
 
-      clearHistory.addEventListener('click', function(){
-        if(!confirm('Clear all history?')) return;
-        saveHistoryArr([]); renderHistory();
-      });
-
-      document.addEventListener('keydown', function(e){
-        if((e.ctrlKey || e.metaKey) && e.key === 'Enter'){ e.preventDefault(); saveBtn.click(); }
-      });
-
-      /* ---------- Accordion (FAQ) logic ---------- */
-      (function accordionInit(){
-        const items = document.querySelectorAll('.accordion-item');
-        items.forEach(item=>{
-          const btn = item.querySelector('.accordion-button');
-          const content = item.querySelector('.accordion-content');
-          const icon = btn.querySelector('.icon');
-
-          btn.addEventListener('click', function(){
-            const expanded = btn.getAttribute('aria-expanded') === 'true';
-            // close all other items
-            items.forEach(it=>{
-              const b = it.querySelector('.accordion-button');
-              const c = it.querySelector('.accordion-content');
-              const ic = b.querySelector('.icon');
-              if(b !== btn){
-                b.setAttribute('aria-expanded','false');
-                c.setAttribute('aria-hidden','true');
-                c.classList.remove('open','max');
-                ic.textContent = '+';
-              }
-            });
-
-            if(!expanded){
-              btn.setAttribute('aria-expanded','true');
-              content.setAttribute('aria-hidden','false');
-              content.classList.add('open');
-              requestAnimationFrame(()=>{ content.classList.add('max'); });
-              icon.textContent = '−';
-              setTimeout(()=>{ item.scrollIntoView({behavior:'smooth',block:'center'}); }, 220);
-            } else {
-              btn.setAttribute('aria-expanded','false');
-              content.setAttribute('aria-hidden','true');
-              content.classList.remove('open','max');
-              icon.textContent = '+';
-            }
-          });
-        });
-      })();
-
+    // Initial setup
+    (function init(){
+      limitInput.value = preset.value;
+      renderHistory();
+      updateCounts();
     })();
+
+    // Events
+    ta.addEventListener('input', function(){
+      if(truncate.checked) applyTruncate();
+      updateCounts();
+    });
+
+    preset.addEventListener('change', function(){
+      if(preset.value === 'custom'){ limitInput.focus(); return; }
+      limitInput.value = preset.value;
+      updateCounts();
+    });
+
+    limitInput.addEventListener('input', updateCounts);
+
+    copyBtn.addEventListener('click', function(){
+      const text = ta.value || '';
+      if(!text) return alert('Nothing to copy');
+      if(navigator.clipboard && navigator.clipboard.writeText){
+        navigator.clipboard.writeText(text).then(()=>{ alert('Copied!') }).catch(()=>{ alert('Could not copy') });
+      } else {
+        const t = document.createElement('textarea'); t.value = text; document.body.appendChild(t); t.select();
+        try{ document.execCommand('copy'); alert('Copied!') }catch(e){ alert('Could not copy') }finally{ document.body.removeChild(t) }
+      }
+    });
+
+    downloadBtn.addEventListener('click', function(){
+      const text = ta.value || '';
+      const blob = new Blob([text], {type:'text/plain;charset=utf-8'});
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a'); a.href = url; a.download = 'caption.txt';
+      document.body.appendChild(a); a.click(); a.remove(); URL.revokeObjectURL(url);
+    });
+
+    saveBtn.addEventListener('click', function(){
+      const text = ta.value || '';
+      if(!text.trim()) return alert('Nothing to save');
+      const arr = loadHistory();
+      arr.unshift({ id: Date.now(), text: text });
+      if(arr.length>HISTORY_LIMIT) arr.length = HISTORY_LIMIT;
+      saveHistoryArr(arr);
+      renderHistory();
+    });
+
+    clearBtn.addEventListener('click', function(){ ta.value=''; updateCounts(); });
+
+    fixBtn.addEventListener('click', function(){
+      const before = ta.value || '';
+      const after = fixCaption(before);
+      ta.value = after;
+      updateCounts();
+      alert('Caption fixed — cleaned spaces, line breaks and invisible characters.');
+    });
+
+    exportHistory.addEventListener('click', function(){
+      const arr = loadHistory().map(h=>h.text).join('\n\n---\n\n');
+      const blob = new Blob([arr], { type:'text/plain' });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a'); a.href = url; a.download = 'captions-history.txt';
+      document.body.appendChild(a); a.click(); a.remove(); URL.revokeObjectURL(url);
+    });
+
+    clearHistoryBtn.addEventListener('click', function(){
+      if(!confirm('Clear all history?')) return;
+      saveHistoryArr([]); renderHistory();
+    });
+
+    // keyboard shortcut save
+    document.addEventListener('keydown', function(e){
+      if((e.ctrlKey || e.metaKey) && e.key === 'Enter'){ e.preventDefault(); saveBtn.click(); }
+    });
+
+  })();
   </script>
 </body>
 </html>
