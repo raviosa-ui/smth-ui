@@ -1,0 +1,178 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>SocialMediaToolsKit — Instagram Line Break Generator & Creator Tools</title>
+<meta name="description" content="Fix Instagram line breaks instantly using invisible space. Free creator utilities: caption tools, hashtag helpers, emoji tools and more."/>
+<meta name="theme-color" content="#0f172a"/>
+<style>
+:root{--bg:#0f172a;--card:#1e293b;--text:#f8fafc;--muted:#94a3b8;--border:#334155;--accent-from:#38bdf8;--accent-to:#818cf8;--r-lg:24px;--r-md:16px;--trans:260ms cubic-bezier(.2,.9,.3,1);font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;-webkit-font-smoothing:antialiased}
+*{box-sizing:border-box}html,body{height:100%}body{margin:0;background:var(--bg);color:var(--text);line-height:1.45;padding:20px;-webkit-tap-highlight-color:transparent}
+a{text-decoration:none;color:inherit}img{max-width:100%;height:auto;display:block}.container{max-width:1120px;margin:0 auto}
+
+/* header */
+.header{display:flex;align-items:center;justify-content:space-between;padding:10px 6px;gap:12px}
+.brand{display:flex;gap:10px;font-weight:600;font-size:18px;white-space:nowrap}
+.logo-text{background:linear-gradient(90deg,var(--accent-from),var(--accent-to));-webkit-background-clip:text;color:transparent;-webkit-text-fill-color:transparent}
+.topnav{display:flex;gap:10px;font-size:14px;flex-wrap:wrap}
+.topnav a{padding:8px 10px;border-radius:10px;color:var(--muted);transition:var(--trans)}
+.topnav a:hover{color:var(--text);background:rgba(255,255,255,0.02)}
+
+/* hero */
+.hero{background:var(--card);border-radius:var(--r-lg);padding:20px;margin-top:16px;box-shadow:0 6px 22px rgba(3,7,18,0.6),inset 0 1px rgba(255,255,255,0.01)}
+.hero-inner{display:flex;flex-direction:column;text-align:center;gap:18px}
+.hero h1{margin:0;font-size:20px}
+.lead{color:var(--muted);margin:10px 0 18px;font-size:15px}
+.cta-wrap{display:flex;flex-direction:column;gap:12px;align-items:center}
+.btn-cta{padding:14px 18px;border-radius:12px;border:0;cursor:pointer;font-weight:600;font-size:15px;background:linear-gradient(90deg,var(--accent-from),var(--accent-to));color:#06121f;box-shadow:0 6px 18px rgba(8,12,30,0.6);transition:transform .18s,box-shadow .18s;min-width:220px}
+.btn-cta:hover{transform:translateY(-6px);box-shadow:0 14px 40px rgba(8,12,30,0.7),0 0 60px rgba(56,189,248,0.12)}
+.copy-status{font-size:13px;color:var(--muted);height:18px;transition:opacity .2s,transform .2s}
+.copy-status.show{color:var(--accent-from);opacity:1;transform:translateY(0)}
+.copy-status.hide{opacity:0;transform:translateY(-6px)}
+
+/* tools grid */
+.tools{margin-top:20px}
+.tools h2{font-size:16px;margin:0 0 12px}
+.grid{display:grid;grid-template-columns:1fr;gap:12px}
+.card{display:flex;gap:12px;padding:14px;border-radius:var(--r-md);background:rgba(255,255,255,0.02);border:1px solid var(--border);transition:var(--trans);align-items:flex-start}
+.card:hover{transform:translateY(-6px);border-color:var(--accent-from);background:rgba(255,255,255,0.03);box-shadow:0 10px 30px rgba(8,12,30,0.55)}
+.emoji{font-size:28px;width:44px;height:44px;display:grid;place-items:center;background:rgba(255,255,255,0.05);border-radius:10px;flex-shrink:0}
+.card h3{margin:0 0 6px;font-size:15px}
+.card p{margin:0;color:var(--muted);font-size:13px}
+
+/* content area */
+.content-area{max-width:800px;margin:22px auto 0;color:var(--muted)}
+.content-area h3{color:var(--text);margin:14px 0 6px;font-size:15px}
+.content-area p{font-size:14px;line-height:1.6}
+.faq dt{font-weight:700;color:var(--text);margin-top:12px}
+.faq dd{margin:4px 0 0;color:var(--muted);font-size:13px}
+
+/* footer */
+footer{text-align:center;margin:36px 0;color:var(--muted);font-size:13px}
+
+/* responsive */
+@media(min-width:640px){.hero-inner{flex-direction:row;text-align:left;align-items:center}.cta-wrap{align-items:flex-end}}
+@media(min-width:768px){.grid{grid-template-columns:repeat(4,1fr)}}
+</style>
+</head>
+<body>
+<div class="container">
+
+<header class="header">
+  <div class="brand" aria-label="logo"><span>⚡</span><span class="logo-text">SocialMediaToolsKit</span></div>
+  <nav class="topnav" role="navigation" aria-label="primary">
+    <a href="#about">About</a><a href="#requests">Requests</a>
+  </nav>
+</header>
+
+<main>
+  <section class="hero" aria-labelledby="hero-title">
+    <div class="hero-inner">
+      <div class="hero-copy">
+        <h1 id="hero-title">Instagram Line Break Generator &amp; Creator Tools</h1>
+        <p class="lead">Stop Instagram from ruining your captions. Copy our invisible space to fix line breaks instantly.</p>
+      </div>
+      <div class="cta-wrap" aria-live="polite">
+        <textarea id="invisible-space" style="position:absolute;left:-9999px;">⠀</textarea>
+        <button id="copy-btn" class="btn-cta" aria-describedby="copy-status" type="button">Copy Invisible Space ✂️</button>
+        <div id="copy-status" class="copy-status hide" role="status" aria-live="polite"></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="tools" aria-labelledby="tools-title">
+    <h2 id="tools-title">More Social Media Creator Tools</h2>
+    <div class="grid" role="list">
+      <a class="card" href="caption-counter.html" role="listitem" aria-label="Caption Counter">
+        <div class="emoji" aria-hidden="true">🧾</div>
+        <div><h3>Caption Counter</h3><p>Live character, word and line counters with export options.</p></div>
+      </a>
+
+      <a class="card" href="emoji-adder.html" role="listitem" aria-label="Emoji Adder">
+        <div class="emoji" aria-hidden="true">😊</div>
+        <div><h3>Emoji Adder</h3><p>Quickly insert popular emojis into captions and bios.</p></div>
+      </a>
+
+      <a class="card" href="hashtag-cleaner.html" role="listitem" aria-label="Hashtag Cleaner">
+        <div class="emoji" aria-hidden="true">🧼</div>
+        <div><h3>Hashtag Cleaner</h3><p>Remove duplicates and format hashtags for posting.</p></div>
+      </a>
+
+      <a class="card" href="line-break.html" role="listitem" aria-label="Line Break Generator">
+        <div class="emoji" aria-hidden="true">↩️</div>
+        <div><h3>Line Break Generator</h3><p>Invisible space tool to preserve paragraph breaks on Instagram.</p></div>
+      </a>
+
+      <a class="card" href="case-converter.html" role="listitem" aria-label="Case Converter">
+        <div class="emoji" aria-hidden="true">🔤</div>
+        <div><h3>Case Converter</h3><p>Switch between UPPER, lower, Title Case and more.</p></div>
+      </a>
+
+      <a class="card" href="bio-char-checker.html" role="listitem" aria-label="Bio Character Checker">
+        <div class="emoji" aria-hidden="true">🧷</div>
+        <div><h3>Bio Character Checker</h3><p>Validate length for Instagram/TikTok bio limits.</p></div>
+      </a>
+
+      <a class="card" href="stylish-text.html" role="listitem" aria-label="Stylish Text Generator">
+        <div class="emoji" aria-hidden="true">✨</div>
+        <div><h3>Stylish Text Generator</h3><p>Create bold, italic and fancy unicode text for bios.</p></div>
+      </a>
+
+      <a class="card" href="hashtag-recommender.html" role="listitem" aria-label="Hashtag Recommender">
+        <div class="emoji" aria-hidden="true">🔍</div>
+        <div><h3>Hashtag Recommender</h3><p>Get suggested hashtags based on your keywords.</p></div>
+      </a>
+
+      <a class="card" href="copy-download.html" role="listitem" aria-label="Copy & Download">
+        <div class="emoji" aria-hidden="true">📥</div>
+        <div><h3>Copy & Download</h3><p>One-click copy and download text/captions as files.</p></div>
+      </a>
+
+      <a class="card" href="text-to-hashtags.html" role="listitem" aria-label="Text to Hashtags">
+        <div class="emoji" aria-hidden="true">#️⃣</div>
+        <div><h3>Text to Hashtags</h3><p>Convert sentences into optimized hashtag lists.</p></div>
+      </a>
+
+      <a class="card" href="link-cleaner.html" role="listitem" aria-label="Link Cleaner">
+        <div class="emoji" aria-hidden="true">🔗</div>
+        <div><h3>Link Cleaner</h3><p>Shorten and sanitize URLs for captions and bios.</p></div>
+      </a>
+
+      <a class="card" href="caption-scorer.html" role="listitem" aria-label="Caption Scorer">
+        <div class="emoji" aria-hidden="true">🏷️</div>
+        <div><h3>Caption Scorer</h3><p>Analyze caption effectiveness and readability.</p></div>
+      </a>
+
+      <a class="card" href="emoji-counter.html" role="listitem" aria-label="Emoji Counter & Remover">
+        <div class="emoji" aria-hidden="true">🔢</div>
+        <div><h3>Emoji Counter &amp; Remover</h3><p>Count, list and strip emojis from your text.</p></div>
+      </a>
+    </div>
+  </section>
+
+  <article class="content-area">
+    <h3>Why do you need an Invisible Space?</h3>
+    <p>Instagram, TikTok, and Facebook often remove normal line breaks. Our invisible Unicode character (U+2800) forces a clean line break so captions keep the spacing you want.</p>
+
+    <h3>More free tools for social media growth</h3>
+    <p>We offer utilities to help creators: caption counters, hashtag helpers, bio tools and engagement helpers — all run in your browser for privacy and speed.</p>
+
+    <h3>Frequently Asked Questions</h3>
+    <dl class="faq">
+      <dt>How do I add spaces in my Instagram bio?</dt>
+      <dd>Normal spaces often disappear. Use the invisible space tool at the top of the page.</dd>
+      <dt>Is this tool safe?</dt>
+      <dd>Yes. Everything runs locally in your browser. No data is collected.</dd>
+    </dl>
+  </article>
+</main>
+
+<footer>© 2025 SocialMediaToolsKit. Built for speed.</footer>
+</div>
+
+<script>
+(function(){var b=document.getElementById('copy-btn'),s=document.getElementById('copy-status'),h=document.getElementById('invisible-space');function show(m,o){s.textContent=m;s.classList.remove('hide');s.classList.add('show');s.style.color=o?getComputedStyle(document.documentElement).getPropertyValue('--accent-from')||'#38bdf8':'var(--muted)';clearTimeout(s._t);s._t=setTimeout(function(){s.classList.remove('show');s.classList.add('hide')},1600)}b&&b.addEventListener('click',function(){var c=h.value||'\u2800';if(navigator.clipboard&&navigator.clipboard.writeText){navigator.clipboard.writeText(c).then(function(){show('Copied!',true)},function(){show('Could not copy',false)})}else{try{var t=document.createElement('textarea');t.value=c;t.setAttribute('readonly','');t.style.position='absolute';t.style.left='-9999px';document.body.appendChild(t);t.select();document.execCommand('copy');document.body.removeChild(t);show('Copied!',true)}catch(e){show('Could not copy',false)}}});})();
+</script>
+</body>
+</html>
