@@ -133,7 +133,8 @@
                   <option value="instagram">Instagram caption</option>
                   <option value="bio">Instagram bio / profile</option>
                   <option value="twitter">Twitter/X</option>
-                  <option value="youtube">YouTube Shorts</option>
+                  <option value="youtube">YouTube Description (5000)</option>
+<option value="youtube_title">YouTube Title (Shorts) — 100</option>
                   <option value="custom">Custom...</option>
                 </select>
               </label>
@@ -475,12 +476,14 @@
     const SEE_MORE_LIMIT = 125;
 
     const PRESETS = {
-      instagram: { limit: 2200, preview: 'instagram' },
-      bio: { limit: 150, preview: 'bio' },
-      twitter: { limit: 280, preview: 'twitter' },
-      youtube: { limit: 5000, preview: 'youtube' },
-      custom: { limit: 2200, preview: 'instagram' }
-    };
+  instagram: { limit: 2200, preview: 'instagram' },
+  bio: { limit: 150, preview: 'bio' },
+  twitter: { limit: 280, preview: 'twitter' },
+  youtube: { limit: 5000, preview: 'youtube' },       // description (keep)
+  youtube_title: { limit: 100, preview: 'youtube' },  // shorts title (new)
+  custom: { limit: 2200, preview: 'instagram' }
+};
+
 
     /* ----------------- Utilities ----------------- */
     function countWords(s){ if(!s || !s.trim()) return 0; return s.trim().split(/\s+/).length }
