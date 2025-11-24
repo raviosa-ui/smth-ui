@@ -4,10 +4,10 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
   <title>Caption Counter — SocialMediaToolsHub</title>
-  <meta name="description" content="Caption Counter with live preview, see-more simulation, fixer, keyword counter and hook analyzer." />
+  <meta name="description" content="Caption Counter with adaptive preview (Instagram/Twitter/Bio/YouTube), keyword insights, hook analyzer and fixer." />
   <link rel="stylesheet" href="style.css">
   <style>
-    /* === Page-specific styles (minimal + responsive) === */
+    /* page-specific styles */
     :root{--preview-bg:#0b1220;--mock-card:#0f1726}
     .tool-wrap{margin-top:18px}
     .editor{background:var(--card);padding:14px;border-radius:14px;box-shadow:0 6px 18px rgba(2,6,23,0.5)}
@@ -50,6 +50,11 @@
     .badge-strong{background:linear-gradient(90deg,var(--accent-from),var(--accent-to));color:#041027}
     .badge-ok{background:rgba(129,140,248,0.12);color:var(--text)}
     .badge-weak{background:rgba(255,69,58,0.12);color:#ffb4a9}
+    .hook-chips{display:flex;gap:6px;flex-wrap:wrap;margin-top:8px}
+
+    /* preview info */
+    .preview-header{display:flex;align-items:center;justify-content:space-between;gap:8px}
+    .preview-badge{padding:6px 8px;border-radius:10px;font-weight:700;font-size:13px}
 
     /* small helpers */
     .muted{color:var(--muted);font-size:13px}
@@ -68,7 +73,7 @@
         <div class="hero-inner">
           <div class="hero-copy">
             <h1 id="cap-title">Caption Counter</h1>
-            <p class="lead">Enhanced caption tools — preview, fix, analyze and export faster on SocialMediaToolsHub.</p>
+            <p class="lead">Adaptive preview, keyword insights, hook analysis and one-click fixes — designed for creators.</p>
           </div>
         </div>
       </section>
@@ -89,10 +94,10 @@
             <div class="meta-right">
               <label class="small">Preset
                 <select id="preset" class="pill" title="Choose a preset limit">
-                  <option value="2200">Instagram caption</option>
-                  <option value="150">Instagram bio</option>
-                  <option value="280">Twitter/X</option>
-                  <option value="5000">YouTube description</option>
+                  <option value="instagram">Instagram caption</option>
+                  <option value="bio">Instagram bio</option>
+                  <option value="twitter">Twitter/X</option>
+                  <option value="youtube">YouTube description</option>
                   <option value="custom">Custom...</option>
                 </select>
               </label>
@@ -122,7 +127,11 @@
                 <div class="keywords panel" aria-live="polite">
                   <div style="display:flex;justify-content:space-between;align-items:center">
                     <div class="small">Top keywords</div>
-                    <div class="muted">Excludes common words</div>
+                    <div class="muted small">Excludes common words</div>
+                  </div>
+                  <div style="display:flex;justify-content:space-between;align-items:center;margin-top:8px">
+                    <div class="muted">Example: <strong>travel (5)</strong></div>
+                    <div class="muted" style="font-size:12px">If no keywords appear, try typing a longer caption</div>
                   </div>
                   <table class="kw-table" id="kw-table" style="margin-top:8px">
                     <!-- populated by JS -->
@@ -130,12 +139,16 @@
                 </div>
 
                 <div class="hook" style="margin-top:10px">
-                  <div>
+                  <div style="flex:1">
                     <div class="small">First-line hook analysis (first 125 chars)</div>
                     <div id="hook-text" style="font-weight:600;margin-top:6px;color:var(--text)">No input yet</div>
                     <div id="hook-tip" class="muted" style="margin-top:6px">Short advice will appear here.</div>
+                    <div class="hook-chips" id="hook-chips" aria-hidden="true"></div>
                   </div>
-                  <div id="hook-badge" class="badge badge-weak">—</div>
+                  <div style="min-width:120px;text-align:right">
+                    <div id="hook-badge" class="badge badge-weak">—</div>
+                    <div class="muted" style="font-size:12px;margin-top:8px">Score: <strong id="hook-score">0</strong></div>
+                  </div>
                 </div>
 
                 <div style="margin-top:12px" class="muted">History & tools</div>
@@ -149,25 +162,33 @@
               <!-- RIGHT: Live visual preview -->
               <div>
                 <div class="preview-panel panel" aria-live="polite">
-                  <div style="display:flex;justify-content:space-between;align-items:center">
-                    <div class="small">Live Preview</div>
-                    <div class="small muted">See More simulation: <strong>125</strong> chars</div>
+                  <div class="preview-header">
+                    <div>
+                      <div class="small">Live Preview</div>
+                      <div id="preview-mode" class="muted" style="font-size:13px">Platform: Instagram</div>
+                    </div>
+                    <div>
+                      <span id="limit-badge" class="preview-badge pill" style="background:rgba(255,255,255,0.02);color:var(--muted)">Limit: 2200</span>
+                    </div>
                   </div>
 
                   <div class="mock-post" id="mock-post" style="margin-top:10px">
+                    <!-- Instagram/Twitter/Bio/YouTube responsive preview will render here -->
                     <div class="mock-header">
                       <div class="mock-avatar" aria-hidden="true">SM</div>
                       <div>
-                        <div class="mock-username">socialmediatoolshub</div>
+                        <div class="mock-username" id="mock-username">socialmediatoolshub</div>
                         <div class="muted" style="font-size:13px">Demo · <span id="mock-time">now</span></div>
                       </div>
                     </div>
 
                     <div id="mock-caption" class="mock-caption" aria-live="polite">No caption yet</div>
                     <div id="mock-see" class="see-more muted" aria-hidden="true"></div>
+                    <div id="mock-twitter-warning" class="muted" style="margin-top:6px;display:none;color:#ffb4a9"></div>
+                    <div id="mock-showmore" style="margin-top:8px;display:none"><button id="mock-expand" class="btn">Show more</button></div>
                   </div>
 
-                  <div style="margin-top:10px" class="muted">This preview simulates how captions appear on Instagram and demonstrates the "see more" split at ~125 characters.</div>
+                  <div style="margin-top:10px" class="muted">This preview adapts for Instagram, Twitter/X, Bio and YouTube.</div>
                 </div>
               </div>
             </div>
@@ -176,17 +197,16 @@
         </div>
       </section>
 
-      <!-- FAQ (kept small to focus on features) -->
+      <!-- FAQ short -->
       <article class="content-area" aria-labelledby="whycap" style="margin-top:18px">
         <h3 id="whycap">Why use this Caption Counter?</h3>
-        <p>SocialMediaToolsHub combines fast counting with real previews, automatic caption fixing, keyword insights and a hook tester — all in your browser, offline and private.</p>
+        <p>SocialMediaToolsHub combines counting, previews and quick fixes so your captions look right on the platform before you post.</p>
       </article>
     </main>
 
     <footer>© 2025 SocialMediaToolsHub. Built for speed.</footer>
   </div>
 
-  <!-- JS: All features (compact, fast) -->
   <script>
   (function(){
     // Elements
@@ -210,16 +230,34 @@
 
     const mockCaption = document.getElementById('mock-caption');
     const mockSee = document.getElementById('mock-see');
+    const mockTwitterWarning = document.getElementById('mock-twitter-warning');
+    const mockShowMore = document.getElementById('mock-showmore');
+    const mockExpand = document.getElementById('mock-expand');
+    const previewModeLabel = document.getElementById('preview-mode');
+    const limitBadge = document.getElementById('limit-badge');
+
     const hookText = document.getElementById('hook-text');
     const hookTip = document.getElementById('hook-tip');
     const hookBadge = document.getElementById('hook-badge');
+    const hookChips = document.getElementById('hook-chips');
+    const hookScoreEl = document.getElementById('hook-score');
+
     const kwTable = document.getElementById('kw-table');
 
-    const STORAGE_KEY = 'smt_caption_history_v2';
+    const STORAGE_KEY = 'smt_caption_history_v3';
     const HISTORY_LIMIT = 30;
     const SEE_MORE_LIMIT = 125; // IG preview threshold
 
-    // Utilities
+    // preview config per preset
+    const PRESETS = {
+      instagram: { limit: 2200, preview: 'instagram' },
+      bio: { limit: 150, preview: 'bio' },
+      twitter: { limit: 280, preview: 'twitter' },
+      youtube: { limit: 5000, preview: 'youtube' },
+      custom: { limit: 2200, preview: 'instagram' }
+    };
+
+    /* ----------------- Helpers ----------------- */
     function countWords(s){ if(!s || !s.trim()) return 0; return s.trim().split(/\s+/).length }
     function countLines(s){ if(!s) return 0; return s.split(/\r?\n/).length }
     function countEmojis(s){
@@ -230,28 +268,133 @@
       }catch(e){ return 0; }
     }
 
-    function updateCounts(){
-      const v = ta.value || '';
-      charCount.textContent = v.length;
-      wordCount.textContent = countWords(v);
-      lineCount.textContent = countLines(v);
-      emojiCount.textContent = countEmojis(v);
-      const limit = Number(limitInput.value) || 0;
-      const remaining = limit - v.length;
-      remainingEl.textContent = remaining >= 0 ? remaining : ('-' + Math.abs(remaining));
-      updatePreview();
-      updateKeywords(v);
-      analyzeHook(v);
+    function escapeHtml(s){ return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
+
+    /* ----------------- Keywords (fixed) ----------------- */
+    const STOPWORDS = new Set(['the','a','an','and','or','but','is','are','to','for','of','in','on','with','it','this','that','you','your','as','be','by','at','from','our','we','will','i','me','my','so','if','then','too','not','have','s','t','m']);
+
+    function updateKeywords(text){
+      const s = String(text || '').toLowerCase();
+      // replace punctuation except # and @, keep letters and numbers
+      const cleaned = s.replace(/[^\p{L}\p{N}#@]+/gu, ' ');
+      const parts = cleaned.split(/\s+/).filter(Boolean);
+
+      const freq = Object.create(null);
+      for(const p of parts){
+        // keep letters, numbers, # and @ (trim stray chars)
+        const w = p.replace(/^[^#@0-9\p{L}]+|[^#@0-9\p{L}]+$/gu, '');
+        if(!w) continue;
+        if(STOPWORDS.has(w)) continue;
+        if(w.length <= 1 && !/^[@#\d]$/.test(w)) continue;
+        freq[w] = (freq[w] || 0) + 1;
+      }
+
+      const arr = Object.keys(freq).map(k=>({k,v:freq[k]})).sort((a,b)=>b.v - a.v).slice(0,10);
+      kwTable.innerHTML = '';
+      if(arr.length === 0){
+        kwTable.innerHTML = '<tr><td class="muted">No keywords yet</td><td></td></tr>';
+        return;
+      }
+      arr.forEach(it=>{
+        const r = document.createElement('tr');
+        r.innerHTML = `<td>${escapeHtml(it.k)}</td><td style="text-align:right;color:var(--muted)">${it.v}</td>`;
+        kwTable.appendChild(r);
+      });
+      // append note row
+      const note = document.createElement('tr');
+      note.innerHTML = `<td class="muted" colspan="2" style="padding-top:6px;font-size:12px">Common words like "the, a, in, for" are excluded</td>`;
+      kwTable.appendChild(note);
     }
 
-    function applyTruncate(){
-      const limit = Number(limitInput.value) || 0;
-      if(truncate.checked && limit>0 && ta.value.length > limit){
-        ta.value = ta.value.slice(0, limit);
+    /* ----------------- Hook analyzer (fixed + chips + suggestion) ----------------- */
+    function analyzeHook(text){
+      const first = (text || '').slice(0, SEE_MORE_LIMIT).trim();
+      if(!first){
+        hookText.textContent = 'No input yet';
+        hookTip.textContent = 'Start typing to get hook feedback';
+        hookBadge.textContent = '—';
+        hookBadge.className = 'badge badge-weak';
+        hookChips.innerHTML = '';
+        hookScoreEl.textContent = '0';
+        return;
+      }
+
+      // signals
+      const hasQuestion = /\?/.test(first);
+      let hasEmoji = false;
+      try{ hasEmoji = /\p{Extended_Pictographic}/u.test(first); }catch(e){ hasEmoji = /[\uD800-\uDBFF][\uDC00-\uDFFF]/.test(first); }
+      const hasCTA = /\b(save|tap|watch|click|link|follow|share|buy|shop|subscribe|try|get|check|reply)\b/i.test(first);
+      const firstNormalized = first.replace(/[\u2018\u2019\u201C\u201D]/g, "'");
+      const hasPower = /\b(stop|wait|warning|alert|dont|must|now|today|new|exclusive|free|urgent|breaking|important|must-see|amazing)\b/i.test(firstNormalized);
+      const lengthScore = (first.length >= 12 && first.length <= SEE_MORE_LIMIT);
+
+      // scoring
+      let score = 0;
+      if(hasQuestion) score += 2;
+      if(hasEmoji) score += 1;
+      if(hasCTA) score += 2;
+      if(hasPower) score += 1;
+      if(lengthScore) score += 1;
+
+      // rating thresholds
+      let ratingText = 'Weak hook';
+      let tip = 'Try starting with a question, emoji, or bold statement in the first line.';
+      let cls = 'badge-weak';
+      if(score >= 5){
+        ratingText = 'Strong hook';
+        tip = 'Great — the first line is attention grabbing. Keep it concise.';
+        cls = 'badge-strong';
+      } else if(score >= 3){
+        ratingText = 'Okay hook';
+        tip = 'Good start — consider adding an emoji or a short CTA to boost engagement.';
+        cls = 'badge-ok';
+      }
+
+      hookText.textContent = first.length > 80 ? first.slice(0,80) + '…' : first;
+      hookTip.textContent = tip;
+      hookBadge.textContent = ratingText;
+      hookBadge.className = 'badge ' + cls;
+      hookScoreEl.textContent = String(score);
+
+      // chips
+      hookChips.innerHTML = '';
+      const chips = [
+        {t:'Question',ok:hasQuestion},
+        {t:'Emoji',ok:hasEmoji},
+        {t:'CTA',ok:hasCTA},
+        {t:'Power word',ok:hasPower},
+        {t:'Good length',ok:lengthScore}
+      ];
+      chips.forEach(c=>{
+        const d = document.createElement('div');
+        d.textContent = c.t;
+        d.style.padding = '6px 8px';
+        d.style.borderRadius = '999px';
+        d.style.fontSize = '12px';
+        d.style.color = c.ok ? '#041027' : 'var(--muted)';
+        d.style.background = c.ok ? 'linear-gradient(90deg,var(--accent-from),var(--accent-to))' : 'rgba(255,255,255,0.02)';
+        hookChips.appendChild(d);
+      });
+
+      // suggestion (simple rewrite: emphasize strong patterns)
+      if(score < 3){
+        hookTip.textContent = 'Suggestion: Start with a short question or strong verb, add an emoji or a clear action.';
       }
     }
 
-    // History
+    /* ----------------- Auto-fixer ----------------- */
+    function fixCaption(text){
+      if(!text) return '';
+      const cleaned = text.replace(/\u00A0/g,' ').replace(/[\u200B-\u200F\uFEFF]/g,'');
+      let t = cleaned.replace(/\r\n/g,'\n').replace(/\r/g,'\n');
+      t = t.split('\n').map(ln=>ln.replace(/[ \t]+/g,' ').trimEnd()).join('\n');
+      t = t.replace(/\n{3,}/g,'\n\n');
+      t = t.trim();
+      t = t.replace(/\s+([.,!?;:])/g,'$1');
+      return t;
+    }
+
+    /* ----------------- History ----------------- */
     function loadHistory(){ try{ const raw = localStorage.getItem(STORAGE_KEY); return raw ? JSON.parse(raw) : []; }catch(e){ return [] } }
     function saveHistoryArr(arr){ try{ localStorage.setItem(STORAGE_KEY, JSON.stringify(arr)); }catch(e){} }
     function renderHistory(){
@@ -274,113 +417,105 @@
       });
     }
 
-    // Preview (See more simulation)
+    /* ----------------- Preview (adaptive) ----------------- */
+    function getPreviewMode(){
+      const p = preset.value || 'instagram';
+      if(p === 'custom') return PRESETS['instagram'].preview;
+      return PRESETS[p].preview;
+    }
+    function getPresetLimit(){
+      const p = preset.value || 'instagram';
+      if(p === 'custom') return Number(limitInput.value) || 2200;
+      return PRESETS[p].limit;
+    }
+
     function updatePreview(){
       const v = ta.value || '';
-      const preview = v.length > SEE_MORE_LIMIT ? v.slice(0, SEE_MORE_LIMIT) : v;
-      mockCaption.textContent = preview || 'No caption yet';
-      if(v.length > SEE_MORE_LIMIT){
-        mockSee.textContent = '... more';
-        mockSee.setAttribute('aria-hidden','false');
-      } else {
+      const mode = getPreviewMode();
+      const limit = getPresetLimit();
+      previewModeLabel.textContent = 'Platform: ' + (mode === 'instagram' ? 'Instagram' : mode === 'bio' ? 'Instagram bio' : mode === 'twitter' ? 'Twitter/X' : 'YouTube');
+      limitBadge.textContent = 'Limit: ' + limit;
+
+      mockTwitterWarning.style.display = 'none';
+      mockShowMore.style.display = 'none';
+      mockSee.textContent = '';
+      mockCaption.textContent = '';
+
+      if(mode === 'instagram'){
+        // See more at 125
+        const preview = v.length > SEE_MORE_LIMIT ? v.slice(0, SEE_MORE_LIMIT) : v;
+        mockCaption.textContent = preview || 'No caption yet';
+        if(v.length > SEE_MORE_LIMIT){ mockSee.textContent = '... more'; mockSee.setAttribute('aria-hidden','false'); } else { mockSee.textContent=''; mockSee.setAttribute('aria-hidden','true'); }
+      } else if(mode === 'bio'){
+        // single-line bio preview (truncate visually)
+        const single = v.replace(/\r?\n/g,' ');
+        const displayed = single.length > limit ? single.slice(0, limit) + '…' : single || 'No bio yet';
+        mockCaption.textContent = displayed;
         mockSee.textContent = '';
-        mockSee.setAttribute('aria-hidden','true');
+        if(single.length > limit){ mockTwitterWarning.style.display='block'; mockTwitterWarning.textContent = 'Bio will be truncated on Instagram if over ' + limit + ' characters.'; }
+      } else if(mode === 'twitter'){
+        // show full text up to 280 chars; warn if over
+        const allowed = PRESETS['twitter'].limit;
+        const displayed = v.length > allowed ? v.slice(0, allowed) : v || 'No tweet yet';
+        mockCaption.textContent = displayed;
+        if(v.length > allowed){
+          mockTwitterWarning.style.display='block';
+          mockTwitterWarning.textContent = 'Over '+allowed+' characters — tweets are limited to '+allowed+'. Preview truncated.';
+        }
+      } else if(mode === 'youtube'){
+        // show first 3 lines and a show more button if more
+        const lines = (v || '').split(/\r?\n/);
+        const firstN = lines.slice(0,3).join('\n');
+        const rest = lines.slice(3).join('\n');
+        mockCaption.textContent = (firstN && firstN.trim()) ? firstN : (v || 'No description yet');
+        if(rest && rest.trim()){
+          mockShowMore.style.display = 'block';
+          mockSee.textContent = '...';
+          mockSee.setAttribute('aria-hidden','false');
+          mockExpand.onclick = function(){
+            mockCaption.textContent = v || 'No description yet';
+            mockShowMore.style.display = 'none';
+            mockSee.textContent = '';
+          };
+        }
       }
-      // mock time
-      document.getElementById('mock-time').textContent = 'now';
     }
 
-    // Keyword frequency (basic, excludes small stopwords)
-    const STOPWORDS = new Set(['the','a','an','and','or','but','is','are','to','for','of','in','on','with','it','this','that','you','your','as','be','by','at','from','our','we','will']);
-    function updateKeywords(text){
-      const s = text.toLowerCase().replace(/[^\p{L}\p{N}\s#@]/gu,' ');
-      const parts = s.split(/\s+/).filter(Boolean);
-      const freq = {};
-      parts.forEach(p=>{
-        if(STOPWORDS.has(p)) return;
-        // strip punctuation on ends
-        const w = p.replace(/^[^0-9#@]+|[^0-9#@]+$/g,'');
-        if(!w) return;
-        freq[w] = (freq[w]||0) + 1;
-      });
-      // make array and sort
-      const arr = Object.keys(freq).map(k=>({k,v:freq[k]})).sort((a,b)=>b.v - a.v).slice(0,10);
-      // render
-      kwTable.innerHTML = '';
-      if(arr.length===0){ kwTable.innerHTML = '<tr><td class="muted">No keywords yet</td><td></td></tr>'; return; }
-      arr.forEach(it=>{ const r = document.createElement('tr'); r.innerHTML = `<td>${escapeHtml(it.k)}</td><td style="text-align:right;color:var(--muted)">${it.v}</td>`; kwTable.appendChild(r); });
+    /* ----------------- Counts & init ----------------- */
+    function updateCounts(){
+      const v = ta.value || '';
+      charCount.textContent = v.length;
+      wordCount.textContent = countWords(v);
+      lineCount.textContent = countLines(v);
+      emojiCount.textContent = countEmojis(v);
+      const limit = Number(limitInput.value) || getPresetLimit();
+      const remaining = limit - v.length;
+      remainingEl.textContent = remaining >= 0 ? remaining : ('-' + Math.abs(remaining));
+      updatePreview();
+      updateKeywords(v);
+      analyzeHook(v);
     }
 
-    // simple HTML escape
-    function escapeHtml(s){ return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
-
-    // Hook analyzer — inspects first 125 chars
-    function analyzeHook(text){
-      const first = (text || '').slice(0, SEE_MORE_LIMIT).trim();
-      if(!first){ hookText.textContent = 'No input yet'; hookTip.textContent = 'Start typing to get hook feedback'; hookBadge.textContent='—'; hookBadge.className='badge badge-weak'; return; }
-
-      // signals
-      const hasQuestion = first.includes('?');
-      const hasEmoji = (/\p{Extended_Pictographic}/u).test(first);
-      const hasCTA = /\b(save|tap|watch|click|link|follow|share|buy|shop|subscribe)\b/i.test(first);
-      const hasPower = /\b(stop|wait|warning|alert|don’t|must|now|today|new|exclusive|free)\b/i.test(first);
-      const lengthScore = first.length >= 20 && first.length <= 125;
-
-      // score
-      let score = 0;
-      if(hasQuestion) score += 2;
-      if(hasEmoji) score += 1;
-      if(hasCTA) score += 2;
-      if(hasPower) score += 2;
-      if(lengthScore) score += 1;
-
-      // rating
-      let rating = 'Weak hook';
-      let tip = 'Try starting with a question, emoji, or bold statement in the first line.';
-      let cls = 'badge-weak';
-      if(score >= 6){ rating = 'Strong hook'; tip = 'Great — the first line invites clicks. Keep it concise.'; cls = 'badge-strong'; }
-      else if(score >= 3){ rating = 'Okay hook'; tip = 'Good start — consider adding a clear action or an emotion word.'; cls = 'badge-ok'; }
-
-      hookText.textContent = first.length > 60 ? first.slice(0,60) + '…' : first;
-      hookTip.textContent = tip;
-      hookBadge.textContent = rating;
-      hookBadge.className = 'badge ' + cls;
-    }
-
-    // Auto-fixer: trims, normalizes spaces, removes duplicate empty lines, replaces NBSP, normalize punctuation spacing
-    function fixCaption(text){
-      if(!text) return '';
-      // 1. replace non-breaking spaces and weird unicode spaces with regular space
-      const cleaned = text.replace(/\u00A0/g,' ').replace(/[\u200B-\u200F\uFEFF]/g,'');
-      // 2. normalize line endings
-      let t = cleaned.replace(/\r\n/g,'\n').replace(/\r/g,'\n');
-      // 3. collapse multiple spaces into single (but preserve double-newline for paragraph breaks)
-      t = t.split('\n').map(ln=>ln.replace(/[ \t]+/g,' ').trimEnd()).join('\n');
-      // 4. remove more than one consecutive blank line
-      t = t.replace(/\n{3,}/g,'\n\n');
-      // 5. trim overall
-      t = t.trim();
-      // 6. normalize spaces before punctuation (remove space before .,!?)
-      t = t.replace(/\s+([.,!?;:])/g,'$1');
-      return t;
-    }
-
-    // Initial setup
+    // initial
     (function init(){
-      limitInput.value = preset.value;
+      // set limit based on preset
+      limitInput.value = PRESETS['instagram'].limit;
       renderHistory();
       updateCounts();
     })();
 
-    // Events
+    /* ----------------- Event handlers ----------------- */
     ta.addEventListener('input', function(){
-      if(truncate.checked) applyTruncate();
+      if(truncate.checked){
+        const lim = Number(limitInput.value) || getPresetLimit();
+        if(ta.value.length > lim) ta.value = ta.value.slice(0, lim);
+      }
       updateCounts();
     });
 
     preset.addEventListener('change', function(){
       if(preset.value === 'custom'){ limitInput.focus(); return; }
-      limitInput.value = preset.value;
+      limitInput.value = PRESETS[preset.value].limit;
       updateCounts();
     });
 
@@ -438,7 +573,6 @@
       saveHistoryArr([]); renderHistory();
     });
 
-    // keyboard shortcut save
     document.addEventListener('keydown', function(e){
       if((e.ctrlKey || e.metaKey) && e.key === 'Enter'){ e.preventDefault(); saveBtn.click(); }
     });
