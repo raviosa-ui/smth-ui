@@ -3,11 +3,11 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>Caption Counter — SocialMediaToolsKit</title>
+  <title>Caption Counter — SocialMediaToolsHub</title>
   <meta name="description" content="Caption Counter: live characters, words, lines, emoji count. Presets for Instagram, Twitter, YouTube and custom limits." />
   <link rel="stylesheet" href="style.css">
   <style>
-    /* small page-specific tweaks */
+    /* page-specific styles (small & performant) */
     .tool-wrap{margin-top:18px}
     .editor{background:var(--card);padding:14px;border-radius:14px;box-shadow:0 6px 18px rgba(2,6,23,0.5)}
     textarea.counter-area{width:100%;min-height:160px;padding:12px;border-radius:10px;border:1px solid rgba(255,255,255,0.03);background:transparent;color:var(--text);resize:vertical;font-size:15px}
@@ -24,12 +24,30 @@
     .history-item{background:rgba(255,255,255,0.02);padding:8px;border-radius:10px;display:flex;justify-content:space-between;gap:8px;align-items:flex-start}
     .history-item .text{font-size:13px;color:var(--muted);max-width:68ch;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
     @media(min-width:640px){ .meta-row{gap:14px} .controls{gap:10px} textarea.counter-area{min-height:220px} }
+
+    /* Accordion (FAQ) */
+    .faq-wrap{margin-top:20px;max-width:900px;margin-left:auto;margin-right:auto}
+    .accordion-item{background:var(--card);border-radius:12px;margin-bottom:10px;border:1px solid rgba(255,255,255,0.02);overflow:hidden}
+    .accordion-button{
+      display:flex;align-items:center;justify-content:space-between;width:100%;
+      padding:12px 14px;background:transparent;border:0;color:var(--text);
+      cursor:pointer;font-weight:600;font-size:15px;
+    }
+    .accordion-button .qtext{text-align:left}
+    .accordion-button .icon{font-size:16px;color:var(--muted);margin-left:12px;flex-shrink:0}
+    .accordion-content{
+      padding:0 14px;max-height:0;overflow:hidden;transition:max-height .24s ease, padding .18s ease;
+      color:var(--muted);font-size:14px;line-height:1.6;
+    }
+    .accordion-content.open{padding:12px 14px 16px 14px}
+    .accordion-content.open.max{ max-height:1200px; }
+    .accordion-button:focus{outline:2px solid rgba(129,140,248,0.12);outline-offset:2px}
   </style>
 </head>
 <body>
   <div class="container">
     <header class="header" role="banner">
-      <div class="brand"><span>⚡</span><span class="logo-text">SocialMediaToolsKit</span></div>
+      <div class="brand"><span>⚡</span><span class="logo-text">SocialMediaToolsHub</span></div>
       <nav class="topnav" role="navigation"><a href="index.html">Home</a></nav>
     </header>
 
@@ -91,21 +109,264 @@
               <button id="export-history" class="btn">Export history</button>
               <button id="clear-history" class="btn">Clear history</button>
             </div>
+            <div class="small" style="margin-top:8px;color:var(--muted)">Stored locally in your browser — max <strong>30</strong> items. Clearing browser data will remove the history.</div>
           </div>
         </div>
       </section>
 
-      <article class="content-area" aria-labelledby="whycap">
-        <h3 id="whycap">Why use the Caption Counter?</h3>
-        <p>Use presets for quick platform limits or set your own maximum. Auto truncate prevents oversize captions and history saves commonly used captions for reuse.</p>
-      </article>
+      <!-- Collapsible FAQ built from approved content -->
+      <section class="faq-wrap" aria-labelledby="faq-heading">
+        <h2 id="faq-heading" style="margin:0 0 10px 0;color:var(--text)">Frequently Asked Questions — Caption Counter</h2>
+
+        <div class="accordion-item">
+          <button class="accordion-button" aria-expanded="false">
+            <span class="qtext">What does the Caption Counter on SocialMediaToolsHub actually do?</span>
+            <span class="icon">+</span>
+          </button>
+          <div class="accordion-content" aria-hidden="true">
+            <p>It measures your caption in real time — characters, words, lines and emoji — so you instantly know whether your text fits Instagram, Twitter, YouTube or any platform you choose.</p>
+          </div>
+        </div>
+
+        <div class="accordion-item">
+          <button class="accordion-button" aria-expanded="false">
+            <span class="qtext">Which platforms does this tool support?</span>
+            <span class="icon">+</span>
+          </button>
+          <div class="accordion-content" aria-hidden="true">
+            <p>The Caption Counter on SocialMediaToolsHub includes presets for Instagram captions, Instagram bios, Twitter/X posts and YouTube descriptions. You can also set your own custom limit to fit other platforms.</p>
+          </div>
+        </div>
+
+        <div class="accordion-item">
+          <button class="accordion-button" aria-expanded="false">
+            <span class="qtext">Do emoji count as one character or more?</span>
+            <span class="icon">+</span>
+          </button>
+          <div class="accordion-content" aria-hidden="true">
+            <p>Every emoji counts as one character inside our tool, even the ones made from multiple Unicode parts. The counter is designed to mirror common platform behaviors.</p>
+          </div>
+        </div>
+
+        <div class="accordion-item">
+          <button class="accordion-button" aria-expanded="false">
+            <span class="qtext">Do hashtags and mentions count toward the character limit?</span>
+            <span class="icon">+</span>
+          </button>
+          <div class="accordion-content" aria-hidden="true">
+            <p>Yes. Every symbol counts — the # in hashtags and the @ in mentions count just like letters and punctuation. SocialMediaToolsHub counts them as individual characters.</p>
+          </div>
+        </div>
+
+        <div class="accordion-item">
+          <button class="accordion-button" aria-expanded="false">
+            <span class="qtext">Do spaces and line breaks count as characters?</span>
+            <span class="icon">+</span>
+          </button>
+          <div class="accordion-content" aria-hidden="true">
+            <p>Yes — spaces and each new line are counted. This matches how platforms treat spacing in captions and helps you preview exactly how your text will appear.</p>
+          </div>
+        </div>
+
+        <div class="accordion-item">
+          <button class="accordion-button" aria-expanded="false">
+            <span class="qtext">What does the “Auto Truncate” feature do?</span>
+            <span class="icon">+</span>
+          </button>
+          <div class="accordion-content" aria-hidden="true">
+            <p>When Auto Truncate is enabled, the caption is automatically shortened to the selected limit as you type or paste. Use it when you want to ensure your caption never exceeds a platform’s maximum.</p>
+          </div>
+        </div>
+
+        <div class="accordion-item">
+          <button class="accordion-button" aria-expanded="false">
+            <span class="qtext">What limits do your presets use?</span>
+            <span class="icon">+</span>
+          </button>
+          <div class="accordion-content" aria-hidden="true">
+            <p>SocialMediaToolsHub preset limits are: Instagram caption — 2,200; Instagram bio — 150; Twitter/X — 280; YouTube description — 5,000. You can always choose a custom number if you need a different limit.</p>
+          </div>
+        </div>
+
+        <div class="accordion-item">
+          <button class="accordion-button" aria-expanded="false">
+            <span class="qtext">Can I choose my own character limit?</span>
+            <span class="icon">+</span>
+          </button>
+          <div class="accordion-content" aria-hidden="true">
+            <p>Yes. Select "Custom" in the preset dropdown and enter any limit in the Limit field. This makes the counter flexible for any platform or personal rule.</p>
+          </div>
+        </div>
+
+        <div class="accordion-item">
+          <button class="accordion-button" aria-expanded="false">
+            <span class="qtext">How does the tool count words?</span>
+            <span class="icon">+</span>
+          </button>
+          <div class="accordion-content" aria-hidden="true">
+            <p>Words are counted by splitting on spaces. Extra spaces don’t create extra words — the tool ignores blank fragments when counting words.</p>
+          </div>
+        </div>
+
+        <div class="accordion-item">
+          <button class="accordion-button" aria-expanded="false">
+            <span class="qtext">How does the line counter work?</span>
+            <span class="icon">+</span>
+          </button>
+          <div class="accordion-content" aria-hidden="true">
+            <p>Each time you press Enter, the line count increases. If you paste text with several paragraphs, each paragraph increases the line counter accordingly.</p>
+          </div>
+        </div>
+
+        <div class="accordion-item">
+          <button class="accordion-button" aria-expanded="false">
+            <span class="qtext">What does “Remaining” mean?</span>
+            <span class="icon">+</span>
+          </button>
+          <div class="accordion-content" aria-hidden="true">
+            <p>“Remaining” shows how many characters are left before you hit the chosen limit. If it shows a negative number, you have exceeded the limit.</p>
+          </div>
+        </div>
+
+        <div class="accordion-item">
+          <button class="accordion-button" aria-expanded="false">
+            <span class="qtext">How does History work on SocialMediaToolsHub?</span>
+            <span class="icon">+</span>
+          </button>
+          <div class="accordion-content" aria-hidden="true">
+            <p>Saved captions are stored locally in your browser only. You can restore, copy, or delete saved items without anything leaving your device. It’s a private workspace for your drafts.</p>
+          </div>
+        </div>
+
+        <div class="accordion-item">
+          <button class="accordion-button" aria-expanded="false">
+            <span class="qtext">How many captions can I save?</span>
+            <span class="icon">+</span>
+          </button>
+          <div class="accordion-content" aria-hidden="true">
+            <p>Up to 30 captions can be saved. When the list exceeds 30, older entries are removed automatically so the tool stays fast on your device.</p>
+          </div>
+        </div>
+
+        <div class="accordion-item">
+          <button class="accordion-button" aria-expanded="false">
+            <span class="qtext">What does “Export History” do?</span>
+            <span class="icon">+</span>
+          </button>
+          <div class="accordion-content" aria-hidden="true">
+            <p>Export History downloads all saved captions as a single `.txt` file. It’s useful for backups or moving your drafts to another device or app.</p>
+          </div>
+        </div>
+
+        <div class="accordion-item">
+          <button class="accordion-button" aria-expanded="false">
+            <span class="qtext">Does the tool work offline?</span>
+            <span class="icon">+</span>
+          </button>
+          <div class="accordion-content" aria-hidden="true">
+            <p>Yes. After the page loads, everything runs in your browser and continues to work offline — counting, saving and exporting are local actions.</p>
+          </div>
+        </div>
+
+        <div class="accordion-item">
+          <button class="accordion-button" aria-expanded="false">
+            <span class="qtext">Does SocialMediaToolsHub store my captions on a server?</span>
+            <span class="icon">+</span>
+          </button>
+          <div class="accordion-content" aria-hidden="true">
+            <p>No. Your captions remain in your browser only. SocialMediaToolsHub does not send or store your drafts on a server.</p>
+          </div>
+        </div>
+
+        <div class="accordion-item">
+          <button class="accordion-button" aria-expanded="false">
+            <span class="qtext">Why use presets instead of typing the limit manually?</span>
+            <span class="icon">+</span>
+          </button>
+          <div class="accordion-content" aria-hidden="true">
+            <p>Presets automatically set the correct limits for popular platforms, preventing accidental oversize captions and saving time. You can switch to a custom limit whenever you need to.</p>
+          </div>
+        </div>
+
+        <div class="accordion-item">
+          <button class="accordion-button" aria-expanded="false">
+            <span class="qtext">What happens if I paste a caption that's too long?</span>
+            <span class="icon">+</span>
+          </button>
+          <div class="accordion-content" aria-hidden="true">
+            <p>If Auto Truncate is on, the caption is trimmed immediately to the limit. If it’s off, the counter shows how many characters you are over so you can edit manually.</p>
+          </div>
+        </div>
+
+        <div class="accordion-item">
+          <button class="accordion-button" aria-expanded="false">
+            <span class="qtext">Can I download my caption as a text file?</span>
+            <span class="icon">+</span>
+          </button>
+          <div class="accordion-content" aria-hidden="true">
+            <p>Yes — use the Download button to save your caption as a `.txt` file for safekeeping or later reuse.</p>
+          </div>
+        </div>
+
+        <div class="accordion-item">
+          <button class="accordion-button" aria-expanded="false">
+            <span class="qtext">Does this tool support long YouTube descriptions?</span>
+            <span class="icon">+</span>
+          </button>
+          <div class="accordion-content" aria-hidden="true">
+            <p>Yes. The YouTube preset supports up to 5,000 characters, which is ideal for long descriptions with timestamps and links.</p>
+          </div>
+        </div>
+
+        <div class="accordion-item">
+          <button class="accordion-button" aria-expanded="false">
+            <span class="qtext">Can I copy my caption with one click?</span>
+            <span class="icon">+</span>
+          </button>
+          <div class="accordion-content" aria-hidden="true">
+            <p>Yes — the Copy button copies everything in the editor to your clipboard instantly.</p>
+          </div>
+        </div>
+
+        <div class="accordion-item">
+          <button class="accordion-button" aria-expanded="false">
+            <span class="qtext">Does the tool count invisible characters?</span>
+            <span class="icon">+</span>
+          </button>
+          <div class="accordion-content" aria-hidden="true">
+            <p>Yes. Hidden characters, invisible spaces, line breaks and unusual Unicode symbols are included in the count so you always see an accurate total.</p>
+          </div>
+        </div>
+
+        <div class="accordion-item">
+          <button class="accordion-button" aria-expanded="false">
+            <span class="qtext">Is the Caption Counter mobile-friendly?</span>
+            <span class="icon">+</span>
+          </button>
+          <div class="accordion-content" aria-hidden="true">
+            <p>Yes. The interface is optimized for mobile devices and small screens — it’s fast, touch-friendly and designed for quick editing on the go.</p>
+          </div>
+        </div>
+
+        <div class="accordion-item">
+          <button class="accordion-button" aria-expanded="false">
+            <span class="qtext">Why should creators use SocialMediaToolsHub?</span>
+            <span class="icon">+</span>
+          </button>
+          <div class="accordion-content" aria-hidden="true">
+            <p>SocialMediaToolsHub keeps your drafts private (stored only in your browser), is very fast, and offers useful presets and history features tailored for creators who publish across multiple platforms.</p>
+          </div>
+        </div>
+
+      </section>
     </main>
 
-    <footer>© 2025 SocialMediaToolsKit. Built for speed.</footer>
+    <footer>© 2025 SocialMediaToolsHub. Built for speed.</footer>
   </div>
 
   <script>
     (function(){
+      /* ---------- Caption Counter logic ---------- */
       const ta = document.getElementById('caption');
       const charCount = document.getElementById('char-count');
       const wordCount = document.getElementById('word-count');
@@ -122,17 +383,16 @@
       const historyEl = document.getElementById('history');
       const exportHistory = document.getElementById('export-history');
       const clearHistory = document.getElementById('clear-history');
-
       const STORAGE_KEY = 'smt_caption_history_v1';
 
-      // helpers
       function countWords(s){ if(!s || !s.trim()) return 0; return s.trim().split(/\s+/).length }
       function countLines(s){ if(!s) return 0; return s.split(/\r?\n/).length }
       function countEmojis(s){
-        // simple emoji regex (covers many common emoji)
-        const emojiRegex = /\p{Extended_Pictographic}/gu;
-        const matches = s.match(emojiRegex);
-        return matches? matches.length:0;
+        try{
+          const emojiRegex = /\p{Extended_Pictographic}/gu;
+          const matches = s.match(emojiRegex);
+          return matches? matches.length:0;
+        }catch(e){ return 0; }
       }
 
       function updateCounts(){
@@ -161,16 +421,10 @@
         }
       }
 
-      // history
       function loadHistory(){
-        try{
-          const raw = localStorage.getItem(STORAGE_KEY);
-          return raw ? JSON.parse(raw) : [];
-        }catch(e){ return [] }
+        try{ const raw = localStorage.getItem(STORAGE_KEY); return raw ? JSON.parse(raw) : []; }catch(e){ return [] }
       }
-      function saveHistory(arr){
-        try{ localStorage.setItem(STORAGE_KEY, JSON.stringify(arr)) }catch(e){}
-      }
+      function saveHistoryArr(arr){ try{ localStorage.setItem(STORAGE_KEY, JSON.stringify(arr)); }catch(e){} }
       function renderHistory(){
         historyEl.innerHTML = '';
         const arr = loadHistory();
@@ -184,26 +438,21 @@
           const del = document.createElement('button'); del.className='btn'; del.textContent='Del';
           restore.onclick = ()=>{ ta.value = item.text; updateCounts(); };
           copy.onclick = ()=>{ navigator.clipboard?.writeText(item.text).then(()=>{ alert('Copied!') }).catch(()=>{ alert('Could not copy') }) };
-          del.onclick = ()=>{ const newArr = loadHistory().filter(h=>h.id !== item.id); saveHistory(newArr); renderHistory(); };
+          del.onclick = ()=>{ const newArr = loadHistory().filter(h=>h.id !== item.id); saveHistoryArr(newArr); renderHistory(); };
           actions.appendChild(restore); actions.appendChild(copy); actions.appendChild(del);
           node.appendChild(text); node.appendChild(actions);
           historyEl.appendChild(node);
         });
       }
 
-      // init
       (function init(){
-        // default preset value (match your site default)
         limitInput.value = preset.value;
         renderHistory();
         updateCounts();
       })();
 
-      // events
       ta.addEventListener('input', function(){
-        if(truncate.checked){
-          applyTruncate();
-        }
+        if(truncate.checked){ applyTruncate(); }
         updateCounts();
       });
 
@@ -213,9 +462,7 @@
         updateCounts();
       });
 
-      limitInput.addEventListener('input', function(){
-        updateCounts();
-      });
+      limitInput.addEventListener('input', function(){ updateCounts(); });
 
       copyBtn.addEventListener('click', function(){
         const text = ta.value || '';
@@ -223,9 +470,8 @@
         if(navigator.clipboard && navigator.clipboard.writeText){
           navigator.clipboard.writeText(text).then(()=>{ alert('Copied!') }).catch(()=>{ alert('Could not copy') });
         } else {
-          // fallback
           const t = document.createElement('textarea'); t.value = text; document.body.appendChild(t); t.select();
-          try{ document.execCommand('copy'); alert('Copied!') }catch(e){ alert('Could not copy') } finally{ document.body.removeChild(t) }
+          try{ document.execCommand('copy'); alert('Copied!') }catch(e){ alert('Could not copy') }finally{ document.body.removeChild(t) }
         }
       });
 
@@ -243,7 +489,7 @@
         const arr = loadHistory();
         arr.unshift({ id: Date.now(), text: text });
         if(arr.length>30) arr.length = 30;
-        saveHistory(arr);
+        saveHistoryArr(arr);
         renderHistory();
       });
 
@@ -259,13 +505,52 @@
 
       clearHistory.addEventListener('click', function(){
         if(!confirm('Clear all history?')) return;
-        saveHistory([]); renderHistory();
+        saveHistoryArr([]); renderHistory();
       });
 
-      // keyboard shortcuts: ctrl/cmd + enter saves
       document.addEventListener('keydown', function(e){
         if((e.ctrlKey || e.metaKey) && e.key === 'Enter'){ e.preventDefault(); saveBtn.click(); }
       });
+
+      /* ---------- Accordion (FAQ) logic ---------- */
+      (function accordionInit(){
+        const items = document.querySelectorAll('.accordion-item');
+        items.forEach(item=>{
+          const btn = item.querySelector('.accordion-button');
+          const content = item.querySelector('.accordion-content');
+          const icon = btn.querySelector('.icon');
+
+          btn.addEventListener('click', function(){
+            const expanded = btn.getAttribute('aria-expanded') === 'true';
+            // close all other items
+            items.forEach(it=>{
+              const b = it.querySelector('.accordion-button');
+              const c = it.querySelector('.accordion-content');
+              const ic = b.querySelector('.icon');
+              if(b !== btn){
+                b.setAttribute('aria-expanded','false');
+                c.setAttribute('aria-hidden','true');
+                c.classList.remove('open','max');
+                ic.textContent = '+';
+              }
+            });
+
+            if(!expanded){
+              btn.setAttribute('aria-expanded','true');
+              content.setAttribute('aria-hidden','false');
+              content.classList.add('open');
+              requestAnimationFrame(()=>{ content.classList.add('max'); });
+              icon.textContent = '−';
+              setTimeout(()=>{ item.scrollIntoView({behavior:'smooth',block:'center'}); }, 220);
+            } else {
+              btn.setAttribute('aria-expanded','false');
+              content.setAttribute('aria-hidden','true');
+              content.classList.remove('open','max');
+              icon.textContent = '+';
+            }
+          });
+        });
+      })();
 
     })();
   </script>
