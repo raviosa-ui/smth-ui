@@ -1,0 +1,273 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Caption Counter — SocialMediaToolsKit</title>
+  <meta name="description" content="Caption Counter: live characters, words, lines, emoji count. Presets for Instagram, Twitter, YouTube and custom limits." />
+  <link rel="stylesheet" href="style.css">
+  <style>
+    /* small page-specific tweaks */
+    .tool-wrap{margin-top:18px}
+    .editor{background:var(--card);padding:14px;border-radius:14px;box-shadow:0 6px 18px rgba(2,6,23,0.5)}
+    textarea.counter-area{width:100%;min-height:160px;padding:12px;border-radius:10px;border:1px solid rgba(255,255,255,0.03);background:transparent;color:var(--text);resize:vertical;font-size:15px}
+    .meta-row{display:flex;flex-wrap:wrap;gap:10px;align-items:center;justify-content:space-between;margin-top:10px}
+    .meta-left{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+    .meta-right{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+    .small{font-size:13px;color:var(--muted)}
+    .pill{background:rgba(255,255,255,0.02);padding:6px 8px;border-radius:10px;border:1px solid rgba(255,255,255,0.02)}
+    .controls{display:flex;gap:8px;flex-wrap:wrap}
+    .btn{padding:8px 10px;border-radius:10px;border:1px solid rgba(255,255,255,0.04);background:transparent;color:var(--text);cursor:pointer}
+    .btn:hover{transform:translateY(-3px)}
+    .toggle{display:inline-flex;align-items:center;gap:6px}
+    .history-list{margin-top:12px;display:flex;flex-direction:column;gap:8px;max-height:220px;overflow:auto;padding-right:6px}
+    .history-item{background:rgba(255,255,255,0.02);padding:8px;border-radius:10px;display:flex;justify-content:space-between;gap:8px;align-items:flex-start}
+    .history-item .text{font-size:13px;color:var(--muted);max-width:68ch;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+    @media(min-width:640px){ .meta-row{gap:14px} .controls{gap:10px} textarea.counter-area{min-height:220px} }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <header class="header" role="banner">
+      <div class="brand"><span>⚡</span><span class="logo-text">SocialMediaToolsKit</span></div>
+      <nav class="topnav" role="navigation"><a href="index.html">Home</a></nav>
+    </header>
+
+    <main>
+      <section class="hero" aria-labelledby="cap-title">
+        <div class="hero-inner">
+          <div class="hero-copy">
+            <h1 id="cap-title">Caption Counter</h1>
+            <p class="lead">Live character, word, line and emoji counts. Presets and custom limits for any platform.</p>
+          </div>
+        </div>
+      </section>
+
+      <section class="tools tool-wrap" aria-labelledby="tool-title">
+        <div class="editor" role="region" aria-label="Caption counter editor">
+          <label class="small" for="caption">Write your caption below</label>
+          <textarea id="caption" class="counter-area" placeholder="Paste or type your caption..."></textarea>
+
+          <div class="meta-row" aria-hidden="false">
+            <div class="meta-left">
+              <div class="pill small">Chars: <strong id="char-count">0</strong></div>
+              <div class="pill small">Words: <strong id="word-count">0</strong></div>
+              <div class="pill small">Lines: <strong id="line-count">0</strong></div>
+              <div class="pill small">Emojis: <strong id="emoji-count">0</strong></div>
+            </div>
+
+            <div class="meta-right">
+              <label class="small">Preset
+                <select id="preset" class="pill" title="Choose a preset limit">
+                  <option value="2200">Instagram caption</option>
+                  <option value="150">Instagram bio</option>
+                  <option value="280">Twitter/X</option>
+                  <option value="5000">YouTube description</option>
+                  <option value="custom">Custom...</option>
+                </select>
+              </label>
+
+              <label class="small">Limit <input id="limit" class="pill" type="number" min="1" value="2200" style="width:92px;text-align:right"></label>
+
+              <label class="toggle small"><input id="truncate" type="checkbox"> Auto truncate</label>
+            </div>
+          </div>
+
+          <div class="meta-row" style="margin-top:12px">
+            <div class="controls">
+              <button id="copy" class="btn">Copy</button>
+              <button id="download" class="btn">Download</button>
+              <button id="save" class="btn">Save to history</button>
+              <button id="clear" class="btn">Clear</button>
+            </div>
+
+            <div class="small" id="remaining-text">Remaining: <strong id="remaining">2200</strong></div>
+          </div>
+
+          <div style="margin-top:14px">
+            <div class="small" style="margin-bottom:8px">History (saved captions)</div>
+            <div class="history-list" id="history"></div>
+            <div style="margin-top:8px">
+              <button id="export-history" class="btn">Export history</button>
+              <button id="clear-history" class="btn">Clear history</button>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <article class="content-area" aria-labelledby="whycap">
+        <h3 id="whycap">Why use the Caption Counter?</h3>
+        <p>Use presets for quick platform limits or set your own maximum. Auto truncate prevents oversize captions and history saves commonly used captions for reuse.</p>
+      </article>
+    </main>
+
+    <footer>© 2025 SocialMediaToolsKit. Built for speed.</footer>
+  </div>
+
+  <script>
+    (function(){
+      const ta = document.getElementById('caption');
+      const charCount = document.getElementById('char-count');
+      const wordCount = document.getElementById('word-count');
+      const lineCount = document.getElementById('line-count');
+      const emojiCount = document.getElementById('emoji-count');
+      const preset = document.getElementById('preset');
+      const limitInput = document.getElementById('limit');
+      const truncate = document.getElementById('truncate');
+      const remainingEl = document.getElementById('remaining');
+      const copyBtn = document.getElementById('copy');
+      const downloadBtn = document.getElementById('download');
+      const saveBtn = document.getElementById('save');
+      const clearBtn = document.getElementById('clear');
+      const historyEl = document.getElementById('history');
+      const exportHistory = document.getElementById('export-history');
+      const clearHistory = document.getElementById('clear-history');
+
+      const STORAGE_KEY = 'smt_caption_history_v1';
+
+      // helpers
+      function countWords(s){ if(!s || !s.trim()) return 0; return s.trim().split(/\s+/).length }
+      function countLines(s){ if(!s) return 0; return s.split(/\r?\n/).length }
+      function countEmojis(s){
+        // simple emoji regex (covers many common emoji)
+        const emojiRegex = /\p{Extended_Pictographic}/gu;
+        const matches = s.match(emojiRegex);
+        return matches? matches.length:0;
+      }
+
+      function updateCounts(){
+        let v = ta.value || '';
+        const chars = v.length;
+        const words = countWords(v);
+        const lines = countLines(v);
+        const emojis = countEmojis(v);
+
+        charCount.textContent = chars;
+        wordCount.textContent = words;
+        lineCount.textContent = lines;
+        emojiCount.textContent = emojis;
+
+        const limit = Number(limitInput.value) || 0;
+        const remaining = limit - chars;
+        remainingEl.textContent = remaining >= 0 ? remaining : ('-' + Math.abs(remaining));
+      }
+
+      function applyTruncate(){
+        const limit = Number(limitInput.value) || 0;
+        if(truncate.checked && limit>0){
+          if(ta.value.length > limit){
+            ta.value = ta.value.slice(0, limit);
+          }
+        }
+      }
+
+      // history
+      function loadHistory(){
+        try{
+          const raw = localStorage.getItem(STORAGE_KEY);
+          return raw ? JSON.parse(raw) : [];
+        }catch(e){ return [] }
+      }
+      function saveHistory(arr){
+        try{ localStorage.setItem(STORAGE_KEY, JSON.stringify(arr)) }catch(e){}
+      }
+      function renderHistory(){
+        historyEl.innerHTML = '';
+        const arr = loadHistory();
+        if(arr.length===0){ historyEl.innerHTML = '<div class="small" style="color:var(--muted)">No saved captions.</div>'; return; }
+        arr.forEach(item=>{
+          const node = document.createElement('div'); node.className='history-item';
+          const text = document.createElement('div'); text.className='text'; text.textContent = item.text;
+          const actions = document.createElement('div'); actions.style.display='flex'; actions.style.gap='6px';
+          const restore = document.createElement('button'); restore.className='btn'; restore.textContent='Restore';
+          const copy = document.createElement('button'); copy.className='btn'; copy.textContent='Copy';
+          const del = document.createElement('button'); del.className='btn'; del.textContent='Del';
+          restore.onclick = ()=>{ ta.value = item.text; updateCounts(); };
+          copy.onclick = ()=>{ navigator.clipboard?.writeText(item.text).then(()=>{ alert('Copied!') }).catch(()=>{ alert('Could not copy') }) };
+          del.onclick = ()=>{ const newArr = loadHistory().filter(h=>h.id !== item.id); saveHistory(newArr); renderHistory(); };
+          actions.appendChild(restore); actions.appendChild(copy); actions.appendChild(del);
+          node.appendChild(text); node.appendChild(actions);
+          historyEl.appendChild(node);
+        });
+      }
+
+      // init
+      (function init(){
+        // default preset value (match your site default)
+        limitInput.value = preset.value;
+        renderHistory();
+        updateCounts();
+      })();
+
+      // events
+      ta.addEventListener('input', function(){
+        if(truncate.checked){
+          applyTruncate();
+        }
+        updateCounts();
+      });
+
+      preset.addEventListener('change', function(){
+        if(preset.value === 'custom'){ limitInput.focus(); return; }
+        limitInput.value = preset.value;
+        updateCounts();
+      });
+
+      limitInput.addEventListener('input', function(){
+        updateCounts();
+      });
+
+      copyBtn.addEventListener('click', function(){
+        const text = ta.value || '';
+        if(!text) return alert('Nothing to copy');
+        if(navigator.clipboard && navigator.clipboard.writeText){
+          navigator.clipboard.writeText(text).then(()=>{ alert('Copied!') }).catch(()=>{ alert('Could not copy') });
+        } else {
+          // fallback
+          const t = document.createElement('textarea'); t.value = text; document.body.appendChild(t); t.select();
+          try{ document.execCommand('copy'); alert('Copied!') }catch(e){ alert('Could not copy') } finally{ document.body.removeChild(t) }
+        }
+      });
+
+      downloadBtn.addEventListener('click', function(){
+        const text = ta.value || '';
+        const blob = new Blob([text], {type:'text/plain;charset=utf-8'});
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement('a'); a.href = url; a.download = 'caption.txt';
+        document.body.appendChild(a); a.click(); a.remove(); URL.revokeObjectURL(url);
+      });
+
+      saveBtn.addEventListener('click', function(){
+        const text = ta.value || '';
+        if(!text.trim()) return alert('Nothing to save');
+        const arr = loadHistory();
+        arr.unshift({ id: Date.now(), text: text });
+        if(arr.length>30) arr.length = 30;
+        saveHistory(arr);
+        renderHistory();
+      });
+
+      clearBtn.addEventListener('click', function(){ ta.value=''; updateCounts(); });
+
+      exportHistory.addEventListener('click', function(){
+        const arr = loadHistory().map(h=>h.text).join('\n\n---\n\n');
+        const blob = new Blob([arr], { type:'text/plain' });
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement('a'); a.href = url; a.download = 'captions-history.txt';
+        document.body.appendChild(a); a.click(); a.remove(); URL.revokeObjectURL(url);
+      });
+
+      clearHistory.addEventListener('click', function(){
+        if(!confirm('Clear all history?')) return;
+        saveHistory([]); renderHistory();
+      });
+
+      // keyboard shortcuts: ctrl/cmd + enter saves
+      document.addEventListener('keydown', function(e){
+        if((e.ctrlKey || e.metaKey) && e.key === 'Enter'){ e.preventDefault(); saveBtn.click(); }
+      });
+
+    })();
+  </script>
+</body>
+</html>
