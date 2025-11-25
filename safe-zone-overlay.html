@@ -1,0 +1,412 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Safe Zone Overlay — SocialMediaToolsKit</title>
+  <meta name="description" content="Check your video text placement against TikTok, Instagram Reels, and YouTube Shorts UI safe zones." />
+  <meta name="theme-color" content="#0f172a" />
+
+  <link rel="stylesheet" href="style.css">
+
+  <style>
+    /* --- Page Specific Styles (Extensions of your design system) --- */
+    
+    /* Tool Container */
+    .tool-interface {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 30px;
+      margin-top: 20px;
+    }
+
+    /* Left Side: Controls & Upload */
+    .controls-panel {
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+      background: var(--card);
+      padding: 24px;
+      border-radius: var(--r-lg);
+      border: 1px solid var(--border);
+    }
+
+    /* Platform Toggles */
+    .platform-selector {
+      display: flex;
+      gap: 10px;
+      background: rgba(0,0,0,0.2);
+      padding: 6px;
+      border-radius: 14px;
+    }
+    .plat-btn {
+      flex: 1;
+      background: transparent;
+      border: none;
+      color: var(--muted);
+      padding: 10px;
+      border-radius: 10px;
+      cursor: pointer;
+      font-weight: 600;
+      font-size: 14px;
+      transition: var(--trans);
+    }
+    .plat-btn:hover { color: var(--text); }
+    .plat-btn.active {
+      background: var(--bg);
+      color: var(--accent-from);
+      box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+    }
+
+    /* Upload Zone */
+    .upload-zone {
+      border: 2px dashed var(--border);
+      border-radius: var(--r-md);
+      padding: 40px 20px;
+      text-align: center;
+      cursor: pointer;
+      transition: var(--trans);
+      position: relative;
+    }
+    .upload-zone:hover, .upload-zone.drag-active {
+      border-color: var(--accent-from);
+      background: rgba(56, 189, 248, 0.05);
+    }
+    .upload-icon { font-size: 32px; margin-bottom: 10px; display: block; }
+    .upload-text { color: var(--text); font-weight: 600; margin-bottom: 5px; }
+    .upload-sub { color: var(--muted); font-size: 13px; }
+    
+    /* Range Slider */
+    .opacity-control { margin-top: 10px; }
+    .opacity-label { display: flex; justify-content: space-between; font-size: 13px; color: var(--muted); margin-bottom: 8px; }
+    input[type=range] {
+      width: 100%;
+      accent-color: var(--accent-from);
+      cursor: pointer;
+    }
+
+    /* Right Side: The Phone Simulator */
+    .preview-container {
+      display: flex;
+      justify-content: center;
+      background: #000;
+      border-radius: var(--r-lg);
+      padding: 20px;
+      border: 1px solid var(--border);
+      min-height: 500px;
+    }
+
+    /* The Phone Frame (9:16 Aspect Ratio) */
+    .phone-frame {
+      width: 100%;
+      max-width: 320px;
+      aspect-ratio: 9/16;
+      background: #1a1a1a;
+      border-radius: 20px;
+      position: relative;
+      overflow: hidden;
+      box-shadow: 0 0 0 8px #2d2d2d, 0 20px 50px rgba(0,0,0,0.5);
+    }
+
+    /* Layers */
+    .layer-user-image {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      position: absolute;
+      top: 0; left: 0;
+      z-index: 1;
+    }
+    
+    .layer-guide {
+      width: 100%;
+      height: 100%;
+      position: absolute;
+      top: 0; left: 0;
+      z-index: 2;
+      pointer-events: none; /* Let clicks pass through */
+      transition: opacity 0.2s ease;
+      background-size: cover;
+      background-position: center;
+      background-repeat: no-repeat;
+    }
+
+    /* --- SVG DATA URIS FOR OVERLAYS --- 
+       These create the red "Danger Zones" automatically without external images.
+    */
+    
+    /* TikTok Overlay (Red zones: Right sidebar buttons, Bottom caption, Top tabs) */
+    .guide-tiktok {
+      background-image: url("data:image/svg+xml,%3Csvg width='1080' height='1920' viewBox='0 0 1080 1920' xmlns='http://www.w3.org/2000/svg'%3E%3Crect x='880' y='800' width='180' height='800' fill='rgba(255, 0, 0, 0.4)' rx='20'/%3E%3Crect x='20' y='1550' width='800' height='350' fill='rgba(255, 0, 0, 0.4)' rx='20'/%3E%3Crect x='0' y='0' width='1080' height='200' fill='rgba(255, 0, 0, 0.4)'/%3E%3Ctext x='920' y='1200' fill='white' font-size='40' font-family='sans-serif' transform='rotate(90 920,1200)'%3EBUTTONS%3C/text%3E%3Ctext x='300' y='1700' fill='white' font-size='40' font-family='sans-serif'%3ECAPTION ZONE%3C/text%3E%3C/svg%3E");
+    }
+
+    /* Reels Overlay (Red zones: Right sidebar, Bottom overlay, Top header) */
+    .guide-reels {
+      background-image: url("data:image/svg+xml,%3Csvg width='1080' height='1920' viewBox='0 0 1080 1920' xmlns='http://www.w3.org/2000/svg'%3E%3Crect x='900' y='950' width='150' height='600' fill='rgba(255, 0, 0, 0.4)' rx='20'/%3E%3Crect x='0' y='1600' width='1080' height='320' fill='rgba(255, 0, 0, 0.4)'/%3E%3Crect x='0' y='0' width='1080' height='150' fill='rgba(255, 0, 0, 0.4)'/%3E%3Ctext x='940' y='1250' fill='white' font-size='40' font-family='sans-serif' transform='rotate(90 940,1250)'%3EUI%3C/text%3E%3Ctext x='400' y='1750' fill='white' font-size='40' font-family='sans-serif'%3EDETAILS%3C/text%3E%3C/svg%3E");
+    }
+
+    /* Shorts Overlay (Red zones: Right sidebar, Bottom title/channel) */
+    .guide-shorts {
+      background-image: url("data:image/svg+xml,%3Csvg width='1080' height='1920' viewBox='0 0 1080 1920' xmlns='http://www.w3.org/2000/svg'%3E%3Crect x='880' y='1100' width='160' height='500' fill='rgba(255, 0, 0, 0.4)' rx='20'/%3E%3Crect x='20' y='1650' width='1040' height='250' fill='rgba(255, 0, 0, 0.4)' rx='20'/%3E%3Crect x='0' y='0' width='1080' height='150' fill='rgba(255, 0, 0, 0.4)'/%3E%3Ctext x='930' y='1350' fill='white' font-size='40' font-family='sans-serif' transform='rotate(90 930,1350)'%3ELIKE%3C/text%3E%3Ctext x='400' y='1780' fill='white' font-size='40' font-family='sans-serif'%3ETITLE%3C/text%3E%3C/svg%3E");
+    }
+
+    /* Instructions & FAQ Specifics */
+    .demo-section {
+      margin-top: 40px;
+      display: grid;
+      gap: 20px;
+    }
+    @media(min-width: 768px) {
+      .tool-interface { grid-template-columns: 350px 1fr; }
+      .demo-section { grid-template-columns: 1fr 1fr; align-items: center; }
+    }
+    
+    .faq-item {
+      border-bottom: 1px solid var(--border);
+      padding: 16px 0;
+    }
+    .faq-q {
+      font-weight: 600;
+      color: var(--text);
+      cursor: pointer;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .faq-q::after { content: '+'; font-size: 18px; color: var(--accent-from); }
+    .faq-item.open .faq-q::after { content: '-'; }
+    .faq-a {
+      margin-top: 10px;
+      font-size: 14px;
+      color: var(--muted);
+      display: none;
+      line-height: 1.6;
+    }
+    .faq-item.open .faq-a { display: block; animation: fadeIn 0.3s ease; }
+
+    @keyframes fadeIn { from { opacity: 0; transform: translateY(-5px); } to { opacity: 1; transform: translateY(0); } }
+
+  </style>
+</head>
+
+<body>
+  <div class="container">
+
+    <header class="header" role="banner">
+      <a href="index.html" class="brand" aria-label="SocialMediaToolsKit">
+        <span class="brand-emoji" aria-hidden="true">⚡</span>
+        <span class="logo-text">SocialMediaToolsKit</span>
+      </a>
+
+      <nav class="topnav" role="navigation" aria-label="Primary">
+        <a href="index.html">All Tools</a>
+      </nav>
+    </header>
+
+    <main>
+      
+      <div style="text-align:center; margin: 30px 0 20px;">
+        <h1 style="margin-bottom: 10px;">Safe Zone Overlay Tool</h1>
+        <p class="lead">Stop buttons from covering your text. Check your layout before you post.</p>
+      </div>
+
+      <div class="tool-interface">
+        
+        <div class="controls-panel">
+          
+          <div>
+            <label style="color:var(--muted); font-size:12px; font-weight:600; text-transform:uppercase; letter-spacing:1px;">1. Choose Platform</label>
+            <div class="platform-selector" style="margin-top:8px">
+              <button class="plat-btn active" data-platform="tiktok">TikTok</button>
+              <button class="plat-btn" data-platform="reels">Reels</button>
+              <button class="plat-btn" data-platform="shorts">Shorts</button>
+            </div>
+          </div>
+
+          <div>
+            <label style="color:var(--muted); font-size:12px; font-weight:600; text-transform:uppercase; letter-spacing:1px;">2. Upload Screenshot</label>
+            <div class="upload-zone" id="drop-zone" style="margin-top:8px">
+              <span class="upload-icon">📂</span>
+              <div class="upload-text">Drag image here</div>
+              <div class="upload-sub">or click to browse</div>
+              <input type="file" id="file-input" accept="image/*" style="position:absolute; inset:0; opacity:0; cursor:pointer;">
+            </div>
+          </div>
+
+          <div class="opacity-control">
+            <div class="opacity-label">
+              <span>Overlay Opacity</span>
+              <span id="opacity-val">50%</span>
+            </div>
+            <input type="range" id="opacity-slider" min="0" max="100" value="50">
+          </div>
+
+          <div style="background:rgba(56,189,248,0.1); border:1px solid rgba(56,189,248,0.2); padding:12px; border-radius:12px; font-size:13px; color:var(--text);">
+            <strong>💡 Tip:</strong> Place your text in the clear areas. The red boxes show where buttons will appear.
+          </div>
+
+        </div>
+
+        <div class="preview-container">
+          <div class="phone-frame">
+            <img id="user-preview" class="layer-user-image" style="display:none;" alt="User Upload">
+            <div id="placeholder-text" style="position:absolute; inset:0; display:flex; align-items:center; justify-content:center; color:var(--muted); text-align:center; padding:20px;">
+              Preview will appear here
+            </div>
+            
+            <div id="guide-layer" class="layer-guide guide-tiktok" style="opacity: 0.5;"></div>
+          </div>
+        </div>
+
+      </div>
+
+      <hr style="border:0; border-top:1px solid var(--border); margin: 60px 0;">
+
+      <section class="demo-section">
+        <div>
+          <h2>Why use a Safe Zone tool?</h2>
+          <p style="color:var(--muted); line-height:1.6;">
+            Creators often spend hours editing, only to upload their video and realize the <strong>Like button</strong> is covering their subtitles, or their <strong>username</strong> is blocking the punchline.
+          </p>
+          <ul style="color:var(--muted); line-height:1.8; margin-top:15px; padding-left:20px;">
+            <li>Ensure captions are readable 100% of the time.</li>
+            <li>Look professional by respecting UI boundaries.</li>
+            <li>Stop guessing where the "Like" and "Share" buttons go.</li>
+          </ul>
+        </div>
+        <div style="background:var(--card); padding:20px; border-radius:var(--r-md); border:1px solid var(--border);">
+          <div style="font-weight:600; margin-bottom:10px; color:var(--accent-from);">The Solution:</div>
+          <p style="font-size:14px; color:var(--text);">
+            Simply drag a screenshot of your video into this tool. We superimpose the exact interface layout (Like buttons, captions, search bars) over your image so you can see exactly what needs to move.
+          </p>
+        </div>
+      </section>
+
+      <section style="max-width:800px; margin: 60px auto 0;">
+        <h3 style="text-align:center; margin-bottom:30px;">Frequently Asked Questions</h3>
+        
+        <div class="faq-list">
+          <div class="faq-item">
+            <div class="faq-q">What is a Safe Zone?</div>
+            <div class="faq-a">
+              A "Safe Zone" is the area of the screen that is not covered by the app's interface (buttons, descriptions, search bars). If you put text outside the safe zone, viewers won't be able to read it.
+            </div>
+          </div>
+          <div class="faq-item">
+            <div class="faq-q">Does this tool save my images?</div>
+            <div class="faq-a">
+              <strong>No.</strong> This tool uses privacy-first technology (HTML5 FileReader). Your image is processed locally in your browser and is never uploaded to any server.
+            </div>
+          </div>
+          <div class="faq-item">
+            <div class="faq-q">Which platforms are supported?</div>
+            <div class="faq-a">
+              Currently, we support the layouts for TikTok, Instagram Reels, and YouTube Shorts.
+            </div>
+          </div>
+          <div class="faq-item">
+            <div class="faq-q">Why is the overlay red?</div>
+            <div class="faq-a">
+              The red semi-transparent areas represent "Danger Zones." These are areas where the app (TikTok/Instagram) places buttons or text. You should avoid putting any important content in the red areas.
+            </div>
+          </div>
+        </div>
+      </section>
+
+    </main>
+
+    <footer>© 2025 SocialMediaToolsKit. Built for speed.</footer>
+  </div>
+
+  <script>
+    document.addEventListener('DOMContentLoaded', function() {
+      
+      // Elements
+      const dropZone = document.getElementById('drop-zone');
+      const fileInput = document.getElementById('file-input');
+      const userPreview = document.getElementById('user-preview');
+      const placeholder = document.getElementById('placeholder-text');
+      const guideLayer = document.getElementById('guide-layer');
+      const opacitySlider = document.getElementById('opacity-slider');
+      const opacityVal = document.getElementById('opacity-val');
+      const platformBtns = document.querySelectorAll('.plat-btn');
+
+      // 1. Handle Platform Switching
+      platformBtns.forEach(btn => {
+        btn.addEventListener('click', () => {
+          // Remove active class from all
+          platformBtns.forEach(b => b.classList.remove('active'));
+          // Add active to clicked
+          btn.classList.add('active');
+          
+          // Update Guide Layer Class
+          const platform = btn.getAttribute('data-platform');
+          guideLayer.className = `layer-guide guide-${platform}`;
+        });
+      });
+
+      // 2. Handle Opacity Slider
+      opacitySlider.addEventListener('input', (e) => {
+        const val = e.target.value;
+        opacityVal.textContent = val + '%';
+        guideLayer.style.opacity = val / 100;
+      });
+
+      // 3. Handle File Upload (Drag & Drop + Click)
+      
+      // Visual cues for drag
+      ['dragenter', 'dragover'].forEach(eventName => {
+        dropZone.addEventListener(eventName, (e) => {
+          e.preventDefault();
+          e.stopPropagation();
+          dropZone.classList.add('drag-active');
+        }, false);
+      });
+
+      ['dragleave', 'drop'].forEach(eventName => {
+        dropZone.addEventListener(eventName, (e) => {
+          e.preventDefault();
+          e.stopPropagation();
+          dropZone.classList.remove('drag-active');
+        }, false);
+      });
+
+      // File drop
+      dropZone.addEventListener('drop', (e) => {
+        const dt = e.dataTransfer;
+        const files = dt.files;
+        handleFiles(files);
+      });
+
+      // File input change
+      fileInput.addEventListener('change', (e) => {
+        handleFiles(fileInput.files);
+      });
+
+      function handleFiles(files) {
+        if (files.length > 0) {
+          const file = files[0];
+          if (!file.type.startsWith('image/')) return;
+
+          const reader = new FileReader();
+          reader.onload = (e) => {
+            userPreview.src = e.target.result;
+            userPreview.style.display = 'block';
+            placeholder.style.display = 'none';
+          };
+          reader.readAsDataURL(file);
+        }
+      }
+
+      // 4. Handle FAQ Toggle
+      const faqItems = document.querySelectorAll('.faq-item');
+      faqItems.forEach(item => {
+        item.querySelector('.faq-q').addEventListener('click', () => {
+          item.classList.toggle('open');
+        });
+      });
+
+    });
+  </script>
+</body>
+</html>
