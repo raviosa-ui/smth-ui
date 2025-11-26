@@ -20,6 +20,9 @@
     .stats{display:flex;gap:12px;align-items:center}
     .toggle{display:flex;gap:6px;align-items:center}
     @media(min-width:720px){ .controls{gap:14px} .row{flex-wrap:nowrap} }
+    /* FAQ styling tweaks */
+    .faq dt{font-weight:700;color:var(--text);margin-top:12px}
+    .faq dd{margin:6px 0 0;color:var(--muted);font-size:14px;line-height:1.6}
   </style>
 </head>
 <body>
@@ -37,271 +40,258 @@
     </header>
 
     <main>
-      <section class="tool-card" aria-labelledby="tool-title">
-        <div style="display:flex;justify-content:space-between;align-items:center;gap:12px;margin-bottom:12px">
-          <div>
-            <h1 id="tool-title" style="margin:0;font-size:18px">Hashtag Cleaner</h1>
-            <p class="small" style="margin:6px 0 0">Paste caption or hashtags — clean, dedupe and format for posting.</p>
+      <section class="hero" aria-labelledby="hero-title">
+        <div class="hero-inner">
+          <div class="hero-copy">
+            <h1 id="hero-title">Instagram Line Break Generator &amp; Creator Tools</h1>
+            <p class="lead">Stop Instagram from ruining your captions. Copy our invisible space to fix line breaks instantly.</p>
           </div>
 
-          <div class="stats" aria-hidden="false" style="text-align:right">
-            <div class="small">Total: <strong id="total-count">0</strong></div>
-            <div class="small">Unique: <strong id="unique-count">0</strong></div>
-          </div>
-        </div>
+          <div class="cta-wrap" aria-live="polite">
+            <!-- hidden value (U+2800 Braille Pattern Blank) -->
+            <textarea id="invisible-space" aria-hidden="true" class="visually-hidden">⠀</textarea>
 
-        <!-- Input -->
-        <label for="input-text" class="small">Input (caption, hashtags or both)</label>
-        <textarea id="input-text" class="input" placeholder="Paste caption with hashtags here — e.g. Loved the sunset! #sunset #Travel #travel"></textarea>
+            <button id="copy-btn" class="btn-cta" aria-describedby="copy-status" type="button">
+              Copy Invisible Space ✂️
+            </button>
 
-        <!-- Controls -->
-        <div class="controls" style="margin-top:12px">
-          <div class="row" style="flex:1">
-            <button id="clean-btn" class="btn" type="button">Clean</button>
-            <button id="copy-btn" class="btn" type="button">Copy Clean Hashtags</button>
-            <button id="clear-btn" class="muted-btn" type="button">Clear</button>
-          </div>
-
-          <div style="display:flex;gap:10px;align-items:center">
-            <label class="small" for="sort-select">Sort</label>
-            <select id="sort-select" aria-label="Sort hashtags" class="muted-btn" style="padding:8px;border-radius:10px;background:transparent;border:1px solid var(--border);color:var(--muted)">
-              <option value="none">None (input order)</option>
-              <option value="alpha">A → Z</option>
-              <option value="length">Longest → Shortest</option>
-              <option value="random">Random</option>
-            </select>
-          </div>
-
-          <div class="toggle" title="Output format">
-            <label class="small">Format</label>
-            <label style="display:flex;gap:6px;align-items:center"><input id="one-line" type="radio" name="format" checked> <span class="small">Single line</span></label>
-            <label style="display:flex;gap:6px;align-items:center"><input id="one-per-line" type="radio" name="format"> <span class="small">One per line</span></label>
+            <div id="copy-status" class="copy-status hide" role="status" aria-live="polite"></div>
           </div>
         </div>
-
-        <!-- Output -->
-        <label for="output" class="small" style="margin-top:8px">Cleaned Hashtags</label>
-        <pre id="output" class="output" aria-live="polite"></pre>
-
-        <p class="small" id="notes" style="margin-top:8px;color:var(--muted)">
-          Notes: Hashtags are normalized (lowercase) for deduplication. You can edit the output before copying.
-        </p>
       </section>
 
-      <article class="content-area" id="how" aria-labelledby="how-title">
-        <h3 id="how-title">How it works</h3>
-        <p>Paste any caption or list of hashtags and click <strong>Clean</strong>. The tool extracts hashtag tokens, strips trailing punctuation/emojis, removes duplicates (case-insensitive), and formats them for copy/paste.</p>
+                <!-- Tools Grid -->
+      <section class="tools" aria-labelledby="tools-title">
+        <h2 id="tools-title">More Social Media Creator Tools</h2>
+
+        <div class="grid" role="list">
+          <!-- 1. Caption Counter -->
+          <a class="card" href="caption-counter.html" role="listitem" aria-label="Caption Counter">
+            <div class="emoji" aria-hidden="true">🧾</div>
+            <div>
+              <h3>Caption Counter</h3>
+              <p>Live character, word and line counters with export options.</p>
+            </div>
+          </a>
+
+          <!-- 2. NEW: Safe Zone Overlay -->
+          <a class="card" href="safe-zone-overlay.html" role="listitem" aria-label="Safe Zone Overlay">
+            <div class="emoji" aria-hidden="true">🎯</div>
+            <div>
+              <h3>Safe Zone Overlay</h3>
+              <p>Preview posts with on-screen safe zones for Reels, Shorts & posts.</p>
+            </div>
+          </a>
+
+          <!-- 3. NEW: Full Frame Blur -->
+          <a class="card" href="full-frame-border-blur.html" role="listitem" aria-label="Full Frame Blur">
+            <div class="emoji" aria-hidden="true">🎞️</div>
+            <div>
+              <h3>Full Frame Border Blur</h3>
+              <p>Post entire pictures without cropping by adding blurred backgrounds</p>
+            </div>
+          </a>
+
+          <!-- 4. Hashtag Cleaner -->
+          <a class="card" href="hashtag-cleaner.html" role="listitem" aria-label="Hashtag Cleaner">
+            <div class="emoji" aria-hidden="true">🧼</div>
+            <div>
+              <h3>Hashtag Cleaner</h3>
+              <p>Remove duplicates and format hashtags for posting.</p>
+            </div>
+          </a>
+
+          <!-- 5. Line Break Generator -->
+          <a class="card" href="line-break.html" role="listitem" aria-label="Line Break Generator">
+            <div class="emoji" aria-hidden="true">↩️</div>
+            <div>
+              <h3>Line Break Generator</h3>
+              <p>Invisible space tool to preserve paragraph breaks on Instagram.</p>
+            </div>
+          </a>
+
+          <!-- 6. Case Converter -->
+          <a class="card" href="case-converter.html" role="listitem" aria-label="Case Converter">
+            <div class="emoji" aria-hidden="true">🔤</div>
+            <div>
+              <h3>Case Converter</h3>
+              <p>Switch between UPPER, lower, Title Case and more.</p>
+            </div>
+          </a>
+
+          <!-- 7. Bio Character Checker -->
+          <a class="card" href="bio-char-checker.html" role="listitem" aria-label="Bio Character Checker">
+            <div class="emoji" aria-hidden="true">🧷</div>
+            <div>
+              <h3>Bio Character Checker</h3>
+              <p>Validate length for Instagram/TikTok bio limits.</p>
+            </div>
+          </a>
+
+          <!-- 8. Stylish Text Generator -->
+          <a class="card" href="stylish-text.html" role="listitem" aria-label="Stylish Text Generator">
+            <div class="emoji" aria-hidden="true">✨</div>
+            <div>
+              <h3>Stylish Text Generator</h3>
+              <p>Create bold, italic and fancy unicode text for bios.</p>
+            </div>
+          </a>
+
+          <!-- 9. Hashtag Recommender -->
+          <a class="card" href="hashtag-recommender.html" role="listitem" aria-label="Hashtag Recommender">
+            <div class="emoji" aria-hidden="true">🔍</div>
+            <div>
+              <h3>Hashtag Recommender</h3>
+              <p>Get suggested hashtags based on your keywords.</p>
+            </div>
+          </a>
+
+          <!-- 10. Copy & Download -->
+          <a class="card" href="copy-download.html" role="listitem" aria-label="Copy & Download">
+            <div class="emoji" aria-hidden="true">📥</div>
+            <div>
+              <h3>Copy & Download</h3>
+              <p>One-click copy and download text/captions as files.</p>
+            </div>
+          </a>
+
+          <!-- 11. Text to Hashtags -->
+          <a class="card" href="text-to-hashtags.html" role="listitem" aria-label="Text to Hashtags">
+            <div class="emoji" aria-hidden="true">#️⃣</div>
+            <div>
+              <h3>Text to Hashtags</h3>
+              <p>Convert sentences into optimized hashtag lists.</p>
+            </div>
+          </a>
+
+          <!-- 12. Link Cleaner -->
+          <a class="card" href="link-cleaner.html" role="listitem" aria-label="Link Cleaner">
+            <div class="emoji" aria-hidden="true">🔗</div>
+            <div>
+              <h3>Link Cleaner</h3>
+              <p>Shorten and sanitize URLs for captions and bios.</p>
+            </div>
+          </a>
+
+          <!-- 13. Caption Scorer -->
+          <a class="card" href="caption-scorer.html" role="listitem" aria-label="Caption Scorer">
+            <div class="emoji" aria-hidden="true">🏷️</div>
+            <div>
+              <h3>Caption Scorer</h3>
+              <p>Analyze caption effectiveness and readability.</p>
+            </div>
+          </a>
+
+          <!-- 14. Emoji Counter & Remover -->
+          <a class="card" href="emoji-counter.html" role="listitem" aria-label="Emoji Counter and Remover">
+            <div class="emoji" aria-hidden="true">🔢</div>
+            <div>
+              <h3>Emoji Counter &amp; Remover</h3>
+              <p>Count, list and strip emojis from your text.</p>
+            </div>
+          </a>
+
+          <!-- 15. Emoji Adder (moved to last) -->
+          <a class="card" href="emoji-adder.html" role="listitem" aria-label="Emoji Adder">
+            <div class="emoji" aria-hidden="true">😊</div>
+            <div>
+              <h3>Emoji Adder</h3>
+              <p>Quickly insert popular emojis into captions and bios.</p>
+            </div>
+          </a>
+        </div>
+      </section>
+
+      <!-- Help / article area -->
+      <article class="content-area">
+        <h3>Why do you need an Invisible Space?</h3>
+        <p>Instagram, TikTok, and Facebook often remove normal line breaks. Our invisible Unicode character (U+2800) forces a clean line break so captions keep the spacing you want.</p>
+
+        <h3>More free tools for social media growth</h3>
+        <p>We provide a set of browser tools to help creators write better captions, clean hashtags, and prepare content faster — everything runs locally for privacy and speed.</p>
+
+        <h3>Frequently Asked Questions</h3>
+        <dl class="faq">
+          <dt>What does the Hashtag Cleaner do and why should I use it?</dt>
+          <dd>The Hashtag Cleaner on SocialMediaToolsHub is designed to take any messy block of caption text or tag list and return a clean, deduplicated set of hashtags that are ready to paste into Instagram, TikTok, Facebook or any social platform. It extracts tokens that are clearly hashtags, strips trailing punctuation, normalizes to lowercase for consistent deduplication, and preserves the order unless you select a sort option. This tool is useful when captions and tags are copied from other apps or when you paste a paragraph that contains inline hashtags. Cleaning saves time, avoids accidental duplicates, and produces a compact list you can paste instantly into the platform of your choice.</dd>
+
+          <dt>Will this tool remove broken or unsafe characters from hashtags?</dt>
+          <dd>Yes. The cleaner keeps letters, numbers and underscores in hashtag bodies and strips surrounding punctuation or stray symbols which can break tags on some platforms. It handles Unicode characters and common accented letters but will remove non-alphanumeric punctuation that would prevent a token from functioning as a hashtag. This behavior helps ensure the tags you paste are recognized by the platform and not accidentally split by an attached punctuation mark, emoji, or stray character.</dd>
+
+          <dt>How does deduplication work and is it case-sensitive?</dt>
+          <dd>Deduplication is case-insensitive. For example, #Travel and #travel will be treated as the same tag and only the first occurrence will be kept. The output is normalized to lowercase for consistency, which reduces accidental duplicates and keeps your hashtag block compact. If you want to keep a particular capitalization, you can edit the output manually after cleaning, but the dedupe step prioritizes functional correctness and predictability across platforms.</dd>
+
+          <dt>Can I control the order or group hashtags for posts that allow only a limited number of tags?</dt>
+          <dd>Yes. The tool provides simple sort options (None, A→Z, Long→Short, Random). If you need groups sized for platform limits (for example, Instagram’s typical 30-hashtag limit), you can use the sort and manual copy features to create groups. Future updates planned for SocialMediaToolsHub include automatic 30-per-group splitting with separate copy buttons so you can quickly assemble tag groups for multiple posts or variations.</dd>
+
+          <dt>Does anything get saved to a server?</dt>
+          <dd>No. Everything runs locally in your browser. No text is uploaded to a remote server unless you explicitly use a download or share feature that writes a file locally. This design keeps your drafts and tags private and fast — ideal for creators working on sensitive captions or who prefer local-only tools.</dd>
+
+          <dt>What if I want to permanently block certain tags (like spammy or shadowbanned tags)?</dt>
+          <dd>SocialMediaToolsHub plans include a blacklist option that will allow you to always filter out a user-defined list of tags. You can keep that list locally in your browser and toggle it on when cleaning. That way, banned or low-quality tags are never included in your final output. For now, you can manually remove such tags from the cleaned output or use the upcoming blacklist feature to automate this step.</dd>
+
+          <dt>Can this tool convert plain words into hashtags?</dt>
+          <dd>Yes — an automatic hashify feature is available in the tool’s options, which will convert plain words into hashtag tokens. This is helpful when you paste a caption with no # characters and still want a clean list of hashtags. Use hashify carefully because converting every word will generate many weak or generic tags; it’s recommended to edit the input or the final output to keep only the most relevant tags.</dd>
+
+          <dt>What best practices should I follow when using hashtags?</dt>
+          <dd>Choose a mix of specific and broader tags, avoid overly generic or known spammy tags, and rotate tag sets to keep content fresh. Keep your tag set focused on the content and audience you want to reach, and use tools like the Hashtag Cleaner on SocialMediaToolsHub to keep those sets tidy. Avoid copying thousands of tags from random sources — curated, relevant tags consistently perform better than large random blocks.</dd>
+
+          <dt>Who should I contact if something doesn’t work?</dt>
+          <dd>If you run into issues, report them on the SocialMediaToolsHub contact page or leave a brief description of the problem and a sample input that reproduces the issue. Include the browser and device you used. That information helps diagnose issues quickly and keeps the tool reliable for everyone.</dd>
+        </dl>
       </article>
+
     </main>
 
     <footer>© 2025 SocialMediaToolsKit. Built for speed.</footer>
   </div>
 
+  <!-- Minimal JavaScript (kept tiny for perf) -->
   <script>
   (function(){
-    // Elements
-    var input = document.getElementById('input-text');
-    var output = document.getElementById('output');
-    var cleanBtn = document.getElementById('clean-btn');
-    var copyBtn = document.getElementById('copy-btn');
-    var clearBtn = document.getElementById('clear-btn');
-    var sortSelect = document.getElementById('sort-select');
-    var oneLineRadio = document.getElementById('one-line');
-    var onePerLineRadio = document.getElementById('one-per-line');
-    var totalCountEl = document.getElementById('total-count');
-    var uniqueCountEl = document.getElementById('unique-count');
-
-    // Unicode-safe regexes
-    // Capture hashtag bodies (#abc123, allowing Unicode letters/numbers and underscore)
-    var HASHTAG_BODY_RE = /#([\p{L}\p{N}_]+)/gu;
-    // Fallback: capture word-like tokens (letters/numbers/underscore). Used only when no explicit # found.
-    var WORD_BODY_RE = /([\p{L}\p{N}_]+)/gu;
-
-    // Extract hashtag bodies; return array of '#body' strings (raw body, not normalized)
-    function extractHashtagBodies(text){
-      if(!text) return [];
-      var bodies = [];
-      // First capture explicit hashtags
-      var m;
-      while((m = HASHTAG_BODY_RE.exec(text)) !== null){
-        bodies.push(m[1]);
-      }
-      if(bodies.length > 0) return bodies.map(function(b){ return '#'+b; });
-
-      // Fallback: capture word-like tokens (this helps when users paste words without #)
-      while((m = WORD_BODY_RE.exec(text)) !== null){
-        bodies.push(m[1]);
-      }
-      return bodies.map(function(b){ return '#'+b; });
+    var btn = document.getElementById('copy-btn');
+    var status = document.getElementById('copy-status');
+    var hidden = document.getElementById('invisible-space');
+    function show(msg, ok){
+      status.textContent = msg;
+      status.classList.remove('hide');
+      status.classList.add('show');
+      status.style.color = ok ? getComputedStyle(document.documentElement).getPropertyValue('--accent-from') || '#38bdf8' : '';
+      clearTimeout(status._t);
+      status._t = setTimeout(function(){ status.classList.remove('show'); status.classList.add('hide'); }, 1500);
     }
-
-    // Normalize for dedupe
-    function normalizeTag(tag){
-      return tag.toLowerCase();
-    }
-
-    // Sorters
-    function sortTags(arr, mode){
-      if(mode === 'alpha'){
-        return arr.slice().sort(function(a,b){ return a.localeCompare(b, undefined, {sensitivity:'base'}); });
-      }
-      if(mode === 'length'){
-        return arr.slice().sort(function(a,b){ return b.length - a.length; });
-      }
-      if(mode === 'random'){
-        var copy = arr.slice();
-        for(var i = copy.length-1; i>0; i--){
-          var j = Math.floor(Math.random()*(i+1));
-          var t = copy[i]; copy[i]=copy[j]; copy[j]=t;
+    if(btn){
+      btn.addEventListener('click', function(){
+        var ch = (hidden && hidden.value) ? hidden.value : '\u2800';
+        if(navigator.clipboard && navigator.clipboard.writeText){
+          navigator.clipboard.writeText(ch).then(function(){ show('Copied!', true); }, function(){ show('Could not copy', false); });
+        } else {
+          try {
+            var ta = document.createElement('textarea');
+            ta.value = ch;
+            ta.setAttribute('readonly','');
+            ta.style.position = 'absolute';
+            ta.style.left = '-9999px';
+            document.body.appendChild(ta);
+            ta.select();
+            document.execCommand('copy');
+            document.body.removeChild(ta);
+            show('Copied!', true);
+          } catch(e){
+            show('Could not copy', false);
+          }
         }
-        return copy;
-      }
-      return arr.slice(); // none => original order
-    }
-
-    // Format output
-    function formatOutput(arr){
-      if(onePerLineRadio.checked){
-        return arr.join('\n');
-      }
-      return arr.join(' ');
-    }
-
-    // Main cleaning pipeline
-    function cleanPipeline(text){
-      var extracted = extractHashtagBodies(text); // e.g. ["#Travel", "#sunset"]
-      var totalFound = extracted.length;
-
-      var seen = new Set();
-      var unique = [];
-      for(var i=0;i<extracted.length;i++){
-        var tag = extracted[i]; // e.g. "#Travel"
-        // remove any accidental non-word chars around body (defensive)
-        var bodyMatch = tag.match(/^#([\p{L}\p{N}_]+)$/u);
-        if(!bodyMatch) continue;
-        var body = bodyMatch[1];
-        var normalized = normalizeTag('#' + body);
-        if(!seen.has(normalized)){
-          seen.add(normalized);
-          unique.push('#' + body.toLowerCase());
-        }
-      }
-      return { list: unique, total: totalFound, uniqueCount: unique.length };
-    }
-
-    // Render result
-    function renderResult(res){
-      var list = res.list;
-      var sorted = sortTags(list, sortSelect.value);
-      output.textContent = formatOutput(sorted);
-      totalCountEl.textContent = String(res.total);
-      uniqueCountEl.textContent = String(res.uniqueCount);
-    }
-
-    // Bindings
-    cleanBtn.addEventListener('click', function(){
-      var text = input.value || '';
-      var res = cleanPipeline(text);
-      renderResult(res);
-      output.focus();
-    });
-
-    // Ctrl/Cmd+Enter to clean
-    input.addEventListener('keydown', function(e){
-      if(e.key === 'Enter' && (e.ctrlKey || e.metaKey)){
-        e.preventDefault();
-        cleanBtn.click();
-      }
-    });
-
-    // Copy button
-    copyBtn.addEventListener('click', function(){
-      var val = output.textContent || '';
-      if(!val.trim()){
-        cleanBtn.click();
-        val = output.textContent || '';
-      }
-      if(!val.trim()){
-        copyBtn.textContent = 'Nothing to copy';
-        setTimeout(function(){ copyBtn.textContent = 'Copy Clean Hashtags'; }, 1300);
-        return;
-      }
-      if(navigator.clipboard && navigator.clipboard.writeText){
-        navigator.clipboard.writeText(val).then(function(){
-          copyBtn.textContent = 'Copied!';
-          setTimeout(function(){ copyBtn.textContent = 'Copy Clean Hashtags'; }, 1200);
-        }, function(){
-          fallbackCopy(val);
-        });
-      } else {
-        fallbackCopy(val);
-      }
-    });
-
-    function fallbackCopy(text){
-      try {
-        var ta = document.createElement('textarea');
-        ta.value = text;
-        ta.setAttribute('readonly','');
-        ta.style.position = 'absolute';
-        ta.style.left = '-9999px';
-        document.body.appendChild(ta);
-        ta.select();
-        document.execCommand('copy');
-        document.body.removeChild(ta);
-        copyBtn.textContent = 'Copied!';
-        setTimeout(function(){ copyBtn.textContent = 'Copy Clean Hashtags'; }, 1200);
-      } catch(e){
-        copyBtn.textContent = 'Could not copy';
-        setTimeout(function(){ copyBtn.textContent = 'Copy Clean Hashtags'; }, 1500);
-      }
-    }
-
-    // Clear
-    clearBtn.addEventListener('click', function(){
-      input.value = '';
-      output.textContent = '';
-      totalCountEl.textContent = '0';
-      uniqueCountEl.textContent = '0';
-    });
-
-    // Re-sort existing output when sort or format changes
-    function reformatExistingOutput(){
-      var current = output.textContent || '';
-      if(!current.trim()) return;
-      // split current hashtags by whitespace/newline
-      var tokens = current.split(/\s+/).filter(Boolean).map(function(t){
-        // remove leading # if any and keep body
-        return '#'+t.replace(/^#+/, '').replace(/[^\p{L}\p{N}_]+/gu,'');
-      }).filter(function(t){ return t && t.length>1; }); // defensive
-      // dedupe preserve first occurrence order
-      var seen = new Set(), unique = [];
-      tokens.forEach(function(t){
-        var n = normalizeTag(t);
-        if(!seen.has(n)){ seen.add(n); unique.push(t.toLowerCase()); }
       });
-      var sorted = sortTags(unique, sortSelect.value);
-      output.textContent = formatOutput(sorted);
     }
-
-    sortSelect.addEventListener('change', reformatExistingOutput);
-    oneLineRadio.addEventListener('change', reformatExistingOutput);
-    onePerLineRadio.addEventListener('change', reformatExistingOutput);
-
-    // Developer shortcut: paste sample on Cmd/Ctrl+K
-    document.addEventListener('keydown', function(e){
-      if((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === 'k'){
-        e.preventDefault();
-        input.value = "Loved the sunset at the beach! #Sunset #beachlife #Travel #travel, #fun 😊 #sunset.";
-      }
-    });
-
-    // Hint on load
     document.addEventListener('DOMContentLoaded', function(){
-      if(!input.value) input.placeholder = 'Paste caption with hashtags or a hashtag list — then click Clean';
+      if(hidden && (!hidden.value || hidden.value.trim()==='')) hidden.value = '\u2800';
     });
-
   })();
   </script>
+
+  <!-- Small utility: visually-hidden helper for accessibility -->
+  <style>
+    .visually-hidden{position:absolute !important;left:-9999px;width:1px;height:1px;overflow:hidden}
+  </style>
 </body>
 </html>
