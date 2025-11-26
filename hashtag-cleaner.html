@@ -19,9 +19,6 @@
     .row{display:flex;gap:10px;align-items:center;flex-wrap:wrap}
     .stats{display:flex;gap:12px;align-items:center}
     .toggle{display:flex;gap:6px;align-items:center}
-    .blacklist-box{margin-top:12px;padding:12px;border-radius:10px;border:1px solid var(--border);background:rgba(255,255,255,0.01)}
-    .blacklist-box textarea{width:100%;min-height:70px;padding:10px;border-radius:8px;border:1px solid var(--border);background:transparent;color:var(--text);resize:vertical}
-    .blacklist-actions{display:flex;gap:8px;align-items:center;margin-top:8px}
     @media(min-width:720px){ .controls{gap:14px} .row{flex-wrap:nowrap} }
   </style>
 </head>
@@ -82,28 +79,229 @@
           </div>
         </div>
 
-        <!-- Additional options: Hashify + Blacklist -->
-        <div class="blacklist-box" aria-label="Options: auto-hashify and blacklist">
-          <div style="display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap">
-            <div class="toggle" style="gap:12px;align-items:center">
-              <label style="display:flex;gap:8px;align-items:center"><input id="hashify-toggle" type="checkbox"> <span class="small">Automatic hashify (convert words → hashtags)</span></label>
-              <label style="display:flex;gap:8px;align-items:center"><input id="use-blacklist-toggle" type="checkbox"> <span class="small">Use blacklist</span></label>
-            </div>
-
-            <div style="text-align:right">
-              <div class="small">Blacklist saved: <strong id="blacklist-count">0</strong></div>
-            </div>
-          </div>
-
-          <label class="small" for="blacklist-area" style="display:block;margin-top:10px">Blacklist (one per line or comma-separated). Tags entered with or without '#' will be normalized.</label>
-          <textarea id="blacklist-area" placeholder="#spam, follow4follow, like4like"></textarea>
-
-          <div class="blacklist-actions">
-            <button id="save-blacklist" class="muted-btn" type="button">Save Blacklist</button>
-            <button id="clear-blacklist" class="muted-btn" type="button">Clear Blacklist</button>
-            <div class="small" id="blacklist-status" style="color:var(--muted)"></div>
-          </div>
-        </div>
-
         <!-- Output -->
-        <label for="output" class="small" style="margin-top:12px">Cleaned Hashtag
+        <label for="output" class="small" style="margin-top:8px">Cleaned Hashtags</label>
+        <pre id="output" class="output" aria-live="polite"></pre>
+
+        <p class="small" id="notes" style="margin-top:8px;color:var(--muted)">
+          Notes: Hashtags are normalized (lowercase) for deduplication. You can edit the output before copying.
+        </p>
+      </section>
+
+      <article class="content-area" id="how" aria-labelledby="how-title">
+        <h3 id="how-title">How it works</h3>
+        <p>Paste any caption or list of hashtags and click <strong>Clean</strong>. The tool extracts hashtag tokens, strips trailing punctuation/emojis, removes duplicates (case-insensitive), and formats them for copy/paste.</p>
+      </article>
+    </main>
+
+    <footer>© 2025 SocialMediaToolsKit. Built for speed.</footer>
+  </div>
+
+  <script>
+  (function(){
+    // Elements
+    var input = document.getElementById('input-text');
+    var output = document.getElementById('output');
+    var cleanBtn = document.getElementById('clean-btn');
+    var copyBtn = document.getElementById('copy-btn');
+    var clearBtn = document.getElementById('clear-btn');
+    var sortSelect = document.getElementById('sort-select');
+    var oneLineRadio = document.getElementById('one-line');
+    var onePerLineRadio = document.getElementById('one-per-line');
+    var totalCountEl = document.getElementById('total-count');
+    var uniqueCountEl = document.getElementById('unique-count');
+
+    // Unicode-safe regexes
+    // Capture hashtag bodies (#abc123, allowing Unicode letters/numbers and underscore)
+    var HASHTAG_BODY_RE = /#([\p{L}\p{N}_]+)/gu;
+    // Fallback: capture word-like tokens (letters/numbers/underscore). Used only when no explicit # found.
+    var WORD_BODY_RE = /([\p{L}\p{N}_]+)/gu;
+
+    // Extract hashtag bodies; return array of '#body' strings (raw body, not normalized)
+    function extractHashtagBodies(text){
+      if(!text) return [];
+      var bodies = [];
+      // First capture explicit hashtags
+      var m;
+      while((m = HASHTAG_BODY_RE.exec(text)) !== null){
+        bodies.push(m[1]);
+      }
+      if(bodies.length > 0) return bodies.map(function(b){ return '#'+b; });
+
+      // Fallback: capture word-like tokens (this helps when users paste words without #)
+      while((m = WORD_BODY_RE.exec(text)) !== null){
+        bodies.push(m[1]);
+      }
+      return bodies.map(function(b){ return '#'+b; });
+    }
+
+    // Normalize for dedupe
+    function normalizeTag(tag){
+      return tag.toLowerCase();
+    }
+
+    // Sorters
+    function sortTags(arr, mode){
+      if(mode === 'alpha'){
+        return arr.slice().sort(function(a,b){ return a.localeCompare(b, undefined, {sensitivity:'base'}); });
+      }
+      if(mode === 'length'){
+        return arr.slice().sort(function(a,b){ return b.length - a.length; });
+      }
+      if(mode === 'random'){
+        var copy = arr.slice();
+        for(var i = copy.length-1; i>0; i--){
+          var j = Math.floor(Math.random()*(i+1));
+          var t = copy[i]; copy[i]=copy[j]; copy[j]=t;
+        }
+        return copy;
+      }
+      return arr.slice(); // none => original order
+    }
+
+    // Format output
+    function formatOutput(arr){
+      if(onePerLineRadio.checked){
+        return arr.join('\n');
+      }
+      return arr.join(' ');
+    }
+
+    // Main cleaning pipeline
+    function cleanPipeline(text){
+      var extracted = extractHashtagBodies(text); // e.g. ["#Travel", "#sunset"]
+      var totalFound = extracted.length;
+
+      var seen = new Set();
+      var unique = [];
+      for(var i=0;i<extracted.length;i++){
+        var tag = extracted[i]; // e.g. "#Travel"
+        // remove any accidental non-word chars around body (defensive)
+        var bodyMatch = tag.match(/^#([\p{L}\p{N}_]+)$/u);
+        if(!bodyMatch) continue;
+        var body = bodyMatch[1];
+        var normalized = normalizeTag('#' + body);
+        if(!seen.has(normalized)){
+          seen.add(normalized);
+          unique.push('#' + body.toLowerCase());
+        }
+      }
+      return { list: unique, total: totalFound, uniqueCount: unique.length };
+    }
+
+    // Render result
+    function renderResult(res){
+      var list = res.list;
+      var sorted = sortTags(list, sortSelect.value);
+      output.textContent = formatOutput(sorted);
+      totalCountEl.textContent = String(res.total);
+      uniqueCountEl.textContent = String(res.uniqueCount);
+    }
+
+    // Bindings
+    cleanBtn.addEventListener('click', function(){
+      var text = input.value || '';
+      var res = cleanPipeline(text);
+      renderResult(res);
+      output.focus();
+    });
+
+    // Ctrl/Cmd+Enter to clean
+    input.addEventListener('keydown', function(e){
+      if(e.key === 'Enter' && (e.ctrlKey || e.metaKey)){
+        e.preventDefault();
+        cleanBtn.click();
+      }
+    });
+
+    // Copy button
+    copyBtn.addEventListener('click', function(){
+      var val = output.textContent || '';
+      if(!val.trim()){
+        cleanBtn.click();
+        val = output.textContent || '';
+      }
+      if(!val.trim()){
+        copyBtn.textContent = 'Nothing to copy';
+        setTimeout(function(){ copyBtn.textContent = 'Copy Clean Hashtags'; }, 1300);
+        return;
+      }
+      if(navigator.clipboard && navigator.clipboard.writeText){
+        navigator.clipboard.writeText(val).then(function(){
+          copyBtn.textContent = 'Copied!';
+          setTimeout(function(){ copyBtn.textContent = 'Copy Clean Hashtags'; }, 1200);
+        }, function(){
+          fallbackCopy(val);
+        });
+      } else {
+        fallbackCopy(val);
+      }
+    });
+
+    function fallbackCopy(text){
+      try {
+        var ta = document.createElement('textarea');
+        ta.value = text;
+        ta.setAttribute('readonly','');
+        ta.style.position = 'absolute';
+        ta.style.left = '-9999px';
+        document.body.appendChild(ta);
+        ta.select();
+        document.execCommand('copy');
+        document.body.removeChild(ta);
+        copyBtn.textContent = 'Copied!';
+        setTimeout(function(){ copyBtn.textContent = 'Copy Clean Hashtags'; }, 1200);
+      } catch(e){
+        copyBtn.textContent = 'Could not copy';
+        setTimeout(function(){ copyBtn.textContent = 'Copy Clean Hashtags'; }, 1500);
+      }
+    }
+
+    // Clear
+    clearBtn.addEventListener('click', function(){
+      input.value = '';
+      output.textContent = '';
+      totalCountEl.textContent = '0';
+      uniqueCountEl.textContent = '0';
+    });
+
+    // Re-sort existing output when sort or format changes
+    function reformatExistingOutput(){
+      var current = output.textContent || '';
+      if(!current.trim()) return;
+      // split current hashtags by whitespace/newline
+      var tokens = current.split(/\s+/).filter(Boolean).map(function(t){
+        // remove leading # if any and keep body
+        return '#'+t.replace(/^#+/, '').replace(/[^\p{L}\p{N}_]+/gu,'');
+      }).filter(function(t){ return t && t.length>1; }); // defensive
+      // dedupe preserve first occurrence order
+      var seen = new Set(), unique = [];
+      tokens.forEach(function(t){
+        var n = normalizeTag(t);
+        if(!seen.has(n)){ seen.add(n); unique.push(t.toLowerCase()); }
+      });
+      var sorted = sortTags(unique, sortSelect.value);
+      output.textContent = formatOutput(sorted);
+    }
+
+    sortSelect.addEventListener('change', reformatExistingOutput);
+    oneLineRadio.addEventListener('change', reformatExistingOutput);
+    onePerLineRadio.addEventListener('change', reformatExistingOutput);
+
+    // Developer shortcut: paste sample on Cmd/Ctrl+K
+    document.addEventListener('keydown', function(e){
+      if((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === 'k'){
+        e.preventDefault();
+        input.value = "Loved the sunset at the beach! #Sunset #beachlife #Travel #travel, #fun 😊 #sunset.";
+      }
+    });
+
+    // Hint on load
+    document.addEventListener('DOMContentLoaded', function(){
+      if(!input.value) input.placeholder = 'Paste caption with hashtags or a hashtag list — then click Clean';
+    });
+
+  })();
+  </script>
+</body>
+</html>
