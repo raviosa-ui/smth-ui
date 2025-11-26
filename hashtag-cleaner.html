@@ -3,229 +3,95 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>Hashtag Cleaner & Optimizer — SocialMediaToolsKit</title>
-  <meta name="description" content="Clean Instagram hashtags, remove banned tags, fix formatting, and inject high-performing niche tags instantly." />
-  <meta name="theme-color" content="#0f172a" />
+  <title>Hashtag Cleaner — SocialMediaToolsKit</title>
+  <meta name="description" content="Clean, dedupe and format hashtags for Instagram, TikTok & more. Remove duplicates, strip punctuation and copy ready-to-paste lists." />
   <link rel="stylesheet" href="style.css">
-
   <style>
-    /* Tool Specific Layout */
-    .tool-wrapper { display: grid; grid-template-columns: 1fr; gap: 24px; margin-top: 20px; }
-    
-    /* Input Areas */
-    .input-group { background: var(--card); border: 1px solid var(--border); border-radius: var(--r-md); padding: 20px; }
-    .input-label { display: block; font-weight: 600; margin-bottom: 8px; color: var(--text); font-size: 14px; }
-    
-    textarea.custom-input {
-      width: 100%; min-height: 120px; background: rgba(0,0,0,0.2); border: 1px solid var(--border);
-      border-radius: 12px; color: var(--text); padding: 12px; font-family: monospace; font-size: 14px; resize: vertical;
-    }
-    textarea.custom-input:focus { outline: none; border-color: var(--accent-from); }
-
-    /* Controls Row */
-    .controls-row { display: flex; gap: 12px; margin: 16px 0; flex-wrap: wrap; }
-    .control-item { flex: 1; min-width: 140px; }
-    
-    select, input[type="number"] {
-      width: 100%; padding: 10px; background: rgba(255,255,255,0.05); border: 1px solid var(--border);
-      border-radius: 10px; color: var(--text); font-size: 14px;
-    }
-
-    /* Dashboard / Stats */
-    .stats-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: 12px; margin-bottom: 20px; }
-    .stat-card { background: rgba(255,255,255,0.03); padding: 12px; border-radius: 12px; text-align: center; border: 1px solid var(--border); }
-    .stat-val { font-size: 20px; font-weight: 700; color: var(--accent-from); display: block; }
-    .stat-label { font-size: 12px; color: var(--muted); }
-    .risk-high { color: #ef4444; } .risk-low { color: #22c55e; }
-
-    /* Output Section */
-    .results-area { border-top: 1px solid var(--border); margin-top: 24px; padding-top: 24px; display: none; }
-    .results-area.active { display: block; animation: fadeIn 0.4s ease; }
-    
-    .radio-group { display: flex; gap: 16px; margin-bottom: 12px; font-size: 14px; color: var(--muted); }
-    .radio-group label { display: flex; align-items: center; gap: 6px; cursor: pointer; }
-
-    .action-row { display: flex; gap: 12px; margin-top: 16px; }
-    .btn-secondary { background: rgba(255,255,255,0.05); border: 1px solid var(--border); color: var(--text); }
-    .btn-secondary:hover { background: rgba(255,255,255,0.1); }
-
-    /* Alerts */
-    .alert-box { padding: 12px; border-radius: 8px; margin-bottom: 16px; font-size: 13px; display: none; }
-    .alert-box.show { display: block; }
-    .alert-warning { background: rgba(245, 158, 11, 0.1); border: 1px solid rgba(245, 158, 11, 0.3); color: #fbbf24; }
-    .alert-success { background: rgba(34, 197, 94, 0.1); border: 1px solid rgba(34, 197, 94, 0.3); color: #4ade80; }
-
-    /* FAQ Styling Override */
-    details { background: rgba(255,255,255,0.02); border-radius: 12px; padding: 16px; margin-bottom: 12px; border: 1px solid var(--border); transition: all 0.3s; }
-    details[open] { background: rgba(255,255,255,0.04); border-color: var(--accent-from); }
-    summary { font-weight: 600; cursor: pointer; list-style: none; display: flex; align-items: center; justify-content: space-between; }
-    summary::after { content: '+'; font-size: 18px; color: var(--accent-from); }
-    details[open] summary::after { content: '-'; }
-    .faq-content { padding-top: 12px; line-height: 1.6; color: var(--muted); font-size: 14px; }
-
-    @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
-    @media(min-width: 768px) { .tool-wrapper { grid-template-columns: 1fr 1fr; } .full-width { grid-column: 1 / -1; } }
+    /* Page-specific tweaks that blend with your theme */
+    .tool-card{max-width:980px;margin:18px auto;padding:18px;border-radius:18px;background:linear-gradient(180deg,rgba(255,255,255,0.01),rgba(255,255,255,0.00));box-shadow:0 6px 22px rgba(3,7,18,0.6);border:1px solid var(--border)}
+    .controls{display:flex;flex-wrap:wrap;gap:10px;align-items:center;margin-bottom:12px}
+    .controls > *{margin:0}
+    textarea.input{width:100%;min-height:140px;border-radius:12px;padding:12px;border:1px solid var(--border);background:transparent;color:var(--text);font-size:14px;resize:vertical}
+    .output{width:100%;min-height:120px;border-radius:12px;padding:12px;border:1px dashed rgba(255,255,255,0.04);background:transparent;color:var(--text);font-size:14px;white-space:pre-wrap}
+    .small{font-size:13px;color:var(--muted)}
+    .btn{padding:10px 12px;border-radius:10px;border:0;cursor:pointer;font-weight:600;background:linear-gradient(90deg,var(--accent-from),var(--accent-to));color:#06121f}
+    .muted-btn{background:transparent;border:1px solid var(--border);color:var(--muted);padding:8px 10px;border-radius:10px}
+    .row{display:flex;gap:10px;align-items:center;flex-wrap:wrap}
+    .stats{display:flex;gap:12px;align-items:center}
+    .toggle{display:flex;gap:6px;align-items:center}
+    @media(min-width:720px){ .controls{gap:14px} .row{flex-wrap:nowrap} }
   </style>
 </head>
-
 <body>
   <div class="container">
-
     <header class="header" role="banner">
       <div class="brand" aria-label="SocialMediaToolsKit">
         <span class="brand-emoji" aria-hidden="true">⚡</span>
         <span class="logo-text">SocialMediaToolsKit</span>
       </div>
+
       <nav class="topnav" role="navigation" aria-label="Primary">
         <a href="index.html">Home</a>
-        <a href="index.html#tools-title">More Tools</a>
+        <a href="#how">How</a>
       </nav>
     </header>
 
     <main>
-      <section class="hero" aria-labelledby="hero-title">
-        <div class="hero-inner" style="justify-content: center; text-align: center;">
-          <div class="hero-copy">
-            <h1 id="hero-title">Hashtag Cleaner & Strategy Optimizer</h1>
-            <p class="lead">Remove banned tags, fix formatting, and inject niche strategies to beat the algorithm.</p>
+      <section class="tool-card" aria-labelledby="tool-title">
+        <div style="display:flex;justify-content:space-between;align-items:center;gap:12px;margin-bottom:12px">
+          <div>
+            <h1 id="tool-title" style="margin:0;font-size:18px">Hashtag Cleaner</h1>
+            <p class="small" style="margin:6px 0 0">Paste caption or hashtags — clean, dedupe and format for posting.</p>
+          </div>
+
+          <div class="stats" aria-hidden="false" style="text-align:right">
+            <div class="small">Total: <strong id="total-count">0</strong></div>
+            <div class="small">Unique: <strong id="unique-count">0</strong></div>
           </div>
         </div>
+
+        <!-- Input -->
+        <label for="input-text" class="small">Input (caption, hashtags or both)</label>
+        <textarea id="input-text" class="input" placeholder="Paste caption with hashtags here — e.g. Loved the sunset! #sunset #Travel #travel"></textarea>
+
+        <!-- Controls -->
+        <div class="controls" style="margin-top:12px">
+          <div class="row" style="flex:1">
+            <button id="clean-btn" class="btn" type="button">Clean</button>
+            <button id="copy-btn" class="btn" type="button">Copy Clean Hashtags</button>
+            <button id="clear-btn" class="muted-btn" type="button">Clear</button>
+          </div>
+
+          <div style="display:flex;gap:10px;align-items:center">
+            <label class="small" for="sort-select">Sort</label>
+            <select id="sort-select" aria-label="Sort hashtags" class="muted-btn" style="padding:8px;border-radius:10px;background:transparent;border:1px solid var(--border);color:var(--muted)">
+              <option value="none">None (input order)</option>
+              <option value="alpha">A → Z</option>
+              <option value="length">Longest → Shortest</option>
+              <option value="random">Random</option>
+            </select>
+          </div>
+
+          <div class="toggle" title="Output format">
+            <label class="small">Format</label>
+            <label style="display:flex;gap:6px;align-items:center"><input id="one-line" type="radio" name="format" checked> <span class="small">Single line</span></label>
+            <label style="display:flex;gap:6px;align-items:center"><input id="one-per-line" type="radio" name="format"> <span class="small">One per line</span></label>
+          </div>
+        </div>
+
+        <!-- Output -->
+        <label for="output" class="small" style="margin-top:8px">Cleaned Hashtags</label>
+        <pre id="output" class="output" aria-live="polite"></pre>
+
+        <p class="small" id="notes" style="margin-top:8px;color:var(--muted)">
+          Notes: Hashtags are normalized (lowercase) for deduplication. You can edit the output before copying.
+        </p>
       </section>
 
-      <div class="tool-wrapper">
-        
-        <div class="input-group">
-          <label class="input-label" for="raw-input">1. Paste Raw Hashtags</label>
-          <textarea id="raw-input" class="custom-input" placeholder="#paste #your #messy #list #here ..."></textarea>
-
-          <div class="controls-row">
-            <div class="control-item">
-              <label class="input-label" for="platform">Platform</label>
-              <select id="platform">
-                <option value="insta">Instagram (30 max)</option>
-                <option value="tiktok">TikTok (Mix)</option>
-                <option value="twitter">X / Twitter</option>
-                <option value="youtube">YouTube</option>
-              </select>
-            </div>
-            <div class="control-item">
-              <label class="input-label" for="max-count">Max Tags</label>
-              <input type="number" id="max-count" value="30" min="1" max="50">
-            </div>
-          </div>
-          
-          <label class="input-label" for="niche-select">2. Strategy Injection (Optional)</label>
-          <select id="niche-select">
-            <option value="">No Injection (Clean only)</option>
-            <option value="fitness">Fitness & Gym (Balanced)</option>
-            <option value="travel">Travel & Adventure</option>
-            <option value="business">Entrepreneur & Biz</option>
-            <option value="art">Digital Art & Design</option>
-            <option value="food">Food & Cooking</option>
-            <option value="tech">Tech & Coding</option>
-          </select>
-          <p style="font-size: 12px; color: var(--muted); margin-top: 6px;">Fills empty slots with high/medium/niche tags.</p>
-
-          <button id="clean-btn" class="btn-cta" style="width: 100%; margin-top: 16px;">✨ Clean & Optimize List</button>
-        </div>
-
-        <div class="input-group" id="output-wrapper" style="opacity: 0.5; pointer-events: none;">
-          
-          <div class="stats-grid">
-            <div class="stat-card">
-              <span id="stat-removed" class="stat-val">0</span>
-              <span class="stat-label">Duplicates Removed</span>
-            </div>
-            <div class="stat-card">
-              <span id="stat-risk" class="stat-val">0</span>
-              <span class="stat-label">Risk Score</span>
-            </div>
-            <div class="stat-card">
-              <span id="stat-count" class="stat-val">0/30</span>
-              <span class="stat-label">Final Count</span>
-            </div>
-          </div>
-
-          <div id="risk-alert" class="alert-box alert-warning"></div>
-          <div id="success-alert" class="alert-box alert-success"></div>
-
-          <label class="input-label">3. Final Optimized List</label>
-          
-          <div class="radio-group">
-            <label><input type="radio" name="format" value="space" checked> Spaces</label>
-            <label><input type="radio" name="format" value="newline"> New Lines</label>
-            <label><input type="radio" name="format" value="comma"> Commas</label>
-          </div>
-
-          <textarea id="final-output" class="custom-input" readonly></textarea>
-          
-          <div class="action-row">
-            <button id="copy-btn" class="btn-cta" style="flex: 2;">Copy to Clipboard 📋</button>
-            <button id="export-btn" class="btn-cta btn-secondary" style="flex: 1;">Export CSV</button>
-          </div>
-        </div>
-
-      </div>
-
-      <article class="content-area full-width">
-        <h3>Frequently Asked Questions</h3>
-        <p style="margin-bottom: 20px;">Understanding hashtag strategy is half the battle. Here is what you need to know about using this tool effectively.</p>
-
-        <details>
-          <summary>What exactly is a "Risk Score" and why does it matter?</summary>
-          <div class="faq-content">
-            Great question. In the world of social media algorithms, not all hashtags are created equal. Some tags are flagged by platforms like Instagram as "spammy" or have been banned entirely because of inappropriate content associated with them.
-            <br><br>
-            If you accidentally use a banned tag (like #beautyblogger used to be for a while), the algorithm might "shadowban" your post, meaning it won't show up in <em>any</em> hashtag feeds, even the good ones. Our <strong>SocialMediaToolsKit</strong> Risk Score calculator scans your list for known flagged terms. A high score means you are treading dangerous waters. A score of zero means your list is clean and safe to post.
-          </div>
-        </details>
-
-        <details>
-          <summary>How does the "Strategy Injection" actually work?</summary>
-          <div class="faq-content">
-            Most people just slap on the 30 most popular tags they can find (like #love or #happy). The problem? Those tags have millions of new posts every hour. Your content gets buried in seconds.
-            <br><br>
-            When you select a niche (like Fitness) in our tool, we don't just give you random tags. We use the <strong>3x3x3 Strategy</strong>. We fill your remaining hashtag slots with a balanced mix:
-            <ul>
-                <li><strong>High Volume:</strong> Broad appeal tags to get immediate eyes.</li>
-                <li><strong>Medium Volume:</strong> Tags where you actually have a chance to rank in the "Top" section.</li>
-                <li><strong>Niche/Specific:</strong> Highly targeted tags that tell the algorithm exactly what your content is about.</li>
-            </ul>
-            This blend gives you the best statistical chance of growth.
-          </div>
-        </details>
-
-        <details>
-          <summary>Why should I clean duplicates? Does it really hurt me?</summary>
-          <div class="faq-content">
-            It looks sloppy to your followers, but more importantly, it wastes precious real estate. Instagram limits you to 30 tags. If you paste a list that has "#gym" three times, you've just wasted 2 slots that could have been used for different keywords to reach new audiences.
-            <br><br>
-            SocialMediaToolsKit automatically detects these duplicates (even if one is #Gym and one is #gym) and merges them, freeing up space for our Strategy Injector to do its work. It's all about efficiency.
-          </div>
-        </details>
-
-        <details>
-          <summary>Is my data safe when I paste it here?</summary>
-          <div class="faq-content">
-            100%. This is one of the core values of SocialMediaToolsKit. Unlike other "free" tools that send your captions and data to a server to be analyzed (or stolen for training AI), our tools run entirely <strong>Client-Side</strong>.
-            <br><br>
-            This means the JavaScript code runs right inside your browser (Chrome, Safari, etc.). Your hashtag lists never leave your device. You could literally disconnect your internet, and this cleaner would still work perfectly. We believe in privacy by design.
-          </div>
-        </details>
-
-        <details>
-          <summary>Can I use this for platforms other than Instagram?</summary>
-          <div class="faq-content">
-            Absolutely. While the "30 limit" is specific to Instagram, the cleaning logic works everywhere.
-            <br><br>
-            For <strong>TikTok</strong>, you generally want fewer, broader tags mixed with trending sounds. You can use the "Max Count" feature to limit the output to 3-5 tags.
-            For <strong>YouTube</strong>, tags are less critical now than titles, but keeping them relevant and non-spammy is still best practice for SEO.
-            For <strong>X (Twitter)</strong>, we recommend setting the limit to 2 or 3, as tweets with too many hashtags tend to look like bots and get lower engagement.
-          </div>
-        </details>
-
+      <article class="content-area" id="how" aria-labelledby="how-title">
+        <h3 id="how-title">How it works</h3>
+        <p>Paste any caption or list of hashtags and click <strong>Clean</strong>. The tool extracts hashtag tokens, strips trailing punctuation/emojis, removes duplicates (case-insensitive), and formats them for copy/paste.</p>
       </article>
-
     </main>
 
     <footer>© 2025 SocialMediaToolsKit. Built for speed.</footer>
@@ -233,200 +99,209 @@
 
   <script>
   (function(){
-    // --- Data: Banned & Templates ---
-    // Note: In a real app, these lists would be much longer. 
-    // These are examples to demonstrate the logic.
-    const BANNED_TAGS = ['porn', 'f4f', 'follow4follow', 'like4like', 'l4l', 'instababy', 'eggplant', 'curvy'];
-    const LOW_VALUE_TAGS = ['explore', 'viral', 'fyp', 'instagram', 'love', 'instagood', 'photooftheday'];
-    
-    const TEMPLATES = {
-      fitness: ['#GymMotivation', '#FitFam', '#WorkoutRoutine', '#Gains', '#FitnessJourney', '#TrainHard', '#MuscleBuilding', '#CardioDay', '#PersonalTrainer'],
-      travel: ['#TravelGram', '#Wanderlust', '#HiddenGems', '#TravelDiaries', '#Backpacking', '#SoloTravel', '#VacationMode', '#ExploreMore', '#PassportReady'],
-      business: ['#EntrepreneurLife', '#SmallBiz', '#StartupGrind', '#MarketingTips', '#HustleMode', '#BusinessGrowth', '#Founder', '#SuccessMindset', '#DigitalMarketing'],
-      art: ['#DigitalArt', '#Procreate', '#ArtistOnInstagram', '#Sketchbook', '#CharacterDesign', '#ConceptArt', '#IllustrationDaily', '#ArtStation', '#CreativeProcess'],
-      food: ['#Foodie', '#FoodPorn', '#HomeCooking', '#RecipeOfTheDay', '#ChefLife', '#FoodPhotography', '#Delicious', '#Yummy', '#EatLocal'],
-      tech: ['#Coding', '#WebDevelopment', '#TechNews', '#ProgrammerLife', '#SoftwareEngineer', '#Innovation', '#Gadgets', '#Developer', '#JavaScript']
-    };
+    // Helpers -----------------------------------------------------------
+    var input = document.getElementById('input-text');
+    var output = document.getElementById('output');
+    var cleanBtn = document.getElementById('clean-btn');
+    var copyBtn = document.getElementById('copy-btn');
+    var clearBtn = document.getElementById('clear-btn');
+    var sortSelect = document.getElementById('sort-select');
+    var oneLineRadio = document.getElementById('one-line');
+    var onePerLineRadio = document.getElementById('one-per-line');
+    var totalCountEl = document.getElementById('total-count');
+    var uniqueCountEl = document.getElementById('unique-count');
 
-    // --- DOM Elements ---
-    const rawInput = document.getElementById('raw-input');
-    const platformSelect = document.getElementById('platform');
-    const maxCountInput = document.getElementById('max-count');
-    const nicheSelect = document.getElementById('niche-select');
-    const cleanBtn = document.getElementById('clean-btn');
-    const outputWrapper = document.getElementById('output-wrapper');
-    const finalOutput = document.getElementById('final-output');
-    
-    // Stats Elements
-    const statRemoved = document.getElementById('stat-removed');
-    const statRisk = document.getElementById('stat-risk');
-    const statCount = document.getElementById('stat-count');
-    const riskAlert = document.getElementById('risk-alert');
-    const successAlert = document.getElementById('success-alert');
+    // Regex to detect hashtag-like tokens:
+    // We will find tokens that either begin with '#' or are words containing letters/numbers/underscore and treat them.
+    // For cleaning a hashtag body, allow Unicode letters & numbers and underscores.
+    // Use u flag to support emoji and unicode.
+    var HASHTAG_FIND = /#[^\s#]+/gu; // quick find of tokens that start with #
+    var WORD_FIND = /[^\s#]+/gu; // fallback tokens (when hashtags not present)
+    var CLEAN_BODY = /(^#+)|[^\p{L}\p{N}_]+/gu; // strip leading # signs and trailing punctuation/emojis (keep letters/numbers/underscore)
+    // Note: CLEAN_BODY keeps Unicode letters and numbers (u-flag) and underscores.
 
-    // --- Event Listeners ---
-    
-    // Auto-update max count based on platform
-    platformSelect.addEventListener('change', function() {
-      const val = this.value;
-      if(val === 'insta') maxCountInput.value = 30;
-      else if(val === 'twitter') maxCountInput.value = 3;
-      else if(val === 'tiktok') maxCountInput.value = 5;
-      else maxCountInput.value = 15;
-    });
+    // Extract hashtags from text (handles caption+hashtags)
+    function extractHashtags(text){
+      if(!text || !text.trim()) return [];
 
-    // Formatting Radio buttons
-    const formatRadios = document.querySelectorAll('input[name="format"]');
-    formatRadios.forEach(r => r.addEventListener('change', updateOutputFormat));
-
-    // Main Logic
-    cleanBtn.addEventListener('click', function() {
-      const text = rawInput.value;
-      if(!text.trim()) { alert('Please paste some tags first!'); return; }
-      
-      const max = parseInt(maxCountInput.value) || 30;
-      const niche = nicheSelect.value;
-      
-      processTags(text, max, niche);
-    });
-
-    let currentCleanedTags = []; // Store current state for re-formatting
-
-    function processTags(input, maxLimit, niche) {
-      // 1. Split & Normalize
-      // Matches #tag, space, or comma
-      let rawList = input.split(/[\s,]+/).filter(t => t.trim() !== '');
-      
-      let uniqueSet = new Set();
-      let duplicates = 0;
-      let riskScore = 0;
-      let bannedFound = [];
-      let lowValueFound = [];
-      
-      let cleanList = [];
-
-      rawList.forEach(tag => {
-        // Remove # for processing, convert to lowercase
-        let cleanText = tag.replace(/#/g, '').toLowerCase();
-        
-        // Skip empty or purely special char tags
-        if(!cleanText) return;
-
-        // Check Logic
-        if(uniqueSet.has(cleanText)) {
-          duplicates++;
-          return;
+      // first try to find explicit #tokens
+      var found = Array.from(text.matchAll(HASHTAG_FIND || []), m => m[0]);
+      if(found.length === 0){
+        // maybe user pasted space/comma separated words (no #) - we will look for words that look like hashtags
+        found = Array.from(text.matchAll(WORD_FIND || []), m => m[0]);
+      }
+      // Clean each token to a valid hashtag body
+      var cleaned = found.map(function(tok){
+        // If token starts with #, fine. If not, treat tok as candidate and strip punctuation.
+        var body = tok.replace(CLEAN_BODY, '');
+        // fallback: if body empty, attempt to remove punctuation around tokens
+        if(!body){
+          // remove leading/trailing punctuation generally
+          body = tok.replace(/^[^0-9\p{L}_]+|[^0-9\p{L}_]+$/gu,'');
         }
+        return body ? ('#' + body) : null;
+      }).filter(Boolean);
 
-        uniqueSet.add(cleanText);
+      return cleaned;
+    }
 
-        // Banned Check
-        if(BANNED_TAGS.some(b => cleanText.includes(b))) {
-          riskScore += 20;
-          bannedFound.push('#'+cleanText);
-          return; // Remove it
+    // Normalize for dedupe: lowercase
+    function normalizeTag(tag){
+      return tag.toLowerCase();
+    }
+
+    // Sorters
+    function sortTags(arr, mode){
+      if(mode === 'alpha'){
+        return arr.slice().sort(function(a,b){ return a.localeCompare(b, undefined, {sensitivity:'base'}); });
+      }
+      if(mode === 'length'){
+        return arr.slice().sort(function(a,b){ return b.length - a.length; });
+      }
+      if(mode === 'random'){
+        var copy = arr.slice();
+        for(var i = copy.length-1; i>0; i--){
+          var j = Math.floor(Math.random()*(i+1));
+          var t = copy[i]; copy[i]=copy[j]; copy[j]=t;
         }
+        return copy;
+      }
+      return arr.slice(); // none => original order
+    }
 
-        // Low Value Check
-        if(LOW_VALUE_TAGS.includes(cleanText)) {
-          riskScore += 5;
-          lowValueFound.push('#'+cleanText);
-          // We keep low value tags, but flag them. 
-          // Option: Uncomment next line to auto-remove them
-          // return; 
-        }
+    // Format output
+    function formatOutput(arr){
+      if(onePerLineRadio.checked){
+        return arr.join('\\n');
+      }
+      return arr.join(' ');
+    }
 
-        cleanList.push('#' + cleanText); // Store as lowercase logic for now
-      });
-
-      // 2. Strategy Injection
-      let injectedCount = 0;
-      if(niche && TEMPLATES[niche]) {
-        const stratTags = TEMPLATES[niche];
-        for(let t of stratTags) {
-          if(cleanList.length >= maxLimit) break;
-          // Check if already exists (case insensitive check)
-          let tLower = t.toLowerCase();
-          if(!uniqueSet.has(tLower.replace('#',''))) {
-            cleanList.push(t); // Keep the CamelCase from template
-            uniqueSet.add(tLower.replace('#',''));
-            injectedCount++;
-          }
+    // Core cleaning pipeline
+    function cleanPipeline(text){
+      var extracted = extractHashtags(text); // e.g. ["#Travel", "#sunset.", ...]
+      // Track original order but dedupe case-insensitively
+      var seen = new Set();
+      var unique = [];
+      for(var i=0;i<extracted.length;i++){
+        var tag = extracted[i];
+        // remove any leftover invalid chars from body (run CLEAN_BODY again defensively)
+        var body = tag.replace(/^#+/, '').replace(/[^\\p{L}\\p{N}_]+/gu,'');
+        if(!body) continue;
+        var normalized = normalizeTag('#' + body);
+        if(!seen.has(normalized)){
+          seen.add(normalized);
+          unique.push('#' + body.toLowerCase()); // output normalized to lowercase for consistency
         }
       }
+      return { list: unique, total: extracted.length, uniqueCount: unique.length };
+    }
 
-      // 3. Trim to Max
-      if(cleanList.length > maxLimit) {
-        cleanList = cleanList.slice(0, maxLimit);
+    // Render state
+    function renderResult(res){
+      var list = res.list;
+      // apply sort
+      var sorted = sortTags(list, sortSelect.value);
+      output.textContent = formatOutput(sorted);
+      totalCountEl.textContent = String(res.total);
+      uniqueCountEl.textContent = String(res.uniqueCount);
+    }
+
+    // Bindings ---------------------------------------------------------
+    cleanBtn.addEventListener('click', function(){
+      var text = input.value || '';
+      var res = cleanPipeline(text);
+      renderResult(res);
+      // focus output for quick edit
+      output.focus();
+    });
+
+    // Also clean on Ctrl+Enter in textarea
+    input.addEventListener('keydown', function(e){
+      if(e.key === 'Enter' && (e.ctrlKey || e.metaKey)){
+        e.preventDefault();
+        cleanBtn.click();
       }
+    });
 
-      // 4. Update UI
-      currentCleanedTags = cleanList;
-      updateOutputFormat();
-
-      // Update Dashboard
-      outputWrapper.style.opacity = '1';
-      outputWrapper.style.pointerEvents = 'all';
-      
-      statRemoved.textContent = duplicates;
-      statRisk.textContent = riskScore;
-      
-      // Color code risk
-      statRisk.className = 'stat-val ' + (riskScore > 0 ? 'risk-high' : 'risk-low');
-      
-      statCount.textContent = `${cleanList.length}/${maxLimit}`;
-
-      // Alerts
-      riskAlert.className = 'alert-box alert-warning'; 
-      successAlert.className = 'alert-box alert-success';
-      
-      if(riskScore > 0) {
-        riskAlert.innerHTML = `<strong>⚠️ Risk Alert:</strong> Removed banned tags: ${bannedFound.join(', ')} <br> Flagged low-value: ${lowValueFound.join(', ')}`;
-        riskAlert.classList.add('show');
+    // Copy button
+    copyBtn.addEventListener('click', function(){
+      var val = output.textContent || '';
+      if(!val.trim()){
+        // if output empty, run a clean first
+        cleanBtn.click();
+        val = output.textContent || '';
+      }
+      if(!val.trim()){
+        // nothing to copy
+        copyBtn.textContent = 'Nothing to copy';
+        setTimeout(function(){ copyBtn.textContent = 'Copy Clean Hashtags'; }, 1300);
+        return;
+      }
+      if(navigator.clipboard && navigator.clipboard.writeText){
+        navigator.clipboard.writeText(val).then(function(){
+          copyBtn.textContent = 'Copied!';
+          setTimeout(function(){ copyBtn.textContent = 'Copy Clean Hashtags'; }, 1200);
+        }, function(){
+          fallbackCopy(val);
+        });
       } else {
-        riskAlert.classList.remove('show');
+        fallbackCopy(val);
       }
-
-      let successMsg = `<strong>✅ Optimization Complete!</strong>`;
-      if(injectedCount > 0) successMsg += ` Injected ${injectedCount} strategic tags for ${niche}.`;
-      successAlert.innerHTML = successMsg;
-      successAlert.classList.add('show');
-      
-      // Scroll to results
-      document.getElementById('results-area').classList.add('active');
-    }
-
-    function updateOutputFormat() {
-      if(!currentCleanedTags.length) return;
-      
-      const format = document.querySelector('input[name="format"]:checked').value;
-      let glue = ' ';
-      if(format === 'newline') glue = '\n';
-      if(format === 'comma') glue = ', ';
-      
-      finalOutput.value = currentCleanedTags.join(glue);
-    }
-
-    // Copy Function
-    document.getElementById('copy-btn').addEventListener('click', function() {
-      finalOutput.select();
-      document.execCommand('copy');
-      const originalText = this.textContent;
-      this.textContent = 'Copied! 🎉';
-      setTimeout(() => this.textContent = originalText, 2000);
     });
 
-    // Export Function
-    document.getElementById('export-btn').addEventListener('click', function() {
-      if(!currentCleanedTags.length) return;
-      const csvContent = "data:text/csv;charset=utf-8," + currentCleanedTags.join(",");
-      const encodedUri = encodeURI(csvContent);
-      const link = document.createElement("a");
-      link.setAttribute("href", encodedUri);
-      link.setAttribute("download", "optimized_hashtags.csv");
-      document.body.appendChild(link);
-      link.click();
-      document.body.removeChild(link);
+    function fallbackCopy(text){
+      try {
+        var ta = document.createElement('textarea');
+        ta.value = text;
+        ta.setAttribute('readonly','');
+        ta.style.position = 'absolute';
+        ta.style.left = '-9999px';
+        document.body.appendChild(ta);
+        ta.select();
+        document.execCommand('copy');
+        document.body.removeChild(ta);
+        copyBtn.textContent = 'Copied!';
+        setTimeout(function(){ copyBtn.textContent = 'Copy Clean Hashtags'; }, 1200);
+      } catch(e){
+        copyBtn.textContent = 'Could not copy';
+        setTimeout(function(){ copyBtn.textContent = 'Copy Clean Hashtags'; }, 1500);
+      }
+    }
+
+    // clear button
+    clearBtn.addEventListener('click', function(){
+      input.value = '';
+      output.textContent = '';
+      totalCountEl.textContent = '0';
+      uniqueCountEl.textContent = '0';
+    });
+
+    // Recompute output when sort or format changes (keeps user edits if already cleaned)
+    sortSelect.addEventListener('change', function(){
+      // If output has content, attempt to re-sort/format based on existing tags
+      var current = output.textContent || '';
+      if(!current.trim()) return;
+      // parse current output as hashtags (split by whitespace or newline)
+      var tokens = current.split(/[\\s\\n]+/).filter(Boolean).map(function(t){ return t.replace(/^#+/,''); }).filter(Boolean).map(function(b){ return '#'+b; });
+      var sorted = sortTags(tokens.map(function(t){ return t.toLowerCase(); }), sortSelect.value);
+      output.textContent = formatOutput(sorted);
+    });
+
+    oneLineRadio.addEventListener('change', function(){ sortSelect.dispatchEvent(new Event('change')); });
+    onePerLineRadio.addEventListener('change', function(){ sortSelect.dispatchEvent(new Event('change')); });
+
+    // Allow pressing Cmd/Ctrl+K to paste sample demo hashtags (developer shortcut)
+    document.addEventListener('keydown', function(e){
+      if((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === 'k'){
+        e.preventDefault();
+        input.value = "Loved the sunset at the beach! #Sunset #beachlife #Travel #travel, #fun 😊 #sunset.";
+      }
+    });
+
+    // On load: small hint if empty
+    document.addEventListener('DOMContentLoaded', function(){
+      if(!input.value) input.placeholder = 'Paste caption with hashtags or a hashtag list — then click Clean';
     });
 
   })();
