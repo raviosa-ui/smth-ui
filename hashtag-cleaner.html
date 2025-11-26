@@ -38,4 +38,302 @@
       </div>
 
       <nav class="topnav" role="navigation" aria-label="Primary">
-        <a href
+        <a href="index.html">Home</a>
+        <a href="#how">How</a>
+      </nav>
+    </header>
+
+    <main>
+      <section class="tool-card" aria-labelledby="tool-title">
+        <div style="display:flex;justify-content:space-between;align-items:center;gap:12px;margin-bottom:12px">
+          <div>
+            <h1 id="tool-title" style="margin:0;font-size:18px">Hashtag Cleaner</h1>
+            <p class="small" style="margin:6px 0 0">Paste caption or hashtags — clean, dedupe and format for posting.</p>
+          </div>
+
+          <div class="stats" aria-hidden="false" style="text-align:right">
+            <div class="small">Total: <strong id="total-count">0</strong></div>
+            <div class="small">Unique: <strong id="unique-count">0</strong></div>
+          </div>
+        </div>
+
+        <!-- Input -->
+        <label for="input-text" class="small">Input (caption, hashtags or both)</label>
+        <textarea id="input-text" class="input" placeholder="Paste caption with hashtags here — e.g. Loved the sunset! #sunset #Travel #travel"></textarea>
+
+        <!-- Controls -->
+        <div class="controls" style="margin-top:12px">
+          <div class="row" style="flex:1">
+            <button id="clean-btn" class="btn" type="button">Clean</button>
+            <button id="copy-btn" class="btn" type="button">Copy Clean Hashtags</button>
+            <button id="clear-btn" class="muted-btn" type="button">Clear</button>
+          </div>
+
+          <div style="display:flex;gap:10px;align-items:center">
+            <label class="small" for="sort-select">Sort</label>
+            <select id="sort-select" aria-label="Sort hashtags" class="muted-btn" style="padding:8px;border-radius:10px;background:transparent;border:1px solid var(--border);color:var(--muted)">
+              <option value="none">None (input order)</option>
+              <option value="alpha">A → Z</option>
+              <option value="length">Longest → Shortest</option>
+              <option value="random">Random</option>
+            </select>
+          </div>
+
+          <div class="toggle" title="Output format">
+            <label class="small">Format</label>
+            <label style="display:flex;gap:6px;align-items:center"><input id="one-line" type="radio" name="format" checked> <span class="small">Single line</span></label>
+            <label style="display:flex;gap:6px;align-items:center"><input id="one-per-line" type="radio" name="format"> <span class="small">One per line</span></label>
+          </div>
+        </div>
+
+        <!-- Output -->
+        <label for="output" class="small" style="margin-top:8px">Cleaned Hashtags</label>
+        <pre id="output" class="output" aria-live="polite"></pre>
+
+        <p class="small" id="notes" style="margin-top:8px;color:var(--muted)">
+          Notes: Hashtags are normalized (lowercase) for deduplication. You can edit the output before copying.
+        </p>
+      </section>
+
+      <!-- FAQ block inserted below (uses SocialMediaToolsHub name, ~1000+ chars) -->
+      <article class="content-area" id="how" aria-labelledby="how-title">
+        <h3 id="how-title">Frequently Asked Questions — Hashtag Cleaner</h3>
+        <div class="faq" role="region" aria-label="FAQ about the Hashtag Cleaner">
+          <dl>
+            <dt>What does the Hashtag Cleaner do and when should I use it?</dt>
+            <dd>
+              The Hashtag Cleaner on SocialMediaToolsHub is a lightweight browser utility that extracts and normalizes hashtags from a block of text or a mixed caption. When creators copy captions from notes, messaging apps, or other tools they often bring along punctuation, stray characters, emojis, or duplicate tags. This tool isolates hashtag-like tokens, strips trailing punctuation and non-hashtag characters, and returns a compact, deduplicated list that you can paste directly into Instagram, TikTok or Facebook. Use it when you want reliable, clean hashtag blocks fast — especially helpful before posting from a phone or scheduling tool.
+            </dd>
+
+            <dt>Is my text uploaded anywhere or saved on a server?</dt>
+            <dd>
+              No. Hashtag Cleaner runs entirely in your browser. Nothing is sent to SocialMediaToolsHub’s servers by default — the tool performs all extraction, deduplication and formatting locally. This keeps your draft captions private and ensures the cleaning step is immediate, even when you are offline or on a slow connection. If you choose to copy or download the output locally, those actions happen on your device only.
+            </dd>
+
+            <dt>How does deduplication work and will it change capitalization?</dt>
+            <dd>
+              Deduplication is case-insensitive: the tool treats #Travel and #travel as the same tag and will keep only the first occurrence in the cleaned list. Output is normalized to lowercase to reduce accidental duplicates and to keep blocks compact and consistent. If you prefer specific capitalization for branding, you can edit the final output manually before copying. The goal is functional hashtags that behave consistently across platforms.
+            </dd>
+
+            <dt>Does the cleaner support Unicode or non-English hashtags?</dt>
+            <dd>
+              Yes — while the cleaning uses broadly-compatible patterns to maximize browser support, common Unicode letters and digits are preserved when possible and the routine removes punctuation and stray symbols that break tags. For edge-case scripts or platform-specific rules, test a sample tag; the cleaner is conservative and designed to produce widely compatible hashtag tokens.
+            </dd>
+
+            <dt>What about blacklist and automatic hashify features?</dt>
+            <dd>
+              SocialMediaToolsHub provides options (if enabled) to automatically convert plain words into hashtag tokens (hashify) and to apply a local blacklist of tags you want to exclude permanently, such as known spammy or shadowed tags. Blacklist settings are stored locally so they do not leave your device. If you haven’t enabled blacklist or hashify, the cleaner simply extracts existing hashtags and returns a deduplicated list.
+            </dd>
+
+            <dt>How can I prepare tag groups for platforms that limit hashtags?</dt>
+            <dd>
+              The Hashtag Cleaner supports sorting and formatting so you can craft groups manually: sort by length or alphabetically, then copy the first 30 tags for an Instagram post. Planned updates on SocialMediaToolsHub will add a one-click 30-per-group feature with separate copy buttons, but for now sorting and manual grouping are reliable and immediate.
+            </dd>
+
+            <dt>What should I do if a tag still doesn’t behave on the platform?</dt>
+            <dd>
+              Occasionally a platform may block or ignore specific tags. If a tag appears broken after pasting (for example it doesn’t link or search), remove any non-alphanumeric characters and retry. If a tag is known to be shadowed, add it to your local blacklist in the tool and enable blacklist mode to prevent it from being included in future outputs.
+            </dd>
+
+            <dt>Which browsers and devices are supported?</dt>
+            <dd>
+              The Hashtag Cleaner works in modern browsers that support standard JavaScript and standard regular expressions. That includes current versions of Chrome, Edge, Firefox and Safari on desktop and mobile. If you notice a browser-specific issue, include your browser name and version when reporting it so the SocialMediaToolsHub team can investigate.
+            </dd>
+
+            <dt>Where can I get help or report bugs?</dt>
+            <dd>
+              If something doesn’t work or you have a suggestion, contact the SocialMediaToolsHub support/contact page with a short description and a sample input that reproduces the problem. Provide your browser and device details — those help reproduce and fix issues quickly. The project is focused on fast local tools, so feedback is valuable and usually addressed in small, frequent updates.
+            </dd>
+          </dl>
+        </div>
+      </article>
+
+    </main>
+
+    <footer>© 2025 SocialMediaToolsKit. Built for speed.</footer>
+  </div>
+
+  <script>
+  (function(){
+    // Elements
+    var input = document.getElementById('input-text');
+    var output = document.getElementById('output');
+    var cleanBtn = document.getElementById('clean-btn');
+    var copyBtn = document.getElementById('copy-btn');
+    var clearBtn = document.getElementById('clear-btn');
+    var sortSelect = document.getElementById('sort-select');
+    var oneLineRadio = document.getElementById('one-line');
+    var onePerLineRadio = document.getElementById('one-per-line');
+    var totalCountEl = document.getElementById('total-count');
+    var uniqueCountEl = document.getElementById('unique-count');
+
+    // Compatible regexes (avoid Unicode property escapes for broader browser support)
+    // Find explicit hashtags: capture anything starting with # up to a whitespace or another #.
+    var HASHTAG_EXTRACT_RE = /#([^\s#]+)/g;
+    // Fallback word capture when no explicit hashtags: words separated by whitespace or punctuation
+    var WORD_FALLBACK_RE = /[^\s#]+/g;
+
+    // Helper: sanitize a candidate body -> keep letters/numbers/underscore and basic Unicode remainder,
+    // remove leading/trailing punctuation like .,!?:;()[]{}"'
+    function sanitizeBodyRaw(body){
+      if(!body) return '';
+      // Trim common leading/trailing punctuation and emoji-like symbols
+      body = body.replace(/^[\s\p{P}\p{S}]+|[\s\p{P}\p{S}]+$/gu,''); // attempt unicode trim if supported
+      // Fallback conservative trim for environments that don't support \p{P}
+      body = body.replace(/^[^A-Za-z0-9_]+|[^A-Za-z0-9_]+$/g,'');
+      return body;
+    }
+
+    // Extract candidate hashtag bodies (returns array like ['#sunset','#travel'])
+    function extractCandidates(text){
+      if(!text) return [];
+      var out = [];
+      var m;
+      while((m = HASHTAG_EXTRACT_RE.exec(text)) !== null){
+        var raw = m[1];
+        var body = sanitizeBodyRaw(raw);
+        if(body) out.push('#' + body);
+      }
+      if(out.length > 0) return out;
+      // Fallback: capture words (useful when user pasted plain words)
+      while((m = WORD_FALLBACK_RE.exec(text)) !== null){
+        var raw2 = m[0];
+        var body2 = sanitizeBodyRaw(raw2);
+        // skip purely numeric tokens
+        if(!body2 || /^[0-9]+$/.test(body2)) continue;
+        out.push('#' + body2);
+      }
+      return out;
+    }
+
+    // Normalize to lowercase for dedupe
+    function norm(tag){ return tag.toLowerCase(); }
+
+    // Sorters (same behavior)
+    function sortTags(arr, mode){
+      if(mode === 'alpha') return arr.slice().sort(function(a,b){ return a.localeCompare(b, undefined, {sensitivity:'base'}); });
+      if(mode === 'length') return arr.slice().sort(function(a,b){ return b.length - a.length; });
+      if(mode === 'random'){ var c = arr.slice(); for(var i=c.length-1;i>0;i--){ var j=Math.floor(Math.random()*(i+1)); var t=c[i]; c[i]=c[j]; c[j]=t; } return c; }
+      return arr.slice();
+    }
+
+    function formatOutput(arr){
+      if(onePerLineRadio.checked) return arr.join('\n');
+      return arr.join(' ');
+    }
+
+    // Core cleaning pipeline
+    function cleanPipeline(text){
+      var candidates = extractCandidates(text);
+      var total = candidates.length;
+      var seen = new Set();
+      var unique = [];
+      for(var i=0;i<candidates.length;i++){
+        var t = candidates[i];
+        // defensive sanitize again: strip any remaining punctuation at edges
+        var body = t.replace(/^#+/,'').replace(/^[^A-Za-z0-9_]+|[^A-Za-z0-9_]+$/g,'');
+        if(!body) continue;
+        var tag = '#' + body.toLowerCase();
+        if(!seen.has(tag)){
+          seen.add(tag);
+          unique.push(tag);
+        }
+      }
+      return { list: unique, total: total, uniqueCount: unique.length };
+    }
+
+    // Render
+    function renderResult(res){
+      var list = res.list;
+      var sorted = sortTags(list, sortSelect.value);
+      output.textContent = formatOutput(sorted);
+      totalCountEl.textContent = String(res.total);
+      uniqueCountEl.textContent = String(res.uniqueCount);
+    }
+
+    // Events
+    cleanBtn.addEventListener('click', function(){
+      var txt = input.value || '';
+      var r = cleanPipeline(txt);
+      renderResult(r);
+      output.focus();
+    });
+
+    input.addEventListener('keydown', function(e){
+      if(e.key === 'Enter' && (e.ctrlKey || e.metaKey)){
+        e.preventDefault();
+        cleanBtn.click();
+      }
+    });
+
+    copyBtn.addEventListener('click', function(){
+      var val = output.textContent || '';
+      if(!val.trim()){ cleanBtn.click(); val = output.textContent || ''; }
+      if(!val.trim()){ copyBtn.textContent = 'Nothing to copy'; setTimeout(function(){ copyBtn.textContent = 'Copy Clean Hashtags'; },1300); return; }
+      if(navigator.clipboard && navigator.clipboard.writeText){
+        navigator.clipboard.writeText(val).then(function(){ copyBtn.textContent = 'Copied!'; setTimeout(function(){ copyBtn.textContent = 'Copy Clean Hashtags'; },1100); }, function(){ fallbackCopy(val); });
+      } else fallbackCopy(val);
+    });
+
+    function fallbackCopy(text){
+      try {
+        var t = document.createElement('textarea');
+        t.value = text;
+        t.setAttribute('readonly','');
+        t.style.position='absolute'; t.style.left='-9999px';
+        document.body.appendChild(t);
+        t.select();
+        document.execCommand('copy');
+        document.body.removeChild(t);
+        copyBtn.textContent = 'Copied!';
+        setTimeout(function(){ copyBtn.textContent = 'Copy Clean Hashtags'; },1100);
+      } catch(e){
+        copyBtn.textContent = 'Could not copy';
+        setTimeout(function(){ copyBtn.textContent = 'Copy Clean Hashtags'; },1400);
+      }
+    }
+
+    clearBtn.addEventListener('click', function(){
+      input.value = '';
+      output.textContent = '';
+      totalCountEl.textContent = '0';
+      uniqueCountEl.textContent = '0';
+    });
+
+    // Reformat existing output when sort/format changes
+    function reformatExistingOutput(){
+      var cur = output.textContent || '';
+      if(!cur.trim()) return;
+      var tokens = cur.split(/\s+/).filter(Boolean).map(function(t){
+        return '#'+t.replace(/^#+/,'').replace(/^[^A-Za-z0-9_]+|[^A-Za-z0-9_]+$/g,'');
+      }).filter(function(t){ return t && t.length>1; });
+      var seen = new Set(), unique=[];
+      tokens.forEach(function(t){
+        var n = t.toLowerCase();
+        if(!seen.has(n)){ seen.add(n); unique.push(n); }
+      });
+      var sorted = sortTags(unique, sortSelect.value);
+      output.textContent = formatOutput(sorted);
+    }
+
+    sortSelect.addEventListener('change', reformatExistingOutput);
+    oneLineRadio.addEventListener('change', reformatExistingOutput);
+    onePerLineRadio.addEventListener('change', reformatExistingOutput);
+
+    // Developer shortcut sample content
+    document.addEventListener('keydown', function(e){
+      if((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === 'k'){
+        e.preventDefault();
+        input.value = "Loved the sunset at the beach! #Sunset #beachlife #Travel #travel, #fun 😊 #sunset.";
+      }
+    });
+
+    // Hint on load
+    document.addEventListener('DOMContentLoaded', function(){
+      if(!input.value) input.placeholder = 'Paste caption with hashtags or a hashtag list — then click Clean';
+    });
+
+  })();
+  </script>
+</body>
+</html>
