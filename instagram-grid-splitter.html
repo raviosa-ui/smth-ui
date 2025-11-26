@@ -1,0 +1,366 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Instagram Grid Splitter — SocialMediaToolsKit</title>
+  <meta name="description" content="Split high-res images into 3x1, 3x2, or 3x3 grids for your Instagram profile banner instantly. Free client-side tool." />
+  <meta name="theme-color" content="#0f172a" />
+
+  <link rel="stylesheet" href="style.css">
+
+  <style>
+    .tool-interface {
+        display: flex;
+        flex-direction: column;
+        gap: 24px;
+        margin-top: 24px;
+    }
+    
+    /* Left Panel - Controls */
+    .tool-controls {
+        display: flex;
+        flex-direction: column;
+        gap: 20px;
+    }
+    
+    .drop-zone {
+        border: 2px dashed var(--border);
+        border-radius: var(--r-md);
+        padding: 30px 20px;
+        text-align: center;
+        cursor: pointer;
+        background: rgba(255,255,255,0.02);
+        transition: var(--trans);
+        position: relative;
+    }
+    .drop-zone:hover, .drop-zone.dragover {
+        border-color: var(--accent-from);
+        background: rgba(56,189,248,0.05);
+    }
+    .drop-zone-text { color: var(--muted); font-size: 14px; }
+    .drop-zone-icon { font-size: 32px; margin-bottom: 10px; display: block; }
+    #file-input { position: absolute; inset: 0; opacity: 0; cursor: pointer; }
+
+    .control-group label { display: block; color: var(--muted); font-size: 14px; margin-bottom: 8px; font-weight: 600;}
+    .control-select {
+        width: 100%;
+        padding: 12px;
+        background: var(--card);
+        border: 1px solid var(--border);
+        color: var(--text);
+        border-radius: 12px;
+        outline: none;
+    }
+    .control-select:focus { border-color: var(--accent-from); }
+    
+    /* Right Panel - Preview */
+    .tool-preview {
+        background: var(--card);
+        border: 1px solid var(--border);
+        border-radius: var(--r-lg);
+        padding: 20px;
+        min-height: 300px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+    
+    .preview-empty-state { color: var(--muted); font-size: 14px; text-align: center; }
+
+    /* Grid Result Display */
+    .grid-results-container {
+        display: none; /* Hidden until results exist */
+        width: 100%;
+        max-width: 400px; /* Limit width so it doesn't get huge */
+    }
+    .grid-results {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr); /* Always 3 columns for Insta */
+        gap: 2px;
+        background: var(--bg); /* Dark lines between grid items */
+        border: 2px solid var(--bg);
+    }
+    .grid-results img {
+        width: 100%;
+        display: block;
+        aspect-ratio: 1 / 1; /* Force squares */
+        object-fit: cover;
+    }
+
+    /* Responsiveness for tool layout */
+    @media(min-width: 768px){
+        .tool-interface {
+            flex-direction: row;
+            align-items: flex-start;
+        }
+        .tool-controls { flex: 1; max-width: 350px; }
+        .tool-preview { flex: 2; }
+    }
+  </style>
+</head>
+
+<body>
+  <div class="container">
+
+    <header class="header" role="banner">
+      <div class="brand" aria-label="SocialMediaToolsKit">
+        <span class="brand-emoji" aria-hidden="true">⚡</span>
+        <a href="index.html" class="logo-text">SocialMediaToolsKit</a>
+      </div>
+      <nav class="topnav" role="navigation">
+        <a href="index.html">← Back to home</a>
+      </nav>
+    </header>
+
+    <main>
+      <section class="hero" aria-labelledby="tool-title">
+        <div class="hero-inner" style="text-align: left; align-items: flex-start;">
+          <div class="hero-copy">
+            <h1 id="tool-title">Instagram Grid Splitter</h1>
+            <p class="lead">Split a single image into a 3-column grid banner for your profile. No apps, no watermarks.</p>
+          </div>
+        </div>
+      </section>
+
+      <section class="tool-interface">
+        
+        <div class="tool-controls">
+            <div class="drop-zone" id="drop-zone">
+                <span class="drop-zone-icon">🖼️</span>
+                <span class="drop-zone-text" id="drop-zone-text">Click or Drop image here</span>
+                <input type="file" id="file-input" accept="image/png, image/jpeg, image/jpg">
+            </div>
+
+            <div class="control-group">
+                <label for="grid-size">Grid Layout</label>
+                <select id="grid-size" class="control-select" disabled>
+                    <option value="3">3 x 1 Row (3 images)</option>
+                    <option value="6" selected>3 x 2 Rows (6 images)</option>
+                    <option value="9">3 x 3 Rows (9 images)</option>
+                </select>
+            </div>
+
+            <button id="download-btn" class="btn-cta" type="button" disabled style="opacity:0.5; width:100%">
+                Split & Download All ✂️
+            </button>
+            <p id="status-msg" style="color:var(--muted); font-size:13px; text-align: center; margin-top:-10px; min-height: 20px;"></p>
+        </div>
+
+        <div class="tool-preview" id="preview-container">
+            <div class="preview-empty-state" id="empty-state">
+                Upload an image to see the grid preview here.
+            </div>
+            
+            <div class="grid-results-container" id="results-container">
+                <h4 style="margin: 0 0 10px; color:var(--muted); font-size: 14px;">Preview:</h4>
+                <div class="grid-results" id="grid-results"></div>
+                 <p style="color:var(--muted); font-size:12px; margin-top:10px;">Note: Images will download individually due to browser security limitations.</p>
+            </div>
+        </div>
+
+      </section>
+
+      <article class="content-area">
+        <h3>How to create an Instagram Grid Banner</h3>
+        <p>This tool takes your large photo and slices it into perfect squares. 
+        <ol style="padding-left: 20px; font-size: 14px; color: var(--muted); line-height: 1.6;">
+            <li>Upload a high-quality image (landscape orientation usually works best).</li>
+            <li>Choose how many rows you want (1, 2, or 3). We always split into 3 columns.</li>
+            <li>The tool will automatically center-crop your image to fit the squares.</li>
+            <li>Click download. <strong>Important:</strong> Your browser will download the images one by one. You may need to "allow multiple downloads".</li>
+            <li>Post them to Instagram in reverse order (bottom-right first, top-left last).</li>
+        </ol>
+        </p>
+      </article>
+
+    </main>
+
+    <footer>© 2025 SocialMediaToolsKit. Built for speed.</footer>
+  </div>
+
+  <script>
+  (function(){
+    const fileInput = document.getElementById('file-input');
+    const dropZone = document.getElementById('drop-zone');
+    const dropZoneText = document.getElementById('drop-zone-text');
+    const gridSizeSelect = document.getElementById('grid-size');
+    const downloadBtn = document.getElementById('download-btn');
+    const emptyState = document.getElementById('empty-state');
+    const resultsContainer = document.getElementById('results-container');
+    const gridResults = document.getElementById('grid-results');
+    const statusMsg = document.getElementById('status-msg');
+
+    let loadedImage = null;
+    let generatedBlobs = [];
+
+    // --- Event Listeners ---
+
+    // Drag and drop visual cues
+    ['dragenter', 'dragover'].forEach(eventName => {
+        dropZone.addEventListener(eventName, (e) => {
+            e.preventDefault(); e.stopPropagation();
+            dropZone.classList.add('dragover');
+        }, false);
+    });
+    ['dragleave', 'drop'].forEach(eventName => {
+        dropZone.addEventListener(eventName, (e) => {
+            e.preventDefault(); e.stopPropagation();
+            dropZone.classList.remove('dragover');
+        }, false);
+    });
+
+    // File handling
+    dropZone.addEventListener('drop', (e) => handleFiles(e.dataTransfer.files));
+    fileInput.addEventListener('change', (e) => handleFiles(e.target.files));
+
+    // Recalculate preview if grid size changes
+    gridSizeSelect.addEventListener('change', () => {
+        if(loadedImage) generateGrid(false);
+    });
+
+    // Download action
+    downloadBtn.addEventListener('click', () => {
+        if(loadedImage) generateGrid(true);
+    });
+
+
+    // --- Core Functions ---
+
+    function handleFiles(files) {
+        if(files.length === 0) return;
+        const file = files[0];
+        if(!file.type.match('image.*')) {
+            statusMsg.textContent = "Please upload an image file (JPG or PNG).";
+            return;
+        }
+
+        dropZoneText.textContent = `Loaded: ${file.name}`;
+        statusMsg.textContent = "Loading image...";
+
+        const reader = new FileReader();
+        reader.onload = (e) => {
+            loadedImage = new Image();
+            loadedImage.onload = onImageLoaded;
+            loadedImage.src = e.target.result;
+        };
+        reader.readAsDataURL(file);
+    }
+
+    function onImageLoaded() {
+        // Enable UI controls
+        gridSizeSelect.disabled = false;
+        downloadBtn.disabled = false;
+        downloadBtn.style.opacity = 1;
+        statusMsg.textContent = "";
+        
+        // Show results area
+        emptyState.style.display = 'none';
+        resultsContainer.style.display = 'block';
+
+        // Generate initial preview
+        generateGrid(false);
+    }
+
+
+    // The magical splitting function
+    function generateGrid(isDownloading) {
+        gridResults.innerHTML = ''; // Clear previous preview
+        generatedBlobs = []; // Clear previous download queue
+        statusMsg.textContent = isDownloading ? "Processing..." : "";
+
+        const totalTiles = parseInt(gridSizeSelect.value);
+        const numCols = 3;
+        const numRows = totalTiles / numCols;
+
+        // 1. Calculate dimensions for perfect squares
+        // The width of one square dictates the height of one square.
+        const sliceSide = loadedImage.width / numCols; 
+        
+        // Calculate total height needed.
+        const totalNeededHeight = sliceSide * numRows;
+
+        // Determine starting Y coordinate to center-crop the image vertically if it's too tall/short
+        const startY = (loadedImage.height - totalNeededHeight) / 2;
+
+        let processedCount = 0;
+
+        // Loop through rows and columns (Top to bottom, left to right)
+        for (let row = 0; row < numRows; row++) {
+            for (let col = 0; col < numCols; col++) {
+                
+                // Create a temporary canvas for this specific slice
+                const canvas = document.createElement('canvas');
+                canvas.width = sliceSide;
+                canvas.height = sliceSide;
+                const ctx = canvas.getContext('2d');
+
+                // Calculate where to grab from source image
+                const sx = col * sliceSide; // source x
+                const sy = startY + (row * sliceSide); // source y (with centering offset)
+
+                // Draw the slice onto the temp canvas
+                // drawImage(image, sx, sy, sWidth, sHeight, dx, dy, dWidth, dHeight)
+                ctx.drawImage(loadedImage, sx, sy, sliceSide, sliceSide, 0, 0, sliceSide, sliceSide);
+
+                // Convert canvas to blob for preview and download
+                canvas.toBlob((blob) => {
+                    const imgUrl = URL.createObjectURL(blob);
+                    
+                    // Create preview image element
+                    const imgElem = document.createElement('img');
+                    imgElem.src = imgUrl;
+                    // Add data attributes for sorting later if needed, though loop order is correct (top-left to bottom-right)
+                    imgElem.dataset.row = row; 
+                    imgElem.dataset.col = col;
+                    gridResults.appendChild(imgElem);
+
+                    // Add to download queue if needed
+                    if(isDownloading) {
+                        // We name them in reverse order for easier Instagram posting
+                        // (Instagram posts bottom-right first)
+                        const reverseIndex = totalTiles - processedCount;
+                        generatedBlobs.push({
+                            blob: blob,
+                            filename: `insta-split-${reverseIndex}.jpg`
+                        });
+                    }
+
+                    processedCount++;
+                    // When all tiles are processed, trigger download sequence if requested
+                    if (processedCount === totalTiles && isDownloading) {
+                         triggerSequentialDownloads();
+                    }
+                }, 'image/jpeg', 0.95); // High quality JPG
+            }
+        }
+    }
+
+    // Function to download files with a slight delay to prevent browser blocking
+    function triggerSequentialDownloads() {
+        statusMsg.textContent = "Downloading images... Please allow multiple downloads.";
+        let i = 0;
+        function downloadNext() {
+            if (i < generatedBlobs.length) {
+                const item = generatedBlobs[i];
+                const a = document.createElement('a');
+                a.href = URL.createObjectURL(item.blob);
+                a.download = item.filename;
+                document.body.appendChild(a);
+                a.click();
+                document.body.removeChild(a);
+                setTimeout(() => URL.revokeObjectURL(a.href), 1000); // Cleanup memory
+
+                i++;
+                setTimeout(downloadNext, 300); // 300ms delay between downloads
+            } else {
+                statusMsg.textContent = "Done! Post them in reverse order (1 last).";
+            }
+        }
+        downloadNext();
+    }
+
+  })();
+  </script>
+</body>
+</html>
