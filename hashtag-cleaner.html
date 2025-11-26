@@ -21,12 +21,42 @@
     .toggle{display:flex;gap:6px;align-items:center}
     @media(min-width:720px){ .controls{gap:14px} .row{flex-wrap:nowrap} }
 
-    /* FAQ styling */
+    /* FAQ styling and collapsible behavior */
     .content-area{max-width:980px;margin:22px auto 40px;color:var(--muted);padding:0 6px}
     .content-area h3{color:var(--text);margin:14px 0 6px;font-size:16px}
-    .faq{background:transparent;border-radius:12px;padding:10px}
-    .faq dt{font-weight:700;color:var(--text);margin-top:12px}
-    .faq dd{margin:6px 0 0;color:var(--muted);font-size:14px;line-height:1.6}
+    .faq{background:transparent;border-radius:12px;padding:6px}
+    .faq-item{border-top:1px solid rgba(255,255,255,0.02);padding:8px 0}
+    .faq-question{
+      width:100%;
+      text-align:left;
+      background:transparent;
+      border:0;
+      color:var(--text);
+      font-weight:700;
+      padding:8px 6px;
+      cursor:pointer;
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:12px;
+      font-size:15px;
+      border-radius:8px;
+    }
+    .faq-question:focus{outline:2px solid rgba(56,189,248,0.18);outline-offset:2px}
+    .faq-answer{
+      overflow:hidden;
+      max-height:0;
+      transition: max-height 260ms cubic-bezier(.2,.9,.3,1), padding 160ms;
+      padding:0 6px;
+      color:var(--muted);
+      font-size:14px;
+      line-height:1.6;
+    }
+    .faq-answer.open{ padding:10px 6px 6px 6px; }
+    .faq-toggle-icon{
+      width:26px;height:26px;display:inline-grid;place-items:center;border-radius:6px;background:rgba(255,255,255,0.02);
+      color:var(--muted);font-size:14px;flex-shrink:0;
+    }
   </style>
 </head>
 <body>
@@ -95,56 +125,115 @@
         </p>
       </section>
 
-      <!-- FAQ block inserted below (uses SocialMediaToolsHub name, ~1000+ chars) -->
+      <!-- Collapsible FAQ block inserted below (SocialMediaToolsHub name used) -->
       <article class="content-area" id="how" aria-labelledby="how-title">
         <h3 id="how-title">Frequently Asked Questions — Hashtag Cleaner</h3>
         <div class="faq" role="region" aria-label="FAQ about the Hashtag Cleaner">
-          <dl>
-            <dt>What does the Hashtag Cleaner do and when should I use it?</dt>
-            <dd>
-              The Hashtag Cleaner on SocialMediaToolsHub is a lightweight browser utility that extracts and normalizes hashtags from a block of text or a mixed caption. When creators copy captions from notes, messaging apps, or other tools they often bring along punctuation, stray characters, emojis, or duplicate tags. This tool isolates hashtag-like tokens, strips trailing punctuation and non-hashtag characters, and returns a compact, deduplicated list that you can paste directly into Instagram, TikTok or Facebook. Use it when you want reliable, clean hashtag blocks fast — especially helpful before posting from a phone or scheduling tool.
-            </dd>
 
-            <dt>Is my text uploaded anywhere or saved on a server?</dt>
-            <dd>
-              No. Hashtag Cleaner runs entirely in your browser. Nothing is sent to SocialMediaToolsHub’s servers by default — the tool performs all extraction, deduplication and formatting locally. This keeps your draft captions private and ensures the cleaning step is immediate, even when you are offline or on a slow connection. If you choose to copy or download the output locally, those actions happen on your device only.
-            </dd>
+          <!-- FAQ 1 -->
+          <div class="faq-item">
+            <button class="faq-question" aria-expanded="false" aria-controls="faq1">
+              <span>What does the Hashtag Cleaner do and when should I use it?</span>
+              <span class="faq-toggle-icon" aria-hidden="true">+</span>
+            </button>
+            <div id="faq1" class="faq-answer" role="region" aria-hidden="true">
+              <p>
+                The Hashtag Cleaner on SocialMediaToolsHub extracts and normalizes hashtags from mixed caption text. It strips punctuation and stray characters, removes duplicates, and returns a tidy block you can paste into Instagram, TikTok, or Facebook. Use it when copying captions from notes, chats, or other apps to ensure hashtags remain valid and compact.
+              </p>
+            </div>
+          </div>
 
-            <dt>How does deduplication work and will it change capitalization?</dt>
-            <dd>
-              Deduplication is case-insensitive: the tool treats #Travel and #travel as the same tag and will keep only the first occurrence in the cleaned list. Output is normalized to lowercase to reduce accidental duplicates and to keep blocks compact and consistent. If you prefer specific capitalization for branding, you can edit the final output manually before copying. The goal is functional hashtags that behave consistently across platforms.
-            </dd>
+          <!-- FAQ 2 -->
+          <div class="faq-item">
+            <button class="faq-question" aria-expanded="false" aria-controls="faq2">
+              <span>Is my text uploaded anywhere or saved on a server?</span>
+              <span class="faq-toggle-icon" aria-hidden="true">+</span>
+            </button>
+            <div id="faq2" class="faq-answer" role="region" aria-hidden="true">
+              <p>
+                No — everything runs locally in your browser. The tool does not send your text to any external server by default. Copying or downloading is done on your device only, so your drafts and hashtag lists remain private.
+              </p>
+            </div>
+          </div>
 
-            <dt>Does the cleaner support Unicode or non-English hashtags?</dt>
-            <dd>
-              Yes — while the cleaning uses broadly-compatible patterns to maximize browser support, common Unicode letters and digits are preserved when possible and the routine removes punctuation and stray symbols that break tags. For edge-case scripts or platform-specific rules, test a sample tag; the cleaner is conservative and designed to produce widely compatible hashtag tokens.
-            </dd>
+          <!-- FAQ 3 -->
+          <div class="faq-item">
+            <button class="faq-question" aria-expanded="false" aria-controls="faq3">
+              <span>How does deduplication work and will it change capitalization?</span>
+              <span class="faq-toggle-icon" aria-hidden="true">+</span>
+            </button>
+            <div id="faq3" class="faq-answer" role="region" aria-hidden="true">
+              <p>
+                Deduplication is case-insensitive: the tool treats #Travel and #travel as the same tag and keeps the first instance. Output is normalized to lowercase to avoid accidental duplicates and ensure consistent behavior across platforms. You can edit capitalization manually after cleaning if needed.
+              </p>
+            </div>
+          </div>
 
-            <dt>What about blacklist and automatic hashify features?</dt>
-            <dd>
-              SocialMediaToolsHub provides options (if enabled) to automatically convert plain words into hashtag tokens (hashify) and to apply a local blacklist of tags you want to exclude permanently, such as known spammy or shadowed tags. Blacklist settings are stored locally so they do not leave your device. If you haven’t enabled blacklist or hashify, the cleaner simply extracts existing hashtags and returns a deduplicated list.
-            </dd>
+          <!-- FAQ 4 -->
+          <div class="faq-item">
+            <button class="faq-question" aria-expanded="false" aria-controls="faq4">
+              <span>Does the cleaner support Unicode or non-English hashtags?</span>
+              <span class="faq-toggle-icon" aria-hidden="true">+</span>
+            </button>
+            <div id="faq4" class="faq-answer" role="region" aria-hidden="true">
+              <p>
+                Yes — the cleaner preserves common Unicode letters and digits where possible and removes punctuation or symbols that would break a tag. For unusual scripts or platform-specific rules, test a sample tag; the tool prioritizes broad compatibility.
+              </p>
+            </div>
+          </div>
 
-            <dt>How can I prepare tag groups for platforms that limit hashtags?</dt>
-            <dd>
-              The Hashtag Cleaner supports sorting and formatting so you can craft groups manually: sort by length or alphabetically, then copy the first 30 tags for an Instagram post. Planned updates on SocialMediaToolsHub will add a one-click 30-per-group feature with separate copy buttons, but for now sorting and manual grouping are reliable and immediate.
-            </dd>
+          <!-- FAQ 5 -->
+          <div class="faq-item">
+            <button class="faq-question" aria-expanded="false" aria-controls="faq5">
+              <span>How can I prepare tag groups for platforms that limit hashtags?</span>
+              <span class="faq-toggle-icon" aria-hidden="true">+</span>
+            </button>
+            <div id="faq5" class="faq-answer" role="region" aria-hidden="true">
+              <p>
+                Use the sort options (None, A→Z, Long→Short, Random) to order tags, then copy the first 30 for Instagram if you need to respect a 30-tag limit. Planned updates on SocialMediaToolsHub include a one-click grouping feature, but manual grouping remains quick and reliable today.
+              </p>
+            </div>
+          </div>
 
-            <dt>What should I do if a tag still doesn’t behave on the platform?</dt>
-            <dd>
-              Occasionally a platform may block or ignore specific tags. If a tag appears broken after pasting (for example it doesn’t link or search), remove any non-alphanumeric characters and retry. If a tag is known to be shadowed, add it to your local blacklist in the tool and enable blacklist mode to prevent it from being included in future outputs.
-            </dd>
+          <!-- FAQ 6 -->
+          <div class="faq-item">
+            <button class="faq-question" aria-expanded="false" aria-controls="faq6">
+              <span>What should I do if a tag still doesn’t behave on the platform?</span>
+              <span class="faq-toggle-icon" aria-hidden="true">+</span>
+            </button>
+            <div id="faq6" class="faq-answer" role="region" aria-hidden="true">
+              <p>
+                If a pasted tag does not link or search, remove any non-alphanumeric characters and try again. If a tag is shadowed by the platform, remove it from your set before posting. You can keep a personal list of problematic tags externally until a blacklist option is available.
+              </p>
+            </div>
+          </div>
 
-            <dt>Which browsers and devices are supported?</dt>
-            <dd>
-              The Hashtag Cleaner works in modern browsers that support standard JavaScript and standard regular expressions. That includes current versions of Chrome, Edge, Firefox and Safari on desktop and mobile. If you notice a browser-specific issue, include your browser name and version when reporting it so the SocialMediaToolsHub team can investigate.
-            </dd>
+          <!-- FAQ 7 -->
+          <div class="faq-item">
+            <button class="faq-question" aria-expanded="false" aria-controls="faq7">
+              <span>Which browsers and devices are supported?</span>
+              <span class="faq-toggle-icon" aria-hidden="true">+</span>
+            </button>
+            <div id="faq7" class="faq-answer" role="region" aria-hidden="true">
+              <p>
+                The Hashtag Cleaner works in modern browsers with standard JavaScript support (Chrome, Edge, Firefox, Safari) on both desktop and mobile. If you see a browser-specific issue, report browser name and version so the SocialMediaToolsHub team can investigate.
+              </p>
+            </div>
+          </div>
 
-            <dt>Where can I get help or report bugs?</dt>
-            <dd>
-              If something doesn’t work or you have a suggestion, contact the SocialMediaToolsHub support/contact page with a short description and a sample input that reproduces the problem. Provide your browser and device details — those help reproduce and fix issues quickly. The project is focused on fast local tools, so feedback is valuable and usually addressed in small, frequent updates.
-            </dd>
-          </dl>
+          <!-- FAQ 8 -->
+          <div class="faq-item">
+            <button class="faq-question" aria-expanded="false" aria-controls="faq8">
+              <span>Where can I get help or report bugs?</span>
+              <span class="faq-toggle-icon" aria-hidden="true">+</span>
+            </button>
+            <div id="faq8" class="faq-answer" role="region" aria-hidden="true">
+              <p>
+                Send a short report via the SocialMediaToolsHub contact page with a sample input that reproduces the issue plus your browser and device details. That information helps reproduce and fix problems quickly.
+              </p>
+            </div>
+          </div>
+
         </div>
       </article>
 
@@ -177,9 +266,14 @@
     // remove leading/trailing punctuation like .,!?:;()[]{}"'
     function sanitizeBodyRaw(body){
       if(!body) return '';
-      // Trim common leading/trailing punctuation and emoji-like symbols
-      body = body.replace(/^[\s\p{P}\p{S}]+|[\s\p{P}\p{S}]+$/gu,''); // attempt unicode trim if supported
-      // Fallback conservative trim for environments that don't support \p{P}
+      // Try a Unicode-safe trim first (if the browser supports \p), otherwise fall back
+      try {
+        // This may throw in older engines that don't support \p, so wrap in try.
+        body = body.replace(/^[\s\p{P}\p{S}]+|[\s\p{P}\p{S}]+$/gu,'');
+      } catch(e) {
+        body = body.replace(/^[^A-Za-z0-9_]+|[^A-Za-z0-9_]+$/g,'');
+      }
+      // Final conservative pass
       body = body.replace(/^[^A-Za-z0-9_]+|[^A-Za-z0-9_]+$/g,'');
       return body;
     }
@@ -328,12 +422,126 @@
       }
     });
 
-    // Hint on load
+    // Hint on load + FAQ toggles
     document.addEventListener('DOMContentLoaded', function(){
       if(!input.value) input.placeholder = 'Paste caption with hashtags or a hashtag list — then click Clean';
+
+      /* FAQ collapsible setup */
+      var faqButtons = document.querySelectorAll('.faq-question');
+      faqButtons.forEach(function(btn){
+        btn.addEventListener('click', function(){
+          var expanded = btn.getAttribute('aria-expanded') === 'true';
+          var targetId = btn.getAttribute('aria-controls');
+          var content = document.getElementById(targetId);
+          if(!content) return;
+          if(expanded){
+            // collapse
+            btn.setAttribute('aria-expanded','false');
+            content.setAttribute('aria-hidden','true');
+            content.style.maxHeight = '0';
+            content.classList.remove('open');
+            btn.querySelector('.faq-toggle-icon').textContent = '+';
+          } else {
+            // expand
+            btn.setAttribute('aria-expanded','true');
+            content.setAttribute('aria-hidden','false');
+            content.classList.add('open');
+            content.style.maxHeight = content.scrollHeight + 'px';
+            btn.querySelector('.faq-toggle-icon').textContent = '−';
+          }
+        });
+
+        btn.addEventListener('keydown', function(e){
+          if(e.key === 'Enter' || e.key === ' '){
+            e.preventDefault();
+            btn.click();
+          }
+        });
+      });
+
+      window.addEventListener('resize', function(){
+        document.querySelectorAll('.faq-answer.open').forEach(function(el){
+          el.style.maxHeight = el.scrollHeight + 'px';
+        });
+      });
     });
 
   })();
   </script>
+
+  <!-- JSON-LD FAQ schema (search-optimized, SocialMediaToolsHub referenced) -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    "mainEntity": [
+      {
+        "@type": "Question",
+        "name": "What does the Hashtag Cleaner do and when should I use it?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "The Hashtag Cleaner on SocialMediaToolsHub extracts hashtags from mixed caption text, removes punctuation and duplicates, and outputs a tidy list ready to paste into Instagram, TikTok or Facebook. Use it when you copy captions from notes, chats, or other apps to ensure your tags remain valid and compact."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "Is my text uploaded anywhere or saved on a server?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "No. The Hashtag Cleaner runs entirely in your browser and does not send your text to external servers by default. Copying or downloading the output is performed locally on your device."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "How does deduplication work and will it change capitalization?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Deduplication is case-insensitive: #Travel and #travel are considered the same and only the first occurrence is kept. Output is normalized to lowercase to avoid accidental duplicates, but you can edit capitalization manually after cleaning."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "Does the cleaner support Unicode or non-English hashtags?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Yes. The cleaner preserves common Unicode letters and digits where possible and removes punctuation or symbols that would break a hashtag. For unusual scripts, test a sample tag to confirm platform compatibility."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "How can I prepare tag groups for platforms that limit hashtags?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Use the provided sort options to order tags, then copy the first set (for example, 30 tags for Instagram). SocialMediaToolsHub plans to add an automatic grouping feature, but sorting and manual grouping are quick and reliable now."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "What should I do if a tag still doesn’t behave on the platform?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "If a tag does not link or search after pasting, remove non-alphanumeric characters and retry. For tags that are shadowed by the platform, remove them from your set before posting."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "Which browsers and devices are supported?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "The Hashtag Cleaner works in modern browsers with standard JavaScript support, including recent versions of Chrome, Edge, Firefox and Safari on desktop and mobile."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "Where can I get help or report bugs?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Report issues via the SocialMediaToolsHub contact page with a short description, a sample input that reproduces the problem, and your browser and device details so the team can investigate."
+        }
+      }
+    ]
+  }
+  </script>
+
 </body>
 </html>
