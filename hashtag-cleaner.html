@@ -99,7 +99,7 @@
 
   <script>
   (function(){
-    // Helpers -----------------------------------------------------------
+    // Elements
     var input = document.getElementById('input-text');
     var output = document.getElementById('output');
     var cleanBtn = document.getElementById('clean-btn');
@@ -111,41 +111,31 @@
     var totalCountEl = document.getElementById('total-count');
     var uniqueCountEl = document.getElementById('unique-count');
 
-    // Regex to detect hashtag-like tokens:
-    // We will find tokens that either begin with '#' or are words containing letters/numbers/underscore and treat them.
-    // For cleaning a hashtag body, allow Unicode letters & numbers and underscores.
-    // Use u flag to support emoji and unicode.
-    var HASHTAG_FIND = /#[^\s#]+/gu; // quick find of tokens that start with #
-    var WORD_FIND = /[^\s#]+/gu; // fallback tokens (when hashtags not present)
-    var CLEAN_BODY = /(^#+)|[^\p{L}\p{N}_]+/gu; // strip leading # signs and trailing punctuation/emojis (keep letters/numbers/underscore)
-    // Note: CLEAN_BODY keeps Unicode letters and numbers (u-flag) and underscores.
+    // Unicode-safe regexes
+    // Capture hashtag bodies (#abc123, allowing Unicode letters/numbers and underscore)
+    var HASHTAG_BODY_RE = /#([\p{L}\p{N}_]+)/gu;
+    // Fallback: capture word-like tokens (letters/numbers/underscore). Used only when no explicit # found.
+    var WORD_BODY_RE = /([\p{L}\p{N}_]+)/gu;
 
-    // Extract hashtags from text (handles caption+hashtags)
-    function extractHashtags(text){
-      if(!text || !text.trim()) return [];
-
-      // first try to find explicit #tokens
-      var found = Array.from(text.matchAll(HASHTAG_FIND || []), m => m[0]);
-      if(found.length === 0){
-        // maybe user pasted space/comma separated words (no #) - we will look for words that look like hashtags
-        found = Array.from(text.matchAll(WORD_FIND || []), m => m[0]);
+    // Extract hashtag bodies; return array of '#body' strings (raw body, not normalized)
+    function extractHashtagBodies(text){
+      if(!text) return [];
+      var bodies = [];
+      // First capture explicit hashtags
+      var m;
+      while((m = HASHTAG_BODY_RE.exec(text)) !== null){
+        bodies.push(m[1]);
       }
-      // Clean each token to a valid hashtag body
-      var cleaned = found.map(function(tok){
-        // If token starts with #, fine. If not, treat tok as candidate and strip punctuation.
-        var body = tok.replace(CLEAN_BODY, '');
-        // fallback: if body empty, attempt to remove punctuation around tokens
-        if(!body){
-          // remove leading/trailing punctuation generally
-          body = tok.replace(/^[^0-9\p{L}_]+|[^0-9\p{L}_]+$/gu,'');
-        }
-        return body ? ('#' + body) : null;
-      }).filter(Boolean);
+      if(bodies.length > 0) return bodies.map(function(b){ return '#'+b; });
 
-      return cleaned;
+      // Fallback: capture word-like tokens (this helps when users paste words without #)
+      while((m = WORD_BODY_RE.exec(text)) !== null){
+        bodies.push(m[1]);
+      }
+      return bodies.map(function(b){ return '#'+b; });
     }
 
-    // Normalize for dedupe: lowercase
+    // Normalize for dedupe
     function normalizeTag(tag){
       return tag.toLowerCase();
     }
@@ -172,51 +162,51 @@
     // Format output
     function formatOutput(arr){
       if(onePerLineRadio.checked){
-        return arr.join('\\n');
+        return arr.join('\n');
       }
       return arr.join(' ');
     }
 
-    // Core cleaning pipeline
+    // Main cleaning pipeline
     function cleanPipeline(text){
-      var extracted = extractHashtags(text); // e.g. ["#Travel", "#sunset.", ...]
-      // Track original order but dedupe case-insensitively
+      var extracted = extractHashtagBodies(text); // e.g. ["#Travel", "#sunset"]
+      var totalFound = extracted.length;
+
       var seen = new Set();
       var unique = [];
       for(var i=0;i<extracted.length;i++){
-        var tag = extracted[i];
-        // remove any leftover invalid chars from body (run CLEAN_BODY again defensively)
-        var body = tag.replace(/^#+/, '').replace(/[^\\p{L}\\p{N}_]+/gu,'');
-        if(!body) continue;
+        var tag = extracted[i]; // e.g. "#Travel"
+        // remove any accidental non-word chars around body (defensive)
+        var bodyMatch = tag.match(/^#([\p{L}\p{N}_]+)$/u);
+        if(!bodyMatch) continue;
+        var body = bodyMatch[1];
         var normalized = normalizeTag('#' + body);
         if(!seen.has(normalized)){
           seen.add(normalized);
-          unique.push('#' + body.toLowerCase()); // output normalized to lowercase for consistency
+          unique.push('#' + body.toLowerCase());
         }
       }
-      return { list: unique, total: extracted.length, uniqueCount: unique.length };
+      return { list: unique, total: totalFound, uniqueCount: unique.length };
     }
 
-    // Render state
+    // Render result
     function renderResult(res){
       var list = res.list;
-      // apply sort
       var sorted = sortTags(list, sortSelect.value);
       output.textContent = formatOutput(sorted);
       totalCountEl.textContent = String(res.total);
       uniqueCountEl.textContent = String(res.uniqueCount);
     }
 
-    // Bindings ---------------------------------------------------------
+    // Bindings
     cleanBtn.addEventListener('click', function(){
       var text = input.value || '';
       var res = cleanPipeline(text);
       renderResult(res);
-      // focus output for quick edit
       output.focus();
     });
 
-    // Also clean on Ctrl+Enter in textarea
+    // Ctrl/Cmd+Enter to clean
     input.addEventListener('keydown', function(e){
       if(e.key === 'Enter' && (e.ctrlKey || e.metaKey)){
         e.preventDefault();
@@ -228,12 +218,10 @@
     copyBtn.addEventListener('click', function(){
       var val = output.textContent || '';
       if(!val.trim()){
-        // if output empty, run a clean first
         cleanBtn.click();
         val = output.textContent || '';
       }
       if(!val.trim()){
-        // nothing to copy
         copyBtn.textContent = 'Nothing to copy';
         setTimeout(function(){ copyBtn.textContent = 'Copy Clean Hashtags'; }, 1300);
         return;
@@ -269,7 +257,7 @@
       }
     }
 
-    // clear button
+    // Clear
     clearBtn.addEventListener('click', function(){
       input.value = '';
       output.textContent = '';
@@ -277,21 +265,30 @@
       uniqueCountEl.textContent = '0';
     });
 
-    // Recompute output when sort or format changes (keeps user edits if already cleaned)
-    sortSelect.addEventListener('change', function(){
-      // If output has content, attempt to re-sort/format based on existing tags
+    // Re-sort existing output when sort or format changes
+    function reformatExistingOutput(){
       var current = output.textContent || '';
       if(!current.trim()) return;
-      // parse current output as hashtags (split by whitespace or newline)
-      var tokens = current.split(/[\\s\\n]+/).filter(Boolean).map(function(t){ return t.replace(/^#+/,''); }).filter(Boolean).map(function(b){ return '#'+b; });
-      var sorted = sortTags(tokens.map(function(t){ return t.toLowerCase(); }), sortSelect.value);
+      // split current hashtags by whitespace/newline
+      var tokens = current.split(/\s+/).filter(Boolean).map(function(t){
+        // remove leading # if any and keep body
+        return '#'+t.replace(/^#+/, '').replace(/[^\p{L}\p{N}_]+/gu,'');
+      }).filter(function(t){ return t && t.length>1; }); // defensive
+      // dedupe preserve first occurrence order
+      var seen = new Set(), unique = [];
+      tokens.forEach(function(t){
+        var n = normalizeTag(t);
+        if(!seen.has(n)){ seen.add(n); unique.push(t.toLowerCase()); }
+      });
+      var sorted = sortTags(unique, sortSelect.value);
       output.textContent = formatOutput(sorted);
-    });
+    }
 
-    oneLineRadio.addEventListener('change', function(){ sortSelect.dispatchEvent(new Event('change')); });
-    onePerLineRadio.addEventListener('change', function(){ sortSelect.dispatchEvent(new Event('change')); });
+    sortSelect.addEventListener('change', reformatExistingOutput);
+    oneLineRadio.addEventListener('change', reformatExistingOutput);
+    onePerLineRadio.addEventListener('change', reformatExistingOutput);
 
-    // Allow pressing Cmd/Ctrl+K to paste sample demo hashtags (developer shortcut)
+    // Developer shortcut: paste sample on Cmd/Ctrl+K
     document.addEventListener('keydown', function(e){
       if((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === 'k'){
         e.preventDefault();
@@ -299,7 +296,7 @@
       }
     });
 
-    // On load: small hint if empty
+    // Hint on load
     document.addEventListener('DOMContentLoaded', function(){
       if(!input.value) input.placeholder = 'Paste caption with hashtags or a hashtag list — then click Clean';
     });
