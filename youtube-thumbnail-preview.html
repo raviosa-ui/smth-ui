@@ -1,0 +1,707 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>YouTube Thumbnail Previewer — SocialMediaToolsKit</title>
+  <meta name="description" content="Test your YouTube thumbnail in 4 different layouts: Homepage, Search, Sidebar, and Mobile." />
+  <meta name="theme-color" content="#0f172a" />
+  
+  <link rel="stylesheet" href="style.css">
+
+  <style>
+    /* * FALLBACK VARIABLES 
+     * Ensures tool works nicely even if style.css fails to load 
+     */
+    :root {
+      --bg: #0f172a;
+      --card: #1e293b;
+      --text: #f8fafc;
+      --muted: #94a3b8;
+      --border: #334155;
+      --accent-from: #38bdf8;
+      --accent-to: #818cf8;
+      --r-lg: 24px;
+      --r-md: 16px;
+      --trans: 260ms cubic-bezier(.2,.9,.3,1);
+    }
+
+    /* --- TOOL SPECIFIC LAYOUT --- */
+    .tool-container {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 24px;
+      margin-top: 24px;
+    }
+
+    @media(min-width: 900px) {
+      .tool-container {
+        grid-template-columns: 320px 1fr;
+        align-items: start;
+      }
+    }
+
+    /* CONTROLS (Left Panel) */
+    .controls {
+      background: var(--card);
+      padding: 24px;
+      border-radius: var(--r-md);
+      border: 1px solid var(--border);
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+    }
+
+    .form-group label {
+      display: block;
+      font-weight: 600;
+      margin-bottom: 8px;
+      font-size: 14px;
+      color: var(--text);
+    }
+
+    .input-field {
+      width: 100%;
+      background: rgba(0,0,0,0.3);
+      border: 1px solid var(--border);
+      color: var(--text);
+      padding: 12px;
+      border-radius: 8px;
+      font-family: inherit;
+      font-size: 14px;
+    }
+    .input-field:focus { outline: none; border-color: var(--accent-from); }
+
+    /* UPLOAD AREA */
+    .upload-box {
+      border: 2px dashed var(--border);
+      border-radius: 12px;
+      padding: 20px;
+      text-align: center;
+      cursor: pointer;
+      position: relative;
+      background: rgba(255,255,255,0.01);
+      transition: 0.2s;
+    }
+    .upload-box:hover { border-color: var(--accent-from); background: rgba(56,189,248,0.05); }
+    .upload-box input {
+      position: absolute; top: 0; left: 0; width: 100%; height: 100%; opacity: 0; cursor: pointer;
+    }
+    .upload-preview-mini {
+      width: 100%; height: auto; margin-top: 10px; border-radius: 6px; display: none;
+    }
+
+    /* MODE SWITCHER (Tabs) */
+    .mode-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 8px;
+    }
+    .mode-btn {
+      background: rgba(255,255,255,0.03);
+      border: 1px solid var(--border);
+      color: var(--muted);
+      padding: 10px;
+      border-radius: 8px;
+      cursor: pointer;
+      font-size: 13px;
+      transition: var(--trans);
+    }
+    .mode-btn:hover { background: rgba(255,255,255,0.08); color: var(--text); }
+    .mode-btn.active {
+      background: linear-gradient(90deg, var(--accent-from), var(--accent-to));
+      color: #000;
+      border-color: transparent;
+      font-weight: 600;
+    }
+
+    /* PREVIEW PANEL (Right Panel) */
+    .preview-wrapper {
+      background: var(--card);
+      padding: 20px;
+      border-radius: var(--r-md);
+      border: 1px solid var(--border);
+      display: flex;
+      justify-content: center;
+      align-items: flex-start;
+      overflow: auto; /* Allow scroll if canvas is huge */
+      min-height: 500px;
+    }
+
+    canvas {
+      box-shadow: 0 10px 40px rgba(0,0,0,0.5);
+      max-width: 100%;
+      height: auto;
+      border-radius: 4px;
+    }
+
+    /* CONTENT STYLING */
+    .content-block {
+      max-width: 800px;
+      margin: 40px auto;
+      color: var(--muted);
+    }
+    .content-block h2 { color: var(--text); margin-bottom: 16px; }
+    .content-block p { line-height: 1.6; margin-bottom: 16px; }
+
+    /* FAQ */
+    details {
+      background: rgba(255,255,255,0.02);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      margin-bottom: 10px;
+    }
+    summary {
+      padding: 16px;
+      cursor: pointer;
+      font-weight: 600;
+      color: var(--text);
+      display: flex;
+      justify-content: space-between;
+    }
+    .faq-body {
+      padding: 0 16px 16px;
+      font-size: 14px;
+      line-height: 1.5;
+    }
+  </style>
+</head>
+
+<body>
+  <div class="container">
+
+    <header class="header" role="banner">
+      <div class="brand" aria-label="SocialMediaToolsKit">
+        <span class="brand-emoji" aria-hidden="true">⚡</span>
+        <span class="logo-text">SocialMediaToolsKit</span>
+      </div>
+      <nav class="topnav" role="navigation">
+        <a href="index.html">Home</a>
+        <a href="#about">About</a>
+      </nav>
+    </header>
+
+    <main>
+      <section class="hero" style="text-align:center; padding: 20px;">
+        <h1>YouTube Thumbnail Previewer</h1>
+        <p class="lead">See how your thumbnail looks on Homepage, Sidebar, Search, and Mobile.</p>
+      </section>
+
+      <div class="tool-container">
+        
+        <div class="controls">
+          
+          <div class="form-group">
+            <label>1. Upload Thumbnail</label>
+            <div class="upload-box" id="drop-zone">
+              <span style="font-size:24px">📁</span>
+              <div style="font-size:13px; margin-top:4px; color:var(--muted)">Click or Drag Image</div>
+              <input type="file" id="image-input" accept="image/*">
+              <img id="img-preview-mini" class="upload-preview-mini" alt="Preview">
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label>2. Video Details</label>
+            <input type="text" id="input-title" class="input-field" placeholder="Video Title" value="My Awesome Video Title Goes Here">
+            <input type="text" id="input-channel" class="input-field" placeholder="Channel Name" value="My Channel" style="margin-top:8px">
+          </div>
+
+          <div class="form-group">
+            <label>3. Preview Mode</label>
+            <div class="mode-grid">
+              <button class="mode-btn active" data-mode="home">🏠 Home</button>
+              <button class="mode-btn" data-mode="search">🔍 Search</button>
+              <button class="mode-btn" data-mode="sidebar">⏭️ Sidebar</button>
+              <button class="mode-btn" data-mode="mobile">📱 Mobile</button>
+            </div>
+          </div>
+
+          <button id="theme-btn" class="mode-btn" style="width:100%; text-align:center;">
+            🌗 Toggle Dark/Light Mode
+          </button>
+
+          <button id="download-btn" class="btn-cta" style="width:100%; justify-content:center; margin-top:10px;">
+            Download Preview 📥
+          </button>
+
+        </div>
+
+        <div class="preview-wrapper">
+          <canvas id="canvas"></canvas>
+        </div>
+
+      </div>
+
+      <article class="content-block">
+        <h2>Why Preview Your Thumbnail?</h2>
+        <p>Your thumbnail never exists in a vacuum. It competes with dozens of other images, colors, and texts on the screen. A design that looks great in Photoshop might vanish against YouTube's dark background or become unreadable when shrunk down to mobile size.</p>
+        <p><strong>The "Context Gap":</strong> Most creators fail because they don't check legibility. By using the 4 modes above, you can ensure your text is large enough for mobile users (70% of traffic) and that your colors pop against the "Up Next" sidebar.</p>
+      </article>
+
+      <article class="content-block">
+        <h2>Frequently Asked Questions</h2>
+        <details>
+          <summary>What is the correct YouTube thumbnail size?</summary>
+          <div class="faq-body">The ideal size is 1280x720 pixels (16:9 aspect ratio). Minimum width is 640 pixels.</div>
+        </details>
+        <details>
+          <summary>Why use Emojis in the preview?</summary>
+          <div class="faq-body">We use emojis and colors to simulate "noisy" competitor thumbnails without using heavy images. This mimics the distraction of the YouTube feed.</div>
+        </details>
+        <details>
+          <summary>Is my image uploaded?</summary>
+          <div class="faq-body">No. All processing happens in your browser. Your image never leaves your device.</div>
+        </details>
+      </article>
+
+    </main>
+
+    <footer>© 2025 SocialMediaToolsKit.</footer>
+  </div>
+
+  <script>
+    (function(){
+      // --- CONFIG & STATE ---
+      const canvas = document.getElementById('canvas');
+      const ctx = canvas.getContext('2d');
+      
+      const state = {
+        title: "My Awesome Video Title Goes Here",
+        channel: "My Channel",
+        image: null, // holds the Image object
+        mode: 'home', // home, search, sidebar, mobile
+        isDark: true
+      };
+
+      // Mock Data Generator for "Competitors"
+      const EMOJIS = ['🔥','😱','😂','🦄','🍕','🚀','💀','👀','💰','🍔','⚽','🎮'];
+      const COLORS = ['#ef4444','#f97316','#f59e0b','#84cc16','#10b981','#06b6d4','#3b82f6','#8b5cf6','#d946ef'];
+      
+      function getRandomCompetitor() {
+        return {
+          color: COLORS[Math.floor(Math.random() * COLORS.length)],
+          emoji: EMOJIS[Math.floor(Math.random() * EMOJIS.length)],
+          title: "Competitor Video Title " + Math.floor(Math.random()*100),
+          channel: "Other Channel",
+          views: Math.floor(Math.random()*900 + 10) + "K views",
+          time: Math.floor(Math.random()*11 + 1) + " months ago"
+        };
+      }
+
+      // Pre-generate competitors so they don't flicker on redraw
+      const competitors = Array(10).fill(0).map(getRandomCompetitor);
+
+      // --- THEME COLORS ---
+      const THEME = {
+        dark: { bg: '#0f0f0f', text: '#ffffff', sub: '#aaaaaa', elBg: '#1f1f1f', input: '#121212' },
+        light: { bg: '#ffffff', text: '#030303', sub: '#606060', elBg: '#f2f2f2', input: '#ffffff' }
+      };
+
+      // --- INIT ---
+      function init() {
+        // Event Listeners
+        document.getElementById('input-title').addEventListener('input', e => { state.title = e.target.value; draw(); });
+        document.getElementById('input-channel').addEventListener('input', e => { state.channel = e.target.value; draw(); });
+        
+        // Mode Buttons
+        document.querySelectorAll('.mode-btn[data-mode]').forEach(btn => {
+          btn.addEventListener('click', () => {
+            document.querySelectorAll('.mode-btn[data-mode]').forEach(b => b.classList.remove('active'));
+            btn.classList.add('active');
+            state.mode = btn.dataset.mode;
+            draw();
+          });
+        });
+
+        // Theme Toggle
+        document.getElementById('theme-btn').addEventListener('click', () => {
+          state.isDark = !state.isDark;
+          draw();
+        });
+
+        // Image Upload
+        const fileInput = document.getElementById('image-input');
+        const dropZone = document.getElementById('drop-zone');
+        
+        fileInput.addEventListener('change', handleFile);
+        
+        dropZone.addEventListener('dragover', e => { e.preventDefault(); dropZone.style.borderColor = '#38bdf8'; });
+        dropZone.addEventListener('dragleave', e => { e.preventDefault(); dropZone.style.borderColor = ''; });
+        dropZone.addEventListener('drop', e => {
+          e.preventDefault();
+          if(e.dataTransfer.files[0]) handleFile({ target: { files: e.dataTransfer.files } });
+        });
+
+        // Download
+        document.getElementById('download-btn').addEventListener('click', () => {
+          const link = document.createElement('a');
+          link.download = `preview-${state.mode}.png`;
+          link.href = canvas.toDataURL();
+          link.click();
+        });
+
+        // Initial Draw
+        draw();
+      }
+
+      function handleFile(e) {
+        if(!e.target.files || !e.target.files[0]) return;
+        const reader = new FileReader();
+        reader.onload = function(evt) {
+          const img = new Image();
+          img.onload = function() {
+            state.image = img;
+            document.getElementById('img-preview-mini').src = img.src;
+            document.getElementById('img-preview-mini').style.display = 'block';
+            draw();
+          }
+          img.src = evt.target.result;
+        }
+        reader.readAsDataURL(e.target.files[0]);
+      }
+
+      // --- DRAWING ENGINE (FIXED) ---
+      function draw() {
+        const t = state.isDark ? THEME.dark : THEME.light;
+        
+        // Set Canvas Size based on mode
+        if (state.mode === 'home') { canvas.width = 1200; canvas.height = 800; }
+        else if (state.mode === 'search') { canvas.width = 1000; canvas.height = 800; }
+        else if (state.mode === 'sidebar') { canvas.width = 1100; canvas.height = 700; }
+        else if (state.mode === 'mobile') { 
+            canvas.width = 400; 
+            canvas.height = 850; // Increased height for better feed simulation
+        }
+
+        // Fill BG
+        ctx.fillStyle = t.bg;
+        ctx.fillRect(0, 0, canvas.width, canvas.height); // Crucial: Clear background completely
+
+        // Header simulation (Search bar etc)
+        drawHeader(t);
+
+        if (state.mode === 'home') drawHome(t);
+        else if (state.mode === 'search') drawSearch(t);
+        else if (state.mode === 'sidebar') drawSidebar(t);
+        else if (state.mode === 'mobile') drawMobile(t);
+      }
+
+      function drawHeader(t) {
+        // Set header height based on mode
+        const h = state.mode === 'mobile' ? 50 : 60;
+        
+        ctx.fillStyle = t.bg;
+        ctx.fillRect(0,0,canvas.width, h);
+        
+        // Logo (Adjusted for mobile)
+        ctx.fillStyle = '#ff0000';
+        ctx.fillRect(10, h/2 - 10, 30, 20); // YouTube Red Box
+        ctx.fillStyle = t.text;
+        ctx.beginPath(); ctx.moveTo(23, h/2); ctx.lineTo(33, h/2+5); ctx.lineTo(23, h/2+10); ctx.fill(); // Play icon
+
+        // Search Bar (Desktop)
+        if(state.mode !== 'mobile') {
+          ctx.fillStyle = t.elBg;
+          ctx.fillRect(canvas.width/2 - 200, 12, 400, 36);
+          ctx.fillStyle = t.sub;
+          ctx.font = "16px Arial";
+          ctx.fillText("Search", canvas.width/2 - 180, 36);
+        } else {
+            // Mobile Icons simulation
+            const iconY = h / 2 + 5;
+            ctx.fillStyle = t.text;
+            ctx.font = "bold 16px Arial";
+            ctx.fillText("YouTube", 50, iconY);
+
+            ctx.font = "20px Arial";
+            ctx.textAlign = "right";
+            ctx.fillText("🔍", canvas.width - 50, iconY);
+            ctx.fillText("🔔", canvas.width - 20, iconY);
+            ctx.textAlign = "left";
+            
+            // Draw a separating line
+            ctx.fillStyle = t.sub + '44'; // Lighter subtitle color
+            ctx.fillRect(0, h-1, canvas.width, 1);
+        }
+      }
+
+      // --- LAYOUTS ---
+
+      function drawHome(t) {
+        const cols = 3;
+        const gap = 20;
+        const padding = 30;
+        const cardW = (canvas.width - (padding*2) - (gap*2)) / cols;
+        const startY = 90;
+
+        // Draw 6 cards. Make User the 2nd one.
+        let x = padding, y = startY;
+        
+        for(let i=0; i<6; i++) {
+          const isUser = (i === 1); 
+          drawCard(x, y, cardW, isUser, t, competitors[i]);
+          
+          x += cardW + gap;
+          if ((i+1) % cols === 0) {
+            x = padding;
+            y += 280; // row height
+          }
+        }
+      }
+
+      function drawSearch(t) {
+        const padding = 50;
+        const cardH = 200;
+        const gap = 20;
+        let y = 90;
+        
+        // List view. User is 2nd.
+        for(let i=0; i<4; i++) {
+          const isUser = (i === 1);
+          drawListCard(padding, y, canvas.width - (padding*2), cardH, isUser, t, competitors[i]);
+          y += cardH + gap;
+        }
+      }
+
+      function drawSidebar(t) {
+        // Left side: Part of a "Main Video"
+        const mainW = 700;
+        ctx.fillStyle = '#000';
+        ctx.fillRect(0, 60, mainW, 400); // Main video player
+        
+        // Title under main video
+        ctx.fillStyle = t.text;
+        ctx.font = "bold 20px Arial";
+        ctx.fillText("Currently Watching Video Title", 20, 490);
+
+        // Right side: Up Next List
+        const sidebarX = mainW + 20;
+        const itemH = 100;
+        const gap = 15;
+        let y = 80;
+
+        // "Up Next" Label
+        ctx.fillStyle = t.text;
+        ctx.font = "16px Arial";
+        ctx.fillText("Up Next", sidebarX, y);
+        y += 30;
+
+        for(let i=0; i<5; i++) {
+          const isUser = (i === 0); // User is first in Up Next
+          drawSideItem(sidebarX, y, canvas.width - sidebarX - 20, itemH, isUser, t, competitors[i]);
+          y += itemH + gap;
+        }
+      }
+
+      function drawMobile(t) {
+        // Header height is 50 in mobile mode
+        const headerHeight = 50; 
+
+        // Single column feed
+        const cardH = 280;
+        // Start drawing after the header with a small margin
+        let y = headerHeight + 5; 
+        
+        for(let i=0; i<3; i++) {
+          const isUser = (i === 1);
+          drawMobileCard(0, y, canvas.width, cardH, isUser, t, competitors[i]);
+          y += cardH + 20; // Increased spacing for visual clarity
+        }
+      }
+
+      // --- COMPONENT HELPERS ---
+
+      function drawCard(x, y, w, isUser, t, compData) {
+        const imgH = w * 0.5625; // 16:9
+        
+        // Thumbnail
+        drawThumbnailRect(x, y, w, imgH, isUser, compData);
+
+        // Meta Layout
+        const metaY = y + imgH + 10;
+        
+        // Avatar
+        drawAvatar(x, metaY, 36, isUser ? state.channel : compData.channel);
+
+        // Text
+        const textX = x + 48;
+        ctx.fillStyle = t.text;
+        ctx.font = "bold 16px Arial";
+        const title = isUser ? state.title : compData.title;
+        wrapText(title, textX, metaY + 14, w - 48, 20);
+
+        ctx.fillStyle = t.sub;
+        ctx.font = "14px Arial";
+        const meta = isUser ? `${state.channel} • 10K views` : `${compData.channel} • ${compData.views}`;
+        ctx.fillText(meta, textX, metaY + 54);
+      }
+
+      function drawListCard(x, y, w, h, isUser, t, compData) {
+        // Search layout: Thumb on left, text on right
+        const imgW = 360;
+        const imgH = 202; // 16:9 approx
+        
+        drawThumbnailRect(x, y, imgW, imgH, isUser, compData);
+
+        const textX = x + imgW + 20;
+        const textY = y + 20;
+
+        ctx.fillStyle = t.text;
+        ctx.font = "bold 20px Arial";
+        const title = isUser ? state.title : compData.title;
+        wrapText(title, textX, textY, w - imgW - 20, 26);
+
+        ctx.fillStyle = t.sub;
+        ctx.font = "14px Arial";
+        const meta = isUser ? `${state.channel} • 10K views • 2 hours ago` : `${compData.channel} • ${compData.views} • ${compData.time}`;
+        ctx.fillText(meta, textX, textY + 60);
+        
+        // Avatar small
+        drawAvatar(textX, textY + 80, 24, isUser ? state.channel : compData.channel);
+        ctx.fillText(isUser ? state.channel : compData.channel, textX + 34, textY + 97);
+      }
+
+      function drawSideItem(x, y, w, h, isUser, t, compData) {
+        const imgW = 168;
+        const imgH = 94;
+
+        drawThumbnailRect(x, y, imgW, imgH, isUser, compData);
+
+        const textX = x + imgW + 10;
+        ctx.fillStyle = t.text;
+        ctx.font = "bold 14px Arial";
+        const title = isUser ? state.title : compData.title;
+        wrapText(title, textX, y + 12, w - imgW - 10, 18);
+
+        ctx.fillStyle = t.sub;
+        ctx.font = "12px Arial";
+        ctx.fillText(isUser ? state.channel : compData.channel, textX, y + 60);
+      }
+
+      function drawMobileCard(x, y, w, h, isUser, t, compData) {
+        const imgH = w * 0.5625; 
+        drawThumbnailRect(x, y, w, imgH, isUser, compData);
+
+        const metaY = y + imgH + 12;
+        drawAvatar(x + 12, metaY, 36, isUser ? state.channel : compData.channel);
+
+        const textX = x + 60;
+        ctx.fillStyle = t.text;
+        ctx.font = "bold 16px Arial";
+        const title = isUser ? state.title : compData.title;
+        wrapText(title, textX, metaY + 14, w - 80, 20);
+
+        ctx.fillStyle = t.sub;
+        ctx.font = "12px Arial";
+        const meta = isUser ? `${state.channel} • 50K views • 1 day ago` : `${compData.channel} • ${compData.views} • ${compData.time}`;
+        ctx.fillText(meta, textX, metaY + 54);
+      }
+
+      // --- LOW LEVEL HELPERS ---
+
+      function drawThumbnailRect(x, y, w, h, isUser, compData) {
+        // Crop/Fill logic for user image
+        if (isUser && state.image) {
+          const img = state.image;
+          const scale = Math.max(w / img.width, h / img.height);
+          const tx = (w / 2) - (img.width * scale / 2);
+          const ty = (h / 2) - (img.height * scale / 2);
+          
+          ctx.save();
+          ctx.beginPath();
+          ctx.rect(x, y, w, h);
+          ctx.clip();
+          ctx.drawImage(img, x + tx, y + ty, img.width * scale, img.height * scale);
+          ctx.restore();
+          
+          // Timestamp
+          drawTime(x + w - 45, y + h - 20, "10:25");
+        } else if (isUser) {
+          // Placeholder for User
+          ctx.fillStyle = '#334155';
+          ctx.fillRect(x, y, w, h);
+          ctx.fillStyle = '#fff';
+          ctx.font = "14px Arial";
+          ctx.textAlign = "center";
+          ctx.fillText("Your Thumb", x + w/2, y + h/2);
+          ctx.textAlign = "left";
+          // Timestamp
+          drawTime(x + w - 45, y + h - 20, "00:00");
+        } else {
+          // Competitor (Emoji + Color)
+          ctx.fillStyle = compData.color;
+          ctx.fillRect(x, y, w, h);
+          ctx.font = "40px Arial";
+          ctx.textAlign = "center";
+          ctx.fillText(compData.emoji, x + w/2, y + h/2 + 15);
+          ctx.textAlign = "left";
+          // Timestamp
+          drawTime(x + w - 40, y + h - 20, "08:12");
+        }
+      }
+
+      function drawTime(x, y, txt) {
+        ctx.fillStyle = "rgba(0,0,0,0.8)";
+        ctx.fillRect(x, y, 40, 16);
+        ctx.fillStyle = "#fff";
+        ctx.font = "bold 10px Arial";
+        ctx.fillText(txt, x + 5, y + 12);
+      }
+
+      function drawAvatar(x, y, size, name) {
+        ctx.beginPath();
+        ctx.arc(x + size/2, y + size/2, size/2, 0, Math.PI * 2);
+        ctx.fillStyle = "#888"; 
+        // Generate pseudo-random color from name
+        let hash = 0;
+        for (let i = 0; i < name.length; i++) hash = name.charCodeAt(i) + ((hash << 5) - hash);
+        const c = (hash & 0x00FFFFFF).toString(16).toUpperCase();
+        ctx.fillStyle = "#" + "00000".substring(0, 6 - c.length) + c;
+        
+        ctx.fill();
+        ctx.closePath();
+
+        // Initial
+        ctx.fillStyle = "#fff";
+        ctx.font = "bold " + (size/2) + "px Arial";
+        ctx.textAlign = "center";
+        ctx.fillText(name.charAt(0).toUpperCase(), x + size/2, y + size/2 + (size/6));
+        ctx.textAlign = "left";
+      }
+
+      function wrapText(text, x, y, maxWidth, lineHeight) {
+        const words = text.split(' ');
+        let line = '';
+        let currentY = y;
+        let linesCount = 0;
+
+        for (let n = 0; n < words.length; n++) {
+          // Hard limit to 2 lines usually for YouTube titles in previews
+          if(linesCount >= 2 && state.mode !== 'mobile') {
+            ctx.fillText(line + "...", x, currentY);
+            return;
+          }
+
+          const testLine = line + words[n] + ' ';
+          const metrics = ctx.measureText(testLine);
+          const testWidth = metrics.width;
+          
+          if (testWidth > maxWidth && n > 0) {
+            ctx.fillText(line, x, currentY);
+            line = words[n] + ' ';
+            currentY += lineHeight;
+            linesCount++;
+          } else {
+            line = testLine;
+          }
+        }
+        ctx.fillText(line, x, currentY);
+      }
+
+      // Start
+      init();
+    })();
+  </script>
+</body>
+</html>
