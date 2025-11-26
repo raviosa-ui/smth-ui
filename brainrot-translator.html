@@ -15,7 +15,7 @@
     .intensity-btn { padding: 8px 14px; border-radius: 10px; background: rgba(255,255,255,0.03); border: 1px solid var(--border); color: var(--muted); cursor: pointer; font-size: 13px; }
     .intensity-btn.active { color: var(--accent-from); border-color: var(--accent-from); background: rgba(56,189,248,0.1); }
     .btn-copy { padding: 10px 16px; border-radius: 10px; border: 0; background: linear-gradient(90deg, var(--accent-from), var(--accent-to)); color: #06121f; font-weight: 600; cursor: pointer; }
-    .result-preview { background: rgba(0,0,0,0.2); border-radius: var(--r-md); padding: 14px; margin-top: 10px; font-size: 15px; line-height: 1.5; }
+    .result-preview { background: rgba(0,0,0,0.2); border-radius: var(--r-md); padding: 14px; margin-top: 10px; font-size: 15px; line-height: 1.5; min-height: 24px; }
     .faq { margin-top: 30px; }
     .faq summary { font-weight: 700; color: var(--text); margin: 12px 0; cursor: pointer; font-size: 15px; }
     .faq details { color: var(--muted); font-size: 14px; margin-left: 8px; }
@@ -104,7 +104,11 @@
 
       let currentLevel = 'mild';
 
-      // Dictionary of replacements by intensity
+      // Escape regex special chars (just in case)
+      function escapeRegExp(string) {
+        return string.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+      }
+
       const dictionaries = {
         mild: {
           'good': 'gyatt',
@@ -115,7 +119,11 @@
           'homework': 'sigma grindset',
           'sleep': 'slumber fr',
           'food': 'grimace shake',
-          'friend': 'brother in ohio'
+          'friend': 'brother in ohio',
+          'like': 'rizz',
+          'see': 'peep',
+          'go': 'go brr',
+          'walk': 'stride sigma'
         },
         mid: {
           'good': 'GYATT 🤏',
@@ -128,7 +136,11 @@
           'food': 'grimace shake only 🧃',
           'friend': 'ohio brother 💀',
           'me': 'me irl...',
-          'going': 'boutta'
+          'going': 'boutta',
+          'like': 'RIZZ 🫵',
+          'see': 'PEEP THAT 🧐',
+          'go': 'GO BRRR 💨',
+          'walk': 'SIGMA STRIDE 👣'
         },
         full: {
           'good': 'GYATT 🤏 FOR THE RIZZLER 😳',
@@ -142,6 +154,10 @@
           'friend': 'OHIO BROTHER — FANUM TAX HIM 💀',
           'me': 'ME IRL... BRAINROT MAXED 🧠💥',
           'going': 'BOUTTA GO BRRR 🌀',
+          'like': 'RIZZ GOD MODE ACTIVATED 😳🙏',
+          'see': 'PEEPIN’ IN OHIO 🧐💀',
+          'go': 'GO BRRR — SKIBIDI MODE 🌀🚽',
+          'walk': 'SIGMA STRIDE (OHIO EDITION) 👣🧠',
           'need': 'GOTTA',
           'do': 'HIT THEM',
           'my': 'MY GYATT',
@@ -150,25 +166,43 @@
       };
 
       function translate(text, level) {
-        if (!text.trim()) return 'Your brainrot text will appear here...';
-        let result = text.toLowerCase();
+        if (!text.trim()) {
+          return 'Your brainrot text will appear here...';
+        }
 
-        // Add more generic slang at higher intensities
+        // Work on a copy
+        let result = ' ' + text + ' '; // add padding for word boundaries
+
+        // First, handle "I am" / "I'm"
         if (level === 'mid' || level === 'full') {
-          result = result.replace(/\b(i am|i'm)\b/g, 'me irl...');
-        }
-        if (level === 'full') {
-          result += ' 💀😳🫵';
+          result = result.replace(/\b(i\s+am|i'm)\b/ig, 'me irl...');
         }
 
+        // Replace words using dictionary
         const dict = dictionaries[level];
         Object.keys(dict).forEach(word => {
-          const regex = new RegExp(`\\b${word}\\b`, 'gi');
+          const escaped = escapeRegExp(word);
+          const regex = new RegExp(`\\b${escaped}\\b`, 'gi');
           result = result.replace(regex, dict[word]);
         });
 
+        // Trim extra spaces from padding
+        result = result.trim();
+
+        // Add ending emojis in mid/full
+        if (level === 'mid' && !result.endsWith('💀')) {
+          result += ' 😳';
+        } else if (level === 'full') {
+          if (!result.includes('💀')) result += ' 💀';
+          if (!result.includes('😳')) result += ' 😳';
+          if (!result.includes('🫵')) result += ' 🫵';
+        }
+
         // Capitalize first letter
-        result = result.charAt(0).toUpperCase() + result.slice(1);
+        if (result) {
+          result = result.charAt(0).toUpperCase() + result.slice(1);
+        }
+
         return result;
       }
 
@@ -178,7 +212,6 @@
         outputEl.textContent = output;
       }
 
-      // Intensity buttons
       intensityBtns.forEach(btn => {
         btn.addEventListener('click', () => {
           intensityBtns.forEach(b => b.classList.remove('active'));
@@ -188,10 +221,9 @@
         });
       });
 
-      // Input listener
       inputEl.addEventListener('input', updateOutput);
+      inputEl.addEventListener('paste', () => setTimeout(updateOutput, 10));
 
-      // Copy button
       copyBtn.addEventListener('click', async () => {
         const text = outputEl.textContent;
         if (text && !text.includes('appear here')) {
