@@ -1,0 +1,213 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Brainrot Translator — Turn Text Into Gen Z Meme Slang | SocialMediaToolsKit</title>
+  <meta name="description" content="Transform boring sentences into chaotic brainrot slang (Skibidi, Gyatt, Sigma, Ohio, Rizz). Perfect for TikTok, Roblox bios & memes. Free, instant, no login." />
+  <meta name="theme-color" content="#0f172a" />
+  <link rel="stylesheet" href="style.css">
+  <style>
+    .translator-section { background: var(--card); border-radius: var(--r-lg); padding: 20px; margin-top: 16px; box-shadow: 0 6px 22px rgba(3,7,18,0.6); }
+    .input-group, .output-group { margin-bottom: 16px; }
+    textarea { width: 100%; min-height: 100px; padding: 12px; border-radius: var(--r-md); background: rgba(0,0,0,0.2); border: 1px solid var(--border); color: var(--text); font-family: inherit; font-size: 15px; resize: vertical; }
+    .controls { display: flex; flex-wrap: wrap; gap: 10px; margin: 12px 0; }
+    .intensity-btn { padding: 8px 14px; border-radius: 10px; background: rgba(255,255,255,0.03); border: 1px solid var(--border); color: var(--muted); cursor: pointer; font-size: 13px; }
+    .intensity-btn.active { color: var(--accent-from); border-color: var(--accent-from); background: rgba(56,189,248,0.1); }
+    .btn-copy { padding: 10px 16px; border-radius: 10px; border: 0; background: linear-gradient(90deg, var(--accent-from), var(--accent-to)); color: #06121f; font-weight: 600; cursor: pointer; }
+    .result-preview { background: rgba(0,0,0,0.2); border-radius: var(--r-md); padding: 14px; margin-top: 10px; font-size: 15px; line-height: 1.5; }
+    .faq { margin-top: 30px; }
+    .faq summary { font-weight: 700; color: var(--text); margin: 12px 0; cursor: pointer; font-size: 15px; }
+    .faq details { color: var(--muted); font-size: 14px; margin-left: 8px; }
+    .faq p { margin: 8px 0; line-height: 1.6; }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <header class="header" role="banner">
+      <div class="brand" aria-label="SocialMediaToolsKit">
+        <span class="brand-emoji" aria-hidden="true">⚡</span>
+        <span class="logo-text">SocialMediaToolsKit</span>
+      </div>
+      <nav class="topnav" role="navigation" aria-label="Primary">
+        <a href="index.html">Home</a>
+        <a href="#faq">FAQ</a>
+      </nav>
+    </header>
+
+    <main>
+      <section class="translator-section" aria-labelledby="tool-title">
+        <h1 id="tool-title">🧠 Brainrot Translator</h1>
+        <p class="lead">Turn normal sentences into chaotic Gen Z meme slang (Skibidi, Gyatt, Sigma, Ohio, Rizz).</p>
+
+        <div class="input-group">
+          <label for="input-text">Your Normal Text</label>
+          <textarea id="input-text" placeholder="e.g., I need to do my homework"></textarea>
+        </div>
+
+        <div class="controls">
+          <div>Intensity:</div>
+          <button class="intensity-btn active" data-level="mild">Mild 😌</button>
+          <button class="intensity-btn" data-level="mid">Mid 😳</button>
+          <button class="intensity-btn" data-level="full">Full Brainrot 💀</button>
+        </div>
+
+        <div class="output-group">
+          <label>Brainrot Output</label>
+          <div class="result-preview" id="output-result" aria-live="polite">
+            Your brainrot text will appear here...
+          </div>
+          <button class="btn-copy" id="copy-output">Copy to Clipboard ✂️</button>
+        </div>
+      </section>
+
+      <!-- FAQ Section -->
+      <section class="faq" id="faq">
+        <h2>Frequently Asked Questions</h2>
+
+        <details>
+          <summary>What is "brainrot" slang?</summary>
+          <p>"Brainrot" refers to the chaotic, absurd, and hyper-online language popularized by Gen Z on TikTok and YouTube Shorts — think "Skibidi Toilet", "Gyatt", "Sigma", "Ohio", and "Fanum Tax". It’s used for humor, irony, and meme culture. This tool helps you speak (or parody) that language instantly.</p>
+        </details>
+
+        <details>
+          <summary>Is this tool safe to use?</summary>
+          <p>Yes! The Brainrot Translator from <strong>SocialMediaToolsHub</strong> runs 100% in your browser. No text is sent to any server, no accounts needed, and nothing is tracked. It’s completely private and free.</p>
+        </details>
+
+        <details>
+          <summary>Can I use this for my Roblox or TikTok bio?</summary>
+          <p>Absolutely! Copy the output and paste it into your Roblox username, TikTok bio, Instagram caption, or Discord status. Just remember: some platforms limit special characters, so test it first!</p>
+        </details>
+
+        <details>
+          <summary>Who created this tool?</summary>
+          <p>This free utility is part of <strong>SocialMediaToolsHub</strong> (also known as SocialMediaToolsKit), a collection of ethical, lightweight, and creator-focused tools built for speed and privacy. All tools are open, static, and ad-free.</p>
+        </details>
+
+        <details>
+          <summary>Why isn’t my text changing much?</summary>
+          <p>Try using the “Full Brainrot 💀” mode! The translator works best with short, simple sentences. Complex paragraphs may not transform as dramatically — that’s part of the meme!</p>
+        </details>
+      </section>
+    </main>
+
+    <footer>© 2025 SocialMediaToolsKit. Built for speed.</footer>
+  </div>
+
+  <script>
+    (function() {
+      const inputEl = document.getElementById('input-text');
+      const outputEl = document.getElementById('output-result');
+      const copyBtn = document.getElementById('copy-output');
+      const intensityBtns = document.querySelectorAll('.intensity-btn');
+
+      let currentLevel = 'mild';
+
+      // Dictionary of replacements by intensity
+      const dictionaries = {
+        mild: {
+          'good': 'gyatt',
+          'yes': 'mewing fr',
+          'no': 'oh no no no',
+          'cool': 'skibidi',
+          'wow': 'gyatt dayum',
+          'homework': 'sigma grindset',
+          'sleep': 'slumber fr',
+          'food': 'grimace shake',
+          'friend': 'brother in ohio'
+        },
+        mid: {
+          'good': 'GYATT 🤏',
+          'yes': 'mewing fr fr 😳',
+          'no': 'oh no no no 💀',
+          'cool': 'skibidi toilet core 🚽',
+          'wow': 'GYATT DAYUM 💀',
+          'homework': 'sigma grindset 💪',
+          'sleep': 'hit them slumber fr 😴',
+          'food': 'grimace shake only 🧃',
+          'friend': 'ohio brother 💀',
+          'me': 'me irl...',
+          'going': 'boutta'
+        },
+        full: {
+          'good': 'GYATT 🤏 FOR THE RIZZLER 😳',
+          'yes': 'MEWING FR FR 💀🫵',
+          'no': 'OH NO NO NO — FANUM TAX ACTIVATED 💀',
+          'cool': 'SKIBIDI TOILET SIGMA CORE 🚽🧠',
+          'wow': 'GYATT DAYUM — OHIO LEVELS 💀',
+          'homework': 'SIGMA GRINDSET 💪 (NOT ME)',
+          'sleep': 'HIT THEM SLUMBER IN OHIO 😴💀',
+          'food': 'GRIMACE SHAKE ONLY 🧃 (NO CAP)',
+          'friend': 'OHIO BROTHER — FANUM TAX HIM 💀',
+          'me': 'ME IRL... BRAINROT MAXED 🧠💥',
+          'going': 'BOUTTA GO BRRR 🌀',
+          'need': 'GOTTA',
+          'do': 'HIT THEM',
+          'my': 'MY GYATT',
+          'the': 'THE SIGMA'
+        }
+      };
+
+      function translate(text, level) {
+        if (!text.trim()) return 'Your brainrot text will appear here...';
+        let result = text.toLowerCase();
+
+        // Add more generic slang at higher intensities
+        if (level === 'mid' || level === 'full') {
+          result = result.replace(/\b(i am|i'm)\b/g, 'me irl...');
+        }
+        if (level === 'full') {
+          result += ' 💀😳🫵';
+        }
+
+        const dict = dictionaries[level];
+        Object.keys(dict).forEach(word => {
+          const regex = new RegExp(`\\b${word}\\b`, 'gi');
+          result = result.replace(regex, dict[word]);
+        });
+
+        // Capitalize first letter
+        result = result.charAt(0).toUpperCase() + result.slice(1);
+        return result;
+      }
+
+      function updateOutput() {
+        const input = inputEl.value;
+        const output = translate(input, currentLevel);
+        outputEl.textContent = output;
+      }
+
+      // Intensity buttons
+      intensityBtns.forEach(btn => {
+        btn.addEventListener('click', () => {
+          intensityBtns.forEach(b => b.classList.remove('active'));
+          btn.classList.add('active');
+          currentLevel = btn.dataset.level;
+          updateOutput();
+        });
+      });
+
+      // Input listener
+      inputEl.addEventListener('input', updateOutput);
+
+      // Copy button
+      copyBtn.addEventListener('click', async () => {
+        const text = outputEl.textContent;
+        if (text && !text.includes('appear here')) {
+          try {
+            await navigator.clipboard.writeText(text);
+            copyBtn.textContent = 'Copied! ✅';
+            setTimeout(() => copyBtn.textContent = 'Copy to Clipboard ✂️', 1500);
+          } catch (e) {
+            alert('Failed to copy. Try selecting and copying manually.');
+          }
+        }
+      });
+
+      // Initialize
+      updateOutput();
+    })();
+  </script>
+</body>
+</html>
