@@ -1,18 +1,23 @@
+I have completely rebuilt the tool to fix the errors, added the 4 specific preview modes (Home, Search, Sidebar, Mobile), and implemented the "Emoji/Alphabet" placeholder system to make the preview look alive without needing external assets.
+
+Here is the complete, single-file solution. You can save this as `youtube-thumbnail-previewer.html`.
+
+```html
 <!doctype html>
 <html lang="en">
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>Ultimate YouTube Thumbnail Tester — SocialMediaToolsKit</title>
-  <meta name="description" content="Preview your YouTube thumbnails in Search and Sidebar modes before posting. Boost CTR with our free thumbnail preview tool." />
+  <title>YouTube Thumbnail Previewer — SocialMediaToolsKit</title>
+  <meta name="description" content="Test your YouTube thumbnail in 4 different layouts: Homepage, Search, Sidebar, and Mobile." />
   <meta name="theme-color" content="#0f172a" />
   
   <link rel="stylesheet" href="style.css">
 
   <style>
-    /* FALLBACK VARIABLES 
-       (Ensures tool works even if style.css is missing locally)
-    */
+    /* * FALLBACK VARIABLES 
+     * Ensures tool works nicely even if style.css fails to load 
+     */
     :root {
       --bg: #0f172a;
       --card: #1e293b;
@@ -26,8 +31,8 @@
       --trans: 260ms cubic-bezier(.2,.9,.3,1);
     }
 
-    /* TOOL LAYOUT STYLES */
-    .tool-grid {
+    /* --- TOOL SPECIFIC LAYOUT --- */
+    .tool-container {
       display: grid;
       grid-template-columns: 1fr;
       gap: 24px;
@@ -35,14 +40,14 @@
     }
 
     @media(min-width: 900px) {
-      .tool-grid {
-        grid-template-columns: 350px 1fr;
+      .tool-container {
+        grid-template-columns: 320px 1fr;
         align-items: start;
       }
     }
 
-    /* CONTROLS PANEL */
-    .controls-panel {
+    /* CONTROLS (Left Panel) */
+    .controls {
       background: var(--card);
       padding: 24px;
       border-radius: var(--r-md);
@@ -62,180 +67,107 @@
 
     .input-field {
       width: 100%;
-      background: rgba(0,0,0,0.2);
+      background: rgba(0,0,0,0.3);
       border: 1px solid var(--border);
       color: var(--text);
       padding: 12px;
       border-radius: 8px;
       font-family: inherit;
-      transition: border-color 0.2s;
+      font-size: 14px;
     }
+    .input-field:focus { outline: none; border-color: var(--accent-from); }
 
-    .input-field:focus {
-      outline: none;
-      border-color: var(--accent-from);
-    }
-
-    /* UPLOAD BOX */
-    .upload-area {
+    /* UPLOAD AREA */
+    .upload-box {
       border: 2px dashed var(--border);
       border-radius: 12px;
-      padding: 30px 20px;
+      padding: 20px;
       text-align: center;
       cursor: pointer;
-      transition: all 0.2s;
-      background: rgba(255,255,255,0.01);
       position: relative;
+      background: rgba(255,255,255,0.01);
+      transition: 0.2s;
     }
-
-    .upload-area:hover, .upload-area.dragover {
-      border-color: var(--accent-from);
-      background: rgba(56, 189, 248, 0.05);
+    .upload-box:hover { border-color: var(--accent-from); background: rgba(56,189,248,0.05); }
+    .upload-box input {
+      position: absolute; top: 0; left: 0; width: 100%; height: 100%; opacity: 0; cursor: pointer;
     }
-
-    .upload-area input {
-      position: absolute;
-      width: 100%;
-      height: 100%;
-      top: 0;
-      left: 0;
-      opacity: 0;
-      cursor: pointer;
-    }
-
-    .upload-icon {
-      font-size: 32px;
-      margin-bottom: 10px;
-      display: block;
-    }
-
     .upload-preview-mini {
-      max-width: 100%;
-      max-height: 100px;
-      margin-top: 10px;
-      border-radius: 6px;
-      display: none;
-      box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+      width: 100%; height: auto; margin-top: 10px; border-radius: 6px; display: none;
     }
 
-    /* RADIO GROUPS */
-    .radio-group {
-      display: flex;
-      gap: 12px;
+    /* MODE SWITCHER (Tabs) */
+    .mode-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 8px;
     }
-    .radio-label {
-      display: flex;
-      align-items: center;
-      gap: 6px;
-      font-size: 14px;
-      cursor: pointer;
-      color: var(--muted);
-    }
-    .radio-label input { accent-color: var(--accent-from); }
-    .radio-label:hover { color: var(--text); }
-
-    /* TOGGLE SWITCH */
-    .theme-toggle-btn {
-      background: transparent;
+    .mode-btn {
+      background: rgba(255,255,255,0.03);
       border: 1px solid var(--border);
       color: var(--muted);
-      padding: 8px 12px;
+      padding: 10px;
       border-radius: 8px;
       cursor: pointer;
       font-size: 13px;
-      display: flex;
-      align-items: center;
-      gap: 6px;
-      transition: 0.2s;
+      transition: var(--trans);
     }
-    .theme-toggle-btn:hover {
-      background: rgba(255,255,255,0.05);
-      color: var(--text);
+    .mode-btn:hover { background: rgba(255,255,255,0.08); color: var(--text); }
+    .mode-btn.active {
+      background: linear-gradient(90deg, var(--accent-from), var(--accent-to));
+      color: #000;
+      border-color: transparent;
+      font-weight: 600;
     }
 
-    /* PREVIEW CANVAS AREA */
-    .preview-panel {
+    /* PREVIEW PANEL (Right Panel) */
+    .preview-wrapper {
       background: var(--card);
       padding: 20px;
       border-radius: var(--r-md);
       border: 1px solid var(--border);
-      position: relative;
-      overflow: hidden;
-      min-height: 400px;
       display: flex;
-      flex-direction: column;
-      align-items: center;
       justify-content: center;
+      align-items: flex-start;
+      overflow: auto; /* Allow scroll if canvas is huge */
+      min-height: 500px;
     }
 
-    /* The canvas is styled to be responsive */
-    canvas#preview-canvas {
+    canvas {
+      box-shadow: 0 10px 40px rgba(0,0,0,0.5);
       max-width: 100%;
       height: auto;
-      box-shadow: 0 10px 40px rgba(0,0,0,0.5);
       border-radius: 4px;
     }
 
-    /* CONTENT AREAS */
-    .long-content {
-      margin-top: 60px;
+    /* CONTENT STYLING */
+    .content-block {
       max-width: 800px;
-      margin-left: auto;
-      margin-right: auto;
-    }
-    .long-content h2 {
-      font-size: 24px;
-      margin-bottom: 20px;
-      background: linear-gradient(90deg, var(--accent-from), var(--accent-to));
-      -webkit-background-clip: text;
-      color: transparent;
-      -webkit-text-fill-color: transparent;
-      display: inline-block;
-    }
-    .long-content p {
-      margin-bottom: 20px;
-      line-height: 1.7;
+      margin: 40px auto;
       color: var(--muted);
     }
-    .long-content strong { color: var(--text); }
+    .content-block h2 { color: var(--text); margin-bottom: 16px; }
+    .content-block p { line-height: 1.6; margin-bottom: 16px; }
 
-    /* FAQ STYLES */
+    /* FAQ */
     details {
       background: rgba(255,255,255,0.02);
       border: 1px solid var(--border);
       border-radius: 12px;
-      margin-bottom: 12px;
-      overflow: hidden;
-      transition: all 0.3s ease;
-    }
-    details[open] {
-      border-color: var(--accent-from);
-      background: rgba(255,255,255,0.04);
+      margin-bottom: 10px;
     }
     summary {
       padding: 16px;
       cursor: pointer;
       font-weight: 600;
-      list-style: none;
+      color: var(--text);
       display: flex;
       justify-content: space-between;
-      align-items: center;
     }
-    summary::-webkit-details-marker { display: none; }
-    summary:after {
-      content: '+';
-      font-size: 18px;
-      color: var(--muted);
-    }
-    details[open] summary:after { content: '-'; color: var(--accent-from); }
-    .faq-answer {
-      padding: 0 16px 16px 16px;
-      color: var(--muted);
+    .faq-body {
+      padding: 0 16px 16px;
       font-size: 14px;
-      line-height: 1.6;
-      border-top: 1px solid rgba(255,255,255,0.05);
-      margin-top: 8px;
-      padding-top: 12px;
+      line-height: 1.5;
     }
   </style>
 </head>
@@ -248,268 +180,488 @@
         <span class="brand-emoji" aria-hidden="true">⚡</span>
         <span class="logo-text">SocialMediaToolsKit</span>
       </div>
-      <nav class="topnav" role="navigation" aria-label="Primary">
+      <nav class="topnav" role="navigation">
         <a href="index.html">Home</a>
         <a href="#about">About</a>
       </nav>
     </header>
 
     <main>
-      <section class="hero" style="text-align:center; padding: 30px 20px;">
-        <h1 style="margin:0; font-size:24px;">Ultimate YouTube Thumbnail Tester</h1>
-        <p class="lead">Preview your design in Search & Sidebar results before you publish.</p>
+      <section class="hero" style="text-align:center; padding: 20px;">
+        <h1>YouTube Thumbnail Previewer</h1>
+        <p class="lead">See how your thumbnail looks on Homepage, Sidebar, Search, and Mobile.</p>
       </section>
 
-      <div class="tool-grid">
+      <div class="tool-container">
         
-        <div class="controls-panel">
-          <h3>1. Your Design</h3>
+        <div class="controls">
           
-          <div class="upload-area" id="drop-zone">
-            <span class="upload-icon">📁</span>
-            <p style="margin:0; font-size:14px; color:var(--muted)">Drag & Drop or Click to Upload</p>
-            <input type="file" id="image-upload" accept="image/*">
-            <img id="upload-preview" class="upload-preview-mini" alt="Uploaded Thumbnail">
-          </div>
-
           <div class="form-group">
-            <label for="video-title">Video Title</label>
-            <textarea id="video-title" class="input-field" rows="3" placeholder="E.g., I Built a Website in 5 Minutes (Speedrun)">My Awesome New Video Title goes here...</textarea>
-          </div>
-
-          <div class="form-group">
-            <label for="channel-name">Channel Name</label>
-            <input type="text" id="channel-name" class="input-field" value="MyChannelName">
-          </div>
-
-          <hr style="border: 0; border-top: 1px solid var(--border); width: 100%;">
-
-          <h3>2. Preview Settings</h3>
-
-          <div class="form-group">
-            <label>Preview Mode</label>
-            <div class="radio-group">
-              <label class="radio-label">
-                <input type="radio" name="view-mode" value="search" checked> Search Results
-              </label>
-              <label class="radio-label">
-                <input type="radio" name="view-mode" value="sidebar"> Sidebar (Up Next)
-              </label>
+            <label>1. Upload Thumbnail</label>
+            <div class="upload-box" id="drop-zone">
+              <span style="font-size:24px">📁</span>
+              <div style="font-size:13px; margin-top:4px; color:var(--muted)">Click or Drag Image</div>
+              <input type="file" id="image-input" accept="image/*">
+              <img id="img-preview-mini" class="upload-preview-mini" alt="Preview">
             </div>
           </div>
 
-          <button type="button" id="toggle-theme" class="theme-toggle-btn">
-            <span>🌙/☀️</span> Toggle Dark/Light Mode
+          <div class="form-group">
+            <label>2. Video Details</label>
+            <input type="text" id="input-title" class="input-field" placeholder="Video Title" value="My Awesome Video Title Goes Here">
+            <input type="text" id="input-channel" class="input-field" placeholder="Channel Name" value="My Channel" style="margin-top:8px">
+          </div>
+
+          <div class="form-group">
+            <label>3. Preview Mode</label>
+            <div class="mode-grid">
+              <button class="mode-btn active" data-mode="home">🏠 Home</button>
+              <button class="mode-btn" data-mode="search">🔍 Search</button>
+              <button class="mode-btn" data-mode="sidebar">⏭️ Sidebar</button>
+              <button class="mode-btn" data-mode="mobile">📱 Mobile</button>
+            </div>
+          </div>
+
+          <button id="theme-btn" class="mode-btn" style="width:100%; text-align:center;">
+            🌗 Toggle Dark/Light Mode
           </button>
 
-          <button type="button" id="download-btn" class="btn-cta" style="width:100%; justify-content:center;">
-            Download Mockup 📥
+          <button id="download-btn" class="btn-cta" style="width:100%; justify-content:center; margin-top:10px;">
+            Download Preview 📥
           </button>
+
         </div>
 
-        <div class="preview-panel" id="preview-panel">
-          <canvas id="preview-canvas" width="800" height="600"></canvas>
+        <div class="preview-wrapper">
+          <canvas id="canvas"></canvas>
         </div>
 
       </div>
 
-      <article class="long-content">
-        <h2>Why Your YouTube Thumbnail Needs to Stand Out: The SocialMediaToolsKit Advantage</h2>
-        
-        <p>In the vast ocean of content that is YouTube, approximately 500 hours of video are uploaded every single minute. In this hyper-competitive environment, the "Attention Economy" dictates the winners and losers. Before a viewer hears a single word of your script or sees a single frame of your carefully edited intro, they make a split-second decision based on exactly two things: your thumbnail and your title.</p>
-
-        <p><strong>The First Impression is the Only Impression.</strong> YouTube's own data suggests that 90% of the best-performing videos have custom thumbnails. The click-through rate (CTR) is a primary signal to the algorithm. If people don't click, YouTube stops promoting the video. It doesn't matter if your content is Oscar-worthy; if the packaging looks amateurish or blends in too much with the background, it effectively doesn't exist.</p>
-
-        <p>This is where the <strong>SocialMediaToolsKit Thumbnail Previewer</strong> becomes an essential part of your workflow. Most creators design thumbnails in isolation—inside Photoshop, Canva, or Figma—viewing them as large, high-resolution artworks on a clean canvas. However, that is not how your audience sees them. They see them shrunk down, surrounded by distractions, notifications, and, most importantly, <em>competitors</em>.</p>
-
-        <p><strong>Context is King.</strong> A thumbnail might look stunning on a black background in your editor but disappear completely when placed against YouTube's dark mode dark-grey background. Or perhaps your bright white text is unreadable against YouTube's light mode. By using our tool, you can simulate the exact environment your video will inhabit. You can verify if your font size is legible when the image is scaled down for the "Up Next" sidebar, or if the timestamp overlay (which YouTube adds automatically in the bottom right corner) is obscuring critical visual information.</p>
-
-        <p>By previewing your design in a realistic context, you shift from guessing to knowing. You can optimize contrast, ensure your title complements the image text without being redundant, and verify that your face or subject pops against the interface. SocialMediaToolsKit helps you avoid the "good design, bad context" trap, giving you the algorithmic edge needed to grow your channel.</p>
+      <article class="content-block">
+        <h2>Why Preview Your Thumbnail?</h2>
+        <p>Your thumbnail never exists in a vacuum. It competes with dozens of other images, colors, and texts on the screen. A design that looks great in Photoshop might vanish against YouTube's dark background or become unreadable when shrunk down to mobile size.</p>
+        <p><strong>The "Context Gap":</strong> Most creators fail because they don't check legibility. By using the 4 modes above, you can ensure your text is large enough for mobile users (70% of traffic) and that your colors pop against the "Up Next" sidebar.</p>
       </article>
 
-      <article class="long-content">
-        <h2>Common Questions About Optimizing YouTube Thumbnails with SocialMediaToolsKit</h2>
-
+      <article class="content-block">
+        <h2>Frequently Asked Questions</h2>
         <details>
-          <summary>What is the best size for a YouTube thumbnail?</summary>
-          <div class="faq-answer">
-            The ideal resolution for YouTube thumbnails is <strong>1280x720 pixels</strong> (with a minimum width of 640 pixels). This is a 16:9 aspect ratio. While our SocialMediaToolsKit previewer scales images to fit the mockup, you should always design your source files at 1280x720 to ensure they look crisp on high-definition screens and Retina displays.
-          </div>
+          <summary>What is the correct YouTube thumbnail size?</summary>
+          <div class="faq-body">The ideal size is 1280x720 pixels (16:9 aspect ratio). Minimum width is 640 pixels.</div>
         </details>
-
         <details>
-          <summary>Why does my text look different in Dark Mode vs. Light Mode?</summary>
-          <div class="faq-answer">
-            Contrast is relative. A thumbnail with a dark background might look sleek in your editor but can bleed into YouTube's Dark Mode interface, making it look smaller or oddly shaped. Conversely, distinct borders help in Light Mode. Use the "Toggle Dark/Light Mode" button in this tool to check if your thumbnail maintains its visual impact in both environments.
-          </div>
+          <summary>Why use Emojis in the preview?</summary>
+          <div class="faq-body">We use emojis and colors to simulate "noisy" competitor thumbnails without using heavy images. This mimics the distraction of the YouTube feed.</div>
         </details>
-
         <details>
-          <summary>Does this tool upload my image to a server?</summary>
-          <div class="faq-answer">
-            No. Privacy is a core value at SocialMediaToolsKit. This tool processes your image entirely <strong>client-side</strong> using your browser's local capabilities. Your unpublished thumbnails and titles never leave your device, ensuring your upcoming content ideas remain secure until you are ready to publish.
-          </div>
-        </details>
-
-        <details>
-          <summary>How can I use this tool to improve my Title/Thumbnail combo?</summary>
-          <div class="faq-answer">
-            A common mistake is repeating the exact same text in the thumbnail and the title. Use this previewer to ensure they complement each other. If your thumbnail says "I Failed," your title should explain <em>why</em> or <em>how</em> (e.g., "Why My Business Collapsed in 30 Days"). Seeing them together in the preview helps you craft a compelling "hook" that drives clicks.
-          </div>
-        </details>
-
-        <details>
-          <summary>What is the "Safe Zone" I should worry about?</summary>
-          <div class="faq-answer">
-            YouTube places a timestamp overlay (showing the video duration) in the bottom-right corner of every thumbnail. On mobile, this can be quite large. When using our previewer, check the bottom-right corner of your design. If the timestamp covers important text or a key part of the image, you need to adjust your design layout.
-          </div>
-        </details>
-
-        <details>
-          <summary>How does the "Competitor" view help me?</summary>
-          <div class="faq-answer">
-            The "Search Results" and "Sidebar" modes surround your thumbnail with generic placeholders. This simulates the "pattern interrupt" concept. If all the placeholders are loud and colorful, maybe a minimal design stands out. If everyone else is using red arrows, maybe you shouldn't. This context helps you spot opportunities to differentiate your content visually.
-          </div>
+          <summary>Is my image uploaded?</summary>
+          <div class="faq-body">No. All processing happens in your browser. Your image never leaves your device.</div>
         </details>
       </article>
 
     </main>
 
-    <footer>© 2025 SocialMediaToolsKit. Built for speed.</footer>
+    <footer>© 2025 SocialMediaToolsKit.</footer>
   </div>
 
   <script>
     (function(){
-      // --- Variables ---
-      const canvas = document.getElementById('preview-canvas');
+      // --- CONFIG & STATE ---
+      const canvas = document.getElementById('canvas');
       const ctx = canvas.getContext('2d');
-      const uploadInput = document.getElementById('image-upload');
-      const dropZone = document.getElementById('drop-zone');
-      const titleInput = document.getElementById('video-title');
-      const channelInput = document.getElementById('channel-name');
-      const modeRadios = document.getElementsByName('view-mode');
-      const themeBtn = document.getElementById('toggle-theme');
-      const downloadBtn = document.getElementById('download-btn');
-      const uploadPreview = document.getElementById('upload-preview');
-
-      // State
-      let state = {
-        image: null, // Image Object
-        title: "My Awesome New Video Title goes here...",
-        channel: "MyChannelName",
-        mode: 'search', // 'search' or 'sidebar'
-        isDarkMode: true, // Default to YouTube Dark Mode
-        viewers: "125K views",
-        time: "4 hours ago"
+      
+      const state = {
+        title: "My Awesome Video Title Goes Here",
+        channel: "My Channel",
+        image: null, // holds the Image object
+        mode: 'home', // home, search, sidebar, mobile
+        isDark: true
       };
 
-      // --- Constants for drawing ---
-      const COLORS = {
-        dark: { bg: '#0f0f0f', text: '#ffffff', sub: '#aaaaaa', elBg: '#222222' },
-        light: { bg: '#ffffff', text: '#030303', sub: '#606060', elBg: '#e5e5e5' }
+      // Mock Data Generator for "Competitors"
+      const EMOJIS = ['🔥','😱','😂','🦄','🍕','🚀','💀','👀','💰','🍔','⚽','🎮'];
+      const COLORS = ['#ef4444','#f97316','#f59e0b','#84cc16','#10b981','#06b6d4','#3b82f6','#8b5cf6','#d946ef'];
+      
+      function getRandomCompetitor() {
+        return {
+          color: COLORS[Math.floor(Math.random() * COLORS.length)],
+          emoji: EMOJIS[Math.floor(Math.random() * EMOJIS.length)],
+          title: "Competitor Video Title " + Math.floor(Math.random()*100),
+          channel: "Other Channel",
+          views: Math.floor(Math.random()*900 + 10) + "K views",
+          time: Math.floor(Math.random()*11 + 1) + " months ago"
+        };
+      }
+
+      // Pre-generate competitors so they don't flicker on redraw
+      const competitors = Array(10).fill(0).map(getRandomCompetitor);
+
+      // --- THEME COLORS ---
+      const THEME = {
+        dark: { bg: '#0f0f0f', text: '#ffffff', sub: '#aaaaaa', elBg: '#1f1f1f', input: '#121212' },
+        light: { bg: '#ffffff', text: '#030303', sub: '#606060', elBg: '#f2f2f2', input: '#ffffff' }
       };
 
-      // --- Initialization ---
+      // --- INIT ---
       function init() {
         // Event Listeners
-        uploadInput.addEventListener('change', handleFileSelect);
-        titleInput.addEventListener('keyup', (e) => { state.title = e.target.value; draw(); });
-        channelInput.addEventListener('keyup', (e) => { state.channel = e.target.value; draw(); });
+        document.getElementById('input-title').addEventListener('input', e => { state.title = e.target.value; draw(); });
+        document.getElementById('input-channel').addEventListener('input', e => { state.channel = e.target.value; draw(); });
         
-        modeRadios.forEach(radio => {
-          radio.addEventListener('change', (e) => { state.mode = e.target.value; draw(); });
+        // Mode Buttons
+        document.querySelectorAll('.mode-btn[data-mode]').forEach(btn => {
+          btn.addEventListener('click', () => {
+            document.querySelectorAll('.mode-btn[data-mode]').forEach(b => b.classList.remove('active'));
+            btn.classList.add('active');
+            state.mode = btn.dataset.mode;
+            draw();
+          });
         });
 
-        themeBtn.addEventListener('click', toggleTheme);
-        downloadBtn.addEventListener('click', downloadCanvas);
+        // Theme Toggle
+        document.getElementById('theme-btn').addEventListener('click', () => {
+          state.isDark = !state.isDark;
+          draw();
+        });
 
-        // Drag and Drop
-        dropZone.addEventListener('dragover', (e) => { e.preventDefault(); dropZone.classList.add('dragover'); });
-        dropZone.addEventListener('dragleave', (e) => { e.preventDefault(); dropZone.classList.remove('dragover'); });
-        dropZone.addEventListener('drop', handleDrop);
+        // Image Upload
+        const fileInput = document.getElementById('image-input');
+        const dropZone = document.getElementById('drop-zone');
+        
+        fileInput.addEventListener('change', handleFile);
+        
+        dropZone.addEventListener('dragover', e => { e.preventDefault(); dropZone.style.borderColor = '#38bdf8'; });
+        dropZone.addEventListener('dragleave', e => { e.preventDefault(); dropZone.style.borderColor = ''; });
+        dropZone.addEventListener('drop', e => {
+          e.preventDefault();
+          if(e.dataTransfer.files[0]) handleFile({ target: { files: e.dataTransfer.files } });
+        });
+
+        // Download
+        document.getElementById('download-btn').addEventListener('click', () => {
+          const link = document.createElement('a');
+          link.download = `preview-${state.mode}.png`;
+          link.href = canvas.toDataURL();
+          link.click();
+        });
 
         // Initial Draw
-        resizeCanvas();
-        draw();
-        
-        // Handle Resize
-        window.addEventListener('resize', () => { resizeCanvas(); draw(); });
-      }
-
-      // --- Logic ---
-
-      function resizeCanvas() {
-        // Keep internal resolution high for clear text, CSS handles display size
-        // We fix it to 800 width for consistency in this tool, height depends on content
-        canvas.width = 800;
-        canvas.height = state.mode === 'search' ? 800 : 700;
-      }
-
-      function toggleTheme() {
-        state.isDarkMode = !state.isDarkMode;
         draw();
       }
 
-      function handleDrop(e) {
-        e.preventDefault();
-        dropZone.classList.remove('dragover');
-        if(e.dataTransfer.files && e.dataTransfer.files[0]) {
-          processFile(e.dataTransfer.files[0]);
-        }
-      }
-
-      function handleFileSelect(e) {
-        if(e.target.files && e.target.files[0]) {
-          processFile(e.target.files[0]);
-        }
-      }
-
-      function processFile(file) {
+      function handleFile(e) {
+        if(!e.target.files || !e.target.files[0]) return;
         const reader = new FileReader();
-        reader.onload = function(event) {
+        reader.onload = function(evt) {
           const img = new Image();
           img.onload = function() {
             state.image = img;
-            uploadPreview.src = img.src;
-            uploadPreview.style.display = 'block';
+            document.getElementById('img-preview-mini').src = img.src;
+            document.getElementById('img-preview-mini').style.display = 'block';
             draw();
           }
-          img.src = event.target.result;
+          img.src = evt.target.result;
         }
-        reader.readAsDataURL(file);
+        reader.readAsDataURL(e.target.files[0]);
       }
 
-      function downloadCanvas() {
-        const link = document.createElement('a');
-        link.download = 'thumbnail-preview.png';
-        link.href = canvas.toDataURL();
-        link.click();
-      }
-
-      // --- Drawing Engine ---
-
+      // --- DRAWING ENGINE ---
       function draw() {
-        const theme = state.isDarkMode ? COLORS.dark : COLORS.light;
+        const t = state.isDark ? THEME.dark : THEME.light;
         
-        // 1. Background
-        ctx.fillStyle = theme.bg;
+        // Set Canvas Size based on mode
+        if (state.mode === 'home') { canvas.width = 1200; canvas.height = 800; }
+        else if (state.mode === 'search') { canvas.width = 1000; canvas.height = 800; }
+        else if (state.mode === 'sidebar') { canvas.width = 1100; canvas.height = 700; }
+        else if (state.mode === 'mobile') { canvas.width = 400; canvas.height = 800; }
+
+        // Fill BG
+        ctx.fillStyle = t.bg;
         ctx.fillRect(0, 0, canvas.width, canvas.height);
 
-        // 2. Mockup Layout logic
-        if (state.mode === 'search') {
-          drawSearchMode(theme);
-        } else {
-          drawSidebarMode(theme);
+        // Header simulation (Search bar etc)
+        drawHeader(t);
+
+        if (state.mode === 'home') drawHome(t);
+        else if (state.mode === 'search') drawSearch(t);
+        else if (state.mode === 'sidebar') drawSidebar(t);
+        else if (state.mode === 'mobile') drawMobile(t);
+      }
+
+      function drawHeader(t) {
+        // Basic App Bar simulation
+        const h = state.mode === 'mobile' ? 50 : 60;
+        ctx.fillStyle = t.bg;
+        ctx.fillRect(0,0,canvas.width, h);
+        
+        // Logo
+        ctx.fillStyle = '#ff0000';
+        ctx.fillRect(20, h/2 - 10, 30, 20); // YouTube Red Box
+        ctx.fillStyle = t.text;
+        ctx.beginPath(); ctx.moveTo(33, h/2); ctx.lineTo(43, h/2+5); ctx.lineTo(33, h/2+10); ctx.fill(); // Play icon
+
+        // Search Bar (Desktop only)
+        if(state.mode !== 'mobile') {
+          ctx.fillStyle = t.elBg;
+          ctx.fillRect(canvas.width/2 - 200, 12, 400, 36);
+          ctx.fillStyle = t.sub;
+          ctx.font = "16px Arial";
+          ctx.fillText("Search", canvas.width/2 - 180, 36);
         }
       }
 
-      // Helper: Wrap Text
-      function wrapText(text, x, y, maxWidth, lineHeight, style = "normal") {
+      // --- LAYOUTS ---
+
+      function drawHome(t) {
+        const cols = 3;
+        const gap = 20;
+        const padding = 30;
+        const cardW = (canvas.width - (padding*2) - (gap*2)) / cols;
+        const startY = 90;
+
+        // Draw 6 cards. Make User the 2nd one.
+        let x = padding, y = startY;
+        
+        for(let i=0; i<6; i++) {
+          const isUser = (i === 1); 
+          drawCard(x, y, cardW, isUser, t, competitors[i]);
+          
+          x += cardW + gap;
+          if ((i+1) % cols === 0) {
+            x = padding;
+            y += 280; // row height
+          }
+        }
+      }
+
+      function drawSearch(t) {
+        const padding = 50;
+        const cardH = 200;
+        const gap = 20;
+        let y = 90;
+        
+        // List view. User is 2nd.
+        for(let i=0; i<4; i++) {
+          const isUser = (i === 1);
+          drawListCard(padding, y, canvas.width - (padding*2), cardH, isUser, t, competitors[i]);
+          y += cardH + gap;
+        }
+      }
+
+      function drawSidebar(t) {
+        // Left side: Part of a "Main Video"
+        const mainW = 700;
+        ctx.fillStyle = '#000';
+        ctx.fillRect(0, 60, mainW, 400); // Main video player
+        
+        // Title under main video
+        ctx.fillStyle = t.text;
+        ctx.font = "bold 20px Arial";
+        ctx.fillText("Currently Watching Video Title", 20, 490);
+
+        // Right side: Up Next List
+        const sidebarX = mainW + 20;
+        const itemH = 100;
+        const gap = 15;
+        let y = 80;
+
+        // "Up Next" Label
+        ctx.fillStyle = t.text;
+        ctx.font = "16px Arial";
+        ctx.fillText("Up Next", sidebarX, y);
+        y += 30;
+
+        for(let i=0; i<5; i++) {
+          const isUser = (i === 0); // User is first in Up Next
+          drawSideItem(sidebarX, y, canvas.width - sidebarX - 20, itemH, isUser, t, competitors[i]);
+          y += itemH + gap;
+        }
+      }
+
+      function drawMobile(t) {
+        // Single column feed
+        const cardH = 280;
+        let y = 60;
+        
+        for(let i=0; i<3; i++) {
+          const isUser = (i === 1);
+          drawMobileCard(0, y, canvas.width, cardH, isUser, t, competitors[i]);
+          y += cardH + 10;
+        }
+      }
+
+      // --- COMPONENT HELPERS ---
+
+      function drawCard(x, y, w, isUser, t, compData) {
+        const imgH = w * 0.5625; // 16:9
+        
+        // Thumbnail
+        drawThumbnailRect(x, y, w, imgH, isUser, compData);
+
+        // Meta Layout
+        const metaY = y + imgH + 10;
+        
+        // Avatar
+        drawAvatar(x, metaY, 36, isUser ? state.channel : compData.channel);
+
+        // Text
+        const textX = x + 48;
+        ctx.fillStyle = t.text;
+        ctx.font = "bold 16px Arial";
+        const title = isUser ? state.title : compData.title;
+        wrapText(title, textX, metaY + 14, w - 48, 20);
+
+        ctx.fillStyle = t.sub;
+        ctx.font = "14px Arial";
+        const meta = isUser ? `${state.channel} • 10K views` : `${compData.channel} • ${compData.views}`;
+        ctx.fillText(meta, textX, metaY + 54);
+      }
+
+      function drawListCard(x, y, w, h, isUser, t, compData) {
+        // Search layout: Thumb on left, text on right
+        const imgW = 360;
+        const imgH = 202; // 16:9 approx
+        
+        drawThumbnailRect(x, y, imgW, imgH, isUser, compData);
+
+        const textX = x + imgW + 20;
+        const textY = y + 20;
+
+        ctx.fillStyle = t.text;
+        ctx.font = "bold 20px Arial";
+        const title = isUser ? state.title : compData.title;
+        wrapText(title, textX, textY, w - imgW - 20, 26);
+
+        ctx.fillStyle = t.sub;
+        ctx.font = "14px Arial";
+        const meta = isUser ? `${state.channel} • 10K views • 2 hours ago` : `${compData.channel} • ${compData.views} • ${compData.time}`;
+        ctx.fillText(meta, textX, textY + 60);
+        
+        // Avatar small
+        drawAvatar(textX, textY + 80, 24, isUser ? state.channel : compData.channel);
+        ctx.fillText(isUser ? state.channel : compData.channel, textX + 34, textY + 97);
+      }
+
+      function drawSideItem(x, y, w, h, isUser, t, compData) {
+        const imgW = 168;
+        const imgH = 94;
+
+        drawThumbnailRect(x, y, imgW, imgH, isUser, compData);
+
+        const textX = x + imgW + 10;
+        ctx.fillStyle = t.text;
+        ctx.font = "bold 14px Arial";
+        const title = isUser ? state.title : compData.title;
+        wrapText(title, textX, y + 12, w - imgW - 10, 18);
+
+        ctx.fillStyle = t.sub;
+        ctx.font = "12px Arial";
+        ctx.fillText(isUser ? state.channel : compData.channel, textX, y + 60);
+      }
+
+      function drawMobileCard(x, y, w, h, isUser, t, compData) {
+        const imgH = w * 0.5625; 
+        drawThumbnailRect(x, y, w, imgH, isUser, compData);
+
+        const metaY = y + imgH + 12;
+        drawAvatar(x + 12, metaY, 36, isUser ? state.channel : compData.channel);
+
+        const textX = x + 60;
+        ctx.fillStyle = t.text;
+        ctx.font = "bold 16px Arial";
+        const title = isUser ? state.title : compData.title;
+        wrapText(title, textX, metaY + 14, w - 80, 20);
+
+        ctx.fillStyle = t.sub;
+        ctx.font = "12px Arial";
+        const meta = isUser ? `${state.channel} • 50K views • 1 day ago` : `${compData.channel} • ${compData.views} • ${compData.time}`;
+        ctx.fillText(meta, textX, metaY + 54);
+      }
+
+      // --- LOW LEVEL HELPERS ---
+
+      function drawThumbnailRect(x, y, w, h, isUser, compData) {
+        // Crop/Fill logic for user image
+        if (isUser && state.image) {
+          const img = state.image;
+          const scale = Math.max(w / img.width, h / img.height);
+          const tx = (w / 2) - (img.width * scale / 2);
+          const ty = (h / 2) - (img.height * scale / 2);
+          
+          ctx.save();
+          ctx.beginPath();
+          ctx.rect(x, y, w, h);
+          ctx.clip();
+          ctx.drawImage(img, x + tx, y + ty, img.width * scale, img.height * scale);
+          ctx.restore();
+          
+          // Timestamp
+          drawTime(x + w - 45, y + h - 20, "10:25");
+        } else if (isUser) {
+          // Placeholder for User
+          ctx.fillStyle = '#334155';
+          ctx.fillRect(x, y, w, h);
+          ctx.fillStyle = '#fff';
+          ctx.font = "14px Arial";
+          ctx.textAlign = "center";
+          ctx.fillText("Your Thumb", x + w/2, y + h/2);
+          ctx.textAlign = "left";
+        } else {
+          // Competitor (Emoji + Color)
+          ctx.fillStyle = compData.color;
+          ctx.fillRect(x, y, w, h);
+          ctx.font = "40px Arial";
+          ctx.textAlign = "center";
+          ctx.fillText(compData.emoji, x + w/2, y + h/2 + 15);
+          ctx.textAlign = "left";
+          // Timestamp
+          drawTime(x + w - 40, y + h - 20, "08:12");
+        }
+      }
+
+      function drawTime(x, y, txt) {
+        ctx.fillStyle = "rgba(0,0,0,0.8)";
+        ctx.fillRect(x, y, 40, 16);
+        ctx.fillStyle = "#fff";
+        ctx.font = "bold 10px Arial";
+        ctx.fillText(txt, x + 5, y + 12);
+      }
+
+      function drawAvatar(x, y, size, name) {
+        ctx.beginPath();
+        ctx.arc(x + size/2, y + size/2, size/2, 0, Math.PI * 2);
+        ctx.fillStyle = "#888"; 
+        // Generate pseudo-random color from name
+        let hash = 0;
+        for (let i = 0; i < name.length; i++) hash = name.charCodeAt(i) + ((hash << 5) - hash);
+        const c = (hash & 0x00FFFFFF).toString(16).toUpperCase();
+        ctx.fillStyle = "#" + "00000".substring(0, 6 - c.length) + c;
+        
+        ctx.fill();
+        ctx.closePath();
+
+        // Initial
+        ctx.fillStyle = "#fff";
+        ctx.font = "bold " + (size/2) + "px Arial";
+        ctx.textAlign = "center";
+        ctx.fillText(name.charAt(0).toUpperCase(), x + size/2, y + size/2 + (size/6));
+        ctx.textAlign = "left";
+      }
+
+      function wrapText(text, x, y, maxWidth, lineHeight) {
         const words = text.split(' ');
         let line = '';
         let currentY = y;
-        
-        for(let n = 0; n < words.length; n++) {
+        let linesCount = 0;
+
+        for (let n = 0; n < words.length; n++) {
+          // Hard limit to 2 lines usually for YouTube titles in previews
+          if(linesCount >= 2 && state.mode !== 'mobile') {
+            ctx.fillText(line + "...", x, currentY);
+            return;
+          }
+
           const testLine = line + words[n] + ' ';
           const metrics = ctx.measureText(testLine);
           const testWidth = metrics.width;
@@ -518,210 +670,12 @@
             ctx.fillText(line, x, currentY);
             line = words[n] + ' ';
             currentY += lineHeight;
+            linesCount++;
           } else {
             line = testLine;
           }
         }
         ctx.fillText(line, x, currentY);
-        return currentY; // Return last Y to help stack elements
-      }
-
-      // Helper: Draw Video Block
-      function drawVideoBlock(x, y, w, h, isUser, theme, options = {}) {
-        const { title, channel, views } = options;
-        
-        // Thumbnail Image Area
-        const thumbHeight = (w * 9) / 16;
-        
-        if (isUser && state.image) {
-          // Draw User Image efficiently tailored to aspect ratio
-          // We crop/fit center
-          const imgAspect = state.image.width / state.image.height;
-          const targetAspect = 16/9;
-          
-          let sx, sy, sWidth, sHeight;
-          
-          if(imgAspect > targetAspect) {
-             sHeight = state.image.height;
-             sWidth = state.image.height * targetAspect;
-             sx = (state.image.width - sWidth) / 2;
-             sy = 0;
-          } else {
-             sWidth = state.image.width;
-             sHeight = state.image.width / targetAspect;
-             sx = 0;
-             sy = (state.image.height - sHeight) / 2;
-          }
-
-          ctx.drawImage(state.image, sx, sy, sWidth, sHeight, x, y, w, thumbHeight);
-          
-          // Draw Timestamp Overlay (User)
-          drawTimestamp(x + w - 45, y + thumbHeight - 20, "10:24");
-
-        } else if (isUser && !state.image) {
-          // Placeholder for User
-          ctx.fillStyle = "#334155";
-          ctx.fillRect(x, y, w, thumbHeight);
-          ctx.fillStyle = "#fff";
-          ctx.font = "bold 16px sans-serif";
-          ctx.textAlign = "center";
-          ctx.fillText("Upload Thumbnail", x + w/2, y + thumbHeight/2);
-          ctx.textAlign = "left"; // Reset
-        } else {
-          // Competitor Placeholder (Gray Rect)
-          ctx.fillStyle = theme.elBg; // Slight contrast
-          ctx.fillRect(x, y, w, thumbHeight);
-          // Draw Timestamp Overlay (Competitor)
-          drawTimestamp(x + w - 40, y + thumbHeight - 20, "08:15");
-        }
-
-        // Meta Data Area
-        const metaX = x; 
-        const metaY = y + thumbHeight + 12;
-
-        // Channel Icon (Circle)
-        ctx.beginPath();
-        ctx.arc(metaX + 18, metaY + 18, 18, 0, 2 * Math.PI, false);
-        ctx.fillStyle = isUser ? '#38bdf8' : theme.elBg; // Accent color for user avatar
-        ctx.fill();
-        ctx.closePath();
-
-        // Title
-        ctx.fillStyle = theme.text;
-        ctx.font = "bold 18px Arial";
-        const textX = metaX + 48;
-        const textMaxWidth = w - 60;
-        
-        // Handling Title Drawing
-        const finalTitle = isUser ? state.title : title;
-        // Truncate title visually if needed
-        let lastY = wrapText(finalTitle, textX, metaY + 14, textMaxWidth, 22);
-
-        // Channel & Views
-        ctx.fillStyle = theme.sub;
-        ctx.font = "14px Arial";
-        const finalChannel = isUser ? state.channel : channel;
-        const finalViews = isUser ? state.viewers : views;
-        
-        ctx.fillText(finalChannel + " • " + finalViews + " • " + state.time, textX, lastY + 24);
-      }
-
-      function drawTimestamp(x, y, time) {
-        ctx.fillStyle = "rgba(0,0,0,0.8)";
-        ctx.fillRect(x, y, 40, 16);
-        ctx.fillStyle = "#fff";
-        ctx.font = "bold 11px Arial";
-        ctx.fillText(time, x + 4, y + 12);
-      }
-
-      // Helper: Draw Sidebar Video (Horizontal layout)
-      function drawSidebarBlock(x, y, w, isUser, theme, options) {
-        const { title, channel } = options;
-        const h = 94; // fixed height for sidebar items usually
-        const thumbWidth = 168;
-        const thumbHeight = 94;
-
-        // Draw Thumb
-        if (isUser && state.image) {
-           // Simple stretch for sidebar for code simplicity, or crop
-           ctx.drawImage(state.image, x, y, thumbWidth, thumbHeight);
-           drawTimestamp(x + thumbWidth - 40, y + thumbHeight - 18, "10:24");
-        } else if (isUser) {
-           ctx.fillStyle = "#334155";
-           ctx.fillRect(x, y, thumbWidth, thumbHeight);
-        } else {
-           ctx.fillStyle = theme.elBg;
-           ctx.fillRect(x, y, thumbWidth, thumbHeight);
-           drawTimestamp(x + thumbWidth - 35, y + thumbHeight - 18, "05:01");
-        }
-
-        // Text Info (Right side)
-        const textX = x + thumbWidth + 10;
-        ctx.fillStyle = theme.text;
-        ctx.font = "bold 14px Arial";
-        const finalTitle = isUser ? state.title : title;
-        
-        let lastY = wrapText(finalTitle, textX, y + 14, w - thumbWidth - 15, 18);
-
-        ctx.fillStyle = theme.sub;
-        ctx.font = "12px Arial";
-        const finalChannel = isUser ? state.channel : channel;
-        ctx.fillText(finalChannel, textX, lastY + 18);
-        ctx.fillText("54K views • 1 day ago", textX, lastY + 34);
-      }
-
-
-      // --- Mode Specific Layouts ---
-
-      function drawSearchMode(theme) {
-        // Search bar simulation
-        ctx.fillStyle = theme.elBg;
-        ctx.fillRect(0, 0, canvas.width, 50); // Header
-        ctx.fillStyle = theme.sub;
-        ctx.font = "16px Arial";
-        ctx.fillText("Search YouTube...", 40, 30);
-        
-        const startY = 80;
-        const cardW = 700; // Wide cards centered
-        const centerX = (canvas.width - cardW) / 2;
-
-        // 1. Competitor 1
-        drawVideoBlock(centerX, startY, cardW, 300, false, theme, {
-          title: "10 Mistakes Every New YouTuber Makes (Avoid These)",
-          channel: "FilmBooster",
-          views: "1.2M views"
-        });
-
-        // 2. USER (The Hero)
-        drawVideoBlock(centerX, startY + 300, cardW, 300, true, theme, {});
-
-        // 3. Competitor 2
-        drawVideoBlock(centerX, startY + 600, cardW, 300, false, theme, {
-          title: "How to edit faster in Premiere Pro 2025",
-          channel: "EditorLife",
-          views: "89K views"
-        });
-      }
-
-      function drawSidebarMode(theme) {
-        // Mock Video Player on left (partial)
-        // Since canvas is 800px wide, let's pretend the main video is on the left (but cropped off) or above.
-        // Actually, sidebar usually is strictly a list. Let's make it a list of "Up Next".
-        
-        const padding = 20;
-        const startY = 20;
-        const itemH = 110;
-
-        ctx.fillStyle = theme.text;
-        ctx.font = "16px Arial";
-        ctx.fillText("Up Next", padding, startY + 10);
-
-        // 1. Competitor
-        drawSidebarBlock(padding, startY + 30, canvas.width - 40, false, theme, {
-          title: "Why this camera changed everything for me",
-          channel: "TechGuy"
-        });
-
-        // 2. Competitor
-        drawSidebarBlock(padding, startY + 30 + itemH, canvas.width - 40, false, theme, {
-          title: "Full Day of Eating - 3000 Calories",
-          channel: "GymRat"
-        });
-
-        // 3. USER (The Hero)
-        drawSidebarBlock(padding, startY + 30 + (itemH*2), canvas.width - 40, true, theme, {});
-
-        // 4. Competitor
-        drawSidebarBlock(padding, startY + 30 + (itemH*3), canvas.width - 40, false, theme, {
-          title: "Coding a Flappy Bird Clone in Python",
-          channel: "CodeWithMe"
-        });
-
-        // 5. Competitor
-        drawSidebarBlock(padding, startY + 30 + (itemH*4), canvas.width - 40, false, theme, {
-          title: "Top 10 Travel Destinations for 2025",
-          channel: "Wanderlust"
-        });
       }
 
       // Start
@@ -730,3 +684,4 @@
   </script>
 </body>
 </html>
+```
