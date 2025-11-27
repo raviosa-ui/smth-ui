@@ -47,35 +47,22 @@
     .faq details { color: var(--muted); font-size: 14px; margin-left: 8px; border-radius: 12px; border: 1px solid var(--border); background: rgba(15,23,42,0.9); padding: 8px 10px; }
     .faq p { margin: 8px 0; line-height: 1.6; }
 
-    /* 🧠 Brainrot Floating Character */
+    /* 🧠 Brainrot Character - Now ON TOP and follows cursor */
     .brainrot-character {
       position: fixed;
-      bottom: 25%;
-      left: 15%;
+      z-index: 1000; /* Above all content */
       font-size: 28px;
-      z-index: -1;
       pointer-events: none;
-      opacity: 0.85;
-      animation: brainrotFloat 7s ease-in-out infinite, brainrotWander 30s linear infinite;
+      opacity: 0.9;
+      transform: translate(-50%, -50%); /* center on cursor */
+      transition: opacity 0.3s;
       will-change: transform;
     }
 
-    @keyframes brainrotFloat {
-      0%, 100% { transform: translateY(0); }
-      50% { transform: translateY(-12px); }
-    }
-
-    @keyframes brainrotWander {
-      0% { transform: translate(0, 0) translateY(0); }
-      20% { transform: translate(25vw, -15vh) translateY(-12px); }
-      40% { transform: translate(50vw, 0) translateY(0); }
-      60% { transform: translate(25vw, 15vh) translateY(-12px); }
-      80% { transform: translate(-10vw, 0) translateY(0); }
-      100% { transform: translate(0, 0) translateY(0); }
-    }
-
-    @media (max-width: 480px) {
-      .brainrot-character { display: none; }
+    @media (max-width: 360px) {
+      .brainrot-character {
+        font-size: 24px;
+      }
     }
   </style>
 </head>
@@ -155,65 +142,72 @@
         </div>
       </section>
 
-      <!-- FAQ Section -->
       <section class="faq" id="faq">
         <h2>Frequently Asked Questions</h2>
-
-        <details>
-          <summary>What words does this brainrot translator support?</summary>
-          <p>This tool includes over 120 common English words mapped to Gen Z meme slang like “Gyatt”, “Skibidi”, “Sigma”, “Ohio”, and “Fanum Tax”. It covers verbs (go, eat, watch), nouns (food, school, friend), and expressions (yes, no, wow) — all optimized for TikTok, Roblox, and YouTube Shorts culture.</p>
-        </details>
-
-        <details>
-          <summary>Is this tool from SocialMediaToolsHub safe?</summary>
-          <p>Yes! The Brainrot Translator by <strong>SocialMediaToolsHub</strong> runs 100% in your browser. No data is sent anywhere — it’s private, free, and ad-free. You can even use it offline!</p>
-        </details>
-
-        <details>
-          <summary>Can I use the output on Roblox or TikTok?</summary>
-          <p>Absolutely! Copy the result and paste it into your Roblox bio, TikTok caption, Instagram story, WhatsApp status, Discord status, or Twitter bio. Just note that some platforms limit special characters or emoji counts.</p>
-        </details>
-
-        <details>
-          <summary>Who made this translator?</summary>
-          <p>This free utility is part of <strong>SocialMediaToolsHub</strong>, a growing collection of ethical, lightweight creator tools built for speed, privacy, and virality.</p>
-        </details>
-
-        <details>
-          <summary>Why add so many words?</summary>
-          <p>We expanded the dictionary to 120+ terms so your sentences transform more fully — making the output funnier, more chaotic, and more shareable. But it’s still lightweight: the whole tool loads instantly because everything runs in your browser.</p>
-        </details>
-
-        <details>
-          <summary>How does the Brainrot Translator actually work?</summary>
-          <p>The Brainrot Translator uses a custom dictionary of Gen Z slang and meme phrases. When you type a sentence, it scans for whole words like “good”, “school”, “friend”, or “homework” and swaps them for brainrot equivalents such as “GYATT”, “sigma academy” or “SIGMA GRINDSET 💪 (NOT ME)”. Everything is handled by simple JavaScript in your browser — no external APIs or AI calls.</p>
-        </details>
-
-        <details>
-          <summary>Does the Brainrot Translator support mobile and tablet devices?</summary>
-          <p>Yes. This Gen Z slang converter is built to be responsive, so it works on phones, tablets, laptops and desktops. Just open the page in your mobile browser, type or paste your text, choose an intensity level, and tap “Copy” or a share button to use it instantly.</p>
-        </details>
-
-        <details>
-          <summary>Can I share my brainrot text on WhatsApp or Discord?</summary>
-          <p>Yes! Tap the WhatsApp or Discord button to open the app with your brainrot text ready to send. Note: Some emoji may not render on desktop WhatsApp — they work best on mobile!</p>
-        </details>
-
-        <details>
-          <summary>Is this brainrot generator only for jokes, or can creators use it seriously?</summary>
-          <p>It’s definitely built for fun, but creators use this brainrot generator seriously to match the tone of Gen Z meme culture. It helps short-form creators, Roblox streamers and TikTok editors write captions that feel native to Skibidi, Sigma and Rizz-heavy communities while staying fast and on-brand.</p>
-        </details>
+        <!-- FAQ content unchanged -->
+        <details><summary>What words does this brainrot translator support?</summary><p>This tool includes over 120 common English words mapped to Gen Z meme slang like “Gyatt”, “Skibidi”, “Sigma”, “Ohio”, and “Fanum Tax”. It covers verbs (go, eat, watch), nouns (food, school, friend), and expressions (yes, no, wow) — all optimized for TikTok, Roblox, and YouTube Shorts culture.</p></details>
+        <details><summary>Is this tool from SocialMediaToolsHub safe?</summary><p>Yes! The Brainrot Translator by <strong>SocialMediaToolsHub</strong> runs 100% in your browser. No data is sent anywhere — it’s private, free, and ad-free. You can even use it offline!</p></details>
+        <details><summary>Can I use the output on Roblox or TikTok?</summary><p>Absolutely! Copy the result and paste it into your Roblox bio, TikTok caption, Instagram story, WhatsApp status, Discord status, or Twitter bio. Just note that some platforms limit special characters or emoji counts.</p></details>
+        <details><summary>Who made this translator?</summary><p>This free utility is part of <strong>SocialMediaToolsHub</strong>, a growing collection of ethical, lightweight creator tools built for speed, privacy, and virality.</p></details>
+        <details><summary>Why add so many words?</summary><p>We expanded the dictionary to 120+ terms so your sentences transform more fully — making the output funnier, more chaotic, and more shareable. But it’s still lightweight: the whole tool loads instantly because everything runs in your browser.</p></details>
+        <details><summary>How does the Brainrot Translator actually work?</summary><p>The Brainrot Translator uses a custom dictionary of Gen Z slang and meme phrases. When you type a sentence, it scans for whole words like “good”, “school”, “friend”, or “homework” and swaps them for brainrot equivalents such as “GYATT”, “sigma academy” or “SIGMA GRINDSET 💪 (NOT ME)”. Everything is handled by simple JavaScript in your browser — no external APIs or AI calls.</p></details>
+        <details><summary>Does the Brainrot Translator support mobile and tablet devices?</summary><p>Yes. This Gen Z slang converter is built to be responsive, so it works on phones, tablets, laptops and desktops. Just open the page in your mobile browser, type or paste your text, choose an intensity level, and tap “Copy” or a share button to use it instantly.</p></details>
+        <details><summary>Can I share my brainrot text on WhatsApp or Discord?</summary><p>Yes! Tap the WhatsApp or Discord button to open the app with your brainrot text ready to send. Note: Some emoji may not render on desktop WhatsApp — they work best on mobile!</p></details>
+        <details><summary>Is this brainrot generator only for jokes, or can creators use it seriously?</summary><p>It’s definitely built for fun, but creators use this brainrot generator seriously to match the tone of Gen Z meme culture. It helps short-form creators, Roblox streamers and TikTok editors write captions that feel native to Skibidi, Sigma and Rizz-heavy communities while staying fast and on-brand.</p></details>
       </section>
     </main>
 
     <footer>© 2025 SocialMediaToolsHub. Built for speed.</footer>
   </div>
 
-  <!-- 🧠 Brainrot Character -->
-  <div class="brainrot-character" aria-hidden="true">🩰☕</div>
+  <!-- 🧠 Brainrot Character (created by JS) -->
+  <div id="brainrot-char" class="brainrot-character" aria-hidden="true">🩰☕</div>
 
   <script>
     (function() {
+      // === BRAINROT CHARACTER FOLLOW LOGIC ===
+      const char = document.getElementById('brainrot-char');
+      let posX = window.innerWidth / 2;
+      let posY = window.innerHeight / 2;
+      let targetX = posX;
+      let targetY = posY;
+      const speed = 0.1; // lower = smoother/slower
+
+      // Set initial position
+      char.style.left = `${posX}px`;
+      char.style.top = `${posY}px`;
+
+      function updatePosition() {
+        const dx = targetX - posX;
+        const dy = targetY - posY;
+        posX += dx * speed;
+        posY += dy * speed;
+
+        char.style.left = `${posX}px`;
+        char.style.top = `${posY}px`;
+
+        requestAnimationFrame(updatePosition);
+      }
+
+      // Mouse move (desktop)
+      document.addEventListener('mousemove', (e) => {
+        targetX = e.clientX;
+        targetY = e.clientY;
+      });
+
+      // Touch move (mobile)
+      document.addEventListener('touchmove', (e) => {
+        if (e.touches.length > 0) {
+          targetX = e.touches[0].clientX;
+          targetY = e.touches[0].clientY;
+          e.preventDefault(); // optional: prevent scroll if needed
+        }
+      }, { passive: false });
+
+      // Start animation loop
+      updatePosition();
+
+      // === REST OF YOUR TRANSLATOR CODE ===
       const inputEl = document.getElementById('input-text');
       const outputEl = document.getElementById('output-result');
       const copyBtn = document.getElementById('copy-output');
@@ -232,7 +226,6 @@
         return string.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
       }
 
-      // 🧠 Brainrot Word Mappings (including poop, fart, puke)
       const dictionaries = {
         mild: {
           'good': 'gyatt', 'yes': 'mewing fr', 'no': 'oh no no no', 'cool': 'skibidi', 'wow': 'gyatt dayum',
@@ -363,7 +356,6 @@
         }
       });
 
-      // Simple share – no emoji modification
       function shareTo(platform) {
         const text = outputEl.textContent;
         if (!text || text.includes('appear here')) return;
@@ -372,23 +364,12 @@
         let url = '';
 
         switch (platform) {
-          case 'tiktok':
-            url = `https://www.tiktok.com/upload?text=${encodedText}`;
-            break;
-          case 'instagram':
-            url = 'https://www.instagram.com/';
-            break;
-          case 'twitter':
-            url = `https://twitter.com/intent/tweet?text=${encodedText}`;
-            break;
-          case 'whatsapp':
-            url = `https://wa.me/?text=${encodedText}`;
-            break;
-          case 'discord':
-            window.open('https://discord.com/channels/@me', '_blank');
-            return;
-          default:
-            return;
+          case 'tiktok': url = `https://www.tiktok.com/upload?text=${encodedText}`; break;
+          case 'instagram': url = 'https://www.instagram.com/'; break;
+          case 'twitter': url = `https://twitter.com/intent/tweet?text=${encodedText}`; break;
+          case 'whatsapp': url = `https://wa.me/?text=${encodedText}`; break;
+          case 'discord': window.open('https://discord.com/channels/@me', '_blank'); return;
+          default: return;
         }
 
         window.open(url, '_blank');
