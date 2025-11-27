@@ -47,15 +47,13 @@
     .faq details { color: var(--muted); font-size: 14px; margin-left: 8px; border-radius: 12px; border: 1px solid var(--border); background: rgba(15,23,42,0.9); padding: 8px 10px; }
     .faq p { margin: 8px 0; line-height: 1.6; }
 
-    /* 🧠 Brainrot Character - Now ON TOP and follows cursor */
+    /* 🧠 Floating Brainrot Character - NO cursor follow, just bouncy! */
     .brainrot-character {
       position: fixed;
-      z-index: 1000; /* Above all content */
+      z-index: 1000;
       font-size: 28px;
-      pointer-events: none;
+      pointer-events: none; /* never blocks clicks or scroll */
       opacity: 0.9;
-      transform: translate(-50%, -50%); /* center on cursor */
-      transition: opacity 0.3s;
       will-change: transform;
     }
 
@@ -144,7 +142,6 @@
 
       <section class="faq" id="faq">
         <h2>Frequently Asked Questions</h2>
-        <!-- FAQ content unchanged -->
         <details><summary>What words does this brainrot translator support?</summary><p>This tool includes over 120 common English words mapped to Gen Z meme slang like “Gyatt”, “Skibidi”, “Sigma”, “Ohio”, and “Fanum Tax”. It covers verbs (go, eat, watch), nouns (food, school, friend), and expressions (yes, no, wow) — all optimized for TikTok, Roblox, and YouTube Shorts culture.</p></details>
         <details><summary>Is this tool from SocialMediaToolsHub safe?</summary><p>Yes! The Brainrot Translator by <strong>SocialMediaToolsHub</strong> runs 100% in your browser. No data is sent anywhere — it’s private, free, and ad-free. You can even use it offline!</p></details>
         <details><summary>Can I use the output on Roblox or TikTok?</summary><p>Absolutely! Copy the result and paste it into your Roblox bio, TikTok caption, Instagram story, WhatsApp status, Discord status, or Twitter bio. Just note that some platforms limit special characters or emoji counts.</p></details>
@@ -160,54 +157,60 @@
     <footer>© 2025 SocialMediaToolsHub. Built for speed.</footer>
   </div>
 
-  <!-- 🧠 Brainrot Character (created by JS) -->
+  <!-- 🧠 Floating Brainrot Character -->
   <div id="brainrot-char" class="brainrot-character" aria-hidden="true">🩰☕</div>
 
   <script>
     (function() {
-      // === BRAINROT CHARACTER FOLLOW LOGIC ===
+      // === BRAINROT CHARACTER: Random bounce + emoji cycle ===
       const char = document.getElementById('brainrot-char');
-      let posX = window.innerWidth / 2;
-      let posY = window.innerHeight / 2;
-      let targetX = posX;
-      let targetY = posY;
-      const speed = 0.1; // lower = smoother/slower
+      const emojis = ['🩰☕', '💃', '🚽', '🧠💀', '😳🫵', '🌀🎒', '🐸', '🧢', '🍕', '💀'];
+      
+      let x = Math.random() * (window.innerWidth - 60);
+      let y = Math.random() * (window.innerHeight - 60);
+      let dx = (Math.random() - 0.5) * 2;
+      let dy = (Math.random() - 0.5) * 2;
+      let nextEmojiChange = Date.now() + 3000; // change every 3 sec
 
       // Set initial position
-      char.style.left = `${posX}px`;
-      char.style.top = `${posY}px`;
+      char.style.left = `${x}px`;
+      char.style.top = `${y}px`;
 
-      function updatePosition() {
-        const dx = targetX - posX;
-        const dy = targetY - posY;
-        posX += dx * speed;
-        posY += dy * speed;
+      function animate() {
+        // Update position
+        x += dx;
+        y += dy;
 
-        char.style.left = `${posX}px`;
-        char.style.top = `${posY}px`;
+        // Bounce off edges
+        if (x <= 0 || x >= window.innerWidth - 60) dx = -dx;
+        if (y <= 0 || y >= window.innerHeight - 60) dy = -dy;
 
-        requestAnimationFrame(updatePosition);
+        // Keep in bounds
+        x = Math.max(0, Math.min(window.innerWidth - 60, x));
+        y = Math.max(0, Math.min(window.innerHeight - 60, y));
+
+        char.style.left = `${x}px`;
+        char.style.top = `${y}px`;
+
+        // Change emoji every few seconds
+        if (Date.now() > nextEmojiChange) {
+          char.textContent = emojis[Math.floor(Math.random() * emojis.length)];
+          nextEmojiChange = Date.now() + 2000 + Math.random() * 2000; // 2-4 sec
+        }
+
+        requestAnimationFrame(animate);
       }
 
-      // Mouse move (desktop)
-      document.addEventListener('mousemove', (e) => {
-        targetX = e.clientX;
-        targetY = e.clientY;
+      // Start animation
+      animate();
+
+      // Handle window resize
+      window.addEventListener('resize', () => {
+        x = Math.min(x, window.innerWidth - 60);
+        y = Math.min(y, window.innerHeight - 60);
       });
 
-      // Touch move (mobile)
-      document.addEventListener('touchmove', (e) => {
-        if (e.touches.length > 0) {
-          targetX = e.touches[0].clientX;
-          targetY = e.touches[0].clientY;
-          e.preventDefault(); // optional: prevent scroll if needed
-        }
-      }, { passive: false });
-
-      // Start animation loop
-      updatePosition();
-
-      // === REST OF YOUR TRANSLATOR CODE ===
+      // === REST OF YOUR TRANSLATOR ===
       const inputEl = document.getElementById('input-text');
       const outputEl = document.getElementById('output-result');
       const copyBtn = document.getElementById('copy-output');
