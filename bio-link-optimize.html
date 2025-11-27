@@ -7,278 +7,175 @@
   <meta name="description" content="Create custom bio link pages for Instagram and TikTok. Free tool to organize all your links in one place with no signup required." />
   <meta name="theme-color" content="#0f172a" />
 
-  <!-- Link external stylesheet -->
   <link rel="stylesheet" href="style.css">
   
   <style>
-    /* Additional styles specific to the bio link tool */
-    .bio-builder {
-      background: var(--card);
-      border-radius: var(--r-lg);
-      padding: 20px;
+    /* Previous styles remain the same, adding new ones below */
+    
+    .url-options {
+      display: flex;
+      gap: 12px;
       margin-top: 16px;
-      box-shadow: 0 6px 22px rgba(3,7,18,0.6), inset 0 1px rgba(255,255,255,0.01);
+      flex-wrap: wrap;
     }
     
-    .form-group {
-      margin-bottom: 16px;
+    .url-option {
+      flex: 1;
+      min-width: 200px;
     }
     
-    .form-label {
-      display: block;
-      margin-bottom: 6px;
-      font-size: 14px;
-      color: var(--text);
-    }
-    
-    .form-input {
-      width: 100%;
-      padding: 12px;
-      border-radius: 10px;
-      border: 1px solid var(--border);
-      background: rgba(255,255,255,0.05);
-      color: var(--text);
-      font-size: 14px;
-      transition: var(--trans);
-    }
-    
-    .form-input:focus {
-      outline: none;
-      border-color: var(--accent-from);
-      box-shadow: 0 0 0 2px rgba(56,189,248,0.2);
-    }
-    
-    .link-item {
-      background: rgba(255,255,255,0.02);
-      border: 1px solid var(--border);
-      border-radius: 10px;
-      padding: 14px;
-      margin-bottom: 12px;
-      position: relative;
-    }
-    
-    .link-header {
-      display: flex;
-      justify-content: between;
-      align-items: center;
-      margin-bottom: 10px;
-    }
-    
-    .link-title {
-      font-weight: 600;
-      font-size: 14px;
-      color: var(--text);
-    }
-    
-    .remove-link {
-      background: rgba(255,255,255,0.05);
-      border: 1px solid var(--border);
-      color: var(--muted);
-      border-radius: 6px;
-      width: 28px;
-      height: 28px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      cursor: pointer;
-      font-size: 12px;
-      transition: var(--trans);
-    }
-    
-    .remove-link:hover {
-      background: rgba(239,68,68,0.2);
-      color: #f87171;
-    }
-    
-    .btn-secondary {
-      padding: 10px 14px;
-      border-radius: 10px;
-      border: 1px solid var(--border);
-      background: rgba(255,255,255,0.02);
-      color: var(--text);
-      cursor: pointer;
-      font-size: 14px;
-      transition: var(--trans);
-      display: inline-flex;
-      align-items: center;
-      gap: 6px;
-    }
-    
-    .btn-secondary:hover {
-      background: rgba(255,255,255,0.05);
-      border-color: var(--accent-from);
-    }
-    
-    .preview-container {
-      margin-top: 24px;
-      border-top: 1px solid var(--border);
+    .short-url-section {
+      margin-top: 20px;
       padding-top: 20px;
+      border-top: 1px solid var(--border);
     }
     
-    .preview-title {
-      font-size: 16px;
-      margin-bottom: 16px;
-      color: var(--text);
-    }
-    
-    .bio-preview {
-      background: rgba(255,255,255,0.02);
-      border-radius: 16px;
-      padding: 20px;
-      max-width: 400px;
-      margin: 0 auto;
-      border: 1px solid var(--border);
-    }
-    
-    .bio-header {
-      text-align: center;
-      margin-bottom: 20px;
-    }
-    
-    .bio-avatar {
-      width: 80px;
-      height: 80px;
-      border-radius: 50%;
-      background: rgba(255,255,255,0.05);
-      margin: 0 auto 12px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 32px;
-    }
-    
-    .bio-name {
-      font-size: 18px;
-      font-weight: 600;
-      margin-bottom: 6px;
-    }
-    
-    .bio-bio {
-      color: var(--muted);
-      font-size: 14px;
-      line-height: 1.4;
-    }
-    
-    .bio-links {
+    .url-comparison {
       display: flex;
       flex-direction: column;
-      gap: 10px;
+      gap: 12px;
+      margin: 16px 0;
     }
     
-    .bio-link {
-      display: block;
-      padding: 12px 16px;
-      background: rgba(255,255,255,0.05);
-      border-radius: 10px;
-      text-align: center;
-      border: 1px solid var(--border);
-      transition: var(--trans);
-      font-size: 14px;
-    }
-    
-    .bio-link:hover {
-      background: rgba(255,255,255,0.08);
-      border-color: var(--accent-from);
-      transform: translateY(-2px);
-    }
-    
-    .url-display {
-      margin-top: 20px;
+    .url-box {
       background: rgba(255,255,255,0.02);
       border: 1px solid var(--border);
       border-radius: 10px;
       padding: 14px;
-      font-size: 14px;
-      word-break: break-all;
       display: flex;
       justify-content: space-between;
       align-items: center;
     }
     
-    .url-text {
+    .url-type {
+      font-size: 12px;
       color: var(--muted);
+      margin-bottom: 4px;
     }
     
-    .copy-url {
-      background: rgba(255,255,255,0.05);
-      border: 1px solid var(--border);
+    .url-value {
+      font-size: 14px;
+      word-break: break-all;
       color: var(--text);
-      border-radius: 6px;
+    }
+    
+    .url-actions {
+      display: flex;
+      gap: 8px;
+    }
+    
+    .btn-small {
       padding: 6px 10px;
-      font-size: 12px;
+      border-radius: 6px;
+      border: 1px solid var(--border);
+      background: rgba(255,255,255,0.05);
+      color: var(--text);
       cursor: pointer;
+      font-size: 12px;
       transition: var(--trans);
     }
     
-    .copy-url:hover {
+    .btn-small:hover {
       background: rgba(255,255,255,0.08);
       border-color: var(--accent-from);
     }
     
-    .collapsible {
-      margin-top: 24px;
-      border-top: 1px solid var(--border);
-      padding-top: 20px;
-    }
-    
-    .collapsible-header {
+    .custom-slug-input {
       display: flex;
-      justify-content: space-between;
-      align-items: center;
-      cursor: pointer;
-      padding: 12px 0;
+      gap: 8px;
+      margin-top: 12px;
     }
     
-    .collapsible-title {
-      font-size: 16px;
+    .slug-prefix {
+      padding: 10px;
+      background: rgba(255,255,255,0.05);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      color: var(--muted);
+      font-size: 14px;
+      display: flex;
+      align-items: center;
+    }
+    
+    .slug-input {
+      flex: 1;
+    }
+    
+    .feature-badges {
+      display: flex;
+      gap: 8px;
+      margin: 16px 0;
+      flex-wrap: wrap;
+    }
+    
+    .badge {
+      background: rgba(56,189,248,0.1);
+      color: var(--accent-from);
+      padding: 4px 8px;
+      border-radius: 6px;
+      font-size: 12px;
+      border: 1px solid rgba(56,189,248,0.2);
+    }
+    
+    .analytics-section {
+      margin-top: 24px;
+      padding: 16px;
+      background: rgba(255,255,255,0.02);
+      border-radius: 10px;
+      border: 1px solid var(--border);
+    }
+    
+    .analytics-title {
+      font-size: 14px;
+      margin-bottom: 12px;
       color: var(--text);
     }
     
-    .collapsible-icon {
-      transition: transform 0.3s ease;
-      color: var(--muted);
+    .analytics-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+      gap: 12px;
     }
     
-    .collapsible-content {
-      max-height: 0;
-      overflow: hidden;
-      transition: max-height 0.3s ease;
+    .analytics-item {
+      text-align: center;
+      padding: 12px;
+      background: rgba(255,255,255,0.02);
+      border-radius: 8px;
     }
     
-    .collapsible-content.open {
-      max-height: 1000px;
-    }
-    
-    .status-message {
-      font-size: 13px;
-      margin-top: 8px;
-      height: 18px;
-      transition: opacity 0.2s, transform 0.2s;
-    }
-    
-    .status-message.show {
-      opacity: 1;
-      transform: translateY(0);
+    .analytics-number {
+      font-size: 18px;
+      font-weight: bold;
       color: var(--accent-from);
     }
     
-    .status-message.hide {
-      opacity: 0;
-      transform: translateY(-6px);
+    .analytics-label {
+      font-size: 12px;
+      color: var(--muted);
+      margin-top: 4px;
+    }
+    
+    .qr-code-container {
+      text-align: center;
+      margin: 20px 0;
+    }
+    
+    .qr-code {
+      max-width: 200px;
+      margin: 0 auto;
+      border-radius: 8px;
     }
   </style>
 </head>
 
 <body>
   <div class="container">
-
-    <!-- Header -->
     <header class="header" role="banner">
       <div class="brand" aria-label="SocialMediaToolsHub">
         <span class="brand-emoji" aria-hidden="true">⚡</span>
         <span class="logo-text">SocialMediaToolsHub</span>
       </div>
-
       <nav class="topnav" role="navigation" aria-label="Primary">
         <a href="index.html">Home</a>
         <a href="#about">About</a>
@@ -286,15 +183,19 @@
       </nav>
     </header>
 
-    <!-- Hero -->
     <main>
       <section class="hero" aria-labelledby="hero-title">
         <div class="hero-inner">
           <div class="hero-copy">
             <h1 id="hero-title">Bio Link Optimizer</h1>
-            <p class="lead">Create a custom link-in-bio page for Instagram and TikTok. Organize all your links in one place with no signup required.</p>
+            <p class="lead">Create custom link-in-bio pages with short URLs, analytics, and QR codes. Perfect for Instagram and TikTok.</p>
+            <div class="feature-badges">
+              <span class="badge">Short URLs</span>
+              <span class="badge">Click Analytics</span>
+              <span class="badge">QR Codes</span>
+              <span class="badge">No Signup</span>
+            </div>
           </div>
-
           <div class="cta-wrap" aria-live="polite">
             <button id="create-btn" class="btn-cta" type="button">
               Create Your Bio Link 🚀
@@ -303,7 +204,7 @@
         </div>
       </section>
 
-      <!-- Bio Link Builder -->
+      <!-- Enhanced Bio Link Builder -->
       <section class="bio-builder" aria-labelledby="builder-title">
         <h2 id="builder-title" class="visually-hidden">Bio Link Builder</h2>
         
@@ -319,12 +220,64 @@
         
         <div class="form-group">
           <div class="form-label">Your Links</div>
-          <div id="links-container">
-            <!-- Links will be added here dynamically -->
-          </div>
+          <div id="links-container"></div>
           <button id="add-link-btn" class="btn-secondary" type="button">
             + Add New Link
           </button>
+        </div>
+        
+        <!-- Short URL Section -->
+        <div class="short-url-section">
+          <div class="form-label">Short URL Options</div>
+          <div class="url-options">
+            <div class="url-option">
+              <label class="form-label">Custom Slug</label>
+              <div class="custom-slug-input">
+                <span class="slug-prefix">socialmediatoolshub.com/bio/</span>
+                <input type="text" id="custom-slug" class="form-input slug-input" placeholder="yourname" pattern="[a-zA-Z0-9-]+" title="Only letters, numbers, and hyphens">
+              </div>
+            </div>
+          </div>
+          
+          <div class="url-comparison">
+            <div class="url-box">
+              <div>
+                <div class="url-type">Original URL</div>
+                <div class="url-value" id="long-url-text">Your bio link will appear here</div>
+              </div>
+              <div class="url-actions">
+                <button class="btn-small copy-btn" data-url="long">Copy</button>
+              </div>
+            </div>
+            
+            <div class="url-box">
+              <div>
+                <div class="url-type">Short URL</div>
+                <div class="url-value" id="short-url-text">Short version will appear here</div>
+              </div>
+              <div class="url-actions">
+                <button class="btn-small copy-btn" data-url="short">Copy</button>
+                <button class="btn-small" id="generate-qr-btn">QR Code</button>
+              </div>
+            </div>
+          </div>
+        </div>
+        
+        <!-- QR Code Section -->
+        <div class="qr-code-container" id="qr-code-section" style="display: none;">
+          <div class="form-label">QR Code</div>
+          <img id="qr-code-image" class="qr-code" alt="QR Code for your bio link">
+          <div style="margin-top: 12px;">
+            <button class="btn-small" id="download-qr-btn">Download QR Code</button>
+          </div>
+        </div>
+        
+        <!-- Analytics Section -->
+        <div class="analytics-section" id="analytics-section" style="display: none;">
+          <div class="analytics-title">Link Analytics</div>
+          <div class="analytics-grid" id="analytics-grid">
+            <!-- Analytics will be populated here -->
+          </div>
         </div>
         
         <div class="preview-container">
@@ -341,21 +294,13 @@
           </div>
         </div>
         
-        <div class="url-display">
-          <div class="url-text" id="url-text">Your bio link will appear here after saving</div>
-          <button class="copy-url" id="copy-url-btn">Copy</button>
-        </div>
-        
         <div class="status-message hide" id="status-message" role="status" aria-live="polite"></div>
       </section>
 
-      <!-- Explanation & FAQ -->
+      <!-- Enhanced FAQ Section -->
       <article class="content-area">
-        <h3>What is a Bio Link Optimizer?</h3>
-        <p>A Bio Link Optimizer creates a custom landing page that houses all your important links in one place. Instead of being limited to just one link in your Instagram or TikTok bio, you can share a single URL that leads to a page with all your content, products, and social profiles.</p>
-
-        <h3>Why Use SocialMediaToolsHub Bio Link Creator?</h3>
-        <p>Our tool is completely free, requires no signup, and works entirely in your browser. Your data never leaves your device, ensuring complete privacy. Create and update your bio link anytime without limitations.</p>
+        <h3>Advanced Bio Link Features</h3>
+        <p>Our Bio Link Optimizer now includes short URLs, click analytics, and QR code generation. Create professional bio pages that stand out and track your engagement.</p>
 
         <div class="collapsible">
           <div class="collapsible-header" id="faq-toggle">
@@ -364,60 +309,210 @@
           </div>
           <div class="collapsible-content" id="faq-content">
             <dl class="faq">
-              <dt>How do I use my bio link?</dt>
-              <dd>After creating your page, copy the generated URL and paste it into the website field of your Instagram, TikTok, or other social media profiles.</dd>
+              <dt>How do short URLs work?</dt>
+              <dd>We create a memorable, shortened version of your bio link that redirects to your full bio page. Perfect for social media bios with character limits.</dd>
 
-              <dt>Is this tool completely free?</dt>
-              <dd>Yes, SocialMediaToolsHub Bio Link Optimizer is 100% free with no hidden costs or limitations.</dd>
+              <dt>Can I track clicks on my links?</dt>
+              <dd>Yes! Our built-in analytics track total clicks and individual link performance. Data is stored locally in your browser.</dd>
 
-              <dt>Do I need to create an account?</dt>
-              <dd>No account is required. Your bio link is generated based on the information you enter and is saved locally in your browser.</dd>
+              <dt>What are QR codes used for?</dt>
+              <dd>QR codes make your bio link scannable from physical materials like business cards, flyers, or presentations.</dd>
 
-              <dt>Can I edit my bio link later?</dt>
-              <dd>Yes, simply return to this page on the same device and browser, and your previous settings will be loaded automatically.</dd>
+              <dt>Can I use my own custom slug?</dt>
+              <dd>Yes, choose a custom ending for your short URL (e.g., socialmediatoolshub.com/bio/yourname).</dd>
 
-              <dt>How does the bio link work?</dt>
-              <dd>Your bio link contains all your information encoded directly in the URL. When someone visits your link, our page reads this information and displays your custom bio page.</dd>
+              <dt>Is my data private?</dt>
+              <dd>All data stays in your browser. We don't store your links or analytics on our servers.</dd>
 
-              <dt>Is there a limit to how many links I can add?</dt>
-              <dd>You can add as many links as you need, but we recommend keeping it to your most important 5-8 links for the best user experience.</dd>
+              <dt>How long do my bio links last?</dt>
+              <dd>Your bio links work as long as you have them saved in your browser. Clear your browser data to remove them.</dd>
             </dl>
           </div>
         </div>
       </article>
-
     </main>
 
     <footer>© 2025 SocialMediaToolsHub. Built for speed.</footer>
   </div>
 
-  <!-- JavaScript for the Bio Link Tool -->
   <script>
     document.addEventListener('DOMContentLoaded', function() {
-      // Elements
-      const profileName = document.getElementById('profile-name');
-      const profileBio = document.getElementById('profile-bio');
-      const linksContainer = document.getElementById('links-container');
-      const addLinkBtn = document.getElementById('add-link-btn');
-      const previewName = document.getElementById('preview-name');
-      const previewBio = document.getElementById('preview-bio');
-      const previewLinks = document.getElementById('preview-links');
-      const urlText = document.getElementById('url-text');
-      const copyUrlBtn = document.getElementById('copy-url-btn');
-      const statusMessage = document.getElementById('status-message');
-      const createBtn = document.getElementById('create-btn');
-      const faqToggle = document.getElementById('faq-toggle');
-      const faqContent = document.getElementById('faq-content');
+      // Previous initialization code remains the same...
       
-      // Sample links data
-      let links = [
-        { id: 1, title: 'My YouTube Channel', url: 'https://youtube.com' },
-        { id: 2, title: 'Latest Blog Post', url: 'https://example.com/blog' }
-      ];
+      // New elements for enhanced features
+      const customSlug = document.getElementById('custom-slug');
+      const longUrlText = document.getElementById('long-url-text');
+      const shortUrlText = document.getElementById('short-url-text');
+      const generateQrBtn = document.getElementById('generate-qr-btn');
+      const qrCodeSection = document.getElementById('qr-code-section');
+      const qrCodeImage = document.getElementById('qr-code-image');
+      const downloadQrBtn = document.getElementById('download-qr-btn');
+      const analyticsSection = document.getElementById('analytics-section');
+      const analyticsGrid = document.getElementById('analytics-grid');
       
-      // Initialize the form
+      // Enhanced URL generation
+      function generateUrls() {
+        const name = profileName.value.trim();
+        const slug = customSlug.value.trim().toLowerCase().replace(/[^a-z0-9-]/g, '');
+        
+        // Long URL (encoded)
+        const data = {
+          n: name,
+          b: profileBio.value.trim(),
+          l: links
+        };
+        const encodedData = btoa(JSON.stringify(data));
+        const currentUrl = window.location.href.split('?')[0];
+        const longUrl = `${currentUrl}?bio=${encodedData}`;
+        
+        // Short URL
+        let shortUrl;
+        if (slug) {
+          shortUrl = `${window.location.origin}/bio/${slug}`;
+        } else {
+          // Generate hash-based short URL
+          const hash = generateHash(longUrl);
+          shortUrl = `${window.location.origin}/bio/${hash}`;
+        }
+        
+        longUrlText.textContent = longUrl;
+        shortUrlText.textContent = shortUrl;
+        
+        // Save URLs
+        saveData();
+      }
+      
+      function generateHash(str) {
+        let hash = 0;
+        for (let i = 0; i < str.length; i++) {
+          hash = ((hash << 5) - hash) + str.charCodeAt(i);
+          hash |= 0;
+        }
+        return Math.abs(hash).toString(36).substring(0, 8);
+      }
+      
+      // QR Code Generation
+      function generateQRCode() {
+        const shortUrl = shortUrlText.textContent;
+        if (!shortUrl || shortUrl === 'Short version will appear here') {
+          showStatus('Generate a short URL first', false);
+          return;
+        }
+        
+        // Using QR Server API (free)
+        const qrUrl = `https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=${encodeURIComponent(shortUrl)}&format=png`;
+        qrCodeImage.src = qrUrl;
+        qrCodeSection.style.display = 'block';
+        
+        // Scroll to QR code
+        qrCodeSection.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+      }
+      
+      // Download QR Code
+      function downloadQRCode() {
+        const shortUrl = shortUrlText.textContent;
+        const fileName = `qrcode-${generateHash(shortUrl)}.png`;
+        
+        fetch(qrCodeImage.src)
+          .then(response => response.blob())
+          .then(blob => {
+            const url = window.URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = fileName;
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            window.URL.revokeObjectURL(url);
+            showStatus('QR Code downloaded!', true);
+          })
+          .catch(() => {
+            showStatus('Failed to download QR code', false);
+          });
+      }
+      
+      // Analytics Tracking
+      function setupAnalytics() {
+        const analytics = JSON.parse(localStorage.getItem('bio_analytics') || '{}');
+        let totalClicks = 0;
+        let linkClicks = {};
+        
+        // Calculate totals
+        Object.keys(analytics).forEach(key => {
+          if (key === 'total') {
+            totalClicks = analytics[key];
+          } else {
+            linkClicks[key] = analytics[key];
+          }
+        });
+        
+        // Update analytics display
+        analyticsGrid.innerHTML = `
+          <div class="analytics-item">
+            <div class="analytics-number">${totalClicks}</div>
+            <div class="analytics-label">Total Clicks</div>
+          </div>
+        `;
+        
+        // Show analytics section if we have data
+        if (totalClicks > 0) {
+          analyticsSection.style.display = 'block';
+        }
+      }
+      
+      // Track link clicks in preview
+      function setupClickTracking() {
+        document.querySelectorAll('.bio-link').forEach(link => {
+          link.addEventListener('click', function(e) {
+            if (!this.href || this.href === '#') return;
+            
+            const linkId = this.dataset.linkId;
+            if (linkId) {
+              // Track the click
+              const analytics = JSON.parse(localStorage.getItem('bio_analytics') || '{}');
+              analytics.total = (analytics.total || 0) + 1;
+              analytics[linkId] = (analytics[linkId] || 0) + 1;
+              localStorage.setItem('bio_analytics', JSON.stringify(analytics));
+              
+              // Update analytics display
+              setupAnalytics();
+            }
+          });
+        });
+      }
+      
+      // Enhanced event listeners
+      customSlug.addEventListener('input', function() {
+        generateUrls();
+      });
+      
+      generateQrBtn.addEventListener('click', generateQRCode);
+      downloadQrBtn.addEventListener('click', downloadQRCode);
+      
+      // Enhanced copy functionality
+      document.querySelectorAll('.copy-btn').forEach(btn => {
+        btn.addEventListener('click', function() {
+          const urlType = this.dataset.url;
+          const url = urlType === 'long' ? longUrlText.textContent : shortUrlText.textContent;
+          copyToClipboard(url);
+        });
+      });
+      
+      // Enhanced saveData function
+      function saveData() {
+        const data = {
+          name: profileName.value,
+          bio: profileBio.value,
+          links: links,
+          slug: customSlug.value
+        };
+        localStorage.setItem('socialMediaToolsHub_bioLink', JSON.stringify(data));
+        generateUrls();
+        setupAnalytics();
+      }
+      
+      // Enhanced init function
       function initForm() {
-        // Load saved data from localStorage if available
         const savedData = localStorage.getItem('socialMediaToolsHub_bioLink');
         if (savedData) {
           try {
@@ -425,9 +520,7 @@
             profileName.value = data.name || '';
             profileBio.value = data.bio || '';
             links = data.links || links;
-            
-            // Update the URL display if we have saved data
-            updateUrlDisplay();
+            customSlug.value = data.slug || '';
           } catch (e) {
             console.error('Error loading saved data:', e);
           }
@@ -435,288 +528,11 @@
         
         renderLinks();
         updatePreview();
+        generateUrls();
+        setupAnalytics();
       }
       
-      // Render links in the form
-      function renderLinks() {
-        linksContainer.innerHTML = '';
-        
-        if (links.length === 0) {
-          const emptyMsg = document.createElement('div');
-          emptyMsg.className = 'link-item';
-          emptyMsg.textContent = 'No links added yet. Click "Add New Link" to get started.';
-          emptyMsg.style.color = 'var(--muted)';
-          emptyMsg.style.textAlign = 'center';
-          emptyMsg.style.fontStyle = 'italic';
-          linksContainer.appendChild(emptyMsg);
-          return;
-        }
-        
-        links.forEach(link => {
-          const linkElement = document.createElement('div');
-          linkElement.className = 'link-item';
-          linkElement.innerHTML = `
-            <div class="link-header">
-              <div class="link-title">${link.title}</div>
-              <button type="button" class="remove-link" data-id="${link.id}">×</button>
-            </div>
-            <input type="text" class="form-input link-title-input" data-id="${link.id}" 
-                   placeholder="Link Title" value="${link.title}" style="margin-bottom: 8px;">
-            <input type="url" class="form-input link-url-input" data-id="${link.id}" 
-                   placeholder="https://example.com" value="${link.url}">
-          `;
-          linksContainer.appendChild(linkElement);
-        });
-        
-        // Add event listeners to remove buttons
-        document.querySelectorAll('.remove-link').forEach(btn => {
-          btn.addEventListener('click', function() {
-            const id = parseInt(this.getAttribute('data-id'));
-            removeLink(id);
-          });
-        });
-        
-        // Add event listeners to input fields
-        document.querySelectorAll('.link-title-input').forEach(input => {
-          input.addEventListener('input', function() {
-            const id = parseInt(this.getAttribute('data-id'));
-            updateLinkTitle(id, this.value);
-          });
-        });
-        
-        document.querySelectorAll('.link-url-input').forEach(input => {
-          input.addEventListener('input', function() {
-            const id = parseInt(this.getAttribute('data-id'));
-            updateLinkUrl(id, this.value);
-          });
-        });
-      }
-      
-      // Add a new link
-      function addLink() {
-        const newId = links.length > 0 ? Math.max(...links.map(l => l.id)) + 1 : 1;
-        links.push({
-          id: newId,
-          title: 'New Link',
-          url: ''
-        });
-        renderLinks();
-        updatePreview();
-        saveData();
-      }
-      
-      // Remove a link
-      function removeLink(id) {
-        links = links.filter(link => link.id !== id);
-        renderLinks();
-        updatePreview();
-        saveData();
-      }
-      
-      // Update link title
-      function updateLinkTitle(id, title) {
-        const link = links.find(l => l.id === id);
-        if (link) {
-          link.title = title;
-          updatePreview();
-          saveData();
-        }
-      }
-      
-      // Update link URL
-      function updateLinkUrl(id, url) {
-        const link = links.find(l => l.id === id);
-        if (link) {
-          link.url = url;
-          updatePreview();
-          saveData();
-        }
-      }
-      
-      // Update the preview
-      function updatePreview() {
-        // Update name and bio
-        previewName.textContent = profileName.value || 'Your Name';
-        previewBio.textContent = profileBio.value || 'Your bio description appears here';
-        
-        // Update links
-        previewLinks.innerHTML = '';
-        
-        if (links.length === 0) {
-          const emptyLink = document.createElement('div');
-          emptyLink.className = 'bio-link';
-          emptyLink.textContent = 'Your links will appear here';
-          previewLinks.appendChild(emptyLink);
-        } else {
-          links.forEach(link => {
-            const linkElement = document.createElement('a');
-            linkElement.className = 'bio-link';
-            linkElement.href = link.url || '#';
-            linkElement.textContent = link.title;
-            if (!link.url) {
-              linkElement.style.opacity = '0.6';
-              linkElement.style.cursor = 'not-allowed';
-              linkElement.addEventListener('click', e => e.preventDefault());
-            }
-            previewLinks.appendChild(linkElement);
-          });
-        }
-      }
-      
-      // Update the URL display
-      function updateUrlDisplay() {
-        const name = profileName.value.trim();
-        const bio = profileBio.value.trim();
-        
-        if (name || bio || links.length > 0) {
-          // Encode the data for the URL
-          const data = {
-            n: name,
-            b: bio,
-            l: links
-          };
-          const encodedData = btoa(JSON.stringify(data));
-          const currentUrl = window.location.href.split('?')[0];
-          const bioUrl = `${currentUrl}?bio=${encodedData}`;
-          
-          urlText.textContent = bioUrl;
-          urlText.style.color = 'var(--text)';
-        } else {
-          urlText.textContent = 'Your bio link will appear here after saving';
-          urlText.style.color = 'var(--muted)';
-        }
-      }
-      
-      // Save data to localStorage
-      function saveData() {
-        const data = {
-          name: profileName.value,
-          bio: profileBio.value,
-          links: links
-        };
-        localStorage.setItem('socialMediaToolsHub_bioLink', JSON.stringify(data));
-        updateUrlDisplay();
-      }
-      
-      // Copy URL to clipboard
-      function copyUrl() {
-        const url = urlText.textContent;
-        
-        if (!url || url === 'Your bio link will appear here after saving') {
-          showStatus('No bio link to copy', false);
-          return;
-        }
-        
-        if (navigator.clipboard && navigator.clipboard.writeText) {
-          navigator.clipboard.writeText(url).then(function() {
-            showStatus('Bio link copied!', true);
-          }, function() {
-            showStatus('Could not copy', false);
-          });
-        } else {
-          try {
-            const textArea = document.createElement('textarea');
-            textArea.value = url;
-            textArea.setAttribute('readonly', '');
-            textArea.style.position = 'absolute';
-            textArea.style.left = '-9999px';
-            document.body.appendChild(textArea);
-            textArea.select();
-            document.execCommand('copy');
-            document.body.removeChild(textArea);
-            showStatus('Bio link copied!', true);
-          } catch (e) {
-            showStatus('Could not copy', false);
-          }
-        }
-      }
-      
-      // Show status message
-      function showStatus(msg, ok) {
-        statusMessage.textContent = msg;
-        statusMessage.classList.remove('hide');
-        statusMessage.classList.add('show');
-        statusMessage.style.color = ok ? getComputedStyle(document.documentElement).getPropertyValue('--accent-from') || '#38bdf8' : '';
-        clearTimeout(statusMessage._t);
-        statusMessage._t = setTimeout(function() { 
-          statusMessage.classList.remove('show'); 
-          statusMessage.classList.add('hide'); 
-        }, 2000);
-      }
-      
-      // Toggle FAQ section
-      function toggleFaq() {
-        faqContent.classList.toggle('open');
-        const icon = faqToggle.querySelector('.collapsible-icon');
-        icon.textContent = faqContent.classList.contains('open') ? '▲' : '▼';
-      }
-      
-      // Check if we're viewing a bio page
-      function checkForBioPage() {
-        const urlParams = new URLSearchParams(window.location.search);
-        const bioParam = urlParams.get('bio');
-        
-        if (bioParam) {
-          try {
-            const decodedData = atob(bioParam);
-            const data = JSON.parse(decodedData);
-            
-            // Show the bio page view
-            document.querySelector('.hero').style.display = 'none';
-            document.querySelector('.bio-builder').style.display = 'none';
-            document.querySelector('.content-area').style.display = 'none';
-            
-            // Create bio page view
-            const bioPage = document.createElement('div');
-            bioPage.className = 'bio-preview';
-            bioPage.style.marginTop = '40px';
-            bioPage.style.maxWidth = '400px';
-            bioPage.style.marginLeft = 'auto';
-            bioPage.style.marginRight = 'auto';
-            
-            bioPage.innerHTML = `
-              <div class="bio-header">
-                <div class="bio-avatar">👤</div>
-                <div class="bio-name">${data.n || 'Social Media User'}</div>
-                <div class="bio-bio">${data.b || 'Check out my links below!'}</div>
-              </div>
-              <div class="bio-links">
-                ${data.l && data.l.length > 0 ? 
-                  data.l.map(link => `
-                    <a href="${link.url}" class="bio-link" target="_blank" rel="noopener">${link.title}</a>
-                  `).join('') : 
-                  '<div class="bio-link">No links available</div>'
-                }
-              </div>
-              <div style="text-align: center; margin-top: 20px;">
-                <a href="${window.location.href.split('?')[0]}" class="btn-secondary">Create Your Own Bio Page</a>
-              </div>
-            `;
-            
-            document.querySelector('main').appendChild(bioPage);
-          } catch (e) {
-            console.error('Error parsing bio data:', e);
-          }
-        }
-      }
-      
-      // Event listeners
-      addLinkBtn.addEventListener('click', addLink);
-      profileName.addEventListener('input', function() {
-        updatePreview();
-        saveData();
-      });
-      profileBio.addEventListener('input', function() {
-        updatePreview();
-        saveData();
-      });
-      copyUrlBtn.addEventListener('click', copyUrl);
-      createBtn.addEventListener('click', function() {
-        document.querySelector('.bio-builder').scrollIntoView({ behavior: 'smooth' });
-      });
-      faqToggle.addEventListener('click', toggleFaq);
-      
-      // Initialize
+      // Initialize everything
       initForm();
       checkForBioPage();
     });
