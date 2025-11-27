@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>Brainrot Translator — Turn Text Into Gen Z Meme Slang | SocialMediaToolsKit</title>
+  <title>Brainrot Translator — Turn Text Into Gen Z Meme Slang | SocialMediaToolsHub</title>
   <meta name="description" content="Transform boring sentences into chaotic brainrot slang (Skibidi, Gyatt, Sigma, Ohio, Rizz, Fanum Tax). Perfect for TikTok, Roblox bios & memes. Free, instant, no login." />
   <meta name="theme-color" content="#0f172a" />
   <link rel="stylesheet" href="style.css">
@@ -15,6 +15,25 @@
     .intensity-btn { padding: 8px 14px; border-radius: 10px; background: rgba(255,255,255,0.03); border: 1px solid var(--border); color: var(--muted); cursor: pointer; font-size: 13px; }
     .intensity-btn.active { color: var(--accent-from); border-color: var(--accent-from); background: rgba(56,189,248,0.1); }
     .btn-copy { padding: 10px 16px; border-radius: 10px; border: 0; background: linear-gradient(90deg, var(--accent-from), var(--accent-to)); color: #06121f; font-weight: 600; cursor: pointer; margin-top: 10px; }
+    .share-buttons { display: flex; gap: 10px; margin-top: 12px; flex-wrap: wrap; justify-content: flex-start; }
+    .share-btn {
+      display: flex; align-items: center; justify-content: center;
+      width: 44px; height: 44px;
+      border-radius: 50%;
+      border: 0;
+      cursor: pointer;
+      font-size: 18px;
+      font-weight: bold;
+      color: white;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.2);
+      transition: transform 0.2s, opacity 0.2s;
+    }
+    .share-btn:hover { transform: scale(1.1); opacity: 0.95; }
+    .share-tiktok { background: #000; }
+    .share-instagram { background: linear-gradient(45deg, #f09433, #e6683c, #dc2743, #cc2366, #bc1888); }
+    .share-twitter { background: #000; }
+    .share-whatsapp { background: #25D366; }
+    .share-discord { background: #5865F2; }
     .result-preview { background: rgba(0,0,0,0.2); border-radius: var(--r-md); padding: 14px; margin-top: 10px; font-size: 15px; line-height: 1.5; min-height: 24px; }
     .faq { margin-top: 30px; }
     .faq h2 { font-size: 18px; margin-bottom: 10px; }
@@ -26,9 +45,9 @@
 <body>
   <div class="container">
     <header class="header" role="banner">
-      <div class="brand" aria-label="SocialMediaToolsKit">
+      <div class="brand" aria-label="SocialMediaToolsHub">
         <span class="brand-emoji" aria-hidden="true">⚡</span>
-        <span class="logo-text">SocialMediaToolsKit</span>
+        <span class="logo-text">SocialMediaToolsHub</span>
       </div>
       <nav class="topnav" role="navigation" aria-label="Primary">
         <a href="index.html">Home</a>
@@ -59,6 +78,13 @@
             Your brainrot text will appear here...
           </div>
           <button class="btn-copy" id="copy-output">Copy to Clipboard ✂️</button>
+          <div class="share-buttons">
+            <button class="share-btn share-tiktok" title="Share on TikTok" aria-label="Share on TikTok">T</button>
+            <button class="share-btn share-instagram" title="Share on Instagram" aria-label="Share on Instagram">I</button>
+            <button class="share-btn share-twitter" title="Share on Twitter/X" aria-label="Share on Twitter">X</button>
+            <button class="share-btn share-whatsapp" title="Share on WhatsApp" aria-label="Share on WhatsApp">W</button>
+            <button class="share-btn share-discord" title="Send to Discord" aria-label="Send to Discord">D</button>
+          </div>
         </div>
       </section>
 
@@ -78,20 +104,18 @@
 
         <details>
           <summary>Can I use the output on Roblox or TikTok?</summary>
-          <p>Absolutely! Copy the result and paste it into your Roblox bio, TikTok caption, Instagram story, or Discord status. Just note that some platforms limit special characters or emoji counts.</p>
+          <p>Absolutely! Copy the result and paste it into your Roblox bio, TikTok caption, Instagram story, WhatsApp status, Discord status, or Twitter bio. Just note that some platforms limit special characters or emoji counts.</p>
         </details>
 
         <details>
           <summary>Who made this translator?</summary>
-          <p>This free utility is part of <strong>SocialMediaToolsHub</strong> (also known as SocialMediaToolsKit), a growing collection of ethical, lightweight creator tools built for speed, privacy, and virality.</p>
+          <p>This free utility is part of <strong>SocialMediaToolsHub</strong>, a growing collection of ethical, lightweight creator tools built for speed, privacy, and virality.</p>
         </details>
 
         <details>
           <summary>Why add so many words?</summary>
           <p>We expanded the dictionary to 120+ terms so your sentences transform more fully — making the output funnier, more chaotic, and more shareable. But it’s still lightweight: the whole tool loads instantly because everything runs in your browser.</p>
         </details>
-
-        <!-- NEW SEO-FRIENDLY FAQS BELOW -->
 
         <details>
           <summary>How does the Brainrot Translator actually work?</summary>
@@ -100,17 +124,12 @@
 
         <details>
           <summary>Does the Brainrot Translator support mobile and tablet devices?</summary>
-          <p>Yes. This Gen Z slang converter is built to be responsive, so it works on phones, tablets, laptops and desktops. Just open the page in your mobile browser, type or paste your text, choose an intensity level, and tap “Copy to Clipboard” to use it in your favorite social media app.</p>
+          <p>Yes. This Gen Z slang converter is built to be responsive, so it works on phones, tablets, laptops and desktops. Just open the page in your mobile browser, type or paste your text, choose an intensity level, and tap “Copy” or a share button to use it instantly.</p>
         </details>
 
         <details>
-          <summary>Will brainrot text affect my SEO if I use it on websites or blogs?</summary>
-          <p>Brainrot slang is mainly designed for TikTok captions, YouTube Shorts descriptions, Roblox bios and meme pages. For serious SEO content, you should keep a clean, readable version on your website and use brainrot styling for fun sections only. The tool itself is SEO-friendly because it’s fast, lightweight and hosted as a simple HTML page.</p>
-        </details>
-
-        <details>
-          <summary>Can I request new slang words or trends to be added?</summary>
-          <p>The dictionary is designed to be easy to extend. If new trends like “NPC stream”, “rizzler arc”, or fresh TikTok sounds become popular, you can update the word list in the code or request an update on future versions of SocialMediaToolsKit / SocialMediaToolsHub tools.</p>
+          <summary>Can I share my brainrot text on WhatsApp or Discord?</summary>
+          <p>Yes! Tap the WhatsApp (W) button to open a chat with your brainrot text pre-filled. Tap Discord (D) to open a direct message or server with the text ready to paste. Works best on mobile with the apps installed!</p>
         </details>
 
         <details>
@@ -120,7 +139,7 @@
       </section>
     </main>
 
-    <footer>© 2025 SocialMediaToolsKit. Built for speed.</footer>
+    <footer>© 2025 SocialMediaToolsHub. Built for speed.</footer>
   </div>
 
   <script>
@@ -128,8 +147,15 @@
       const inputEl = document.getElementById('input-text');
       const outputEl = document.getElementById('output-result');
       const copyBtn = document.getElementById('copy-output');
-      const intensityBtns = document.querySelectorAll('.intensity-btn');
+      const btns = {
+        tiktok: document.querySelector('.share-tiktok'),
+        instagram: document.querySelector('.share-instagram'),
+        twitter: document.querySelector('.share-twitter'),
+        whatsapp: document.querySelector('.share-whatsapp'),
+        discord: document.querySelector('.share-discord')
+      };
 
+      const intensityBtns = document.querySelectorAll('.intensity-btn');
       let currentLevel = 'mild';
 
       function escapeRegExp(string) {
@@ -151,7 +177,8 @@
           'tired': 'grindset exhausted', 'happy': 'rizz activated', 'sad': 'ohio mode', 'angry': 'fanum rage',
           'scared': 'skibidi scared', 'ready': 'sigma ready', 'okay': 'gyatt fr', 'sure': 'mewing confirmed',
           'maybe': 'ohio maybe', 'never': 'sigma never', 'always': 'gyatt always', 'today': 'ohio day',
-          'tomorrow': 'sigma tomorrow', 'yesterday': 'brainrot past'
+          'tomorrow': 'sigma tomorrow', 'yesterday': 'brainrot past',
+          'poop': 'ohio dump', 'fart': 'sigma toot', 'puke': 'grimace reflux'
         },
         mid: {
           'good': 'GYATT 🤏', 'yes': 'mewing fr fr 😳', 'no': 'oh no no no 💀', 'cool': 'skibidi toilet core 🚽',
@@ -168,7 +195,8 @@
           'tired': 'GRINDSET EXHAUSTED 😴', 'happy': 'RIZZ ACTIVATED 😳', 'sad': 'OHIO MODE 💀', 'angry': 'FANUM RAGE 🔥',
           'scared': 'SKIBIDI SCARED 🚽', 'ready': 'SIGMA READY 💪', 'okay': 'GYATT FR ✅', 'sure': 'MEWING CONFIRMED 🫵',
           'maybe': 'OHIO MAYBE 🤔', 'never': 'SIGMA NEVER ❌', 'always': 'GYATT ALWAYS 💯', 'today': 'OHIO DAY 📅',
-          'tomorrow': 'SIGMA TOMORROW 🗓️', 'yesterday': 'BRAINROT PAST 💭'
+          'tomorrow': 'SIGMA TOMORROW 🗓️', 'yesterday': 'BRAINROT PAST 💭',
+          'poop': 'OHIO DUMP 💩', 'fart': 'SIGMA TOOT 💨', 'puke': 'GRIMACE REFLUX 🤮'
         },
         full: {
           'good': 'GYATT 🤏 FOR THE RIZZLER 😳', 'yes': 'MEWING FR FR 💀🫵', 'no': 'OH NO NO NO — FANUM TAX ACTIVATED 💀',
@@ -192,7 +220,10 @@
           'okay': 'GYATT FR — OHIO CONFIRMED ✅💀', 'sure': 'MEWING CONFIRMED BY SIGMA COUNCIL 🫵🧠',
           'maybe': 'OHIO MAYBE — TEMPORAL LIMBO 🤔🌀', 'never': 'SIGMA NEVER — ERASED FROM OHIO ❌💀',
           'always': 'GYATT ALWAYS — ETERNAL RIZZ 💯😳', 'today': 'OHIO DAY — BRAINROT PEAK 📅💀',
-          'tomorrow': 'SIGMA TOMORROW — FUTURE GRIND 🗓️💪', 'yesterday': 'BRAINROT PAST — FANUM REGRETS 💭😭'
+          'tomorrow': 'SIGMA TOMORROW — FUTURE GRIND 🗓️💪', 'yesterday': 'BRAINROT PAST — FANUM REGRETS 💭😭',
+          'poop': 'OHIO DUMP 💩 — SKIBIDI TOILET ACTIVATED 🌀', 
+          'fart': 'SIGMA TOOT 💨 — FANUM TAXED THE AIR 💀', 
+          'puke': 'GRIMACE REFLUX 🤮 — NOT SIGMA APPROVED ❌'
         }
       };
 
@@ -203,7 +234,6 @@
 
         let result = ' ' + text + ' ';
 
-        // Handle "I am" / "I'm"
         if (level === 'mid' || level === 'full') {
           result = result.replace(/\b(i\s+am|i'm)\b/ig, 'me irl...');
         }
@@ -217,7 +247,6 @@
 
         result = result.trim();
 
-        // Add ending emojis for extra chaos in mid/full
         if (level === 'mid' && !/[\u{1F480}\u{1F633}\u{1F914}]/u.test(result)) {
           result += ' 😳';
         } else if (level === 'full') {
@@ -226,7 +255,6 @@
           if (!result.includes('🫵')) result += ' 🫵';
         }
 
-        // Capitalize first letter
         if (result) {
           result = result.charAt(0).toUpperCase() + result.slice(1);
         }
@@ -264,6 +292,52 @@
           }
         }
       });
+
+      function shareTo(platform) {
+        const text = outputEl.textContent;
+        if (!text || text.includes('appear here')) return;
+
+        const encodedText = encodeURIComponent(text);
+        const fallbackUrl = window.location.href;
+        let url = '';
+
+        switch (platform) {
+          case 'tiktok':
+            url = `https://www.tiktok.com/upload?text=${encodedText}`;
+            break;
+          case 'instagram':
+            // Instagram doesn't allow pre-filled captions via URL
+            url = 'https://www.instagram.com/';
+            break;
+          case 'twitter':
+            url = `https://twitter.com/intent/tweet?text=${encodedText}`;
+            break;
+          case 'whatsapp':
+            url = `https://wa.me/?text=${encodedText}`;
+            break;
+          case 'discord':
+            // Discord doesn't support pre-filled messages via URL, but we can prompt user
+            // Best practice: copy to clipboard + open Discord
+            navigator.clipboard.writeText(text).then(() => {
+              if (confirm('Copied! Open Discord to paste your brainrot?')) {
+                window.open('https://discord.com/channels/@me', '_blank');
+              }
+            }).catch(() => {
+              alert('Please copy manually and paste into Discord.');
+            });
+            return;
+          default:
+            return;
+        }
+
+        window.open(url, '_blank');
+      }
+
+      btns.tiktok.addEventListener('click', () => shareTo('tiktok'));
+      btns.instagram.addEventListener('click', () => shareTo('instagram'));
+      btns.twitter.addEventListener('click', () => shareTo('twitter'));
+      btns.whatsapp.addEventListener('click', () => shareTo('whatsapp'));
+      btns.discord.addEventListener('click', () => shareTo('discord'));
 
       updateOutput();
     })();
