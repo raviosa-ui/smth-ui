@@ -4,58 +4,64 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
   <title>Glitched &amp; Zalgo Text Generator — SocialMediaToolsKit</title>
-  <meta name="description" content="Convert normal text into glitchy / Zalgo / cursed text for memes, horror captions and aesthetic posts. Copy or download your glitched text instantly." />
+  <meta name="description" content="Convert normal text into cursed, glitchy or hacker-style text and render as a transparent PNG overlay or thumbnail image." />
   <meta name="theme-color" content="#0f172a" />
 
-  <!-- Link existing stylesheet -->
   <link rel="stylesheet" href="style.css">
 
-  <!-- JSON-LD FAQ schema (keep your 10 FAQs here or replace with previous JSON-LD block) -->
+  <!-- FAQ JSON-LD (10 items). Uses SocialMediaToolsHub -->
   <script type="application/ld+json">
   {
     "@context":"https://schema.org",
     "@type":"FAQPage",
     "mainEntity":[
-      {"@type":"Question","name":"What is glitched or Zalgo text?","acceptedAnswer":{"@type":"Answer","text":"Glitched (or Zalgo) text is normal characters combined with multiple Unicode combining marks (diacritics) so letters appear distorted, corrupted or 'creepy'. It's a visual effect made purely with Unicode."}},
-      {"@type":"Question","name":"How is 'glitched' different from 'Zalgo'?","acceptedAnswer":{"@type":"Answer","text":"People use the words interchangeably but: 'Zalgo' historically refers to heavy, horror-style combining marks that 'break' characters; 'glitched' is a broader term for hacker/aesthetic distortions (including light or stylized effects)."}},
-      {"@type":"Question","name":"Why is this trending and popular with Gen Z & creators?","acceptedAnswer":{"@type":"Answer","text":"The aesthetic is visually striking, meme-friendly and fits horror, cyberpunk and ironic niches. It stands out in feeds and captions — which makes it useful for short-form posts and viral hooks."}},
-      {"@type":"Question","name":"How can glitched text improve my post virality?","acceptedAnswer":{"@type":"Answer","text":"Glitched text attracts attention because it visually interrupts scannable text, encouraging viewers to pause and engage. Use sparingly for headlines, CTAs or pins — it can increase curiosity, saves, and shares."}},
-      {"@type":"Question","name":"What are practical use cases on SocialMediaToolsHub?","acceptedAnswer":{"@type":"Answer","text":"Use cases include horror-themed captions, meme formats, attention-grabbing CTAs, profile name stylization, story stickers, themed announcements, and aesthetic headers for livestreams or thumbnails."}},
-      {"@type":"Question","name":"Will the glitched characters display on all platforms?","acceptedAnswer":{"@type":"Answer","text":"Most platforms support Unicode combining marks and will display glitched text. However, extreme combinations may be sanitized by some services or look messy on small screens — moderate intensity is safest."}},
-      {"@type":"Question","name":"Is heavy glitched text accessible?","acceptedAnswer":{"@type":"Answer","text":"Very heavy distortion can break screen readers and reduce readability. For accessibility, provide plain-text alternatives or limit glitched text to decorative headings, not essential content."}},
-      {"@type":"Question","name":"How do I control the intensity & style?","acceptedAnswer":{"@type":"Answer","text":"Use the intensity slider, choose which combining mark sets (up/mid/down) to apply, or select presets (Mild / Chaos / Extreme) to quickly get a look that fits your platform and audience."}},
-      {"@type":"Question","name":"Can this be used for branding or profile names?","acceptedAnswer":{"@type":"Answer","text":"Yes — used lightly, glitched characters can give a unique brand flavor, especially for horror, cyber, or meme-focused accounts. Test on profile fields and across devices before committing."}},
-      {"@type":"Question","name":"What should I avoid when using glitched text?","acceptedAnswer":{"@type":"Answer","text":"Avoid excessive distortion in essential messages, avoid using it where screen readers are mandatory, and be cautious in usernames that must be searchable or copy/paste-friendly."}}
+      {"@type":"Question","name":"What is glitched or Zalgo text?","acceptedAnswer":{"@type":"Answer","text":"Glitched (Zalgo) text uses normal characters plus Unicode combining marks (diacritics) so letters appear distorted, creepy, or corrupted."}},
+      {"@type":"Question","name":"How does glitched differ from Zalgo?","acceptedAnswer":{"@type":"Answer","text":"The terms overlap: Zalgo often indicates heavy, horror-style distortion while glitched can mean lighter, stylistic distortion used for aesthetics."}},
+      {"@type":"Question","name":"Why are creators using this style more?","acceptedAnswer":{"@type":"Answer","text":"It visually stands out in feeds and pairs with horror, cyber, and meme aesthetics — making captions and thumbnails more attention-grabbing."}},
+      {"@type":"Question","name":"Where should I use glitched text for best effect?","acceptedAnswer":{"@type":"Answer","text":"Best used for headlines, short CTAs, meme punchlines, thumbnail overlays and themed announcements — not for critical instructions."}},
+      {"@type":"Question","name":"Will this display across social platforms?","acceptedAnswer":{"@type":"Answer","text":"Most modern apps show combining marks correctly. Very heavy distortion might be sanitized or appear broken on some apps or older devices."}},
+      {"@type":"Question","name":"Is it accessible?","acceptedAnswer":{"@type":"Answer","text":"Intense distortion can reduce readability and break screen readers. Use plain-text alternatives for essential content."}},
+      {"@type":"Question","name":"How can SocialMediaToolsHub help me use it safely?","acceptedAnswer":{"@type":"Answer","text":"SocialMediaToolsHub provides presets, previews and an image renderer so you can test intensity and see how it looks before posting."}},
+      {"@type":"Question","name":"Can I render glitched text as an image?","acceptedAnswer":{"@type":"Answer","text":"Yes — this tool can render the text onto a transparent or solid-background PNG suitable for overlays or standalone thumbnails."}},
+      {"@type":"Question","name":"Are there recommended settings for thumbnails?","acceptedAnswer":{"@type":"Answer","text":"Use larger font sizes, solid backgrounds for thumbnails, and moderate intensity so the text remains legible at small sizes."}},
+      {"@type":"Question","name":"What should be avoided when using glitched text?","acceptedAnswer":{"@type":"Answer","text":"Avoid overuse for essential information, avoid putting heavily glitched text where accessibility matters, and preview on devices before publishing."}}
     ]
   }
   </script>
 
   <style>
-    /* tool-specific tweaks (keeps using your style.css) */
-    .tool-card{background:linear-gradient(90deg,var(--card),#111827);padding:16px;border-radius:var(--r-md);margin:14px 0}
-    .tool-grid{display:flex;flex-direction:column;gap:12px}
-    .row{display:flex;gap:10px;align-items:center;flex-wrap:wrap}
-    textarea.input, textarea.preview{width:100%;min-height:140px;border-radius:12px;padding:12px;border:1px solid var(--border);background:#071127;color:var(--text);font-size:15px;resize:vertical}
-    .controls{display:flex;gap:8px;flex-wrap:wrap;align-items:center}
-    .small{font-size:13px;color:var(--muted)}
+    /* Overrides & responsive layout for this tool page */
+    .tool-wrap{margin-top:18px;background:var(--card);padding:18px;border-radius:18px}
+    .tool-grid{display:flex;gap:18px;align-items:flex-start}
+    .col{flex:1;min-width:0}
+    .left-col{max-width:480px}
+    label.small{display:block;font-size:13px;color:var(--muted);margin-bottom:6px}
+    textarea.input, textarea.preview{width:100%;min-height:120px;border-radius:12px;padding:12px;border:1px solid var(--border);background:#071127;color:var(--text);font-size:15px;resize:vertical}
+    .controls-row{display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin-top:10px}
+    .btn{padding:10px 12px;border-radius:10px;border:0;cursor:pointer;font-weight:600}
+    .btn.primary{background:linear-gradient(90deg,var(--accent-from),var(--accent-to));color:#06121f}
+    .btn.ghost{background:transparent;border:1px solid var(--border);color:var(--muted)}
     .chip{padding:8px 10px;border-radius:10px;background:rgba(255,255,255,0.02);border:1px solid var(--border);cursor:pointer}
-    .chip:active{transform:translateY(1px)}
-    .options{display:flex;gap:10px;align-items:center}
-    .btn-row{display:flex;gap:8px;flex-wrap:wrap}
-    .accent{background:linear-gradient(90deg,var(--accent-from),var(--accent-to));color:#06121f;border:0;padding:10px 12px;border-radius:10px;cursor:pointer;font-weight:600}
-    .muted-btn{background:transparent;border:1px solid var(--border);padding:10px 12px;border-radius:10px;color:var(--muted);cursor:pointer}
-    .accent-small{padding:8px 10px;border-radius:8px;background:linear-gradient(90deg,var(--accent-from),var(--accent-to));color:#06121f;border:0;cursor:pointer;font-weight:600}
-    .canvas-wrap{display:flex;flex-direction:column;gap:8px;margin-top:12px}
-    .canvas-preview{border:1px solid var(--border);border-radius:10px;background:transparent;padding:8px;display:inline-block}
-    label.inline{display:flex;gap:8px;align-items:center}
-    @media(min-width:640px){.tool-grid{flex-direction:row}.left{flex:1}.right{flex:1}}
+    .canvas-container{border-radius:10px;border:1px solid var(--border);padding:10px;background:transparent}
+    canvas{display:block;width:100%;height:auto;border-radius:6px;background:transparent}
+    .image-controls{display:flex;flex-direction:column;gap:8px}
+    .two-cols{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+    .small-muted{font-size:13px;color:var(--muted)}
+    details summary{cursor:pointer;padding:10px 12px;border-radius:10px;background:rgba(255,255,255,0.01);border:1px solid var(--border);display:list-item;margin-top:8px}
+    @media(max-width:880px){
+      .tool-grid{flex-direction:column}
+      .left-col{max-width:none}
+      textarea.input, textarea.preview{min-height:120px}
+    }
+    @media(max-width:420px){
+      .controls-row{flex-direction:column;align-items:stretch}
+      .two-cols{flex-direction:column;align-items:stretch}
+    }
   </style>
 </head>
 
 <body>
   <div class="container">
-
-    <!-- Header -->
     <header class="header" role="banner">
       <div class="brand" aria-label="SocialMediaToolsKit">
         <span class="brand-emoji" aria-hidden="true">⚡</span>
@@ -74,175 +80,172 @@
         <div class="hero-inner">
           <div class="hero-copy">
             <h1 id="hero-title">Glitched &amp; Zalgo Text Generator</h1>
-            <p class="lead">Turn normal text into cursed, glitchy or hacker-style text. Now you can render the glitched text onto a transparent PNG for thumbnails, stories and thumbnails.</p>
-          </div>
-
-          <div class="cta-wrap" aria-live="polite">
-            <div class="small">Tip: Export with transparent background for overlays; use a solid background for thumbnails.</div>
+            <p class="lead">Create glitched text and export it as a transparent PNG overlay or a thumbnail-ready image.</p>
           </div>
         </div>
       </section>
 
-      <section class="tool-card" aria-labelledby="tool-title">
-        <h2 id="tool-title">Generate Glitched Text &amp; Render as Image</h2>
+      <section class="tool-wrap" aria-labelledby="tool-title">
+        <h2 id="tool-title">Generate & Preview Text</h2>
 
-        <div class="tool-grid" role="region" aria-label="Zalgo generator area">
-          <div class="left">
-            <label for="input-text" class="small">Input text</label>
+        <!-- TOP: preview + copy (preview kept first on top of controls per request) -->
+        <div class="tool-grid" role="region" aria-label="generator">
+          <div class="col left-col">
+            <label class="small" for="input-text">Input text</label>
             <textarea id="input-text" class="input" placeholder="Type or paste text here — e.g. Hello World"></textarea>
 
-            <div class="row" style="margin-top:10px;">
-              <div class="controls">
-                <label class="small" for="intensity">Intensity</label>
-                <input id="intensity" type="range" min="0" max="15" value="6" step="1" />
-                <span id="intensity-val" class="small">6</span>
-              </div>
+            <div class="controls-row" style="margin-top:10px">
+              <label class="small" for="intensity">Intensity</label>
+              <input id="intensity" type="range" min="0" max="15" value="6" step="1" />
+              <div class="small-muted" id="intensity-val">6</div>
 
-              <div class="options" aria-label="Combining mark options" style="margin-left:8px">
-                <label class="small" style="margin-right:6px">Apply:</label>
-                <label><input id="up" type="checkbox" checked /> Up</label>
-                <label><input id="mid" type="checkbox" checked /> Mid</label>
-                <label><input id="down" type="checkbox" checked /> Down</label>
+              <div style="margin-left:auto" class="two-cols">
+                <label class="small-muted inline"><input id="up" type="checkbox" checked /> Up</label>
+                <label class="small-muted inline"><input id="mid" type="checkbox" checked /> Mid</label>
+                <label class="small-muted inline"><input id="down" type="checkbox" checked /> Down</label>
               </div>
             </div>
 
-            <div class="row" style="margin-top:10px;align-items:center">
-              <div class="preset-list" role="list" aria-label="Presets">
-                <button class="chip" data-preset="mild">Mild</button>
-                <button class="chip" data-preset="chaos">Chaos</button>
-                <button class="chip" data-preset="extreme">Extreme</button>
-              </div>
+            <div class="controls-row">
+              <div class="chip" data-preset="mild">Mild</div>
+              <div class="chip" data-preset="chaos">Chaos</div>
+              <div class="chip" data-preset="extreme">Extreme</div>
 
-              <div style="margin-left:auto" class="btn-row">
-                <button id="generate" class="accent" type="button">Generate</button>
-                <button id="clear" class="muted-btn" type="button">Clear</button>
+              <div style="margin-left:auto" class="two-cols">
+                <button id="generate" class="btn primary">Generate</button>
+                <button id="clear" class="btn ghost">Clear</button>
               </div>
             </div>
 
-            <div style="margin-top:12px" class="small">Sample: <button class="chip" data-sample="The night whispers.">The night whispers.</button> <button class="chip" data-sample="FOLLOW FOR MORE">FOLLOW FOR MORE</button></div>
-
-            <div style="margin-top:16px">
-              <label class="small">Preview Output</label>
+            <div style="margin-top:12px">
+              <label class="small" for="preview">Preview Output</label>
               <textarea id="preview" class="preview" readonly aria-live="polite" aria-atomic="true"></textarea>
+
+              <div class="controls-row" style="margin-top:8px;justify-content:flex-end">
+                <button id="copy" class="btn primary">Copy</button>
+                <button id="download-text" class="btn ghost">Download text</button>
+              </div>
             </div>
           </div>
 
-          <!-- Right column: Image rendering controls & preview -->
-          <div class="right">
-            <h4 class="small">Image Overlay Generator</h4>
+          <!-- RIGHT: image controls & canvas -->
+          <div class="col">
+            <h3 class="small-muted">Image Overlay Generator</h3>
 
-            <div class="row" style="align-items:center">
-              <label class="inline small">Font
-                <select id="font-family">
-                  <option value="Inter, system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif">Inter / System</option>
-                  <option value="'Georgia', serif">Georgia</option>
-                  <option value="'Times New Roman', Times, serif">Times</option>
-                  <option value="'Arial', Helvetica, sans-serif">Arial</option>
-                  <option value="'Courier New', monospace">Courier</option>
-                </select>
-              </label>
+            <div class="image-controls">
+              <div class="two-cols">
+                <label class="small">Font
+                  <select id="font-family" style="margin-left:6px">
+                    <option value="Inter, system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif">Inter / System</option>
+                    <option value="'Georgia', serif">Georgia</option>
+                    <option value="'Arial', Helvetica, sans-serif">Arial</option>
+                    <option value="'Courier New', monospace">Courier</option>
+                  </select>
+                </label>
 
-              <label class="inline small">Size
-                <input id="font-size" type="number" min="12" max="200" value="48" style="width:84px;margin-left:6px" />
-              </label>
-            </div>
+                <label class="small">Size
+                  <input id="font-size" type="number" min="12" max="200" value="48" style="width:92px;margin-left:6px" />
+                </label>
+              </div>
 
-            <div class="row" style="margin-top:8px">
-              <label class="inline small">Max width (px)
-                <input id="wrap-width" type="number" min="100" max="3000" value="1200" style="width:110px;margin-left:6px"/>
-              </label>
+              <div class="two-cols">
+                <label class="small">Max width (px)
+                  <input id="wrap-width" type="number" min="100" max="3000" value="1200" style="width:120px;margin-left:6px" />
+                </label>
 
-              <label class="inline small">Align
-                <select id="align" style="margin-left:6px">
-                  <option value="center">Center</option>
-                  <option value="left">Left</option>
-                  <option value="right">Right</option>
-                </select>
-              </label>
-            </div>
+                <label class="small">Align
+                  <select id="align" style="margin-left:6px">
+                    <option value="center">Center</option>
+                    <option value="left">Left</option>
+                    <option value="right">Right</option>
+                  </select>
+                </label>
+              </div>
 
-            <div class="row" style="margin-top:8px">
-              <label class="inline small">Text color
-                <input id="text-color" type="color" value="#ffffff" style="margin-left:6px"/>
-              </label>
+              <div class="two-cols">
+                <label class="small">Text color
+                  <input id="text-color" type="color" value="#ffffff" style="margin-left:6px" />
+                </label>
 
-              <label class="inline small">Shadow
-                <input id="text-shadow" type="checkbox" checked style="margin-left:6px"/>
-              </label>
-            </div>
+                <label class="small">Shadow
+                  <input id="text-shadow" type="checkbox" checked style="margin-left:6px" />
+                </label>
+              </div>
 
-            <div class="row" style="margin-top:8px">
-              <label class="inline small">Background
-                <select id="bg-mode" style="margin-left:6px">
-                  <option value="transparent">Transparent</option>
-                  <option value="solid">Solid color</option>
-                </select>
-              </label>
+              <div class="two-cols">
+                <label class="small">Background
+                  <select id="bg-mode" style="margin-left:6px">
+                    <option value="transparent">Transparent</option>
+                    <option value="solid">Solid color</option>
+                  </select>
+                </label>
 
-              <label class="inline small">BG color
-                <input id="bg-color" type="color" value="#0f172a" style="margin-left:6px"/>
-              </label>
-            </div>
+                <label class="small">BG color
+                  <input id="bg-color" type="color" value="#0f172a" style="margin-left:6px" />
+                </label>
+              </div>
 
-            <div style="margin-top:12px" class="row">
-              <button id="render" class="accent-small" type="button">Render as Image</button>
-              <button id="download-img" class="accent-small" type="button">Download PNG</button>
-              <button id="clear-canvas" class="muted-btn" type="button">Clear</button>
-            </div>
-
-            <div class="canvas-wrap" aria-live="polite">
-              <div class="small">Canvas preview (click Render to update)</div>
-              <div class="canvas-preview" id="canvas-container">
-                <canvas id="zim-canvas" width="800" height="400" style="display:block;border-radius:6px"></canvas>
+              <div class="controls-row" style="margin-top:8px">
+                <button id="render" class="btn primary">Render as Image</button>
+                <button id="download-img" class="btn primary">Download PNG</button>
+                <button id="clear-canvas" class="btn ghost">Clear</button>
               </div>
             </div>
 
-            <div style="margin-top:10px" class="small">Tip: Use transparent background for overlaying on thumbnails or solid BG for standalone images.</div>
+            <div style="margin-top:12px">
+              <div class="small-muted">Canvas preview (click Render to update)</div>
+              <div class="canvas-container" style="margin-top:8px">
+                <canvas id="zim-canvas" width="800" height="400" aria-label="Canvas preview"></canvas>
+              </div>
+              <div class="small-muted" style="margin-top:8px">Tip: use transparent background for overlays; solid background for thumbnails.</div>
+            </div>
           </div>
         </div>
       </section>
 
-      <!-- Collapsible FAQ (kept short here; you previously added 10 items) -->
-      <article class="content-area" aria-labelledby="faq-title">
+      <!-- FAQ area (10 collapsible items) -->
+      <article class="content-area" aria-labelledby="faq-title" style="margin-top:18px">
         <h3 id="faq-title">Frequently Asked Questions — SocialMediaToolsHub</h3>
 
-        <details>
-          <summary>What is glitched or Zalgo text?</summary>
-          <p>Glitched (often called Zalgo) text combines normal letters with many Unicode combining marks (diacritics) to produce a corrupted, twisted appearance. The marks attach to characters and visually 'break' them for a spooky or hacker-like effect.</p>
-        </details>
+        <details><summary>What is glitched or Zalgo text?</summary><p>Glitched or Zalgo text is created by adding Unicode combining marks to normal letters so the characters look distorted or corrupted.</p></details>
 
-        <details>
-          <summary>How is 'glitched' different from 'Zalgo'?</summary>
-          <p>'Zalgo' usually means extreme, horror-style distortion (lots of marks), while 'glitched' is a broader term that includes subtle, stylized, or cyber/hacker looks used for aesthetic effect.</p>
-        </details>
+        <details><summary>How is 'glitched' different from 'Zalgo'?</summary><p>Zalgo refers to heavier, horror-style distortions; glitched is a broader term that includes lighter, stylized distortions for aesthetic use.</p></details>
 
-        <details>
-          <summary>Why is this trend popular?</summary>
-          <p>It fits visual-first platforms and subcultures (Gen Z, vaporwave, cyberpunk, horror). The odd appearance draws attention in busy feeds and pairs well with short-form video, memes and themed campaigns.</p>
-        </details>
+        <details><summary>Why are creators using this style?</summary><p>It grabs attention in feeds, supports certain aesthetics like cyberpunk or horror, and can increase curiosity and engagement when used as headings or overlays.</p></details>
 
-        <!-- ... add the rest of your 10 FAQs as before ... -->
+        <details><summary>Where should I use glitched text?</summary><p>Use it for headlines, CTAs, memes, thumbnail overlays and themed posts — avoid using it where clarity or accessibility is required.</p></details>
+
+        <details><summary>Will it display on every platform?</summary><p>Most modern platforms display combining marks, but very heavy distortion may be sanitized or look broken on some apps or old devices. Always preview before publishing.</p></details>
+
+        <details><summary>Is heavy glitched text accessible?</summary><p>Very heavy distortion can break screen readers and reduce readability. Provide plain-text alternatives for important content.</p></details>
+
+        <details><summary>How can SocialMediaToolsHub help me test settings?</summary><p>This tool provides live preview, presets, and an image renderer to test intensities and export overlays or thumbnails without posting first.</p></details>
+
+        <details><summary>Can I export as a PNG for thumbnails?</summary><p>Yes — you can render with a transparent background for overlays or a solid background for standalone thumbnails and download a PNG.</p></details>
+
+        <details><summary>Are there recommended thumbnail settings?</summary><p>Use larger font sizes, clear alignment, and moderate intensity so the text remains legible when viewed at small sizes.</p></details>
+
+        <details><summary>What should I avoid?</summary><p>Avoid using excessive distortion for crucial instructions, don't rely on it in places that require screen readers, and preview across devices before using in profiles or brand materials.</p></details>
 
       </article>
 
     </main>
 
-    <footer>© 2025 SocialMediaToolsKit. Built for speed.</footer>
+    <footer style="margin-top:28px">© 2025 SocialMediaToolsKit. Built for speed.</footer>
   </div>
 
-  <!-- Zalgo / Glitch + Image Render JS -->
   <script>
   (function(){
     "use strict";
 
-    // Combining mark pools (same as before)
+    /* Combining mark pools */
     var Z = {
       up: ['\u030d','\u030e','\u0304','\u0305','\u033f','\u0311','\u0306','\u0310','\u0352','\u0357','\u0351','\u0307','\u0308','\u030a','\u0342','\u0343','\u0344','\u034a','\u034b','\u034c','\u0303','\u0302','\u030c','\u0350','\u0300','\u0301','\u030b','\u030f','\u0312','\u0313','\u0314','\u033d','\u0309','\u0363','\u0364','\u0365','\u0366'],
       mid: ['\u0315','\u031b','\u0340','\u0341','\u0358','\u0321','\u0322','\u0327','\u0328','\u0334','\u0335','\u0336','\u034f','\u035c','\u035d','\u035e','\u035f','\u0360','\u0362','\u0338','\u0337','\u0361','\u0489'],
       down: ['\u0316','\u0317','\u0318','\u0319','\u031c','\u031d','\u031e','\u031f','\u0320','\u0324','\u0325','\u0326','\u0329','\u032a','\u032b','\u032c','\u032d','\u032e','\u032f','\u0330','\u0331','\u0332','\u0333','\u0339','\u033a','\u033b','\u033c','\u0345','\u0347','\u0348','\u0349','\u034d','\u034e','\u0353','\u0354','\u0355','\u0356','\u0359','\u035a','\u0323']
     };
 
-    // DOM refs
+    /* DOM refs */
     var input = document.getElementById('input-text');
     var preview = document.getElementById('preview');
     var intensity = document.getElementById('intensity');
@@ -253,9 +256,10 @@
     var btnGenerate = document.getElementById('generate');
     var btnClear = document.getElementById('clear');
     var presetButtons = document.querySelectorAll('[data-preset]');
-    var sampleButtons = document.querySelectorAll('[data-sample]');
+    var copyBtn = document.getElementById('copy');
+    var downloadTextBtn = document.getElementById('download-text');
 
-    // Image controls
+    /* Image controls */
     var fontSelect = document.getElementById('font-family');
     var fontSizeInput = document.getElementById('font-size');
     var wrapWidthInput = document.getElementById('wrap-width');
@@ -271,82 +275,93 @@
     var canvas = document.getElementById('zim-canvas');
     var ctx = canvas.getContext('2d');
 
-    // helper: random int (inclusive)
+    /* helpers */
     function randInt(min, max){ return Math.floor(Math.random()*(max-min+1))+min; }
-
-    // generate zalgo for a single character
     function zalgoChar(ch, opts){
-      if(!ch || ch === ' ') return ch; // preserve spaces
+      if(!ch || ch === ' ') return ch;
       var out = ch;
       var max = Math.max(0, +opts.intensity|0);
       if(opts.up){
-        var cnt = randInt(0, Math.round(max * (0.6)));
-        for(var i=0;i<cnt;i++){ out += Z.up[randInt(0,Z.up.length-1)]; }
+        var cnt = randInt(0, Math.round(max * 0.6));
+        for(var i=0;i<cnt;i++) out += Z.up[randInt(0,Z.up.length-1)];
       }
       if(opts.mid){
-        var cnt2 = randInt(0, Math.round(max * (0.4)));
-        for(var j=0;j<cnt2;j++){ out += Z.mid[randInt(0,Z.mid.length-1)]; }
+        var cnt2 = randInt(0, Math.round(max * 0.4));
+        for(var j=0;j<cnt2;j++) out += Z.mid[randInt(0,Z.mid.length-1)];
       }
       if(opts.down){
-        var cnt3 = randInt(0, Math.round(max * (0.8)));
-        for(var k=0;k<cnt3;k++){ out += Z.down[randInt(0,Z.down.length-1)]; }
+        var cnt3 = randInt(0, Math.round(max * 0.8));
+        for(var k=0;k<cnt3;k++) out += Z.down[randInt(0,Z.down.length-1)];
       }
       return out;
     }
-
-    // generate zalgo for full string
     function zalgo(text, opts){
       var parts = [];
-      for(var i=0;i<text.length;i++){
-        parts.push(zalgoChar(text[i], opts));
-      }
+      for(var i=0;i<text.length;i++) parts.push(zalgoChar(text[i], opts));
       return parts.join('');
     }
 
-    // update intensity label
-    function updateIntensityLabel(){ intensityVal.textContent = intensity.value; }
-    intensity.addEventListener('input', updateIntensityLabel);
-    updateIntensityLabel();
+    /* UI wiring */
+    intensity.addEventListener('input', function(){ intensityVal.textContent = intensity.value; });
 
-    // generate on button click
     btnGenerate.addEventListener('click', function(){
       var txt = input.value || '';
       var opts = { intensity: intensity.value, up: chkUp.checked, mid: chkMid.checked, down: chkDown.checked };
-      var out = zalgo(txt, opts);
-      preview.value = out;
+      preview.value = zalgo(txt, opts);
       preview.focus();
     });
 
-    // clear
-    btnClear.addEventListener('click', function(){
-      input.value = '';
-      preview.value = '';
-    });
+    btnClear.addEventListener('click', function(){ input.value = ''; preview.value = ''; });
 
-    // presets
     presetButtons.forEach(function(btn){
       btn.addEventListener('click', function(){
         var p = btn.getAttribute('data-preset');
-        if(p === 'mild'){ intensity.value = 3; chkUp.checked = true; chkMid.checked = false; chkDown.checked = true; }
-        else if(p === 'chaos'){ intensity.value = 8; chkUp.checked = true; chkMid.checked = true; chkDown.checked = true; }
-        else if(p === 'extreme'){ intensity.value = 14; chkUp.checked = true; chkMid.checked = true; chkDown.checked = true; }
-        updateIntensityLabel();
+        if(p==='mild'){ intensity.value=3; chkUp.checked=true; chkMid.checked=false; chkDown.checked=true; }
+        else if(p==='chaos'){ intensity.value=8; chkUp.checked=true; chkMid.checked=true; chkDown.checked=true; }
+        else if(p==='extreme'){ intensity.value=14; chkUp.checked=true; chkMid.checked=true; chkDown.checked=true; }
+        intensityVal.textContent = intensity.value;
       });
     });
 
-    sampleButtons.forEach(function(b){
-      b.addEventListener('click', function(){
-        input.value = b.getAttribute('data-sample') || '';
-      });
+    copyBtn.addEventListener('click', function(){
+      var txt = preview.value || '';
+      if(!txt) { preview.focus(); return; }
+      if(navigator.clipboard && navigator.clipboard.writeText){
+        navigator.clipboard.writeText(txt).then(function(){ showTemp('Copied!', true); }, function(){ fallbackCopy(txt); });
+      } else fallbackCopy(txt);
     });
 
-    // simple text wrap helper: breaks text into lines that fit 'maxWidth' using canvas measureText
+    function fallbackCopy(text){
+      try{
+        var ta = document.createElement('textarea');
+        ta.value = text;
+        ta.setAttribute('readonly','');
+        ta.style.position = 'absolute';
+        ta.style.left = '-9999px';
+        document.body.appendChild(ta);
+        ta.select();
+        document.execCommand('copy');
+        document.body.removeChild(ta);
+        showTemp('Copied!', true);
+      } catch(e){ showTemp('Could not copy', false); }
+    }
+
+    downloadTextBtn.addEventListener('click', function(){
+      var txt = preview.value || '';
+      var blob = new Blob([txt], {type:'text/plain;charset=utf-8'});
+      var a = document.createElement('a');
+      a.href = URL.createObjectURL(blob);
+      a.download = 'glitched.txt';
+      document.body.appendChild(a); a.click(); document.body.removeChild(a); URL.revokeObjectURL(a.href);
+    });
+
+    /* canvas helpers */
     function wrapText(ctx, text, maxWidth){
       var words = text.split(' ');
       var lines = [];
       var line = '';
       for(var n=0;n<words.length;n++){
-        var testLine = line ? line + ' ' + words[n] : words[n];
+        var testLine = line ? (line + ' ' + words[n]) : words[n];
         var metrics = ctx.measureText(testLine);
         if(metrics.width > maxWidth && line){
           lines.push(line);
@@ -359,67 +374,56 @@
       return lines;
     }
 
-    // render preview to canvas
     function renderCanvasFromPreview(){
       var text = preview.value || '';
       if(!text){
-        // if preview empty, fall back to input (auto-generate)
         btnGenerate.click();
         text = preview.value || input.value || '';
       }
-
-      // canvas size setup
-      var wrapPx = parseInt(wrapWidthInput.value, 10) || 1200;
-      var fontSize = parseInt(fontSizeInput.value, 10) || 48;
+      // config
+      var wrapPx = Math.max(200, parseInt(wrapWidthInput.value,10) || 1200);
+      var fontSize = Math.max(12, parseInt(fontSizeInput.value,10) || 48);
       var fontFamily = fontSelect.value || "Inter, system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif";
       var align = alignSelect.value || 'center';
       var textColor = textColorInput.value || '#ffffff';
-      var shadow = textShadowCheckbox.checked;
+      var shadow = !!textShadowCheckbox.checked;
       var bgMode = bgModeSelect.value;
       var bgColor = bgColorInput.value || '#0f172a';
-
-      // high DPI
-      var dpr = window.devicePixelRatio || 1;
       var padding = Math.round(fontSize * 0.8);
-      var canvasWidth = Math.round(wrapPx + padding*2);
-      // estimate height: lines * lineHeight
-      // we measure actual text using temporary context scaled for DPR
-      canvas.width = canvasWidth * dpr;
-      canvas.height = Math.round((fontSize * 1.3 * 6 + padding*2) * dpr); // temp big height, will compute actual later
-      ctx.setTransform(dpr,0,0,dpr,0,0); // scale canvas drawing coordinates
+      var dpr = window.devicePixelRatio || 1;
 
-      // setup font on ctx for measuring
+      // set temporary ctx font for measuring (1x)
+      ctx.setTransform(1,0,0,1,0,0);
       ctx.font = fontSize + "px " + fontFamily;
-      ctx.textBaseline = 'top';
 
-      // wrap lines
+      // wrap lines to specified width
       var lines = wrapText(ctx, text, wrapPx);
+      if(lines.length === 0) lines = [''];
 
-      // compute height required
       var lineHeight = Math.round(fontSize * 1.25);
+      var canvasWidth = wrapPx + padding*2;
       var totalHeight = lines.length * lineHeight + padding*2;
 
-      // resize canvas for exact size
-      canvas.width = canvasWidth * dpr;
+      // set canvas size with DPR
+      canvas.width = Math.round(canvasWidth * dpr);
       canvas.height = Math.round(totalHeight * dpr);
+      canvas.style.width = canvasWidth + "px";
+      canvas.style.height = totalHeight + "px";
       ctx.setTransform(dpr,0,0,dpr,0,0);
-      ctx.clearRect(0,0,canvas.width,canvas.height);
 
-      // background (transparent or solid)
+      // background
+      ctx.clearRect(0,0,canvasWidth, totalHeight);
       if(bgMode === 'solid'){
         ctx.fillStyle = bgColor;
         ctx.fillRect(0,0,canvasWidth, totalHeight);
-      } else {
-        // keep transparent (do nothing)
       }
 
       // text draw
       ctx.font = fontSize + "px " + fontFamily;
-      ctx.fillStyle = textColor;
       ctx.textBaseline = 'top';
+      ctx.fillStyle = textColor;
       ctx.textAlign = align;
 
-      // shadow
       if(shadow){
         ctx.shadowColor = "rgba(0,0,0,0.6)";
         ctx.shadowBlur = Math.max(4, fontSize * 0.12);
@@ -430,7 +434,6 @@
         ctx.shadowBlur = 0;
       }
 
-      // draw lines
       var x;
       if(align === 'center') x = canvasWidth / 2;
       else if(align === 'left') x = padding;
@@ -438,63 +441,31 @@
 
       var y = padding;
       for(var i=0;i<lines.length;i++){
-        // draw each line (lines may contain combining marks already)
         ctx.fillText(lines[i], x, y);
         y += lineHeight;
       }
-
-      // show small border if transparent so user can see canvas area
-      // (we won't draw a visible border into PNG, it's just CSS)
-      // done.
     }
 
-    // Render button
-    renderBtn.addEventListener('click', function(){
-      // ensure preview exists
-      if(!preview.value) btnGenerate.click();
-      renderCanvasFromPreview();
-      showTemp('Rendered preview', true);
-    });
+    renderBtn.addEventListener('click', function(){ renderCanvasFromPreview(); showTemp('Rendered', true); });
 
-    // Download PNG
     downloadBtn.addEventListener('click', function(){
-      // Ensure canvas has content, if not render first
+      // ensure rendered
       renderCanvasFromPreview();
       canvas.toBlob(function(blob){
-        if(!blob){
-          showTemp('Could not generate image', false);
-          return;
-        }
+        if(!blob){ showTemp('Could not generate image', false); return; }
         var a = document.createElement('a');
         a.href = URL.createObjectURL(blob);
         a.download = 'glitched-text.png';
-        document.body.appendChild(a);
-        a.click();
-        document.body.removeChild(a);
+        document.body.appendChild(a); a.click(); document.body.removeChild(a);
         URL.revokeObjectURL(a.href);
       }, 'image/png');
     });
 
-    // Clear canvas
     clearCanvasBtn.addEventListener('click', function(){
       var dpr = window.devicePixelRatio || 1;
       ctx.setTransform(dpr,0,0,dpr,0,0);
       ctx.clearRect(0,0,canvas.width,canvas.height);
     });
-
-    // small temporary status using hero copy-status if available, else console
-    function showTemp(msg, ok){
-      var el = document.getElementById('copy-status');
-      if(el){
-        el.textContent = msg;
-        el.classList.remove('hide'); el.classList.add('show');
-        el.style.color = ok ? getComputedStyle(document.documentElement).getPropertyValue('--accent-from') || '#38bdf8' : '';
-        clearTimeout(el._t);
-        el._t = setTimeout(function(){ el.classList.remove('show'); el.classList.add('hide'); }, 1400);
-      } else {
-        console.log(msg);
-      }
-    }
 
     // keyboard shortcut: Ctrl/Cmd+Enter => generate & render
     document.addEventListener('keydown', function(e){
@@ -504,16 +475,30 @@
       }
     });
 
-    // expose debug API
-    window.zalgoImg = {
-      generateText: function(txt, opts){ return zalgo(txt || '', opts || {intensity:6,up:true,mid:true,down:true}); },
-      render: renderCanvasFromPreview
-    };
+    // small status (uses copy-status if available)
+    function showTemp(msg, ok){
+      var el = document.getElementById('copy-status');
+      if(el){
+        el.textContent = msg;
+        el.classList.remove('hide'); el.classList.add('show');
+        el.style.color = ok ? getComputedStyle(document.documentElement).getPropertyValue('--accent-from') || '#38bdf8' : '';
+        clearTimeout(el._t);
+        el._t = setTimeout(function(){ el.classList.remove('show'); el.classList.add('hide'); }, 1400);
+      } else {
+        // fallback toast-like console
+        console.log(msg);
+      }
+    }
 
+    // expose API if needed
+    window.zalgoImg = { generateText: function(txt, opts){ return zalgo(txt || '', opts || {intensity:6,up:true,mid:true,down:true}); }, render: renderCanvasFromPreview };
+
+    // Make sure canvas is cleared/responsive on load
+    window.addEventListener('load', function(){ clearCanvasBtn.click(); });
+    window.addEventListener('resize', function(){ /* don't auto-resize canvas to avoid losing user config */ });
   })();
   </script>
 
-  <!-- small visually-hidden helper -->
   <style>
     .visually-hidden{position:absolute !important;left:-9999px;width:1px;height:1px;overflow:hidden}
   </style>
