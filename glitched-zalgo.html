@@ -24,17 +24,17 @@
       {"@type":"Question","name":"How can SocialMediaToolsHub help me use it safely?","acceptedAnswer":{"@type":"Answer","text":"SocialMediaToolsHub provides presets, previews and an image renderer so you can test intensity and see how it looks before posting."}},
       {"@type":"Question","name":"Can I render glitched text as an image?","acceptedAnswer":{"@type":"Answer","text":"Yes — this tool can render the text onto a transparent or solid-background PNG suitable for overlays or standalone thumbnails."}},
       {"@type":"Question","name":"Are there recommended settings for thumbnails?","acceptedAnswer":{"@type":"Answer","text":"Use larger font sizes, solid backgrounds for thumbnails, and moderate intensity so the text remains legible at small sizes."}},
-      {"@type":"Question","name":"What should be avoided when using glitched text?","acceptedAnswer":{"@type":"Answer","text":"Avoid overuse for essential information, avoid putting heavily glitched text where accessibility matters, and preview on devices before publishing."}}
+      {"@type":"Question","name":"What should be avoided when using glitched text?","acceptedAnswer":{"@type":"Answer","text":"Avoid overuse for essential information, avoid putting heavily glitched text where accessibility matters, and preview across devices before using in profiles or brand materials."}}
     ]
   }
   </script>
 
   <style>
-    /* Overrides & responsive layout for this tool page */
+    /* Page-specific layout & responsiveness */
     .tool-wrap{margin-top:18px;background:var(--card);padding:18px;border-radius:18px}
     .tool-grid{display:flex;gap:18px;align-items:flex-start}
     .col{flex:1;min-width:0}
-    .left-col{max-width:480px}
+    .left-col{max-width:520px}
     label.small{display:block;font-size:13px;color:var(--muted);margin-bottom:6px}
     textarea.input, textarea.preview{width:100%;min-height:120px;border-radius:12px;padding:12px;border:1px solid var(--border);background:#071127;color:var(--text);font-size:15px;resize:vertical}
     .controls-row{display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin-top:10px}
@@ -48,6 +48,8 @@
     .two-cols{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
     .small-muted{font-size:13px;color:var(--muted)}
     details summary{cursor:pointer;padding:10px 12px;border-radius:10px;background:rgba(255,255,255,0.01);border:1px solid var(--border);display:list-item;margin-top:8px}
+    .preset-sizes{display:flex;gap:8px;flex-wrap:wrap;margin-top:6px}
+    .preset-sizes button{padding:8px 10px;border-radius:8px;border:1px solid var(--border);background:rgba(255,255,255,0.02);color:var(--muted);cursor:pointer}
     @media(max-width:880px){
       .tool-grid{flex-direction:column}
       .left-col{max-width:none}
@@ -80,7 +82,7 @@
         <div class="hero-inner">
           <div class="hero-copy">
             <h1 id="hero-title">Glitched &amp; Zalgo Text Generator</h1>
-            <p class="lead">Create glitched text and export it as a transparent PNG overlay or a thumbnail-ready image.</p>
+            <p class="lead">Create glitched text and export it as a transparent PNG overlay or a thumbnail-ready image (one-click presets included).</p>
           </div>
         </div>
       </section>
@@ -88,28 +90,30 @@
       <section class="tool-wrap" aria-labelledby="tool-title">
         <h2 id="tool-title">Generate & Preview Text</h2>
 
-        <!-- TOP: preview + copy (preview kept first on top of controls per request) -->
         <div class="tool-grid" role="region" aria-label="generator">
+          <!-- LEFT: Text input and preview (kept top) -->
           <div class="col left-col">
             <label class="small" for="input-text">Input text</label>
             <textarea id="input-text" class="input" placeholder="Type or paste text here — e.g. Hello World"></textarea>
 
-            <div class="controls-row" style="margin-top:10px">
+            <div class="controls-row">
               <label class="small" for="intensity">Intensity</label>
               <input id="intensity" type="range" min="0" max="15" value="6" step="1" />
               <div class="small-muted" id="intensity-val">6</div>
 
               <div style="margin-left:auto" class="two-cols">
-                <label class="small-muted inline"><input id="up" type="checkbox" checked /> Up</label>
-                <label class="small-muted inline"><input id="mid" type="checkbox" checked /> Mid</label>
-                <label class="small-muted inline"><input id="down" type="checkbox" checked /> Down</label>
+                <label class="small-muted"><input id="up" type="checkbox" checked /> Up</label>
+                <label class="small-muted"><input id="mid" type="checkbox" checked /> Mid</label>
+                <label class="small-muted"><input id="down" type="checkbox" checked /> Down</label>
               </div>
             </div>
 
             <div class="controls-row">
-              <div class="chip" data-preset="mild">Mild</div>
-              <div class="chip" data-preset="chaos">Chaos</div>
-              <div class="chip" data-preset="extreme">Extreme</div>
+              <div class="preset-list" style="display:flex;gap:8px">
+                <div class="chip" data-preset="mild">Mild</div>
+                <div class="chip" data-preset="chaos">Chaos</div>
+                <div class="chip" data-preset="extreme">Extreme</div>
+              </div>
 
               <div style="margin-left:auto" class="two-cols">
                 <button id="generate" class="btn primary">Generate</button>
@@ -128,11 +132,11 @@
             </div>
           </div>
 
-          <!-- RIGHT: image controls & canvas -->
+          <!-- RIGHT: Image controls & canvas -->
           <div class="col">
             <h3 class="small-muted">Image Overlay Generator</h3>
 
-            <div class="image-controls">
+            <div class="image-controls" aria-label="image controls">
               <div class="two-cols">
                 <label class="small">Font
                   <select id="font-family" style="margin-left:6px">
@@ -144,13 +148,13 @@
                 </label>
 
                 <label class="small">Size
-                  <input id="font-size" type="number" min="12" max="200" value="48" style="width:92px;margin-left:6px" />
+                  <input id="font-size" type="number" min="12" max="300" value="48" style="width:92px;margin-left:6px" />
                 </label>
               </div>
 
               <div class="two-cols">
-                <label class="small">Max width (px)
-                  <input id="wrap-width" type="number" min="100" max="3000" value="1200" style="width:120px;margin-left:6px" />
+                <label class="small">Max wrap width (px)
+                  <input id="wrap-width" type="number" min="100" max="4000" value="1200" style="width:120px;margin-left:6px" />
                 </label>
 
                 <label class="small">Align
@@ -183,6 +187,23 @@
                 <label class="small">BG color
                   <input id="bg-color" type="color" value="#0f172a" style="margin-left:6px" />
                 </label>
+              </div>
+
+              <!-- Output size settings + presets -->
+              <div style="margin-top:6px">
+                <label class="small">Output size (px) — set exact export dimensions or use a preset</label>
+
+                <div class="two-cols" style="align-items:center">
+                  <input id="out-width" type="number" min="100" value="" placeholder="width" style="width:120px;padding:8px;border-radius:8px;border:1px solid var(--border);background:transparent;color:var(--text)" />
+                  <input id="out-height" type="number" min="100" value="" placeholder="height" style="width:120px;padding:8px;border-radius:8px;border:1px solid var(--border);background:transparent;color:var(--text)" />
+
+                  <div style="margin-left:auto" class="preset-sizes" aria-hidden="false">
+                    <button type="button" data-size="1280x720">1280×720</button>
+                    <button type="button" data-size="1080x1080">1080×1080</button>
+                    <button type="button" data-size="1080x1920">1080×1920</button>
+                    <button id="clear-size" type="button">Auto</button>
+                  </div>
+                </div>
               </div>
 
               <div class="controls-row" style="margin-top:8px">
@@ -238,14 +259,14 @@
   (function(){
     "use strict";
 
-    /* Combining mark pools */
+    /* Combining marks */
     var Z = {
       up: ['\u030d','\u030e','\u0304','\u0305','\u033f','\u0311','\u0306','\u0310','\u0352','\u0357','\u0351','\u0307','\u0308','\u030a','\u0342','\u0343','\u0344','\u034a','\u034b','\u034c','\u0303','\u0302','\u030c','\u0350','\u0300','\u0301','\u030b','\u030f','\u0312','\u0313','\u0314','\u033d','\u0309','\u0363','\u0364','\u0365','\u0366'],
       mid: ['\u0315','\u031b','\u0340','\u0341','\u0358','\u0321','\u0322','\u0327','\u0328','\u0334','\u0335','\u0336','\u034f','\u035c','\u035d','\u035e','\u035f','\u0360','\u0362','\u0338','\u0337','\u0361','\u0489'],
       down: ['\u0316','\u0317','\u0318','\u0319','\u031c','\u031d','\u031e','\u031f','\u0320','\u0324','\u0325','\u0326','\u0329','\u032a','\u032b','\u032c','\u032d','\u032e','\u032f','\u0330','\u0331','\u0332','\u0333','\u0339','\u033a','\u033b','\u033c','\u0345','\u0347','\u0348','\u0349','\u034d','\u034e','\u0353','\u0354','\u0355','\u0356','\u0359','\u035a','\u0323']
     };
 
-    /* DOM refs */
+    /* DOM */
     var input = document.getElementById('input-text');
     var preview = document.getElementById('preview');
     var intensity = document.getElementById('intensity');
@@ -255,11 +276,10 @@
     var chkDown = document.getElementById('down');
     var btnGenerate = document.getElementById('generate');
     var btnClear = document.getElementById('clear');
-    var presetButtons = document.querySelectorAll('[data-preset]');
+    var presetButtons = document.querySelectorAll('.preset-list .chip');
     var copyBtn = document.getElementById('copy');
     var downloadTextBtn = document.getElementById('download-text');
 
-    /* Image controls */
     var fontSelect = document.getElementById('font-family');
     var fontSizeInput = document.getElementById('font-size');
     var wrapWidthInput = document.getElementById('wrap-width');
@@ -271,6 +291,11 @@
     var renderBtn = document.getElementById('render');
     var downloadBtn = document.getElementById('download-img');
     var clearCanvasBtn = document.getElementById('clear-canvas');
+
+    var outWidthInput = document.getElementById('out-width');
+    var outHeightInput = document.getElementById('out-height');
+    var presetSizeButtons = document.querySelectorAll('.preset-sizes button[data-size]');
+    var clearSizeBtn = document.getElementById('clear-size');
 
     var canvas = document.getElementById('zim-canvas');
     var ctx = canvas.getContext('2d');
@@ -355,7 +380,7 @@
       document.body.appendChild(a); a.click(); document.body.removeChild(a); URL.revokeObjectURL(a.href);
     });
 
-    /* canvas helpers */
+    /* wrap helper */
     function wrapText(ctx, text, maxWidth){
       var words = text.split(' ');
       var lines = [];
@@ -374,13 +399,54 @@
       return lines;
     }
 
+    /* Preset size behavior:
+       - When an output size is set (outWidth/outHeight), Render uses those exact output dimensions.
+       - If output size is empty, Render uses the wrap-width + padding to determine width and auto height based on lines.
+       - Preset buttons set both outWidth/outHeight and sensible defaults for wrap width & font-size.
+    */
+    function applyPresetSize(width, height){
+      // sensible wrap width: about 80% of target width
+      var wrap = Math.max(200, Math.round(width * 0.8));
+      wrapWidthInput.value = wrap;
+      outWidthInput.value = width;
+      outHeightInput.value = height;
+
+      // sensible font-size based on width (relative)
+      var fs = Math.round(width / 26); // heuristic
+      fontSizeInput.value = Math.min(220, Math.max(18, fs));
+    }
+
+    presetSizeButtons.forEach(function(btn){
+      btn.addEventListener('click', function(){
+        var size = btn.getAttribute('data-size');
+        var parts = size.split('x');
+        if(parts.length===2){
+          var w = parseInt(parts[0],10);
+          var h = parseInt(parts[1],10);
+          applyPresetSize(w,h);
+          showTemp('Preset ' + w + '×' + h + ' applied', true);
+        }
+      });
+    });
+
+    clearSizeBtn.addEventListener('click', function(){
+      outWidthInput.value = '';
+      outHeightInput.value = '';
+      showTemp('Output size set to Auto', true);
+    });
+
+    /* Render to canvas using output dimensions if provided */
     function renderCanvasFromPreview(){
       var text = preview.value || '';
       if(!text){
         btnGenerate.click();
         text = preview.value || input.value || '';
       }
-      // config
+
+      // user-configs
+      var specifiedOutW = parseInt(outWidthInput.value, 10) || 0;
+      var specifiedOutH = parseInt(outHeightInput.value, 10) || 0;
+
       var wrapPx = Math.max(200, parseInt(wrapWidthInput.value,10) || 1200);
       var fontSize = Math.max(12, parseInt(fontSizeInput.value,10) || 48);
       var fontFamily = fontSelect.value || "Inter, system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif";
@@ -392,33 +458,42 @@
       var padding = Math.round(fontSize * 0.8);
       var dpr = window.devicePixelRatio || 1;
 
-      // set temporary ctx font for measuring (1x)
+      // measure & wrap at 1x
       ctx.setTransform(1,0,0,1,0,0);
       ctx.font = fontSize + "px " + fontFamily;
+      var effectiveWrap = wrapPx;
 
-      // wrap lines to specified width
-      var lines = wrapText(ctx, text, wrapPx);
+      // If exact output width provided, adapt wrap width to fit inside output minus padding
+      if(specifiedOutW){
+        effectiveWrap = Math.max(100, specifiedOutW - padding*2);
+      }
+
+      var lines = wrapText(ctx, text, effectiveWrap);
       if(lines.length === 0) lines = [''];
 
       var lineHeight = Math.round(fontSize * 1.25);
-      var canvasWidth = wrapPx + padding*2;
-      var totalHeight = lines.length * lineHeight + padding*2;
+      var canvasWidth = specifiedOutW || (effectiveWrap + padding*2);
+      var totalHeight = specifiedOutH || (lines.length * lineHeight + padding*2);
 
-      // set canvas size with DPR
+      // set canvas size using DPR
       canvas.width = Math.round(canvasWidth * dpr);
       canvas.height = Math.round(totalHeight * dpr);
       canvas.style.width = canvasWidth + "px";
       canvas.style.height = totalHeight + "px";
+
+      // scale drawing coordinates
       ctx.setTransform(dpr,0,0,dpr,0,0);
+      ctx.clearRect(0,0,canvasWidth, totalHeight);
 
       // background
-      ctx.clearRect(0,0,canvasWidth, totalHeight);
       if(bgMode === 'solid'){
         ctx.fillStyle = bgColor;
         ctx.fillRect(0,0,canvasWidth, totalHeight);
+      } else {
+        // transparent background (do nothing)
       }
 
-      // text draw
+      // text draw settings
       ctx.font = fontSize + "px " + fontFamily;
       ctx.textBaseline = 'top';
       ctx.fillStyle = textColor;
@@ -439,6 +514,16 @@
       else if(align === 'left') x = padding;
       else x = canvasWidth - padding;
 
+      // if using specifiedOutW but wrap was based on effectiveWrap, re-wrap precisely with ctx.measureText for that final canvas width
+      if(specifiedOutW){
+        // measure again using the canvas context that will be used for drawing
+        ctx.setTransform(1,0,0,1,0,0);
+        ctx.font = fontSize + "px " + fontFamily;
+        lines = wrapText(ctx, text, Math.max(100, specifiedOutW - padding*2));
+        // restore DPR transform
+        ctx.setTransform(dpr,0,0,dpr,0,0);
+      }
+
       var y = padding;
       for(var i=0;i<lines.length;i++){
         ctx.fillText(lines[i], x, y);
@@ -449,7 +534,6 @@
     renderBtn.addEventListener('click', function(){ renderCanvasFromPreview(); showTemp('Rendered', true); });
 
     downloadBtn.addEventListener('click', function(){
-      // ensure rendered
       renderCanvasFromPreview();
       canvas.toBlob(function(blob){
         if(!blob){ showTemp('Could not generate image', false); return; }
@@ -465,6 +549,9 @@
       var dpr = window.devicePixelRatio || 1;
       ctx.setTransform(dpr,0,0,dpr,0,0);
       ctx.clearRect(0,0,canvas.width,canvas.height);
+      // shrink display size to default small preview
+      canvas.style.width = '100%';
+      canvas.style.height = 'auto';
     });
 
     // keyboard shortcut: Ctrl/Cmd+Enter => generate & render
@@ -485,17 +572,16 @@
         clearTimeout(el._t);
         el._t = setTimeout(function(){ el.classList.remove('show'); el.classList.add('hide'); }, 1400);
       } else {
-        // fallback toast-like console
+        // fallback
         console.log(msg);
       }
     }
 
-    // expose API if needed
+    // expose light API
     window.zalgoImg = { generateText: function(txt, opts){ return zalgo(txt || '', opts || {intensity:6,up:true,mid:true,down:true}); }, render: renderCanvasFromPreview };
 
-    // Make sure canvas is cleared/responsive on load
+    // initial clear canvas
     window.addEventListener('load', function(){ clearCanvasBtn.click(); });
-    window.addEventListener('resize', function(){ /* don't auto-resize canvas to avoid losing user config */ });
   })();
   </script>
 
