@@ -41,15 +41,17 @@
     .btn{padding:10px 12px;border-radius:10px;border:0;cursor:pointer;font-weight:600}
     .btn.primary{background:linear-gradient(90deg,var(--accent-from),var(--accent-to));color:#06121f}
     .btn.ghost{background:transparent;border:1px solid var(--border);color:var(--muted)}
-    .chip{padding:8px 10px;border-radius:10px;background:rgba(255,255,255,0.02);border:1px solid var(--border);cursor:pointer}
-    .canvas-container{border-radius:10px;border:1px solid var(--border);padding:10px;background:transparent}
+    .chip{padding:8px 10px;border-radius:10px;background:rgba(255,255,255,0.02);border:1px solid var(--border);cursor:pointer;color:var(--muted)}
+    .chip.active{background:linear-gradient(90deg,var(--accent-from),var(--accent-to));color:#06121f;border-color:transparent;box-shadow:0 6px 18px rgba(8,12,30,0.6)}
+    .preset-sizes button{padding:8px 10px;border-radius:8px;border:1px solid var(--border);background:rgba(255,255,255,0.02);color:var(--muted);cursor:pointer}
+    .preset-sizes button.active{background:linear-gradient(90deg,var(--accent-from),var(--accent-to));color:#06121f;border-color:transparent;box-shadow:0 6px 18px rgba(8,12,30,0.4)}
+    .canvas-container{border-radius:10px;border:1px solid var(--border);padding:10px;background:transparent; overflow:hidden; max-height:520px}
+    /* ensure canvas visually fits container - do not set pixel dimensions here */
     canvas{display:block;width:100%;height:auto;border-radius:6px;background:transparent}
     .image-controls{display:flex;flex-direction:column;gap:8px}
     .two-cols{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
     .small-muted{font-size:13px;color:var(--muted)}
     details summary{cursor:pointer;padding:10px 12px;border-radius:10px;background:rgba(255,255,255,0.01);border:1px solid var(--border);display:list-item;margin-top:8px}
-    .preset-sizes{display:flex;gap:8px;flex-wrap:wrap;margin-top:6px}
-    .preset-sizes button{padding:8px 10px;border-radius:8px;border:1px solid var(--border);background:rgba(255,255,255,0.02);color:var(--muted);cursor:pointer}
     @media(max-width:880px){
       .tool-grid{flex-direction:column}
       .left-col{max-width:none}
@@ -110,9 +112,9 @@
 
             <div class="controls-row">
               <div class="preset-list" style="display:flex;gap:8px">
-                <div class="chip" data-preset="mild">Mild</div>
-                <div class="chip" data-preset="chaos">Chaos</div>
-                <div class="chip" data-preset="extreme">Extreme</div>
+                <div class="chip" data-preset="mild" id="preset-mild">Mild</div>
+                <div class="chip" data-preset="chaos" id="preset-chaos">Chaos</div>
+                <div class="chip" data-preset="extreme" id="preset-extreme">Extreme</div>
               </div>
 
               <div style="margin-left:auto" class="two-cols">
@@ -197,7 +199,7 @@
                   <input id="out-width" type="number" min="100" value="" placeholder="width" style="width:120px;padding:8px;border-radius:8px;border:1px solid var(--border);background:transparent;color:var(--text)" />
                   <input id="out-height" type="number" min="100" value="" placeholder="height" style="width:120px;padding:8px;border-radius:8px;border:1px solid var(--border);background:transparent;color:var(--text)" />
 
-                  <div style="margin-left:auto" class="preset-sizes" aria-hidden="false">
+                  <div style="margin-left:8px" class="preset-sizes" aria-hidden="false">
                     <button type="button" data-size="1280x720">1280×720</button>
                     <button type="button" data-size="1080x1080">1080×1080</button>
                     <button type="button" data-size="1080x1920">1080×1920</button>
@@ -216,6 +218,7 @@
             <div style="margin-top:12px">
               <div class="small-muted">Canvas preview (click Render to update)</div>
               <div class="canvas-container" style="margin-top:8px">
+                <!-- canvas will be drawn at full pixel size internally, but CSS keeps the visual scaled to container -->
                 <canvas id="zim-canvas" width="800" height="400" aria-label="Canvas preview"></canvas>
               </div>
               <div class="small-muted" style="margin-top:8px">Tip: use transparent background for overlays; solid background for thumbnails.</div>
@@ -276,7 +279,7 @@
     var chkDown = document.getElementById('down');
     var btnGenerate = document.getElementById('generate');
     var btnClear = document.getElementById('clear');
-    var presetButtons = document.querySelectorAll('.preset-list .chip');
+    var presetChips = document.querySelectorAll('.preset-list .chip');
     var copyBtn = document.getElementById('copy');
     var downloadTextBtn = document.getElementById('download-text');
 
@@ -338,9 +341,14 @@
 
     btnClear.addEventListener('click', function(){ input.value = ''; preview.value = ''; });
 
-    presetButtons.forEach(function(btn){
-      btn.addEventListener('click', function(){
-        var p = btn.getAttribute('data-preset');
+    // preset chips (Mild/Chaos/Extreme) - show active state
+    presetChips.forEach(function(chip){
+      chip.addEventListener('click', function(){
+        var p = chip.getAttribute('data-preset');
+        // remove active class from all chips then add to clicked
+        presetChips.forEach(function(c){ c.classList.remove('active'); });
+        chip.classList.add('active');
+
         if(p==='mild'){ intensity.value=3; chkUp.checked=true; chkMid.checked=false; chkDown.checked=true; }
         else if(p==='chaos'){ intensity.value=8; chkUp.checked=true; chkMid.checked=true; chkDown.checked=true; }
         else if(p==='extreme'){ intensity.value=14; chkUp.checked=true; chkMid.checked=true; chkDown.checked=true; }
@@ -399,25 +407,22 @@
       return lines;
     }
 
-    /* Preset size behavior:
-       - When an output size is set (outWidth/outHeight), Render uses those exact output dimensions.
-       - If output size is empty, Render uses the wrap-width + padding to determine width and auto height based on lines.
-       - Preset buttons set both outWidth/outHeight and sensible defaults for wrap width & font-size.
-    */
+    /* Preset size behavior and active state */
     function applyPresetSize(width, height){
-      // sensible wrap width: about 80% of target width
       var wrap = Math.max(200, Math.round(width * 0.8));
       wrapWidthInput.value = wrap;
       outWidthInput.value = width;
       outHeightInput.value = height;
-
-      // sensible font-size based on width (relative)
-      var fs = Math.round(width / 26); // heuristic
+      var fs = Math.round(width / 26);
       fontSizeInput.value = Math.min(220, Math.max(18, fs));
     }
 
     presetSizeButtons.forEach(function(btn){
       btn.addEventListener('click', function(){
+        // remove active from all size buttons
+        presetSizeButtons.forEach(function(b){ b.classList.remove('active'); });
+        btn.classList.add('active');
+
         var size = btn.getAttribute('data-size');
         var parts = size.split('x');
         if(parts.length===2){
@@ -432,6 +437,8 @@
     clearSizeBtn.addEventListener('click', function(){
       outWidthInput.value = '';
       outHeightInput.value = '';
+      // remove active from size buttons
+      presetSizeButtons.forEach(function(b){ b.classList.remove('active'); });
       showTemp('Output size set to Auto', true);
     });
 
@@ -475,11 +482,14 @@
       var canvasWidth = specifiedOutW || (effectiveWrap + padding*2);
       var totalHeight = specifiedOutH || (lines.length * lineHeight + padding*2);
 
-      // set canvas size using DPR
+      // set canvas size using DPR for full-resolution export
       canvas.width = Math.round(canvasWidth * dpr);
       canvas.height = Math.round(totalHeight * dpr);
-      canvas.style.width = canvasWidth + "px";
-      canvas.style.height = totalHeight + "px";
+
+      // IMPORTANT: do NOT set canvas.style.width to pixel width (avoids overflow).
+      // Instead scale drawing via transform and allow CSS to scale canvas visually to container (canvas { width:100% }).
+      canvas.style.width = '100%';
+      canvas.style.height = 'auto';
 
       // scale drawing coordinates
       ctx.setTransform(dpr,0,0,dpr,0,0);
@@ -489,11 +499,9 @@
       if(bgMode === 'solid'){
         ctx.fillStyle = bgColor;
         ctx.fillRect(0,0,canvasWidth, totalHeight);
-      } else {
-        // transparent background (do nothing)
       }
 
-      // text draw settings
+      // prepare font for drawing
       ctx.font = fontSize + "px " + fontFamily;
       ctx.textBaseline = 'top';
       ctx.fillStyle = textColor;
@@ -514,13 +522,11 @@
       else if(align === 'left') x = padding;
       else x = canvasWidth - padding;
 
-      // if using specifiedOutW but wrap was based on effectiveWrap, re-wrap precisely with ctx.measureText for that final canvas width
+      // Re-wrap precisely using drawing ctx when specific width set
       if(specifiedOutW){
-        // measure again using the canvas context that will be used for drawing
         ctx.setTransform(1,0,0,1,0,0);
         ctx.font = fontSize + "px " + fontFamily;
         lines = wrapText(ctx, text, Math.max(100, specifiedOutW - padding*2));
-        // restore DPR transform
         ctx.setTransform(dpr,0,0,dpr,0,0);
       }
 
@@ -529,6 +535,8 @@
         ctx.fillText(lines[i], x, y);
         y += lineHeight;
       }
+
+      // After rendering, canvas is visually scaled by CSS (width:100%).
     }
 
     renderBtn.addEventListener('click', function(){ renderCanvasFromPreview(); showTemp('Rendered', true); });
@@ -549,7 +557,7 @@
       var dpr = window.devicePixelRatio || 1;
       ctx.setTransform(dpr,0,0,dpr,0,0);
       ctx.clearRect(0,0,canvas.width,canvas.height);
-      // shrink display size to default small preview
+      // keep canvas visually fit to container
       canvas.style.width = '100%';
       canvas.style.height = 'auto';
     });
@@ -572,7 +580,6 @@
         clearTimeout(el._t);
         el._t = setTimeout(function(){ el.classList.remove('show'); el.classList.add('hide'); }, 1400);
       } else {
-        // fallback
         console.log(msg);
       }
     }
