@@ -159,7 +159,7 @@
                   <input id="wrap-width" type="number" min="100" max="4000" value="1200" style="width:120px;margin-left:6px" />
                 </label>
 
-                <label class="small">Align
+                <label class="small">Align (horizontal)
                   <select id="align" style="margin-left:6px">
                     <option value="center">Center</option>
                     <option value="left">Left</option>
@@ -189,6 +189,19 @@
                 <label class="small">BG color
                   <input id="bg-color" type="color" value="#0f172a" style="margin-left:6px" />
                 </label>
+              </div>
+
+              <!-- Vertical align control -->
+              <div class="two-cols">
+                <label class="small">Vertical align
+                  <select id="v-align" style="margin-left:6px">
+                    <option value="middle">Middle</option>
+                    <option value="top">Top</option>
+                    <option value="bottom">Bottom</option>
+                  </select>
+                </label>
+
+                <div style="margin-left:auto" class="small-muted">Choose where the text block is placed vertically.</div>
               </div>
 
               <!-- Output size settings + presets -->
@@ -287,6 +300,7 @@
     var fontSizeInput = document.getElementById('font-size');
     var wrapWidthInput = document.getElementById('wrap-width');
     var alignSelect = document.getElementById('align');
+    var vAlignSelect = document.getElementById('v-align');
     var textColorInput = document.getElementById('text-color');
     var textShadowCheckbox = document.getElementById('text-shadow');
     var bgModeSelect = document.getElementById('bg-mode');
@@ -417,6 +431,7 @@
       fontSizeInput.value = Math.min(220, Math.max(18, fs));
     }
 
+    var presetSizeButtons = document.querySelectorAll('.preset-sizes button[data-size]');
     presetSizeButtons.forEach(function(btn){
       btn.addEventListener('click', function(){
         // remove active from all size buttons
@@ -442,7 +457,8 @@
       showTemp('Output size set to Auto', true);
     });
 
-    /* Render to canvas using output dimensions if provided */
+    /* Render to canvas using output dimensions if provided
+       Uses scale = Math.max(1, devicePixelRatio) to avoid downscaling when DPR < 1 */
     function renderCanvasFromPreview(){
       var text = preview.value || '';
       if(!text){
@@ -458,14 +474,18 @@
       var fontSize = Math.max(12, parseInt(fontSizeInput.value,10) || 48);
       var fontFamily = fontSelect.value || "Inter, system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif";
       var align = alignSelect.value || 'center';
+      var vAlign = vAlignSelect.value || 'middle'; // top | middle | bottom
       var textColor = textColorInput.value || '#ffffff';
       var shadow = !!textShadowCheckbox.checked;
       var bgMode = bgModeSelect.value;
       var bgColor = bgColorInput.value || '#0f172a';
       var padding = Math.round(fontSize * 0.8);
-      var dpr = window.devicePixelRatio || 1;
 
-      // measure & wrap at 1x
+      // Use scale = max(1, DPR). This avoids downscaling when DPR < 1.
+      var dpr = window.devicePixelRatio || 1;
+      var scale = Math.max(1, dpr);
+
+      // measure & wrap at 1x using temporary ctx
       ctx.setTransform(1,0,0,1,0,0);
       ctx.font = fontSize + "px " + fontFamily;
       var effectiveWrap = wrapPx;
@@ -482,17 +502,16 @@
       var canvasWidth = specifiedOutW || (effectiveWrap + padding*2);
       var totalHeight = specifiedOutH || (lines.length * lineHeight + padding*2);
 
-      // set canvas size using DPR for full-resolution export
-      canvas.width = Math.round(canvasWidth * dpr);
-      canvas.height = Math.round(totalHeight * dpr);
+      // set backing store size using scale (>=1)
+      canvas.width = Math.round(canvasWidth * scale);
+      canvas.height = Math.round(totalHeight * scale);
 
-      // IMPORTANT: do NOT set canvas.style.width to pixel width (avoids overflow).
-      // Instead scale drawing via transform and allow CSS to scale canvas visually to container (canvas { width:100% }).
-      canvas.style.width = '100%';
-      canvas.style.height = 'auto';
+      // set CSS display size to the exact logical pixel dimensions (so preview matches)
+      canvas.style.width = canvasWidth + "px";
+      canvas.style.height = totalHeight + "px";
 
-      // scale drawing coordinates
-      ctx.setTransform(dpr,0,0,dpr,0,0);
+      // scale drawing coordinates to backing store
+      ctx.setTransform(scale,0,0,scale,0,0);
       ctx.clearRect(0,0,canvasWidth, totalHeight);
 
       // background
@@ -501,7 +520,7 @@
         ctx.fillRect(0,0,canvasWidth, totalHeight);
       }
 
-      // prepare font for drawing
+      // prepare font for drawing (in logical px)
       ctx.font = fontSize + "px " + fontFamily;
       ctx.textBaseline = 'top';
       ctx.fillStyle = textColor;
@@ -522,21 +541,31 @@
       else if(align === 'left') x = padding;
       else x = canvasWidth - padding;
 
-      // Re-wrap precisely using drawing ctx when specific width set
+      // If using specifiedOutW, re-wrap precisely using drawing ctx (1x) measurements
       if(specifiedOutW){
         ctx.setTransform(1,0,0,1,0,0);
         ctx.font = fontSize + "px " + fontFamily;
         lines = wrapText(ctx, text, Math.max(100, specifiedOutW - padding*2));
-        ctx.setTransform(dpr,0,0,dpr,0,0);
+        ctx.setTransform(scale,0,0,scale,0,0);
       }
 
-      var y = padding;
+      // vertical alignment calculation
+      var textBlockHeight = lines.length * lineHeight;
+      var y;
+      if(vAlign === 'top'){
+        y = padding;
+      } else if(vAlign === 'bottom'){
+        y = totalHeight - padding - textBlockHeight;
+        if(y < padding) y = padding; // prevent overflow
+      } else { // middle
+        y = Math.round((totalHeight - textBlockHeight) / 2);
+      }
+
+      // draw lines
       for(var i=0;i<lines.length;i++){
         ctx.fillText(lines[i], x, y);
         y += lineHeight;
       }
-
-      // After rendering, canvas is visually scaled by CSS (width:100%).
     }
 
     renderBtn.addEventListener('click', function(){ renderCanvasFromPreview(); showTemp('Rendered', true); });
@@ -554,10 +583,9 @@
     });
 
     clearCanvasBtn.addEventListener('click', function(){
-      var dpr = window.devicePixelRatio || 1;
+      var dpr = Math.max(1, window.devicePixelRatio || 1);
       ctx.setTransform(dpr,0,0,dpr,0,0);
       ctx.clearRect(0,0,canvas.width,canvas.height);
-      // keep canvas visually fit to container
       canvas.style.width = '100%';
       canvas.style.height = 'auto';
     });
