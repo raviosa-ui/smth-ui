@@ -1,0 +1,526 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Profile Ring Creator — SocialMediaToolsKit</title>
+  <meta name="description" content="Add viral colored rings, progress bars, and status badges to your profile picture. Free export." />
+  <meta name="theme-color" content="#0f172a" />
+
+  <link rel="stylesheet" href="style.css">
+
+  <style>
+    /* TOOL SPECIFIC STYLES */
+    .editor-container {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 30px;
+      margin-top: 20px;
+    }
+
+    /* Left: Canvas Area */
+    .canvas-wrapper {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: var(--r-lg);
+      padding: 20px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.2);
+    }
+    
+    canvas {
+      max-width: 100%;
+      height: auto;
+      border-radius: 50%; /* visual preview only */
+      background-image: linear-gradient(45deg, #1e293b 25%, #0f172a 25%, #0f172a 50%, #1e293b 50%, #1e293b 75%, #0f172a 75%, #0f172a 100%);
+      background-size: 20px 20px; /* Checkered pattern for transparency */
+      box-shadow: 0 10px 40px rgba(0,0,0,0.5);
+    }
+
+    /* Right: Controls Area */
+    .controls {
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+      background: rgba(255,255,255,0.02);
+      border: 1px solid var(--border);
+      border-radius: var(--r-lg);
+      padding: 24px;
+    }
+
+    .control-group {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .control-group label {
+      font-weight: 600;
+      font-size: 14px;
+      color: var(--muted);
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    /* Custom Inputs */
+    input[type="range"] {
+      width: 100%;
+      height: 6px;
+      background: var(--border);
+      border-radius: 4px;
+      outline: none;
+      -webkit-appearance: none;
+    }
+    input[type="range"]::-webkit-slider-thumb {
+      -webkit-appearance: none;
+      width: 18px;
+      height: 18px;
+      background: var(--accent-from);
+      border-radius: 50%;
+      cursor: pointer;
+      box-shadow: 0 0 10px rgba(56, 189, 248, 0.4);
+    }
+
+    select, input[type="text"] {
+      background: var(--bg);
+      border: 1px solid var(--border);
+      color: var(--text);
+      padding: 10px;
+      border-radius: 8px;
+      font-family: inherit;
+    }
+
+    /* Brand Presets Grid */
+    .preset-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 10px;
+    }
+    .preset-btn {
+      height: 40px;
+      border-radius: 8px;
+      border: 1px solid rgba(255,255,255,0.1);
+      cursor: pointer;
+      transition: transform 0.2s;
+    }
+    .preset-btn:hover { transform: scale(1.05); }
+
+    /* Upload Button */
+    .file-input-wrapper {
+      position: relative;
+      overflow: hidden;
+      display: inline-block;
+      width: 100%;
+    }
+    .file-input-wrapper input[type=file] {
+      font-size: 100px;
+      position: absolute;
+      left: 0;
+      top: 0;
+      opacity: 0;
+      cursor: pointer;
+    }
+    .btn-secondary {
+      background: var(--card);
+      border: 1px dashed var(--muted);
+      color: var(--text);
+      width: 100%;
+      padding: 12px;
+      border-radius: var(--r-md);
+      text-align: center;
+      font-weight: 500;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+    .file-input-wrapper:hover .btn-secondary {
+      border-color: var(--accent-from);
+      color: var(--accent-from);
+    }
+
+    /* Status Badges */
+    .badge-options {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+    .badge-opt {
+      padding: 8px 12px;
+      background: var(--bg);
+      border: 1px solid var(--border);
+      border-radius: 20px;
+      font-size: 13px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      transition: 0.2s;
+    }
+    .badge-opt.active {
+      border-color: var(--accent-from);
+      background: rgba(56, 189, 248, 0.1);
+    }
+    .dot { width: 8px; height: 8px; border-radius: 50%; }
+
+    @media(min-width: 768px) {
+      .editor-container {
+        grid-template-columns: 1fr 340px;
+        align-items: start;
+      }
+      .canvas-wrapper { position: sticky; top: 20px; }
+    }
+  </style>
+</head>
+
+<body>
+  <div class="container">
+
+    <header class="header" role="banner">
+      <div class="brand" aria-label="SocialMediaToolsKit">
+        <a href="index.html" style="display:flex; gap:10px; text-decoration:none;">
+          <span class="brand-emoji" aria-hidden="true">⚡</span>
+          <span class="logo-text">SocialMediaToolsKit</span>
+        </a>
+      </div>
+
+      <nav class="topnav" role="navigation" aria-label="Primary">
+        <a href="index.html">All Tools</a>
+      </nav>
+    </header>
+
+    <main>
+      <section class="hero" style="margin-bottom: 20px;">
+        <div class="hero-inner">
+          <div class="hero-copy">
+            <h1>Profile Picture Ring Creator</h1>
+            <p class="lead">Add a viral ring, progress bar, or "Open to Work" badge to your photo. Stand out in the comments.</p>
+          </div>
+        </div>
+      </section>
+
+      <div class="editor-container">
+        
+        <div class="canvas-wrapper">
+          <canvas id="canvas" width="800" height="800"></canvas>
+        </div>
+
+        <aside class="controls">
+          
+          <div class="control-group">
+            <label>1. Upload Photo</label>
+            <div class="file-input-wrapper">
+              <div class="btn-secondary">📁 Click to Upload Image</div>
+              <input type="file" id="imageInput" accept="image/*">
+            </div>
+          </div>
+
+          <div class="control-group">
+            <label>Quick Presets</label>
+            <div class="preset-grid">
+              <button class="preset-btn" onclick="setPreset('insta')" style="background: linear-gradient(45deg, #f09433, #dc2743, #bc1888);" title="Instagram"></button>
+              <button class="preset-btn" onclick="setPreset('tiktok')" style="background: linear-gradient(135deg, #00f2ea, #000, #ff0050);" title="TikTok"></button>
+              <button class="preset-btn" onclick="setPreset('linkedin')" style="background: #0077b5;" title="LinkedIn"></button>
+              <button class="preset-btn" onclick="setPreset('neon')" style="background: #39ff14; box-shadow: 0 0 10px #39ff14;" title="Neon Green"></button>
+            </div>
+          </div>
+
+          <div class="control-group">
+            <label>Ring Style</label>
+            <select id="ringType">
+              <option value="solid">Solid Circle</option>
+              <option value="gradient">Gradient</option>
+              <option value="dashed">Dashed (Story Style)</option>
+              <option value="progress">Progress Bar (75%)</option>
+            </select>
+          </div>
+
+          <div class="control-group">
+            <label>Thickness</label>
+            <input type="range" id="ringWidth" min="10" max="100" value="30">
+          </div>
+
+          <div class="control-group">
+            <label>Gap (Space from image)</label>
+            <input type="range" id="ringGap" min="0" max="60" value="20">
+          </div>
+
+          <div class="control-group">
+            <label>Colors</label>
+            <div style="display:flex; gap:10px;">
+              <input type="color" id="color1" value="#38bdf8" style="flex:1; height:40px;">
+              <input type="color" id="color2" value="#818cf8" style="flex:1; height:40px;">
+            </div>
+          </div>
+
+          <div class="control-group">
+            <label>Status Badge</label>
+            <div class="badge-options">
+              <div class="badge-opt active" onclick="setBadge('none', this)">None</div>
+              <div class="badge-opt" onclick="setBadge('online', this)"><div class="dot" style="background:#4caf50"></div> Online</div>
+              <div class="badge-opt" onclick="setBadge('live', this)"><div class="dot" style="background:#f44336"></div> Live</div>
+              <div class="badge-opt" onclick="setBadge('verify', this)"><div class="dot" style="background:#1da1f2"></div> ✔</div>
+              <div class="badge-opt" onclick="setBadge('work', this)"><div class="dot" style="background:#4caf50"></div> #OpenToWork</div>
+            </div>
+          </div>
+
+          <button id="downloadBtn" class="btn-cta" style="margin-top: 10px; width:100%;">
+            Download Profile Pic ⬇
+          </button>
+
+        </aside>
+      </div>
+      
+    </main>
+
+    <footer>© 2025 SocialMediaToolsKit. Built for speed.</footer>
+  </div>
+
+  <script>
+    const canvas = document.getElementById('canvas');
+    const ctx = canvas.getContext('2d');
+    
+    // State management
+    const state = {
+      image: new Image(),
+      imageLoaded: false,
+      ringType: 'gradient', // solid, gradient, dashed, progress
+      width: 30,
+      gap: 20,
+      color1: '#38bdf8',
+      color2: '#818cf8',
+      badge: 'none' // none, online, live, verify, work
+    };
+
+    // Load a default placeholder image so canvas isn't empty
+    state.image.src = 'data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSI1MDAiIGhlaWdodD0iNTAwIiB2aWV3Qm94PSIwIDAgNTAwIDUwMCI+PHJlY3Qgd2lkdGg9IjUwMCIgaGVpZ2h0PSI1MDAiIGZpbGw9IiMxZTI5M2IiLz48dGV4dCB4PSI1MCUiIHk9IjUwJSIgZG9taW5hbnQtYmFzZWxpbmU9Im1pZGRsZSIgdGV4dC1hbmNob3I9Im1pZGRsZSIgZmlsbD0iIzk0YTNiOCIgZm9udC1zaXplPSI1MCIgZm9udC1mYW1pbHk9InNhbnMtc2VyaWYiPlVwbG9hZCBQaG90bzwvdGV4dD48L3N2Zz4=';
+    state.image.onload = () => {
+      state.imageLoaded = true;
+      draw();
+    };
+
+    // --- Core Drawing Function ---
+    function draw() {
+      // 1. Clear Canvas
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      
+      const centerX = canvas.width / 2;
+      const centerY = canvas.height / 2;
+      
+      // Calculate Radius
+      // Max radius is half width minus padding for shadows/badges
+      const maxRadius = (canvas.width / 2) - 10; 
+      const ringOuterRadius = maxRadius;
+      const ringInnerRadius = maxRadius - state.width;
+      const imageRadius = ringInnerRadius - state.gap;
+
+      // 2. Draw Image (Masked Circle)
+      if (state.imageLoaded) {
+        ctx.save();
+        ctx.beginPath();
+        ctx.arc(centerX, centerY, imageRadius > 0 ? imageRadius : 1, 0, Math.PI * 2);
+        ctx.closePath();
+        ctx.clip();
+        
+        // Draw image effectively covering the circle
+        // We calculate aspect ratio to center crop
+        const aspect = state.image.width / state.image.height;
+        let drawW, drawH, drawX, drawY;
+        
+        if (aspect > 1) {
+          // Landscape
+          drawH = imageRadius * 2;
+          drawW = drawH * aspect;
+          drawX = centerX - (drawW / 2);
+          drawY = centerY - imageRadius;
+        } else {
+          // Portrait
+          drawW = imageRadius * 2;
+          drawH = drawW / aspect;
+          drawX = centerX - imageRadius;
+          drawY = centerY - (drawH / 2);
+        }
+        
+        ctx.drawImage(state.image, drawX, drawY, drawW, drawH);
+        ctx.restore();
+      }
+
+      // 3. Draw Ring
+      ctx.save();
+      ctx.beginPath();
+      
+      // Define Gradient or Color
+      let strokeStyle;
+      if (state.ringType === 'solid') {
+        strokeStyle = state.color1;
+      } else {
+        const grad = ctx.createLinearGradient(0, 0, canvas.width, canvas.height);
+        grad.addColorStop(0, state.color1);
+        grad.addColorStop(1, state.color2);
+        strokeStyle = grad;
+      }
+      
+      ctx.strokeStyle = strokeStyle;
+      ctx.lineWidth = state.width;
+      ctx.lineCap = 'round'; // makes ends round
+
+      // Ring Geometry based on type
+      const ringRadius = ringInnerRadius + (state.width / 2); // Center of the stroke
+      
+      if (state.ringType === 'progress') {
+        // Draw 75% circle, rotated to look like loading
+        ctx.arc(centerX, centerY, ringRadius, -Math.PI / 2, Math.PI); 
+      } else if (state.ringType === 'dashed') {
+        ctx.setLineDash([state.width * 1.5, state.width]); // Dash depends on thickness
+        ctx.arc(centerX, centerY, ringRadius, 0, Math.PI * 2);
+      } else {
+        // Solid or Gradient full circle
+        ctx.arc(centerX, centerY, ringRadius, 0, Math.PI * 2);
+      }
+      
+      ctx.stroke();
+      ctx.restore();
+
+      // 4. Draw Status Badge (Bottom Right)
+      if (state.badge !== 'none') {
+        drawBadge(centerX, centerY, imageRadius + state.gap); // anchor to outside of gap
+      }
+    }
+
+    function drawBadge(cx, cy, radius) {
+      // Calculate position at 45 degrees (bottom right)
+      const angle = Math.PI / 4; 
+      const badgeX = cx + (radius * Math.cos(angle));
+      const badgeY = cy + (radius * Math.sin(angle));
+      const badgeSize = canvas.width * 0.18; // Relative size
+
+      ctx.save();
+      
+      // Badge Background (Circle with border)
+      ctx.beginPath();
+      ctx.arc(badgeX, badgeY, badgeSize / 2, 0, Math.PI * 2);
+      ctx.fillStyle = '#ffffff';
+      ctx.fill();
+      ctx.lineWidth = 10;
+      ctx.strokeStyle = '#0f172a'; // Match bg color for cutout effect
+      ctx.stroke();
+
+      // Badge Content
+      if (state.badge === 'online') {
+        ctx.beginPath();
+        ctx.arc(badgeX, badgeY, (badgeSize/2) - 5, 0, Math.PI * 2);
+        ctx.fillStyle = '#4caf50'; // Green
+        ctx.fill();
+      } else if (state.badge === 'live') {
+        ctx.beginPath();
+        ctx.arc(badgeX, badgeY, (badgeSize/2) - 5, 0, Math.PI * 2);
+        ctx.fillStyle = '#f44336'; // Red
+        ctx.fill();
+        // Add "LIVE" text tiny
+        ctx.fillStyle = 'white';
+        ctx.font = 'bold 24px sans-serif';
+        ctx.textAlign = 'center';
+        ctx.textBaseline = 'middle';
+        ctx.fillText('LIVE', badgeX, badgeY);
+      } else if (state.badge === 'verify') {
+        ctx.beginPath();
+        ctx.arc(badgeX, badgeY, (badgeSize/2) - 5, 0, Math.PI * 2);
+        ctx.fillStyle = '#1da1f2'; // Twitter Blue
+        ctx.fill();
+        // Checkmark
+        ctx.fillStyle = 'white';
+        ctx.font = 'bold 40px sans-serif';
+        ctx.textAlign = 'center';
+        ctx.textBaseline = 'middle';
+        ctx.fillText('✓', badgeX, badgeY + 3);
+      } else if (state.badge === 'work') {
+        ctx.beginPath();
+        ctx.arc(badgeX, badgeY, (badgeSize/2) - 5, 0, Math.PI * 2);
+        ctx.fillStyle = '#4caf50'; // Green
+        ctx.fill();
+        ctx.fillStyle = 'white';
+        ctx.font = 'bold 20px sans-serif';
+        ctx.textAlign = 'center';
+        ctx.textBaseline = 'middle';
+        ctx.fillText('#OPEN', badgeX, badgeY);
+      }
+
+      ctx.restore();
+    }
+
+    // --- Interaction Logic ---
+
+    // 1. Image Upload
+    document.getElementById('imageInput').addEventListener('change', function(e) {
+      if(e.target.files && e.target.files[0]){
+        const reader = new FileReader();
+        reader.onload = function(evt) {
+          state.image = new Image();
+          state.image.onload = () => {
+            state.imageLoaded = true;
+            draw();
+          };
+          state.image.src = evt.target.result;
+        };
+        reader.readAsDataURL(e.target.files[0]);
+      }
+    });
+
+    // 2. Input Listeners
+    document.getElementById('ringType').addEventListener('change', (e) => { state.ringType = e.target.value; draw(); });
+    document.getElementById('ringWidth').addEventListener('input', (e) => { state.width = parseInt(e.target.value); draw(); });
+    document.getElementById('ringGap').addEventListener('input', (e) => { state.gap = parseInt(e.target.value); draw(); });
+    document.getElementById('color1').addEventListener('input', (e) => { state.color1 = e.target.value; draw(); });
+    document.getElementById('color2').addEventListener('input', (e) => { state.color2 = e.target.value; draw(); });
+
+    // 3. Preset Logic
+    window.setPreset = function(type) {
+      const c1 = document.getElementById('color1');
+      const c2 = document.getElementById('color2');
+      const rType = document.getElementById('ringType');
+      
+      if (type === 'insta') {
+        state.color1 = '#f09433';
+        state.color2 = '#bc1888';
+        state.ringType = 'gradient';
+      } else if (type === 'tiktok') {
+        state.color1 = '#00f2ea';
+        state.color2 = '#ff0050';
+        state.ringType = 'gradient';
+      } else if (type === 'linkedin') {
+        state.color1 = '#0077b5';
+        state.color2 = '#0077b5';
+        state.ringType = 'solid';
+      } else if (type === 'neon') {
+        state.color1 = '#39ff14';
+        state.color2 = '#39ff14';
+        state.ringType = 'solid';
+      }
+      
+      // Update Inputs UI
+      c1.value = state.color1;
+      c2.value = state.color2;
+      rType.value = state.ringType;
+      draw();
+    };
+
+    // 4. Badge Logic
+    window.setBadge = function(type, el) {
+      state.badge = type;
+      // UI Update
+      document.querySelectorAll('.badge-opt').forEach(b => b.classList.remove('active'));
+      el.classList.add('active');
+      draw();
+    };
+
+    // 5. Download
+    document.getElementById('downloadBtn').addEventListener('click', () => {
+      const link = document.createElement('a');
+      link.download = 'profile-ring.png';
+      link.href = canvas.toDataURL('image/png');
+      link.click();
+    });
+
+  </script>
+</body>
+</html>
