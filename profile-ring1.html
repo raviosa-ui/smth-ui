@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
   <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no" />
   <title>Profile Ring Creator — SocialMediaToolsKit</title>
   <meta name="description" content="Add viral colored rings, progress bars, and status badges to your profile picture. Free export for LinkedIn, Instagram, and TikTok." />
   <meta name="theme-color" content="#0f172a" />
@@ -50,6 +50,7 @@
         gap: 20px;
         position: relative;
         box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+        touch-action: none; /* Prevents scroll when touching canvas */
     }
     canvas {
         max-width: 100%;
@@ -131,10 +132,29 @@
     .faq-section { max-width: 800px; margin: 60px auto 0; }
     .faq-title { font-size: 20px; margin-bottom: 20px; display: flex; align-items: center; gap: 10px; }
     .faq details { background: rgba(255,255,255,0.02); border: 1px solid var(--border); border-radius: 12px; margin-bottom: 10px; overflow: hidden; }
-    .faq summary { padding: 16px; cursor: pointer; font-weight: 500; list-style: none; display: flex; justify-content: space-between; align-items: center; }
+    
+    /* FAQ iOS Fixes */
+    .faq summary { 
+        padding: 16px; 
+        cursor: pointer; 
+        font-weight: 500; 
+        list-style: none; /* Hide default marker */
+        outline: none;
+        display: block; /* Ensure full width click area */
+        position: relative;
+    }
     .faq summary::-webkit-details-marker { display: none; }
-    .faq summary::after { content: '+'; font-size: 18px; color: var(--muted); }
-    .faq details[open] summary::after { content: '−'; }
+    
+    /* Flex container inside summary for alignment */
+    .summary-content {
+        display: flex; 
+        justify-content: space-between; 
+        align-items: center;
+        pointer-events: none; /* Let clicks pass through to summary */
+    }
+    
+    .summary-content::after { content: '+'; font-size: 18px; color: var(--muted); }
+    .faq details[open] .summary-content::after { content: '−'; }
     .faq p { padding: 0 16px 16px; margin: 0; color: var(--muted); font-size: 14px; line-height: 1.6; }
 
     /* Utils */
@@ -366,7 +386,8 @@
     const faqEl = document.getElementById('faqContainer');
     FAQS.forEach(f => {
         const d = document.createElement('details');
-        d.innerHTML = `<summary>${f.q}</summary><p>${f.a}</p>`;
+        // Fixed iOS FAQ: Use a specific class for content to handle flex separately
+        d.innerHTML = `<summary><div class="summary-content">${f.q}</div></summary><p>${f.a}</p>`;
         faqEl.appendChild(d);
     });
 
@@ -374,10 +395,70 @@
     const cvs = document.getElementById('canvas');
     const ctx = cvs.getContext('2d');
     
+    // Offscreen canvas for filtering (Manual pixel processing for iOS compat)
+    const filterCanvas = document.createElement('canvas');
+    const fCtx = filterCanvas.getContext('2d');
+
     // Load Placeholder
     const placeholder = new Image();
     placeholder.src = 'data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSI1MDAiIGhlaWdodD0iNTAwIiB2aWV3Qm94PSIwIDAgNTAwIDUwMCI+PHJlY3Qgd2lkdGg9IjUwMCIgaGVpZ2h0PSI1MDAiIGZpbGw9IiMxZTI5M2IiLz48dGV4dCB4PSI1MCUiIHk9IjUwJSIgZG9taW5hbnQtYmFzZWxpbmU9Im1pZGRsZSIgdGV4dC1hbmNob3I9Im1pZGRsZSIgZmlsbD0iIzQ3NTU2OSIgZm9udC1zaXplPSI1MCIgZm9udC1mYW1pbHk9InNhbnMtc2VyaWYiPlVwbG9hZCBQaG90bzwvdGV4dD48L3N2Zz4=';
-    placeholder.onload = () => { if(!state.img) { state.img = placeholder; draw(); } };
+    placeholder.onload = () => { 
+        if(!state.img) { 
+            state.img = placeholder; 
+            applyImageFilters(); // Initial render
+        } 
+    };
+
+    function applyImageFilters() {
+        if(!state.img) return;
+
+        // Resize offscreen canvas to match image
+        filterCanvas.width = state.img.width;
+        filterCanvas.height = state.img.height;
+        
+        // Draw original
+        fCtx.drawImage(state.img, 0, 0);
+
+        if(state.filter === 'none') {
+            draw();
+            return;
+        }
+
+        // Get pixels
+        const imgData = fCtx.getImageData(0, 0, filterCanvas.width, filterCanvas.height);
+        const data = imgData.data;
+
+        // Apply filters via math (Works on ALL browsers/versions)
+        for(let i = 0; i < data.length; i += 4) {
+            let r = data[i], g = data[i+1], b = data[i+2];
+
+            if(state.filter === 'grayscale') {
+                // Luminosity method
+                const v = 0.3*r + 0.59*g + 0.11*b;
+                data[i] = v; data[i+1] = v; data[i+2] = v;
+            }
+            else if(state.filter === 'sepia') {
+                data[i] = (r * 0.393) + (g * 0.769) + (b * 0.189);
+                data[i+1] = (r * 0.349) + (g * 0.686) + (b * 0.168);
+                data[i+2] = (r * 0.272) + (g * 0.534) + (b * 0.131);
+            }
+            else if(state.filter === 'contrast') {
+                const factor = 1.5; // High contrast
+                data[i] = factor * (r - 128) + 128;
+                data[i+1] = factor * (g - 128) + 128;
+                data[i+2] = factor * (b - 128) + 128;
+            }
+            else if(state.filter === 'brightness') {
+                const bias = 40;
+                data[i] += bias;
+                data[i+1] += bias;
+                data[i+2] += bias;
+            }
+        }
+        
+        fCtx.putImageData(imgData, 0, 0);
+        draw();
+    }
 
     function draw() {
         if(!state.img) return;
@@ -388,14 +469,15 @@
 
         ctx.clearRect(0,0,s,s);
 
-        // 1. Draw Image
+        // 1. Draw Image (Using filterCanvas as source)
         ctx.save();
         ctx.beginPath();
         ctx.arc(cx, cy, imgR, 0, Math.PI*2);
         ctx.clip();
         ctx.fillStyle = '#1e293b'; ctx.fillRect(0,0,s,s);
 
-        // Calc aspect fit cover
+        // Calc aspect fit cover based on original dimensions
+        // (filterCanvas has same dims as state.img)
         const aspect = state.img.width / state.img.height;
         let dw, dh;
         if(aspect > 1) { dh = imgR*2; dw = dh*aspect; }
@@ -408,16 +490,8 @@
         ctx.rotate(state.rot * Math.PI/180);
         if(state.flip) ctx.scale(-1, 1);
 
-        // Filters
-        if(state.filter !== 'none') {
-            const f = state.filter;
-            if(f==='grayscale') ctx.filter='grayscale(1)';
-            if(f==='sepia') ctx.filter='sepia(1)';
-            if(f==='contrast') ctx.filter='contrast(1.5)';
-            if(f==='brightness') ctx.filter='brightness(1.2)';
-        }
-
-        ctx.drawImage(state.img, -dw/2, -dh/2, dw, dh);
+        // Draw the PRE-FILTERED image
+        ctx.drawImage(filterCanvas, -dw/2, -dh/2, dw, dh);
         ctx.restore();
 
         // 2. Ring
@@ -500,7 +574,8 @@
                 const i = new Image();
                 i.onload = () => {
                     state.img = i; state.zoom = 1; state.offX = 0; state.offY = 0; state.rot = 0;
-                    updateUI(); draw();
+                    applyImageFilters(); // Process new image
+                    updateUI();
                 };
                 i.src = evt.target.result;
             };
@@ -514,7 +589,12 @@
     get('color1Input').oninput = (e) => { state.c1 = e.target.value; draw(); };
     get('color2Input').oninput = (e) => { state.c2 = e.target.value; draw(); };
     get('ringTypeInput').onchange = (e) => { state.type = e.target.value; draw(); };
-    get('filterInput').onchange = (e) => { state.filter = e.target.value; draw(); };
+    
+    // IMPORTANT: Re-run expensive filter logic only on change
+    get('filterInput').onchange = (e) => { 
+        state.filter = e.target.value; 
+        applyImageFilters(); 
+    };
     
     get('rotateBtn').onclick = () => { state.rot = (state.rot + 90) % 360; draw(); };
     get('flipBtn').onclick = () => { state.flip = !state.flip; draw(); };
@@ -526,19 +606,45 @@
         a.click();
     };
 
-    /* --- DRAG LOGIC --- */
+    /* --- DRAG LOGIC (MOUSE + TOUCH) --- */
     let dragging = false, lx=0, ly=0;
-    cvs.onmousedown = (e) => { dragging=true; lx=e.clientX; ly=e.clientY; };
-    window.onmousemove = (e) => {
+    
+    // Mouse Support
+    cvs.addEventListener('mousedown', (e) => { dragging=true; lx=e.clientX; ly=e.clientY; });
+    window.addEventListener('mousemove', (e) => {
         if(!dragging) return;
+        handleDrag(e.clientX, e.clientY);
+    });
+    window.addEventListener('mouseup', () => dragging=false);
+
+    // Touch Support (Fix for Mobile)
+    cvs.addEventListener('touchstart', (e) => {
+        if(e.touches.length === 1) {
+            dragging = true;
+            lx = e.touches[0].clientX;
+            ly = e.touches[0].clientY;
+            e.preventDefault(); // Stop scrolling while dragging
+        }
+    }, {passive: false});
+
+    window.addEventListener('touchmove', (e) => {
+        if(!dragging) return;
+        if(e.touches.length === 1) {
+            e.preventDefault(); // Stop scrolling while dragging
+            handleDrag(e.touches[0].clientX, e.touches[0].clientY);
+        }
+    }, {passive: false});
+
+    window.addEventListener('touchend', () => dragging=false);
+
+    function handleDrag(cx, cy) {
         const rect = cvs.getBoundingClientRect();
         const scX = cvs.width / rect.width;
-        state.offX += (e.clientX - lx) * scX;
-        state.offY += (e.clientY - ly) * scX;
-        lx=e.clientX; ly=e.clientY;
+        state.offX += (cx - lx) * scX;
+        state.offY += (cy - ly) * scX;
+        lx = cx; ly = cy;
         draw();
-    };
-    window.onmouseup = () => dragging=false;
+    }
 
   </script>
 </body>
