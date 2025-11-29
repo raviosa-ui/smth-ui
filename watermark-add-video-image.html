@@ -1,0 +1,329 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Free Image & Video Watermark Tool – 100% Private (No Uploads)</title>
+  <meta property="og:title" content="Free Image & Video Watermark Tool – Works Offline!">
+  <meta property="og:description" content="Add text or logo watermarks to photos & videos instantly. Your files never leave your device!">
+  <meta property="og:image" content="https://via.placeholder.com/1200x630.png?text=Image+%26+Video+Watermark+Tool">
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;700&family=Inter:wght@400;600&display=swap" rel="stylesheet">
+  <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.9.2/dist/confetti.browser.min.js"></script>
+  <style>
+    :root { --bg: #f8fafc; --text: #1e293b; --primary: #3b82f6; --card: #ffffff; }
+    .dark { --bg: #0f172a; --text: #e2e8f0; --primary: #60a5fa; --card: #1e293b; }
+    body { margin:0; font-family:'Inter',sans-serif; background:var(--bg); color:var(--text); transition:all .3s; }
+    .dark body { background:#0f172a; }
+    header { text-align:center; padding:2rem 1rem; background:linear-gradient(135deg,#3b82f6,#8b5cf6); color:white; }
+    h1 { margin:0; font-size:2.2rem; }
+    .container { max-width:1100px; margin:2rem auto; padding:0 1rem; }
+    .tabs { display:flex; gap:1rem; margin-bottom:2rem; justify-content:center; flex-wrap:wrap; }
+    .tab { padding:0.8rem 1.5rem; background:var(--card); border-radius:8px; cursor:pointer; box-shadow:0 4px 12px rgba(0,0,0,.1); }
+    .tab.active { background:var(--primary); color:white; }
+    .section { display:none; background:var(--card); padding:2rem; border-radius:12px; box-shadow:0 10px 30px rgba(0,0,0,.1); }
+    .section.active { display:block; }
+    .drop-zone { border:3px dashed #94a3b8; border-radius:12px; padding:3rem; text-align:center; cursor:pointer; transition:.3s; margin:1.5rem 0; }
+    .drop-zone.dragover { border-color:var(--primary); background:#eff6ff; }
+    .controls { display:grid; grid-template-columns:repeat(auto-fit,minmax(250px,1fr)); gap:1rem; margin:1.5rem 0; }
+    input, select, button { padding:0.7rem; border-radius:8px; border:1px solid #cbd5e1; font-size:1rem; }
+    button { background:var(--primary); color:white; border:none; cursor:pointer; font-weight:600; }
+    button:hover { opacity:0.9; }
+    canvas, video { max-width:100%; border-radius:8px; margin:1rem 0; box-shadow:0 8px 25px rgba(0,0,0,.15); }
+    .preview { text-align:center; }
+    .actions { display:flex; flex-wrap:wrap; gap:1rem; justify-content:center; margin-top:1.5rem; }
+    .privacy { text-align:center; margin:2rem 0; font-size:0.9rem; color:#64748b; }
+    footer { text-align:center; padding:2rem; color:#64748b; font-size:0.9rem; }
+    @media (prefers-color-scheme: dark) { .dark { display:block; } }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>Image & Video Watermark Tool</h1>
+    <p style="margin:0.5rem 0 0;font-size:1.2rem;">100% Private • Works Offline • Instant Download</p>
+  </header>
+
+  <div class="container">
+    <div class="tabs">
+      <div class="tab active" data-tab="image">🖼️ Image Watermark</div>
+      <div class="tab" data-tab="video">🎥 Video Watermark</div>
+      <button onclick="document.body.classList.toggle('dark')" style="margin-left:auto;padding:0.7rem 1rem;">🌙 Dark Mode</button>
+    </div>
+
+    <!-- Image Section -->
+    <div id="image" class="section active">
+      <h2 style="text-align:center;">Add Watermark to Images</h2>
+      <div class="drop-zone" id="imgDrop">Drop image here or click to upload<br>(JPG, PNG, WebP, GIF)</div>
+      <input type="file" id="imgInput" accept="image/*" hidden>
+      <canvas id="imgCanvas"></canvas>
+
+      <div class="controls">
+        <input type="text" id="text" placeholder="Watermark text" value="© MyBrand 2025">
+        <input type="file" id="logoInput" accept="image/*" hidden>
+        <button onclick="document.getElementById('logoInput').click()">Upload Logo</button>
+        <input type="range" id="opacity" min="10" max="100" value="60">
+        <input type="range" id="size" min="10" max="200" value="60">
+        <input type="color" id="color" value="#ffffff">
+        <select id="position">
+          <option value="center">Center</option>
+          <option value="bottom-right">Bottom Right</option>
+          <option value="bottom-left">Bottom Left</option>
+          <option value="top-right">Top Right</option>
+          <option value="top-left">Top Left</option>
+          <option value="tile">Tile (Repeat)</option>
+        </select>
+      </div>
+
+      <div class="actions">
+        <button onclick="downloadImage()">💾 Download Image</button>
+        <button onclick="copyImage()">📋 Copy to Clipboard</button>
+        <button onclick="resetImg()">🔄 Reset</button>
+      </div>
+    </div>
+
+    <!-- Video Section -->
+    <div id="video" class="section">
+      <h2 style="text-align:center;">Add Watermark to Videos</h2>
+      <div class="drop-zone" id="vidDrop">Drop video here or click<br>(MP4, WebM, MOV up to ~200MB)</div>
+      <input type="file" id="vidInput" accept="video/*" hidden>
+      <div class="preview"><video id="videoPreview" controls muted></video></div>
+
+      <div class="controls">
+        <input type="text" id="vtext" placeholder="Watermark text" value="© MyBrand">
+        <input type="range" id="vopacity" min="10" max="100" value="70">
+        <input type="range" id="vsize" min="20" max="150" value="50">
+        <input type="color" id="vcolor" value="#ffffff">
+        <select id="vposition">
+          <option value="bottom-right">Bottom Right</option>
+          <option value="bottom-left">Bottom Left</option>
+          <option value="top-right">Top Right</option>
+          <option value="top-left">Top Left</option>
+          <option value="center">Center</option>
+        </select>
+      </div>
+
+      <div class="actions">
+        <button id="processBtn" onclick="processVideo()">🎬 Add Watermark & Download</button>
+        <button onclick="resetVid()">🔄 Reset</button>
+        <p id="progress" style="margin-top:1rem;"></p>
+      </div>
+    </div>
+
+    <div class="privacy">
+      🔒 Your images & videos never leave your device. Everything happens in your browser!
+    </div>
+  </div>
+
+  <footer>
+    Made with ❤️ for creators • Share this tool: <code style="background:#e2e8f0;padding:0.2rem 0.5rem;border-radius:4px;">watermark-tool.html</code>
+  </footer>
+
+<script>
+// Shared variables
+let img, imgCtx, logoImg;
+let videoEl = document.getElementById('videoPreview');
+let processing = false;
+
+// Tab switching
+document.querySelectorAll('.tab').forEach(t => {
+  t.onclick = () => {
+    document.querySelectorAll('.tab').forEach(x => x.classList.remove('active'));
+    document.querySelectorAll('.section').forEach(x => x.classList.remove('active'));
+    t.classList.add('active');
+    document.getElementById(t.dataset.tab).classList.add('active');
+  };
+});
+
+// ==== IMAGE WATERMARK ====
+const canvas = document.getElementById('imgCanvas');
+const ctx = canvas.getContext('2d');
+
+document.getElementById('imgDrop').onclick = () => document.getElementById('imgInput').click();
+document.getElementById('imgInput').onchange = e => loadImage(e.target.files[0]);
+
+document.getElementById('imgDrop').ondragover = e => { e.preventDefault(); e.target.classList.add('dragover'); };
+document.getElementById('imgDrop').ondragleave = e => e.target.classList.remove('dragover');
+document.getElementById('imgDrop').ondrop = e => {
+  e.preventDefault(); e.target.classList.remove('dragover');
+  if (e.dataTransfer.files[0]) loadImage(e.dataTransfer.files[0]);
+};
+
+document.getElementById('logoInput').onchange = e => {
+  const file = e.target.files[0];
+  if (file) {
+    const reader = new FileReader();
+    reader.onload = ev => { logoImg = new Image(); logoImg.src = ev.target.result; setTimeout(drawImage, 300); };
+    reader.readAsDataURL(file);
+  }
+};
+
+function loadImage(file) {
+  const reader = new FileReader();
+  reader.onload = e => {
+    img = new Image();
+    img.onload = () => {
+      canvas.width = img.width; canvas.height = img.height;
+      drawImage();
+      document.querySelectorAll('#image .controls input, #image .controls select').forEach(el => el.oninput = drawImage);
+    };
+    img.src = e.target.result;
+  };
+  reader.readAsDataURL(file);
+}
+
+function drawImage() {
+  if (!img) return;
+  ctx.drawImage(img, 0, 0);
+  const text = document.getElementById('text').value || '';
+  const opacity = document.getElementById('opacity').value / 100;
+  const size = document.getElementById('size').value;
+  const color = document.getElementById('color').value;
+  const pos = document.getElementById('position').value;
+
+  ctx.font = `bold ${size}px Arial`;
+  ctx.fillStyle = color;
+  ctx.globalAlpha = opacity;
+  ctx.shadowColor = 'rgba(0,0,0,0.7)'; ctx.shadowBlur = 8; ctx.shadowOffsetX = 3; ctx.shadowOffsetY = 3;
+
+  if (pos === 'tile') {
+    const stepX = canvas.width / 5;
+    const stepY = canvas.height / 5;
+    for (let x = 50; x < canvas.width; x += stepX) {
+      for (let y = 100; y < canvas.height; y += stepY) {
+        ctx.fillText(text, x, y);
+      }
+    }
+  } else {
+    const positions = {
+      'center': [canvas.width/2, canvas.height/2],
+      'bottom-right': [canvas.width - 30, canvas.height - 30],
+      'bottom-left': [30, canvas.height - 30],
+      'top-right': [canvas.width - 30, 80],
+      'top-left': [30, 80]
+    };
+    const [x, y] = positions[pos];
+    ctx.textAlign = pos.includes('right') ? 'right' : pos.includes('left') ? 'left' : 'center';
+    ctx.textBaseline = pos.includes('top') ? 'top' : 'bottom';
+    ctx.fillText(text, x, y);
+  }
+
+  // Draw logo if exists
+  if (logoImg) {
+    const logoSize = size * 2;
+    ctx.globalAlpha = opacity * 0.8;
+    ctx.drawImage(logoImg, canvas.width - logoSize - 30, canvas.height - logoSize - 30, logoSize, logoSize);
+  }
+
+  ctx.globalAlpha = 1; ctx.shadowBlur = 0;
+}
+
+function downloadImage() {
+  canvas.toBlob(blob => {
+    const a = document.createElement('a');
+    a.href = URL.createObjectURL(blob);
+    a.download = 'watermarked-image.png';
+    a.click();
+    confetti({ particleCount: 100, spread: 70, origin: { y: 0.6 } });
+  });
+}
+
+function copyImage() {
+  canvas.toBlob(blob => navigator.clipboard.write([new ClipboardItem({ 'image/png': blob })]).then(() => {
+    alert('Image copied to clipboard!');
+    confetti();
+  }));
+}
+
+function resetImg() { canvas.width = 1; img = null; logoImg = null; }
+
+// ==== VIDEO WATERMARK ====
+document.getElementById('vidDrop').onclick = () => document.getElementById('vidInput').click();
+document.getElementById('vidInput').onchange = e => loadVideo(e.target.files[0]);
+
+document.getElementById('vidDrop').ondragover = e => { e.preventDefault(); e.target.classList.add('dragover'); };
+document.getElementById('vidDrop').ondragleave = e => e.target.classList.remove('dragover');
+document.getElementById('vidDrop').ondrop = e => {
+  e.preventDefault(); e.target.classList.remove('dragover');
+  loadVideo(e.dataTransfer.files[0]);
+};
+
+function loadVideo(file) {
+  const url = URL.createObjectURL(file);
+  videoEl.src = url;
+  videoEl.style.display = 'block';
+}
+
+async function processVideo() {
+  if (processing || !videoEl.src) return;
+  processing = true;
+  document.getElementById('progress').textContent = 'Processing video... (this may take 10–60 seconds)';
+  
+  const canvas2 = document.createElement('canvas');
+  const ctx2 = canvas2.getContext('2d');
+  canvas2.width = videoEl.videoWidth;
+  canvas2.height = videoEl.videoHeight;
+
+  const stream = canvas2.captureStream(30);
+  const rec = new MediaRecorder(stream, { mimeType: 'video/webm;codecs=vp9' });
+  const chunks = [];
+
+  rec.ondataavailable = e => chunks.push(e.data);
+  rec.onstop = () => {
+    const blob = new Blob(chunks, { type: 'video/webm' });
+    const a = document.createElement('a');
+    a.href = URL.createObjectURL(blob);
+    a.download = 'watermarked-video.webm';
+    a.click();
+    confetti({ particleCount: 150, spread: 100 });
+    document.getElementById('progress').textContent = 'Done! 🎉';
+    processing = false;
+  };
+
+  rec.start();
+  videoEl.play();
+
+  videoEl.ontimeupdate = () => {
+    ctx2.drawImage(videoEl, 0, 0);
+    drawWatermarkOnCanvas(ctx2);
+  };
+
+  videoEl.onended = () => {
+    rec.stop();
+    videoEl.pause();
+  };
+}
+
+function drawWatermarkOnCanvas(ctx) {
+  const text = document.getElementById('vtext').value || '';
+  if (!text) return;
+  const opacity = document.getElementById('vopacity').value / 100;
+  const size = document.getElementById('vsize').value;
+  const color = document.getElementById('vcolor').value;
+  const pos = document.getElementById('vposition').value;
+
+  ctx.font = `bold ${size}px Arial`;
+  ctx.fillStyle = color;
+  ctx.globalAlpha = opacity;
+  ctx.shadowColor = 'rgba(0,0,0,0.8)'; ctx.shadowBlur = 10;
+
+  const positions = {
+    'center': [ctx.canvas.width/2, ctx.canvas.height/2],
+    'bottom-right': [ctx.canvas.width - 40, ctx.canvas.height - 40],
+    'bottom-left': [40, ctx.canvas.height - 40],
+    'top-right': [ctx.canvas.width - 40, 80],
+    'top-left': [40, 80]
+  };
+  const [x, y] = positions[pos];
+  ctx.textAlign = pos.includes('right') ? 'right' : 'center';
+  ctx.textBaseline = pos.includes('top') ? 'top' : 'bottom';
+  ctx.fillText(text, x, y);
+
+  ctx.globalAlpha = 1; ctx.shadowBlur = 0;
+}
+
+function resetVid() {
+  videoEl.src = ''; videoEl.style.display = 'none';
+  document.getElementById('progress').textContent = '';
+}
+  </script>
+</body>
+</html>
