@@ -1,0 +1,411 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Instagram Line Break Generator & Spacer — SocialMediaToolsHub</title>
+    <meta name="description" content="Fix Instagram line breaks instantly using our invisible space generator. Create clean, readable captions and bios for Instagram, TikTok, and Facebook without dots." />
+    <meta name="theme-color" content="#0f172a" />
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+      tailwind.config = {
+        theme: {
+          extend: {
+            colors: {
+              slate: {
+                850: '#1e293b',
+                900: '#0f172a',
+                950: '#020617',
+              },
+              primary: {
+                from: '#38bdf8',
+                to: '#818cf8',
+              }
+            },
+            fontFamily: {
+              sans: ['-apple-system', 'BlinkMacSystemFont', '"Segoe UI"', 'Roboto', 'Helvetica', 'Arial', 'sans-serif'],
+            }
+          }
+        }
+      }
+    </script>
+    <style>
+      body {
+        background-color: #0f172a;
+        color: #f8fafc;
+        -webkit-font-smoothing: antialiased;
+      }
+      /* Custom scrollbar for textarea and preview */
+      .custom-scrollbar::-webkit-scrollbar {
+        width: 8px;
+        height: 8px;
+      }
+      .custom-scrollbar::-webkit-scrollbar-track {
+        background: #1e293b; 
+        border-radius: 4px;
+      }
+      .custom-scrollbar::-webkit-scrollbar-thumb {
+        background: #334155; 
+        border-radius: 4px;
+      }
+      .custom-scrollbar::-webkit-scrollbar-thumb:hover {
+        background: #475569; 
+      }
+      /* Hide scrollbar for smooth visual in some elements but allow scroll */
+      .no-scrollbar::-webkit-scrollbar {
+        display: none;
+      }
+      .no-scrollbar {
+        -ms-overflow-style: none;
+        scrollbar-width: none;
+      }
+    </style>
+  <script type="importmap">
+{
+  "imports": {
+    "react": "https://aistudiocdn.com/react@^19.2.0",
+    "react/": "https://aistudiocdn.com/react@^19.2.0/"
+  }
+}
+</script>
+</head>
+  <body class="min-h-screen flex flex-col">
+    <div class="max-w-[1120px] mx-auto w-full px-5 pb-7 flex-grow flex flex-col">
+      
+      <!-- Header -->
+      <header class="flex items-center justify-between py-5 md:py-6 gap-3" role="banner">
+        <div class="flex gap-2.5 items-center font-semibold text-lg whitespace-nowrap" aria-label="SocialMediaToolsHub">
+          <span class="text-2xl" aria-hidden="true">⚡</span>
+          <span class="text-transparent bg-clip-text bg-gradient-to-r from-primary-from to-primary-to">
+            SocialMediaToolsHub
+          </span>
+        </div>
+
+        <nav class="flex gap-2.5 text-sm flex-wrap" role="navigation" aria-label="Primary">
+          <a href="#about" class="px-3 py-2 rounded-lg text-slate-400 hover:text-slate-50 hover:bg-white/5 transition-colors duration-200">
+            About
+          </a>
+          <a href="#requests" class="px-3 py-2 rounded-lg text-slate-400 hover:text-slate-50 hover:bg-white/5 transition-colors duration-200">
+            Requests
+          </a>
+        </nav>
+      </header>
+      
+      <main class="flex-grow mt-4 flex flex-col gap-12">
+        
+        <!-- Tool Section -->
+        <section class="bg-slate-850 border border-slate-700 rounded-3xl p-6 shadow-2xl shadow-slate-950/60" aria-labelledby="tool-title">
+          <div class="mb-6">
+            <h1 id="tool-title" class="text-xl md:text-2xl font-bold text-slate-50 mb-2">
+              Instagram Invisible Character & Line Break Formatter
+            </h1>
+            <p class="text-slate-400 text-sm md:text-base">
+              Type your caption below. We'll automatically add invisible spaces so your paragraphs stay separated on Instagram, TikTok, and Facebook.
+            </p>
+          </div>
+
+          <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 lg:gap-8">
+            <!-- Editor Column -->
+            <div class="flex flex-col gap-4">
+              <div class="relative group">
+                <div class="absolute -inset-0.5 bg-gradient-to-r from-primary-from to-primary-to rounded-2xl opacity-30 group-hover:opacity-100 transition duration-300 blur-sm"></div>
+                <textarea
+                  id="caption-input"
+                  placeholder="Type or paste your caption here..."
+                  class="custom-scrollbar relative w-full h-80 bg-slate-900 text-slate-50 p-4 rounded-xl border border-slate-700 focus:border-transparent focus:ring-0 focus:outline-none resize-none leading-relaxed placeholder-slate-600"
+                  spellcheck="false"
+                  aria-label="Caption Input"
+                ></textarea>
+              </div>
+
+              <div class="flex gap-3">
+                <button
+                  id="btn-copy"
+                  class="flex-1 py-3.5 px-6 rounded-xl font-semibold text-slate-900 transition-all transform duration-200 shadow-lg shadow-sky-500/20 active:scale-95 flex justify-center items-center gap-2 bg-gradient-to-r from-primary-from to-primary-to hover:-translate-y-1 hover:shadow-sky-500/40"
+                >
+                  <span>✂️</span> Copy Formatted Caption
+                </button>
+                <button
+                  id="btn-clear"
+                  class="px-5 py-3.5 rounded-xl font-medium text-slate-400 border border-slate-700 hover:bg-slate-800 hover:text-slate-200 transition-colors"
+                  aria-label="Clear text"
+                >
+                  Clear
+                </button>
+              </div>
+              <div class="flex justify-between text-xs text-slate-500 px-1">
+                <span><span id="char-count">0</span> characters</span>
+                <span><span id="word-count">0</span> words</span>
+              </div>
+            </div>
+
+            <!-- Preview Column -->
+            <div class="flex flex-col">
+              <h3 class="text-slate-400 text-xs font-bold uppercase tracking-wider mb-3 ml-1">Live Preview</h3>
+              <!-- Mock Phone UI -->
+              <div class="bg-white text-black rounded-3xl overflow-hidden border-8 border-slate-900 shadow-2xl mx-auto w-full max-w-[380px] h-full min-h-[400px] flex flex-col relative">
+                <!-- Status Bar Mock -->
+                <div class="h-7 bg-white flex justify-between items-center px-6 text-[10px] font-bold select-none">
+                  <span>9:41</span>
+                  <div class="flex gap-1">
+                    <span>•••</span>
+                    <span>🔋</span>
+                  </div>
+                </div>
+
+                <!-- App Header -->
+                <div class="flex items-center justify-between px-4 py-2 border-b border-gray-100 select-none">
+                   <div class="flex items-center gap-2">
+                     <div class="w-8 h-8 rounded-full bg-gradient-to-tr from-yellow-400 via-red-500 to-purple-600 p-[2px]">
+                       <div class="w-full h-full bg-white rounded-full p-[2px]">
+                          <div class="w-full h-full bg-gray-200 rounded-full overflow-hidden">
+                             <!-- Simple placeholder avatar -->
+                             <svg class="w-full h-full text-gray-400" fill="currentColor" viewBox="0 0 24 24"><path d="M24 20.993V24H0v-2.996A14.977 14.977 0 0112.004 15c4.904 0 9.26 2.354 11.996 5.993zM16.002 8.999a4 4 0 11-8 0 4 4 0 018 0z" /></svg>
+                          </div>
+                       </div>
+                     </div>
+                     <span class="font-semibold text-sm">your_username</span>
+                   </div>
+                   <span class="text-xl leading-none pb-2">...</span>
+                </div>
+
+                <!-- Image Placeholder -->
+                <div class="bg-gray-100 aspect-square w-full relative group cursor-default flex items-center justify-center overflow-hidden">
+                   <div class="absolute inset-0 bg-gradient-to-br from-blue-50 to-indigo-100"></div>
+                   <span class="relative text-gray-400 font-medium">Image Preview</span>
+                </div>
+
+                <!-- Actions -->
+                <div class="px-3 py-3 flex justify-between text-2xl select-none">
+                  <div class="flex gap-4">
+                    <button class="hover:text-red-500 transition-colors">♡</button>
+                    <button>💬</button>
+                    <button>➤</button>
+                  </div>
+                  <button>🔖</button>
+                </div>
+
+                <!-- Caption Area -->
+                <div class="px-3 pb-6 text-sm overflow-y-auto max-h-[200px] custom-scrollbar">
+                  <div class="font-semibold text-sm mb-1">1,234 likes</div>
+                  <div>
+                    <span class="font-semibold mr-2">your_username</span>
+                    <span id="preview-content" class="whitespace-pre-wrap leading-tight text-gray-900"><span class="text-gray-400 italic">Your formatted caption will appear here...</span></span>
+                  </div>
+                  <div class="text-gray-400 text-[10px] mt-2 uppercase">2 hours ago</div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- Info Section -->
+        <div class="flex flex-col gap-8 max-w-[800px] mx-auto w-full">
+          <!-- How to Use -->
+          <article class="prose prose-invert max-w-none text-slate-300">
+            <h2 class="text-xl font-bold text-slate-50 mb-4">How to add spaces in Instagram captions</h2>
+            <div class="bg-slate-850/50 p-6 rounded-2xl border border-slate-700/50">
+              <ol class="list-decimal list-inside space-y-3 text-sm md:text-base">
+                <li>Type your caption in the text box above.</li>
+                <li>Press <strong>Enter</strong> key to create line breaks where you want them.</li>
+                <li>Our tool automatically inserts the invisible "spacer" character.</li>
+                <li>Check the live preview to see how it looks on a mobile feed.</li>
+                <li>Click <strong>Copy Formatted Caption</strong>.</li>
+                <li>Paste directly into Instagram, Facebook, or TikTok.</li>
+              </ol>
+            </div>
+          </article>
+
+          <!-- FAQ -->
+          <section aria-labelledby="faq-title" class="bg-slate-850 p-6 md:p-8 rounded-2xl border border-slate-700">
+            <h2 id="faq-title" class="text-xl font-bold text-slate-50 mb-6">Frequently Asked Questions</h2>
+            <div class="flex flex-col" id="faq-container">
+              <!-- FAQs generated by JS -->
+            </div>
+          </section>
+        </div>
+
+      </main>
+
+      <footer class="text-center mt-9 text-slate-400 text-sm">
+        © <span id="year"></span> SocialMediaToolsHub. Built for speed.
+      </footer>
+    </div>
+
+    <!-- Application Logic -->
+    <script>
+      (function() {
+        // --- Configuration ---
+        const INVISIBLE_CHAR = '\u2800';
+        const yearSpan = document.getElementById('year');
+        if(yearSpan) yearSpan.textContent = new Date().getFullYear();
+
+        // --- Elements ---
+        const input = document.getElementById('caption-input');
+        const previewContent = document.getElementById('preview-content');
+        const btnCopy = document.getElementById('btn-copy');
+        const btnClear = document.getElementById('btn-clear');
+        const charCountEl = document.getElementById('char-count');
+        const wordCountEl = document.getElementById('word-count');
+
+        // --- Core Logic ---
+        function processText(text) {
+          if (!text) return '';
+          return text.split('\n').map(line => {
+            // If line is empty or just whitespace, replace with invisible char
+            return line.trim().length === 0 ? INVISIBLE_CHAR : line;
+          }).join('\n');
+        }
+
+        function updateUI() {
+          const text = input.value || '';
+          const processed = processText(text);
+          
+          // Update Preview
+          if (text.length === 0) {
+            previewContent.innerHTML = '<span class="text-gray-400 italic">Your formatted caption will appear here...</span>';
+          } else {
+            previewContent.textContent = processed;
+          }
+
+          // Update Counts
+          charCountEl.textContent = text.length;
+          // Rough word count
+          const words = text.trim().split(/\s+/).filter(w => w.length > 0);
+          wordCountEl.textContent = text.length === 0 ? 0 : words.length;
+        }
+
+        // --- Event Listeners ---
+        if (input) {
+          input.addEventListener('input', updateUI);
+        }
+
+        if (btnClear) {
+          btnClear.addEventListener('click', () => {
+            input.value = '';
+            updateUI();
+          });
+        }
+
+        if (btnCopy) {
+          btnCopy.addEventListener('click', async () => {
+            const text = input.value || '';
+            if (!text) return;
+            const processed = processText(text);
+
+            try {
+              await navigator.clipboard.writeText(processed);
+              
+              // Visual Feedback
+              const originalHTML = btnCopy.innerHTML;
+              const originalClass = btnCopy.className;
+              
+              // Success State
+              btnCopy.className = "flex-1 py-3.5 px-6 rounded-xl font-semibold text-slate-900 flex justify-center items-center gap-2 bg-green-400 transition-all shadow-lg";
+              btnCopy.innerHTML = '<span>✓</span> Copied!';
+              
+              setTimeout(() => {
+                btnCopy.className = originalClass;
+                btnCopy.innerHTML = originalHTML;
+              }, 2000);
+            } catch (err) {
+              console.error('Failed to copy', err);
+              // Error State fallback (optional)
+              btnCopy.textContent = 'Error copying';
+              setTimeout(() => {
+                 btnCopy.innerHTML = '<span>✂️</span> Copy Formatted Caption';
+              }, 2000);
+            }
+          });
+        }
+
+        // --- FAQ Logic ---
+        const faqs = [
+          {
+            question: "Why aren't my line breaks showing on Instagram?",
+            answer: "Instagram's algorithm automatically strips out standard empty lines to save space. To keep your paragraphs separated, you need a character that is 'invisible' to the human eye but 'visible' to the computer. This tool inserts a special Unicode character (Braille Pattern Blank U+2800) that forces the line to stay open."
+          },
+          {
+            question: "Is SocialMediaToolsHub Line Break tool safe to use?",
+            answer: "Yes, absolutely. The processing happens 100% in your web browser. We do not store, save, or send your captions to any server. It is a client-side tool built for privacy and speed."
+          },
+          {
+            question: "Does this work for TikTok and Facebook?",
+            answer: "Yes! The invisible space character works on almost all social media platforms including TikTok, Facebook, LinkedIn, and Twitter (X) to create cleaner formatting in bios and posts."
+          },
+          {
+            question: "How do I use this for my Instagram Bio?",
+            answer: "Simply type your bio in the box above, formatting it exactly how you want it to look. Click 'Copy', then go to Edit Profile on Instagram and paste it into the Bio field."
+          },
+          {
+            question: "The Importance of Formatting",
+            answer: "A wall of text is the fastest way to lose a follower's attention. Breaking your caption into digestible paragraphs increases readability and engagement. SocialMediaToolsHub helps you bypass the frustrating native formatting limitations of social apps. Whether you are an influencer, brand, or casual user, using clean line breaks separates your call-to-action (CTA) from your story, making your hashtags less intrusive and your message clearer."
+          }
+        ];
+
+        const faqContainer = document.getElementById('faq-container');
+        if (faqContainer) {
+          faqs.forEach((item, index) => {
+            const wrapper = document.createElement('div');
+            wrapper.className = "border-b border-slate-700 last:border-0";
+            
+            const button = document.createElement('button');
+            button.className = "w-full py-4 text-left flex justify-between items-center focus:outline-none group";
+            button.setAttribute('aria-expanded', 'false');
+            
+            button.innerHTML = `
+              <span class="font-semibold text-sm md:text-base transition-colors text-slate-200 group-hover:text-primary-from">${item.question}</span>
+              <span class="transform transition-transform duration-200 text-slate-400 faq-icon">▼</span>
+            `;
+
+            const contentDiv = document.createElement('div');
+            contentDiv.className = "overflow-hidden max-h-0 opacity-0 transition-all duration-300 ease-in-out";
+            contentDiv.innerHTML = `<p class="text-slate-400 text-sm leading-relaxed mb-4">${item.answer}</p>`;
+
+            // Toggle Logic
+            button.addEventListener('click', () => {
+              const isExpanded = button.getAttribute('aria-expanded') === 'true';
+              
+              // Close all others (optional, but good for accordion feel)
+              document.querySelectorAll('#faq-container button[aria-expanded="true"]').forEach(otherBtn => {
+                if (otherBtn !== button) {
+                  otherBtn.setAttribute('aria-expanded', 'false');
+                  otherBtn.querySelector('.faq-icon').classList.remove('rotate-180');
+                  otherBtn.querySelector('span').classList.remove('text-primary-from');
+                  otherBtn.querySelector('span').classList.add('text-slate-200');
+                  const otherContent = otherBtn.nextElementSibling;
+                  otherContent.style.maxHeight = '0px';
+                  otherContent.classList.remove('opacity-100');
+                  otherContent.classList.add('opacity-0');
+                }
+              });
+
+              // Toggle Current
+              if (isExpanded) {
+                button.setAttribute('aria-expanded', 'false');
+                button.querySelector('.faq-icon').classList.remove('rotate-180');
+                button.querySelector('span').classList.remove('text-primary-from');
+                button.querySelector('span').classList.add('text-slate-200');
+                contentDiv.style.maxHeight = '0px';
+                contentDiv.classList.remove('opacity-100');
+                contentDiv.classList.add('opacity-0');
+              } else {
+                button.setAttribute('aria-expanded', 'true');
+                button.querySelector('.faq-icon').classList.add('rotate-180');
+                button.querySelector('span').classList.add('text-primary-from');
+                button.querySelector('span').classList.remove('text-slate-200');
+                contentDiv.classList.remove('opacity-0');
+                contentDiv.classList.add('opacity-100');
+                contentDiv.style.maxHeight = contentDiv.scrollHeight + 'px';
+              }
+            });
+
+            wrapper.appendChild(button);
+            wrapper.appendChild(contentDiv);
+            faqContainer.appendChild(wrapper);
+          });
+        }
+      })();
+    </script>
+  </body>
+</html>
