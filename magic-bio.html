@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Magical Bio Generator ✨</title>
+  <script src="https://cdn.jsdelivr.net/npm/particles.js@2.0.0/particles.min.js"></script>
+  <style>
+    body { font-family: 'Segoe UI', sans-serif; background: linear-gradient(135deg, #1a0033, #000); color: #fff; text-align: center; min-height: 100vh; margin: 0; overflow: hidden; }
+    .container { padding: 40px 20px; max-width: 700px; margin: auto; position: relative; z-index: 2; }
+    h1 { font-size: 3em; background: linear-gradient(90deg, #ff00cc, #00ffff, #ffff00, #ff00cc); -webkit-background-clip: text; background-clip: text; color: transparent; animation: rainbow 8s linear infinite; }
+    textarea { width: 100%; height: 120px; padding: 15px; font-size: 1.2em; border-radius: 15px; border: none; margin: 20px 0; background: rgba(255,255,255,0.1); color: white; }
+    button { padding: 12px 30px; margin: 10px; border: none; border-radius: 50px; font-weight: bold; cursor: pointer; background: #ff00aa; color: white; box-shadow: 0 0 20px #ff00aa88; }
+    button:hover { transform: scale(1.05); }
+    #output { margin: 30px auto; padding: 20px; background: rgba(255,255,255,0.1); border-radius: 20px; font-size: 1.8em; min-height: 100px; backdrop-filter: blur(10px); }
+    #particles-js { position: absolute; width: 100%; height: 100%; top: 0; left: 0; z-index: 1; }
+    @keyframes rainbow { 0% { background-position: 0%; } 100% { background-position: 100%; } }
+  </style>
+</head>
+<body>
+
+<div id="particles-js"></div>
+<div class="container">
+  <h1>Magical Bio Generator</h1>
+  <p>Type your words and watch the magic! ✨</p>
+  <textarea id="input" placeholder="Ex: I love building cool stuff with code"></textarea><br/>
+
+  <button onclick="makeMagic()">Make It Magical</button>
+  <button onclick="copyBio()">Copy Bio</button>
+
+  <div id="output">Your magical bio will sparkle here...</div>
+</div>
+
+<script>
+  // Sparkly background stars
+  particlesJS("particles-js", {
+    "particles": { "number": { "value": 80 }, "color": { "value": "#ff00ff" }, "shape": { "type": "star" }, "opacity": { "value": 0.8 }, "size": { "value": 3 }, "move": { "speed": 2 } },
+    "interactivity": { "events": { "onhover": { "enable": true, "mode": "repulse" } } }
+  });
+
+  // All the emojis right here! No internet needed.
+  const emojiData = {
+    "love": ["❤️", "🖤", "💜", "💙", "💚", "🧡", "💛", "🤍", "💖", "💕", "💞", "💘", "❣️", "🫀", "💓"],
+    "magic": ["✨", "⭐", "🌟", "💫", "🪄", "🔮", "🌙", "🪐", "☄️", "💥", "🌈", "🧙‍♀️", "🧙", "🧚", "🧜", "🦄", "🧝"],
+    "code": ["💻", "👨‍💻", "👩‍💻", "⚡️", "🚀", "🧑‍🚀", "🖥️", "⌨️", "🤖", "🔧", "🛠️", "🧑‍🔬", "📱", "🖱️", "📟", "🖨️", "💾", "📀", "🕹️"],
+    "money": ["💰", "🤑", "💸", "💵", "🪙", "💎", "📈", "⬆️", "🏆", "💳", "🛒", "💲"],
+    "creative": ["🎨", "✍️", "🖌️", "📸", "🎬", "🎭", "🎪", "🖼️", "✂️", "🧵", "📐", "📏", "🎹", "🎸", "🎤", "📝", "📰", "📖"],
+    "nature": ["🌸", "🌺", "🌿", "🦋", "🍄", "🌻", "🌷", "🐉", "🐬", "🐳", "🌊", "🏝️", "🌲", "🍁", "🌴", "🌵", "🍀", "🌹", "🌼", "🌾", "🪴", "🦉", "🦊", "🦌"],
+    "fire": ["🔥", "❄️", "⚡️", "💯", "😎", "🏃‍♀️", "🏋️‍♂️", "💪", "🧗", "🚀"],
+    "animals": ["🐱", "🐶", "🦊", "🐼", "🦁", "🐯", "🐸", "🦄", "🦉", "🐢", "🦅", "🦈", "🦕", "🦖", "🐘", "🦒", "🦘", "🦜", "🦝", "🐿️"],
+    "food": ["☕", "🍫", "🍕", "🍔", "🌮", "🧋", "🥑", "🍄", "🍪", "🍦", "🍩", "🍰", "🍓", "🍌", "🍎", "🍇", "🥦", "🥕", "🍉"],
+    "travel": ["✈️", "🌍", "🗺️", "🏔️", "🌴", "🗼", "🗽", "🚀", "🚲", "🚗", "🛳️", "🏰"],
+    "time": ["❄️", "☀️", "🌸", "🍂", "🕰️", "⏰", "⌛", "🌞", "🌜", "🗓️"],
+    "cool": ["😎", "🕶️", "🔥", "❄️", "⚡️", "💯", "👍", "👏", "🎉", "🥳", "🤩", "😍", "😂", "🤣", "😊", "🙌", "🕺", "💃"],
+    "default": ["✨", "🌟", "💫", "🪄", "⭐", "🔮", "🌙", "💜", "🌈", "☄️", "💥", "🦄", "🧚", "🧜", "🧝"]
+  };
+
+  function pickEmoji(word) {
+    word = word.toLowerCase();
+    if (word.includes("love") || word.includes("heart")) return randomFrom(emojiData.love);
+    if (word.includes("magic") || word.includes("witch") || word.includes("spell")) return randomFrom(emojiData.magic);
+    if (word.includes("code") || word.includes("dev") || word.includes("build") || word.includes("tech")) return randomFrom(emojiData.code);
+    if (word.includes("money") || word.includes("cash") || word.includes("earn")) return randomFrom(emojiData.money);
+    if (word.includes("art") || word.includes("create") || word.includes("design") || word.includes("write")) return randomFrom(emojiData.creative);
+    if (word.includes("nature") || word.includes("plant") || word.includes("flower") || word.includes("animal")) return randomFrom(emojiData.nature);
+    if (word.includes("fire") || word.includes("energy") || word.includes("strong")) return randomFrom(emojiData.fire);
+    if (word.includes("cat") || word.includes("dog") || word.includes("animal")) return randomFrom(emojiData.animals);
+    if (word.includes("food") || word.includes("coffee") || word.includes("eat")) return randomFrom(emojiData.food);
+    if (word.includes("travel") || word.includes("world") || word.includes("fly")) return randomFrom(emojiData.travel);
+    if (word.includes("time") || word.includes("season") || word.includes("clock")) return randomFrom(emojiData.time);
+    if (word.includes("cool") || word.includes("fun") || word.includes("party")) return randomFrom(emojiData.cool);
+    return randomFrom(emojiData.default);
+  }
+
+  function randomFrom(arr) {
+    return arr[Math.floor(Math.random() * arr.length)];
+  }
+
+  function makeMagic() {
+    const text = document.getElementById("input").value.trim();
+    if (!text) return;
+
+    const words = text.split(/\s+/);
+    let magical = "";
+
+    for (let word of words) {
+      const clean = word.replace(/[^\w]/g, "");
+      if (clean.length > 3) {
+        const emoji = pickEmoji(clean);
+        magical += `${word}${emoji} `;
+      } else {
+        magical += word + " ";
+      }
+    }
+
+    const themes = [
+      "background: linear-gradient(90deg, #ff00cc, #00ffff, #ffff00, #ff00cc); -webkit-background-clip: text; color: transparent;",
+      "color: #e0ff00; text-shadow: 0 0 10px #e0ff00aa;",
+      "color: #ff99ff; text-shadow: 0 0 20px #ff00ffa0;",
+      "background: linear-gradient(45deg, #00ffea, #ff00ff); -webkit-background-clip: text; color: transparent;",
+      "color: #ffff99; text-shadow: 0 0 15px gold;"
+    ];
+    const style = themes[Math.floor(Math.random() * themes.length)];
+
+    const html = `<span style="${style} animation: rainbow 6s infinite;">${magical.trim()}</span>`;
+    document.getElementById("output").innerHTML = html + "<br/><br/>✨ Ready to copy ✨";
+    document.getElementById("output").dataset.plain = magical.trim();
+  }
+
+  function copyBio() {
+    const output = document.getElementById("output");
+    const plain = output.dataset.plain || output.textContent;
+    navigator.clipboard.writeText(plain);
+    alert("Copied your magical bio!");
+  }
+</script>
+</body>
+</html>
