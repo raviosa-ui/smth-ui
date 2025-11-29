@@ -16,6 +16,7 @@
       grid-template-columns: 1fr;
       gap: 30px;
       margin-top: 20px;
+      user-select: none; /* Prevents highlighting while dragging */
     }
 
     /* Left: Canvas Area */
@@ -37,6 +38,10 @@
       background-image: linear-gradient(45deg, #1e293b 25%, #0f172a 25%, #0f172a 50%, #1e293b 50%, #1e293b 75%, #0f172a 75%, #0f172a 100%);
       background-size: 20px 20px; /* Checkered pattern for transparency */
       box-shadow: 0 10px 40px rgba(0,0,0,0.5);
+      cursor: grab; /* Indicate draggable */
+    }
+    canvas:active {
+        cursor: grabbing;
     }
 
     /* Right: Controls Area */
@@ -81,7 +86,13 @@
       border-radius: 50%;
       cursor: pointer;
       box-shadow: 0 0 10px rgba(56, 189, 248, 0.4);
+      margin-top: -6px; /* Fix alignment in some browsers */
     }
+    /* Firefox specific fix for range slider alignment */
+    input[type=range]::-moz-range-thumb {
+        margin-top: 0;
+    }
+
 
     select, input[type="text"] {
       background: var(--bg);
@@ -162,6 +173,9 @@
       background: rgba(56, 189, 248, 0.1);
     }
     .dot { width: 8px; height: 8px; border-radius: 50%; }
+    
+    /* Helper utility */
+    .hide { display: none; }
 
     @media(min-width: 768px) {
       .editor-container {
@@ -214,6 +228,18 @@
               <input type="file" id="imageInput" accept="image/*">
             </div>
           </div>
+          
+           <div class="control-group hide" id="imageAdjustControls">
+            <label>Adjust Image</label>
+            <div style="margin-bottom: 5px;">
+                <span style="font-size:12px; color:var(--muted);">Zoom Level:</span>
+                <input type="range" id="imageZoom" min="1" max="3" step="0.05" value="1">
+            </div>
+            <p style="font-size:12px; color:var(--accent-from); margin:0; display:flex; align-items:center; gap:6px;">
+                <span style="font-size:16px">✋</span> Click and drag image to move it
+            </p>
+          </div>
+
 
           <div class="control-group">
             <label>Quick Presets</label>
@@ -228,8 +254,8 @@
           <div class="control-group">
             <label>Ring Style</label>
             <select id="ringType">
-              <option value="solid">Solid Circle</option>
               <option value="gradient">Gradient</option>
+              <option value="solid">Solid Circle</option>
               <option value="dashed">Dashed (Story Style)</option>
               <option value="progress">Progress Bar (75%)</option>
             </select>
@@ -248,8 +274,8 @@
           <div class="control-group">
             <label>Colors</label>
             <div style="display:flex; gap:10px;">
-              <input type="color" id="color1" value="#38bdf8" style="flex:1; height:40px;">
-              <input type="color" id="color2" value="#818cf8" style="flex:1; height:40px;">
+              <input type="color" id="color1" value="#f09433" style="flex:1; height:40px;">
+              <input type="color" id="color2" value="#bc1888" style="flex:1; height:40px;">
             </div>
           </div>
 
@@ -279,24 +305,35 @@
   <script>
     const canvas = document.getElementById('canvas');
     const ctx = canvas.getContext('2d');
-    
+    const imageAdjustControls = document.getElementById('imageAdjustControls');
+    const zoomSlider = document.getElementById('imageZoom');
+
     // State management
     const state = {
       image: new Image(),
       imageLoaded: false,
-      ringType: 'gradient', // solid, gradient, dashed, progress
+      // Image adjustments
+      imageScale: 1.0,
+      imageOffsetX: 0,
+      imageOffsetY: 0,
+      // Dragging state
+      isDragging: false,
+      lastDragX: 0,
+      lastDragY: 0,
+      // Ring styling
+      ringType: 'gradient', 
       width: 30,
       gap: 20,
-      color1: '#38bdf8',
-      color2: '#818cf8',
-      badge: 'none' // none, online, live, verify, work
+      color1: '#f09433',
+      color2: '#bc1888',
+      badge: 'none'
     };
 
-    // Load a default placeholder image so canvas isn't empty
+    // Load a default placeholder image
     state.image.src = 'data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSI1MDAiIGhlaWdodD0iNTAwIiB2aWV3Qm94PSIwIDAgNTAwIDUwMCI+PHJlY3Qgd2lkdGg9IjUwMCIgaGVpZ2h0PSI1MDAiIGZpbGw9IiMxZTI5M2IiLz48dGV4dCB4PSI1MCUiIHk9IjUwJSIgZG9taW5hbnQtYmFzZWxpbmU9Im1pZGRsZSIgdGV4dC1hbmNob3I9Im1pZGRsZSIgZmlsbD0iIzk0YTNiOCIgZm9udC1zaXplPSI1MCIgZm9udC1mYW1pbHk9InNhbnMtc2VyaWYiPlVwbG9hZCBQaG90bzwvdGV4dD48L3N2Zz4=';
     state.image.onload = () => {
-      state.imageLoaded = true;
       draw();
+      // Don't set imageLoaded=true for placeholder, so drag/zoom is disabled initially
     };
 
     // --- Core Drawing Function ---
@@ -307,39 +344,39 @@
       const centerX = canvas.width / 2;
       const centerY = canvas.height / 2;
       
-      // Calculate Radius
-      // Max radius is half width minus padding for shadows/badges
+      // Calculate Radius boundaries
       const maxRadius = (canvas.width / 2) - 10; 
-      const ringOuterRadius = maxRadius;
       const ringInnerRadius = maxRadius - state.width;
       const imageRadius = ringInnerRadius - state.gap;
 
-      // 2. Draw Image (Masked Circle)
-      if (state.imageLoaded) {
+      // 2. Draw Image (Masked Circle) with Zoom and Pan
+      if (state.image.src && imageRadius > 0) {
         ctx.save();
+        // Create the circular mask
         ctx.beginPath();
         ctx.arc(centerX, centerY, imageRadius > 0 ? imageRadius : 1, 0, Math.PI * 2);
         ctx.closePath();
         ctx.clip();
         
-        // Draw image effectively covering the circle
-        // We calculate aspect ratio to center crop
+        // Calculate dimensions to autofit the circle
         const aspect = state.image.width / state.image.height;
-        let drawW, drawH, drawX, drawY;
+        let baseW, baseH;
         
-        if (aspect > 1) {
-          // Landscape
-          drawH = imageRadius * 2;
-          drawW = drawH * aspect;
-          drawX = centerX - (drawW / 2);
-          drawY = centerY - imageRadius;
-        } else {
-          // Portrait
-          drawW = imageRadius * 2;
-          drawH = drawW / aspect;
-          drawX = centerX - imageRadius;
-          drawY = centerY - (drawH / 2);
+        if (aspect > 1) { // Landscape
+          baseH = imageRadius * 2;
+          baseW = baseH * aspect;
+        } else { // Portrait
+          baseW = imageRadius * 2;
+          baseH = baseW / aspect;
         }
+
+        // Apply Zoom factor
+        const drawW = baseW * state.imageScale;
+        const drawH = baseH * state.imageScale;
+
+        // Apply Pan offsets (centering + manual offset)
+        const drawX = centerX - (drawW / 2) + state.imageOffsetX;
+        const drawY = centerY - (drawH / 2) + state.imageOffsetY;
         
         ctx.drawImage(state.image, drawX, drawY, drawW, drawH);
         ctx.restore();
@@ -362,7 +399,7 @@
       
       ctx.strokeStyle = strokeStyle;
       ctx.lineWidth = state.width;
-      ctx.lineCap = 'round'; // makes ends round
+      ctx.lineCap = 'round'; 
 
       // Ring Geometry based on type
       const ringRadius = ringInnerRadius + (state.width / 2); // Center of the stroke
@@ -383,70 +420,54 @@
 
       // 4. Draw Status Badge (Bottom Right)
       if (state.badge !== 'none') {
-        drawBadge(centerX, centerY, imageRadius + state.gap); // anchor to outside of gap
+        drawBadge(centerX, centerY, imageRadius + state.gap);
       }
     }
 
     function drawBadge(cx, cy, radius) {
-      // Calculate position at 45 degrees (bottom right)
-      const angle = Math.PI / 4; 
+      const angle = Math.PI / 4; // 45 degrees
       const badgeX = cx + (radius * Math.cos(angle));
       const badgeY = cy + (radius * Math.sin(angle));
       const badgeSize = canvas.width * 0.18; // Relative size
 
       ctx.save();
       
-      // Badge Background (Circle with border)
+      // Badge Background (Circle with border cutout)
       ctx.beginPath();
       ctx.arc(badgeX, badgeY, badgeSize / 2, 0, Math.PI * 2);
       ctx.fillStyle = '#ffffff';
       ctx.fill();
-      ctx.lineWidth = 10;
+      ctx.lineWidth = 12; // Thicker cutout for better separation
       ctx.strokeStyle = '#0f172a'; // Match bg color for cutout effect
       ctx.stroke();
 
       // Badge Content
-      if (state.badge === 'online') {
-        ctx.beginPath();
-        ctx.arc(badgeX, badgeY, (badgeSize/2) - 5, 0, Math.PI * 2);
-        ctx.fillStyle = '#4caf50'; // Green
-        ctx.fill();
-      } else if (state.badge === 'live') {
-        ctx.beginPath();
-        ctx.arc(badgeX, badgeY, (badgeSize/2) - 5, 0, Math.PI * 2);
-        ctx.fillStyle = '#f44336'; // Red
-        ctx.fill();
-        // Add "LIVE" text tiny
-        ctx.fillStyle = 'white';
-        ctx.font = 'bold 24px sans-serif';
-        ctx.textAlign = 'center';
-        ctx.textBaseline = 'middle';
-        ctx.fillText('LIVE', badgeX, badgeY);
-      } else if (state.badge === 'verify') {
-        ctx.beginPath();
-        ctx.arc(badgeX, badgeY, (badgeSize/2) - 5, 0, Math.PI * 2);
-        ctx.fillStyle = '#1da1f2'; // Twitter Blue
-        ctx.fill();
-        // Checkmark
-        ctx.fillStyle = 'white';
-        ctx.font = 'bold 40px sans-serif';
-        ctx.textAlign = 'center';
-        ctx.textBaseline = 'middle';
-        ctx.fillText('✓', badgeX, badgeY + 3);
-      } else if (state.badge === 'work') {
-        ctx.beginPath();
-        ctx.arc(badgeX, badgeY, (badgeSize/2) - 5, 0, Math.PI * 2);
-        ctx.fillStyle = '#4caf50'; // Green
-        ctx.fill();
-        ctx.fillStyle = 'white';
-        ctx.font = 'bold 20px sans-serif';
-        ctx.textAlign = 'center';
-        ctx.textBaseline = 'middle';
-        ctx.fillText('#OPEN', badgeX, badgeY);
-      }
+      ctx.beginPath();
+      ctx.arc(badgeX, badgeY, (badgeSize/2) - 4, 0, Math.PI * 2);
 
+      if (state.badge === 'online') {
+        ctx.fillStyle = '#4caf50'; ctx.fill();
+      } else if (state.badge === 'live') {
+        ctx.fillStyle = '#f44336'; ctx.fill();
+        drawBadgeText(ctx, 'LIVE', badgeX, badgeY, 24);
+      } else if (state.badge === 'verify') {
+        ctx.fillStyle = '#1da1f2'; ctx.fill();
+        drawBadgeText(ctx, '✓', badgeX, badgeY + 3, 40);
+      } else if (state.badge === 'work') {
+        ctx.fillStyle = '#4caf50'; ctx.fill();
+        drawBadgeText(ctx, '#OPEN', badgeX, badgeY, 20);
+      }
       ctx.restore();
     }
+
+    function drawBadgeText(context, text, x, y, size) {
+        context.fillStyle = 'white';
+        context.font = `bold ${size}px sans-serif`;
+        context.textAlign = 'center';
+        context.textBaseline = 'middle';
+        context.fillText(text, x, y);
+    }
+
 
     // --- Interaction Logic ---
 
@@ -458,6 +479,13 @@
           state.image = new Image();
           state.image.onload = () => {
             state.imageLoaded = true;
+            // Reset zoom and pan on new image load
+            state.imageScale = 1.0;
+            state.imageOffsetX = 0;
+            state.imageOffsetY = 0;
+            zoomSlider.value = 1.0;
+            // Show adjustments controls
+            imageAdjustControls.classList.remove('hide');
             draw();
           };
           state.image.src = evt.target.result;
@@ -466,54 +494,85 @@
       }
     });
 
-    // 2. Input Listeners
+    // 2. Image Adjustments (Zoom & Pan)
+    zoomSlider.addEventListener('input', (e) => {
+        if(!state.imageLoaded) return;
+        state.imageScale = parseFloat(e.target.value);
+        draw();
+    });
+
+    // Canvas Dragging Logic
+    canvas.addEventListener('mousedown', (e) => {
+        if(!state.imageLoaded) return;
+        state.isDragging = true;
+        state.lastDragX = e.clientX;
+        state.lastDragY = e.clientY;
+    });
+
+    window.addEventListener('mousemove', (e) => {
+        if (!state.isDragging) return;
+        e.preventDefault();
+        
+        const deltaX = e.clientX - state.lastDragX;
+        const deltaY = e.clientY - state.lastDragY;
+        
+        // Determine scale factor between CSS pixels and Canvas internal pixels
+        const rect = canvas.getBoundingClientRect();
+        const scaleFactorX = canvas.width / rect.width;
+        const scaleFactorY = canvas.height / rect.height;
+
+        // Apply movement, scaled up to match canvas resolution
+        state.imageOffsetX += deltaX * scaleFactorX;
+        state.imageOffsetY += deltaY * scaleFactorY;
+        
+        state.lastDragX = e.clientX;
+        state.lastDragY = e.clientY;
+        draw();
+    });
+
+    window.addEventListener('mouseup', () => {
+        if (state.isDragging) {
+            state.isDragging = false;
+        }
+    });
+
+
+    // 3. General Input Listeners
     document.getElementById('ringType').addEventListener('change', (e) => { state.ringType = e.target.value; draw(); });
     document.getElementById('ringWidth').addEventListener('input', (e) => { state.width = parseInt(e.target.value); draw(); });
     document.getElementById('ringGap').addEventListener('input', (e) => { state.gap = parseInt(e.target.value); draw(); });
     document.getElementById('color1').addEventListener('input', (e) => { state.color1 = e.target.value; draw(); });
     document.getElementById('color2').addEventListener('input', (e) => { state.color2 = e.target.value; draw(); });
 
-    // 3. Preset Logic
+    // 4. Preset Logic
     window.setPreset = function(type) {
       const c1 = document.getElementById('color1');
       const c2 = document.getElementById('color2');
       const rType = document.getElementById('ringType');
       
       if (type === 'insta') {
-        state.color1 = '#f09433';
-        state.color2 = '#bc1888';
-        state.ringType = 'gradient';
+        state.color1 = '#f09433'; state.color2 = '#bc1888'; state.ringType = 'gradient';
       } else if (type === 'tiktok') {
-        state.color1 = '#00f2ea';
-        state.color2 = '#ff0050';
-        state.ringType = 'gradient';
+        state.color1 = '#00f2ea'; state.color2 = '#ff0050'; state.ringType = 'gradient';
       } else if (type === 'linkedin') {
-        state.color1 = '#0077b5';
-        state.color2 = '#0077b5';
-        state.ringType = 'solid';
+        state.color1 = '#0077b5'; state.color2 = '#0077b5'; state.ringType = 'solid';
       } else if (type === 'neon') {
-        state.color1 = '#39ff14';
-        state.color2 = '#39ff14';
-        state.ringType = 'solid';
+        state.color1 = '#39ff14'; state.color2 = '#39ff14'; state.ringType = 'solid';
       }
-      
       // Update Inputs UI
-      c1.value = state.color1;
-      c2.value = state.color2;
-      rType.value = state.ringType;
+      c1.value = state.color1; c2.value = state.color2; rType.value = state.ringType;
       draw();
     };
 
-    // 4. Badge Logic
+    // 5. Badge Logic
     window.setBadge = function(type, el) {
       state.badge = type;
-      // UI Update
       document.querySelectorAll('.badge-opt').forEach(b => b.classList.remove('active'));
       el.classList.add('active');
       draw();
     };
 
-    // 5. Download
+    // 6. Download
     document.getElementById('downloadBtn').addEventListener('click', () => {
       const link = document.createElement('a');
       link.download = 'profile-ring.png';
