@@ -1,0 +1,723 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>SocialMediaToolsHub — Free Image & Video Watermark Tool</title>
+    <meta name="description" content="Add watermarks to images and videos securely in your browser. 100% private, offline-capable, and free. SocialMediaToolsHub." />
+    <meta name="theme-color" content="#0f172a" />
+    
+    <!-- OpenGraph / Social Media Meta Tags -->
+    <meta property="og:title" content="SocialMediaToolsHub — Watermark Tool" />
+    <meta property="og:description" content="Securely add watermarks to images and videos locally in your browser." />
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content="https://socialmediatoolshub.com" />
+    <meta property="og:image" content="https://socialmediatoolshub.com/og-image.jpg" />
+    <meta name="twitter:card" content="summary_large_image" />
+
+    <!-- CDNs -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    
+    <style>
+      body {
+        font-family: 'Inter', sans-serif;
+        background-color: #0f172a;
+        color: #f8fafc;
+        -webkit-font-smoothing: antialiased;
+      }
+      /* Custom Scrollbar */
+      ::-webkit-scrollbar {
+        width: 8px;
+        height: 8px;
+      }
+      ::-webkit-scrollbar-track {
+        background: #1e293b; 
+      }
+      ::-webkit-scrollbar-thumb {
+        background: #334155; 
+        border-radius: 4px;
+      }
+      ::-webkit-scrollbar-thumb:hover {
+        background: #475569; 
+      }
+      .brand-gradient {
+        background: linear-gradient(90deg, #38bdf8, #818cf8);
+        -webkit-background-clip: text;
+        color: transparent;
+        -webkit-text-fill-color: transparent;
+      }
+      .btn-gradient {
+        background: linear-gradient(90deg, #38bdf8, #818cf8);
+        color: #06121f;
+        transition: all 0.2s ease;
+      }
+      .btn-gradient:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 10px 25px -5px rgba(56, 189, 248, 0.4);
+      }
+      .animate-in {
+        animation: fadeIn 0.3s ease-out forwards;
+      }
+      @keyframes fadeIn {
+        from { opacity: 0; transform: translateY(5px); }
+        to { opacity: 1; transform: translateY(0); }
+      }
+    </style>
+
+    <!-- Import Map for React and Lucide -->
+    <script type="importmap">
+{
+  "imports": {
+    "react": "https://esm.sh/react@18.2.0",
+    "react-dom/client": "https://esm.sh/react-dom@18.2.0/client",
+    "lucide-react": "https://esm.sh/lucide-react@0.263.1",
+    "react-dom/": "https://aistudiocdn.com/react-dom@^19.2.0/",
+    "react/": "https://aistudiocdn.com/react@^19.2.0/"
+  }
+}
+</script>
+  </head>
+  <body>
+    <div id="root"></div>
+
+    <!-- Application Script -->
+    <script type="text/babel" data-type="module">
+      import React, { useState, useRef, useEffect, useCallback } from 'react';
+      import { createRoot } from 'react-dom/client';
+      import { Upload, Download, Type, Image as ImageIcon, Video as VideoIcon, RotateCw, Trash2, Maximize, AlertCircle, Share2, Check, ChevronDown, ChevronUp } from 'lucide-react';
+
+      // --- Constants & Types ---
+      
+      const INITIAL_SETTINGS = {
+        text: 'SocialMediaToolsHub',
+        image: null,
+        type: 'text',
+        x: 50,
+        y: 50,
+        size: 48,
+        opacity: 0.8,
+        rotation: 0,
+        color: '#ffffff',
+        isBold: true,
+        isItalic: false,
+        shadow: true,
+      };
+
+      const FAQ_DATA = [
+        {
+          question: "Is my data private?",
+          answer: "Yes, absolutely. This tool runs 100% in your browser. Your images and videos are never uploaded to any server, so your content stays on your device."
+        },
+        {
+          question: "Does it support video audio?",
+          answer: "Yes! When you export a video watermark, the original audio is preserved."
+        },
+        {
+          question: "What file formats are supported?",
+          answer: "For images: JPG, PNG, and WebP. For videos: MP4, WebM, and MOV (codecs supported by your browser)."
+        },
+        {
+          question: "Is there a file size limit?",
+          answer: "Since everything is processed locally, the limit depends on your device's memory (RAM). We recommend videos under 300MB for smooth performance."
+        },
+        {
+          question: "Why is video processing slow?",
+          answer: "Video processing requires playing the video in real-time to capture frames and overlay the watermark securely in the browser. We prioritize privacy over server-side speed."
+        },
+        {
+          question: "Can I use transparent logos?",
+          answer: "Yes, PNG logos with transparency are fully supported and recommended for the best look."
+        },
+        {
+          question: "Is this tool free?",
+          answer: "Yes, this tool is completely free to use with no watermarks of our own added."
+        }
+      ];
+
+      // --- Components ---
+
+      const Header = () => {
+        return (
+          <header className="flex items-center justify-between py-6 gap-4">
+            <div className="flex items-center gap-2.5 font-bold text-lg whitespace-nowrap select-none cursor-pointer" onClick={() => window.location.reload()}>
+              <span className="text-2xl">⚡</span>
+              <span className="brand-gradient">SocialMediaToolsHub</span>
+            </div>
+            <nav className="flex gap-2 text-sm md:text-base flex-wrap justify-end">
+              <a href="#tool" className="px-4 py-2 rounded-xl text-slate-400 hover:text-white hover:bg-slate-800 transition-colors">
+                Tool
+              </a>
+              <a href="#faq" className="px-4 py-2 rounded-xl text-slate-400 hover:text-white hover:bg-slate-800 transition-colors">
+                FAQ
+              </a>
+            </nav>
+          </header>
+        );
+      };
+
+      const Footer = () => {
+        return (
+          <footer className="mt-12 text-center text-slate-500 text-sm py-8 border-t border-slate-800">
+            <p>© 2025 SocialMediaToolsHub. Built for speed & privacy.</p>
+          </footer>
+        );
+      };
+
+      const FAQ = () => {
+        const [openIndex, setOpenIndex] = useState(0);
+
+        return (
+          <div className="space-y-3" id="faq">
+            {FAQ_DATA.map((item, index) => (
+              <div 
+                key={index} 
+                className="bg-slate-800 rounded-xl border border-slate-700 overflow-hidden transition-all duration-200 hover:border-slate-600"
+              >
+                <button
+                  onClick={() => setOpenIndex(openIndex === index ? null : index)}
+                  className="w-full flex items-center justify-between p-4 text-left font-medium text-slate-200 hover:bg-slate-700/50 transition-colors"
+                >
+                  <span>{item.question}</span>
+                  {openIndex === index ? <ChevronUp size={18} className="text-sky-400" /> : <ChevronDown size={18} className="text-slate-500" />}
+                </button>
+                
+                <div 
+                  className={`px-4 text-slate-400 text-sm leading-relaxed overflow-hidden transition-all duration-300 ${
+                    openIndex === index ? 'max-h-40 pb-4 opacity-100' : 'max-h-0 opacity-0'
+                  }`}
+                >
+                  {item.answer}
+                </div>
+              </div>
+            ))}
+          </div>
+        );
+      };
+
+      const WatermarkTool = () => {
+        const [activeTab, setActiveTab] = useState('image');
+        const [file, setFile] = useState(null);
+        const [previewUrl, setPreviewUrl] = useState(null);
+        const [settings, setSettings] = useState(INITIAL_SETTINGS);
+        const [dragActive, setDragActive] = useState(false);
+        const [processing, setProcessing] = useState({ isProcessing: false, progress: 0, status: '' });
+        
+        // Refs
+        const canvasRef = useRef(null);
+        const videoRef = useRef(null);
+        const containerRef = useRef(null);
+        const settingsRef = useRef(settings);
+
+        // Keep settings ref in sync for video loop
+        useEffect(() => {
+          settingsRef.current = settings;
+          // Redraw image if needed
+          if (activeTab === 'image' && file && canvasRef.current && previewUrl) {
+            const canvas = canvasRef.current;
+            const ctx = canvas.getContext('2d');
+            const img = new Image();
+            img.src = previewUrl;
+            img.onload = () => {
+               ctx.clearRect(0, 0, canvas.width, canvas.height);
+               ctx.drawImage(img, 0, 0);
+               drawWatermark(ctx, canvas.width, canvas.height, settings);
+            };
+          }
+        }, [settings, activeTab, file, previewUrl]);
+
+        const handleDrag = (e) => {
+          e.preventDefault();
+          e.stopPropagation();
+          if (e.type === 'dragenter' || e.type === 'dragover') {
+            setDragActive(true);
+          } else if (e.type === 'dragleave') {
+            setDragActive(false);
+          }
+        };
+
+        const handleDrop = (e) => {
+          e.preventDefault();
+          e.stopPropagation();
+          setDragActive(false);
+          if (e.dataTransfer.files && e.dataTransfer.files[0]) {
+            handleFile(e.dataTransfer.files[0]);
+          }
+        };
+
+        const handleFileChange = (e) => {
+          if (e.target.files && e.target.files[0]) {
+            handleFile(e.target.files[0]);
+          }
+        };
+
+        const handleFile = (uploadedFile) => {
+          const isImage = uploadedFile.type.startsWith('image/');
+          const isVideo = uploadedFile.type.startsWith('video/');
+
+          if (activeTab === 'image' && !isImage) {
+            alert('Please upload an image file.');
+            return;
+          }
+          if (activeTab === 'video' && !isVideo) {
+            alert('Please upload a video file.');
+            return;
+          }
+
+          if (previewUrl) URL.revokeObjectURL(previewUrl);
+
+          setFile(uploadedFile);
+          const url = URL.createObjectURL(uploadedFile);
+          setPreviewUrl(url);
+          setSettings(prev => ({ ...prev, x: 50, y: 50 }));
+        };
+
+        const handleLogoUpload = (e) => {
+          if (e.target.files && e.target.files[0]) {
+            const file = e.target.files[0];
+            const reader = new FileReader();
+            reader.onload = (ev) => {
+              setSettings(prev => ({ ...prev, image: ev.target.result, type: 'image' }));
+            };
+            reader.readAsDataURL(file);
+          }
+        };
+
+        const drawWatermark = (ctx, width, height, currentSettings) => {
+          const { x, y, size, opacity, rotation, type, text, image, color, isBold, isItalic, shadow } = currentSettings;
+          
+          ctx.save();
+          const posX = (width * x) / 100;
+          const posY = (height * y) / 100;
+          
+          ctx.translate(posX, posY);
+          ctx.rotate((rotation * Math.PI) / 180);
+          ctx.globalAlpha = opacity;
+
+          if (type === 'text') {
+            ctx.font = `${isItalic ? 'italic' : ''} ${isBold ? 'bold' : ''} ${size}px 'Inter', sans-serif`;
+            ctx.textAlign = 'center';
+            ctx.textBaseline = 'middle';
+            
+            if (shadow) {
+              ctx.shadowColor = 'rgba(0,0,0,0.7)';
+              ctx.shadowBlur = 4;
+              ctx.shadowOffsetX = 2;
+              ctx.shadowOffsetY = 2;
+            }
+            
+            ctx.fillStyle = color;
+            ctx.fillText(text, 0, 0);
+          } else if (type === 'image' && image) {
+            const img = new Image();
+            img.src = image;
+            const renderImage = () => {
+               const aspectRatio = img.width / img.height;
+               const baseSize = Math.min(width, height) * (size / 100); 
+               const w = baseSize * aspectRatio;
+               const h = baseSize;
+               ctx.drawImage(img, -w/2, -h/2, w, h);
+            };
+            
+            if (img.complete) {
+               renderImage();
+            } else {
+               img.onload = renderImage;
+            }
+          }
+          ctx.restore();
+        };
+
+        // Image Canvas Initialization
+        useEffect(() => {
+          if (activeTab === 'image' && file && previewUrl && canvasRef.current) {
+            const canvas = canvasRef.current;
+            const ctx = canvas.getContext('2d');
+            const img = new Image();
+            img.src = previewUrl;
+            img.onload = () => {
+              canvas.width = img.width;
+              canvas.height = img.height;
+              ctx.drawImage(img, 0, 0);
+              drawWatermark(ctx, canvas.width, canvas.height, settings);
+            };
+          }
+        }, [activeTab, file, previewUrl]);
+
+        // Video Preview Loop
+        useEffect(() => {
+          let animationFrame;
+          
+          if (activeTab === 'video' && file && previewUrl && videoRef.current && canvasRef.current) {
+            const video = videoRef.current;
+            const canvas = canvasRef.current;
+            const ctx = canvas.getContext('2d');
+            
+            video.loop = true; 
+            video.muted = true;
+            
+            const renderFrame = () => {
+              if (video.readyState >= 2) {
+                  if (canvas.width !== video.videoWidth || canvas.height !== video.videoHeight) {
+                      canvas.width = video.videoWidth;
+                      canvas.height = video.videoHeight;
+                  }
+                  ctx.drawImage(video, 0, 0);
+                  drawWatermark(ctx, canvas.width, canvas.height, settingsRef.current);
+              }
+              animationFrame = requestAnimationFrame(renderFrame);
+            };
+
+            const startPlayback = async () => {
+              try { await video.play(); } catch (e) { console.log("Autoplay blocked"); }
+            };
+
+            video.onloadeddata = () => {
+              canvas.width = video.videoWidth;
+              canvas.height = video.videoHeight;
+              startPlayback();
+            };
+            
+            renderFrame();
+
+            return () => {
+              cancelAnimationFrame(animationFrame);
+              video.pause();
+            };
+          }
+        }, [activeTab, file, previewUrl]);
+
+        const handleDownloadImage = () => {
+          if (!canvasRef.current) return;
+          const link = document.createElement('a');
+          link.download = `SocialMediaToolsHub-${Date.now()}.png`;
+          link.href = canvasRef.current.toDataURL(file?.type || 'image/png', 0.9);
+          link.click();
+          triggerConfetti();
+        };
+
+        const handleProcessVideo = async () => {
+          if (!file || !previewUrl) return;
+          
+          setProcessing({ isProcessing: true, progress: 0, status: 'Preparing...' });
+          
+          try {
+              const offVideo = document.createElement('video');
+              offVideo.src = previewUrl;
+              offVideo.crossOrigin = "anonymous";
+              offVideo.muted = false;
+              offVideo.loop = false;
+              offVideo.playsInline = true;
+              
+              await new Promise((resolve, reject) => {
+                  offVideo.onloadedmetadata = () => resolve(true);
+                  offVideo.onerror = (e) => reject(e);
+              });
+
+              const width = offVideo.videoWidth;
+              const height = offVideo.videoHeight;
+              
+              const canvas = document.createElement('canvas');
+              canvas.width = width;
+              canvas.height = height;
+              const ctx = canvas.getContext('2d');
+              
+              // Audio Setup
+              const AudioContextClass = window.AudioContext || window.webkitAudioContext;
+              const audioCtx = new AudioContextClass();
+              const source = audioCtx.createMediaElementSource(offVideo);
+              const dest = audioCtx.createMediaStreamDestination();
+              source.connect(dest);
+              source.connect(audioCtx.destination);
+              
+              const stream = canvas.captureStream(30);
+              const audioTrack = dest.stream.getAudioTracks()[0];
+              if (audioTrack) stream.addTrack(audioTrack);
+              
+              const types = ["video/mp4", "video/webm;codecs=vp9", "video/webm"];
+              const mimeType = types.find(t => MediaRecorder.isTypeSupported(t));
+              
+              if (!mimeType) {
+                  alert("Browser format not supported.");
+                  setProcessing({ isProcessing: false, progress: 0, status: '' });
+                  return;
+              }
+
+              const mediaRecorder = new MediaRecorder(stream, { mimeType, videoBitsPerSecond: 5000000 });
+              const chunks = [];
+              
+              mediaRecorder.ondataavailable = (e) => {
+                  if (e.data && e.data.size > 0) chunks.push(e.data);
+              };
+              
+              mediaRecorder.onstop = () => {
+                  const blob = new Blob(chunks, { type: mimeType });
+                  const url = URL.createObjectURL(blob);
+                  const a = document.createElement('a');
+                  a.href = url;
+                  const ext = mimeType.includes('mp4') ? 'mp4' : 'webm';
+                  a.download = `SocialMediaToolsHub-video-${Date.now()}.${ext}`;
+                  a.click();
+                  audioCtx.close();
+                  setProcessing({ isProcessing: false, progress: 100, status: 'Done!' });
+                  triggerConfetti();
+              };
+              
+              mediaRecorder.start();
+              offVideo.currentTime = 0;
+              await offVideo.play();
+              
+              const processLoop = () => {
+                  if (offVideo.ended || offVideo.paused) {
+                       if (offVideo.currentTime >= offVideo.duration - 0.1 || offVideo.ended) {
+                          mediaRecorder.stop();
+                          return;
+                       }
+                  }
+                  ctx.drawImage(offVideo, 0, 0);
+                  drawWatermark(ctx, width, height, settingsRef.current);
+                  
+                  if (offVideo.duration > 0) {
+                      const progress = (offVideo.currentTime / offVideo.duration) * 100;
+                      setProcessing(prev => ({ ...prev, progress: Math.min(progress, 99), status: 'Processing...' }));
+                  }
+                  
+                  if (mediaRecorder.state === 'recording') {
+                      requestAnimationFrame(processLoop);
+                  }
+              };
+              processLoop();
+          } catch (err) {
+              console.error(err);
+              setProcessing({ isProcessing: false, progress: 0, status: 'Error' });
+              alert("Processing failed. Please try a different video.");
+          }
+        };
+
+        const triggerConfetti = () => {
+          if (window.confetti) {
+            window.confetti({ particleCount: 100, spread: 70, origin: { y: 0.6 }, colors: ['#38bdf8', '#818cf8', '#ffffff'] });
+          }
+        };
+
+        const copyLink = () => {
+          navigator.clipboard.writeText(window.location.href);
+          alert('Link copied to clipboard!');
+        };
+
+        const handleOverlayDrag = (e) => {
+          if (!containerRef.current) return;
+          const container = containerRef.current.getBoundingClientRect();
+          const clientX = e.touches ? e.touches[0].clientX : e.clientX;
+          const clientY = e.touches ? e.touches[0].clientY : e.clientY;
+          let x = ((clientX - container.left) / container.width) * 100;
+          let y = ((clientY - container.top) / container.height) * 100;
+          x = Math.max(0, Math.min(100, x));
+          y = Math.max(0, Math.min(100, y));
+          setSettings(prev => ({ ...prev, x, y }));
+        };
+
+        return (
+          <div className="bg-slate-800 rounded-3xl border border-slate-700 shadow-2xl overflow-hidden">
+            <div className="flex border-b border-slate-700">
+              <button
+                onClick={() => { setActiveTab('image'); setFile(null); setPreviewUrl(null); }}
+                className={`flex-1 py-4 flex items-center justify-center gap-2 font-semibold transition-colors ${
+                  activeTab === 'image' ? 'bg-slate-800 text-sky-400 border-b-2 border-sky-400' : 'bg-slate-900/50 text-slate-400 hover:text-slate-200'
+                }`}
+              >
+                <ImageIcon size={20} /> Image
+              </button>
+              <button
+                onClick={() => { setActiveTab('video'); setFile(null); setPreviewUrl(null); }}
+                className={`flex-1 py-4 flex items-center justify-center gap-2 font-semibold transition-colors ${
+                  activeTab === 'video' ? 'bg-slate-800 text-indigo-400 border-b-2 border-indigo-400' : 'bg-slate-900/50 text-slate-400 hover:text-slate-200'
+                }`}
+              >
+                <VideoIcon size={20} /> Video
+              </button>
+            </div>
+
+            <div className="grid lg:grid-cols-3 gap-0 lg:divide-x divide-slate-700">
+              {/* Preview Area */}
+              <div className="lg:col-span-2 p-6 md:p-8 bg-slate-900/50 min-h-[500px] flex flex-col items-center justify-center relative">
+                {!file ? (
+                  <div 
+                    className={`w-full h-96 border-2 border-dashed rounded-2xl flex flex-col items-center justify-center cursor-pointer transition-all ${
+                      dragActive ? 'border-sky-400 bg-sky-400/10' : 'border-slate-700 hover:border-slate-500 hover:bg-slate-800'
+                    }`}
+                    onDragEnter={handleDrag} onDragLeave={handleDrag} onDragOver={handleDrag} onDrop={handleDrop}
+                  >
+                    <input type="file" className="hidden" id="file-upload" accept={activeTab === 'image' ? "image/*" : "video/*"} onChange={handleFileChange} />
+                    <label htmlFor="file-upload" className="flex flex-col items-center cursor-pointer p-10 w-full h-full justify-center">
+                      <div className="w-16 h-16 bg-slate-800 rounded-full flex items-center justify-center mb-4 text-sky-400 shadow-lg">
+                        <Upload size={32} />
+                      </div>
+                      <h3 className="text-xl font-bold mb-2">Upload {activeTab === 'image' ? 'Image' : 'Video'}</h3>
+                      <p className="text-slate-400 text-center text-sm">Drag & drop or click to browse</p>
+                    </label>
+                  </div>
+                ) : (
+                  <div className="relative w-full h-full flex items-center justify-center">
+                    {activeTab === 'video' && (
+                      <video ref={videoRef} src={previewUrl} className="hidden" muted playsInline loop crossOrigin="anonymous" />
+                    )}
+                    <canvas ref={canvasRef} className="max-w-full max-h-[600px] shadow-2xl rounded-lg" />
+                    <div 
+                      ref={containerRef}
+                      className="absolute inset-0 z-10 cursor-crosshair touch-none"
+                      onMouseDown={(e) => { if (e.buttons === 1) handleOverlayDrag(e); }}
+                      onMouseMove={(e) => { if (e.buttons === 1) handleOverlayDrag(e); }}
+                      onTouchStart={handleOverlayDrag}
+                      onTouchMove={handleOverlayDrag}
+                    >
+                      <div 
+                        className="absolute w-4 h-4 bg-white rounded-full shadow-lg border-2 border-sky-500 transform -translate-x-1/2 -translate-y-1/2 pointer-events-none"
+                        style={{ left: `${settings.x}%`, top: `${settings.y}%` }}
+                      />
+                    </div>
+                    <div className="absolute top-4 right-4">
+                       <button onClick={() => { setFile(null); setPreviewUrl(null); }} className="p-2 bg-slate-900/80 text-red-400 rounded-lg hover:bg-red-500/20 backdrop-blur-sm transition">
+                         <Trash2 size={20} />
+                       </button>
+                    </div>
+                  </div>
+                )}
+              </div>
+
+              {/* Sidebar Controls */}
+              <div className="p-6 bg-slate-800 border-t lg:border-t-0 lg:border-l border-slate-700 h-full overflow-y-auto max-h-[800px]">
+                <h3 className="text-lg font-bold mb-6 flex items-center gap-2">
+                  <span className="text-sky-400">⚙️</span> Customize
+                </h3>
+                <div className="space-y-6">
+                  <div className="grid grid-cols-2 bg-slate-900 p-1 rounded-xl">
+                    <button onClick={() => setSettings(s => ({ ...s, type: 'text' }))} className={`py-2 px-4 rounded-lg text-sm font-medium transition-all ${settings.type === 'text' ? 'bg-slate-700 text-white shadow' : 'text-slate-400'}`}>Text</button>
+                    <button onClick={() => setSettings(s => ({ ...s, type: 'image' }))} className={`py-2 px-4 rounded-lg text-sm font-medium transition-all ${settings.type === 'image' ? 'bg-slate-700 text-white shadow' : 'text-slate-400'}`}>Logo</button>
+                  </div>
+
+                  {settings.type === 'text' && (
+                    <div className="space-y-4 animate-in">
+                      <div>
+                        <label className="text-xs font-semibold text-slate-400 uppercase tracking-wider mb-2 block">Text</label>
+                        <input type="text" value={settings.text} onChange={(e) => setSettings(s => ({ ...s, text: e.target.value }))} className="w-full bg-slate-900 border border-slate-700 rounded-lg px-4 py-2.5 text-sm focus:border-sky-500 outline-none" />
+                      </div>
+                      <div className="flex gap-2">
+                         <div className="flex-1">
+                            <label className="text-xs font-semibold text-slate-400 uppercase tracking-wider mb-2 block">Color</label>
+                            <input type="color" value={settings.color} onChange={(e) => setSettings(s => ({ ...s, color: e.target.value }))} className="w-full h-10 bg-slate-900 border border-slate-700 rounded-lg px-1 py-1" />
+                         </div>
+                         <div className="flex gap-1 items-end pb-1">
+                            <button onClick={() => setSettings(s => ({...s, isBold: !s.isBold}))} className={`p-2 rounded-lg border border-slate-700 ${settings.isBold ? 'bg-sky-500/20 text-sky-400' : 'bg-slate-900 text-slate-400'}`}><b>B</b></button>
+                            <button onClick={() => setSettings(s => ({...s, isItalic: !s.isItalic}))} className={`p-2 rounded-lg border border-slate-700 ${settings.isItalic ? 'bg-sky-500/20 text-sky-400' : 'bg-slate-900 text-slate-400'}`}><i>I</i></button>
+                            <button onClick={() => setSettings(s => ({...s, shadow: !s.shadow}))} className={`p-2 rounded-lg border border-slate-700 ${settings.shadow ? 'bg-sky-500/20 text-sky-400' : 'bg-slate-900 text-slate-400'}`}>S</button>
+                         </div>
+                      </div>
+                    </div>
+                  )}
+
+                  {settings.type === 'image' && (
+                     <div className="space-y-4 animate-in">
+                        <div>
+                          <label className="text-xs font-semibold text-slate-400 uppercase tracking-wider mb-2 block">Upload Logo</label>
+                          <input type="file" accept="image/*" onChange={handleLogoUpload} className="block w-full text-sm text-slate-400 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-xs file:font-semibold file:bg-slate-700 file:text-sky-400 hover:file:bg-slate-600" />
+                        </div>
+                     </div>
+                  )}
+
+                  <hr className="border-slate-700/50" />
+
+                  <div className="space-y-4">
+                     <div>
+                        <div className="flex justify-between mb-2">
+                          <label className="text-xs font-semibold text-slate-400 uppercase tracking-wider">Size: {settings.size}px</label>
+                        </div>
+                        <input type="range" min="10" max="200" value={settings.size} onChange={(e) => setSettings(s => ({ ...s, size: Number(e.target.value) }))} className="w-full h-2 bg-slate-900 rounded-lg appearance-none cursor-pointer accent-sky-500" />
+                     </div>
+                     <div>
+                        <div className="flex justify-between mb-2">
+                          <label className="text-xs font-semibold text-slate-400 uppercase tracking-wider">Opacity: {Math.round(settings.opacity * 100)}%</label>
+                        </div>
+                        <input type="range" min="0.1" max="1" step="0.05" value={settings.opacity} onChange={(e) => setSettings(s => ({ ...s, opacity: Number(e.target.value) }))} className="w-full h-2 bg-slate-900 rounded-lg appearance-none cursor-pointer accent-sky-500" />
+                     </div>
+                     <div>
+                        <div className="flex justify-between mb-2">
+                          <label className="text-xs font-semibold text-slate-400 uppercase tracking-wider">Rotation: {settings.rotation}°</label>
+                        </div>
+                        <input type="range" min="0" max="360" value={settings.rotation} onChange={(e) => setSettings(s => ({ ...s, rotation: Number(e.target.value) }))} className="w-full h-2 bg-slate-900 rounded-lg appearance-none cursor-pointer accent-sky-500" />
+                     </div>
+                  </div>
+
+                  <div className="pt-4">
+                    {activeTab === 'image' ? (
+                      <button onClick={handleDownloadImage} disabled={!file} className="w-full py-3 btn-gradient rounded-xl font-bold text-lg flex items-center justify-center gap-2 shadow-lg disabled:opacity-50">
+                        <Download size={20} /> Download Image
+                      </button>
+                    ) : (
+                      <button onClick={handleProcessVideo} disabled={!file || processing.isProcessing} className="w-full py-3 btn-gradient rounded-xl font-bold text-lg flex items-center justify-center gap-2 shadow-lg disabled:opacity-50">
+                        {processing.isProcessing ? (
+                          <span className="flex items-center gap-2"><div className="w-5 h-5 border-2 border-slate-900 border-t-transparent rounded-full animate-spin"></div> {Math.round(processing.progress)}%</span>
+                        ) : (
+                          <><VideoIcon size={20} /> Export Video</>
+                        )}
+                      </button>
+                    )}
+                  </div>
+                  
+                  <div className="text-center">
+                    <button onClick={copyLink} className="text-xs text-slate-500 hover:text-sky-400 flex items-center justify-center gap-1 mx-auto transition">
+                      <Share2 size={12} /> Share this tool
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        );
+      };
+
+      const App = () => {
+        return (
+          <div className="min-h-screen flex flex-col bg-slate-900 text-slate-50">
+            <div className="container mx-auto max-w-[1120px] px-5 pb-8 flex-grow">
+              <Header />
+              <main className="mt-8 space-y-12">
+                <section className="bg-slate-800 rounded-3xl p-6 md:p-10 shadow-xl border border-slate-700/50 relative overflow-hidden">
+                  <div className="relative z-10 max-w-2xl">
+                    <h1 className="text-3xl md:text-4xl font-bold mb-4">
+                      Secure Watermark Tool for <span className="brand-gradient">Images & Videos</span>
+                    </h1>
+                    <p className="text-slate-400 text-lg mb-6 leading-relaxed">
+                      Add logos or text to your content instantly. All processing happens 
+                      <strong className="text-slate-200"> locally in your browser</strong>—your files never leave your device.
+                    </p>
+                    <div className="flex flex-wrap gap-3 text-sm text-slate-500 font-medium">
+                      <span className="flex items-center gap-1 bg-slate-900/50 px-3 py-1 rounded-full border border-slate-700">⚡ Lightning Fast</span>
+                      <span className="flex items-center gap-1 bg-slate-900/50 px-3 py-1 rounded-full border border-slate-700">🔒 100% Private</span>
+                      <span className="flex items-center gap-1 bg-slate-900/50 px-3 py-1 rounded-full border border-slate-700">📱 Mobile Ready</span>
+                    </div>
+                  </div>
+                  <div className="absolute top-0 right-0 w-64 h-64 bg-sky-500/10 rounded-full blur-3xl -translate-y-1/2 translate-x-1/2 pointer-events-none" />
+                </section>
+                <section id="tool" className="scroll-mt-20">
+                  <WatermarkTool />
+                </section>
+                <section className="max-w-3xl mx-auto pt-8">
+                  <h2 className="text-2xl font-bold mb-6 text-center">Frequently Asked Questions</h2>
+                  <FAQ />
+                </section>
+              </main>
+              <Footer />
+            </div>
+          </div>
+        );
+      };
+
+      // --- Mount ---
+      const root = createRoot(document.getElementById('root'));
+      root.render(<App />);
+    </script>
+  </body>
+</html>
