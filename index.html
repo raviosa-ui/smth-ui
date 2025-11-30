@@ -9,6 +9,14 @@
 
   <!-- Link external stylesheet -->
   <link rel="stylesheet" href="style.css">
+  <style>
+    /* Small additions for collapsible FAQ visuals */
+    .faq details{margin-bottom:10px;border-radius:10px;padding:10px;background:rgba(255,255,255,0.01);border:1px solid rgba(255,255,255,0.02)}
+    .faq summary{display:flex;justify-content:space-between;align-items:center;cursor:pointer;font-weight:700}
+    .faq summary::-webkit-details-marker{display:none}
+    .faq .faq-arrow{color:var(--muted);transition:transform .18s}
+    details[open] .faq-arrow{transform:rotate(90deg)}
+  </style>
 </head>
 
 <body>
@@ -49,7 +57,7 @@
         </div>
       </section>
 
-                     <!-- Tools Grid -->
+      <!-- Tools Grid -->
       <section class="tools" aria-labelledby="tools-title">
         <h2 id="tools-title">More Social Media Creator Tools</h2>
 
@@ -63,52 +71,52 @@
             </div>
           </a>
 
-          <!-- 2. Safe Zone Overlay -->
-          <a class="card" href="safe-zone-overlay.html" role="listitem" aria-label="Safe Zone Overlay">
+          <!-- 2. Safe zone overlay -->
+          <a class="card" href="safe-zone-overlay.html" role="listitem" aria-label="Safe zone overlay">
             <div class="emoji" aria-hidden="true">🎯</div>
             <div>
-              <h3>Safe Zone Overlay</h3>
+              <h3>Safe zone overlay</h3>
               <p>Preview posts with on-screen safe zones for Reels, Shorts & posts.</p>
             </div>
           </a>
 
-          <!-- 3. Full Frame Blur -->
-          <a class="card" href="full-frame-blur.html" role="listitem" aria-label="Full Frame Blur">
+          <!-- 3. Full frame blur tool -->
+          <a class="card" href="full-frame-border-blur.html" role="listitem" aria-label="Full frame blur tool">
             <div class="emoji" aria-hidden="true">🎞️</div>
             <div>
-              <h3>Full Frame Blur</h3>
-              <p>Blur full-frame backgrounds quickly — ideal for thumbnails & privacy.</p>
+              <h3>Full frame blur tool</h3>
+              <p>Post entire pictures without cropping by adding blurred backgrounds.</p>
             </div>
           </a>
 
-          <!-- 4. Hashtag Cleaner -->
-          <a class="card" href="hashtag-cleaner.html" role="listitem" aria-label="Hashtag Cleaner">
+          <!-- 4. Hashtag cleaner -->
+          <a class="card" href="hashtag-cleaner.html" role="listitem" aria-label="Hashtag cleaner">
             <div class="emoji" aria-hidden="true">🧼</div>
             <div>
-              <h3>Hashtag Cleaner</h3>
+              <h3>Hashtag cleaner</h3>
               <p>Remove duplicates and format hashtags for posting.</p>
             </div>
           </a>
 
-          <!-- 5. YouTube Thumbnail Previewer -->
-          <a class="card" href="youtube-thumbnail-previewer.html" role="listitem" aria-label="YouTube Thumbnail Previewer">
+          <!-- 5. Youtube thumbnail previwer -->
+          <a class="card" href="youtube-thumbnail-previewer.html" role="listitem" aria-label="Youtube thumbnail previewer">
             <div class="emoji" aria-hidden="true">📺</div>
             <div>
-              <h3>YouTube Thumbnail Previewer</h3>
-              <p>Preview thumbnails on mobile & desktop layouts before publishing.</p>
+              <h3>YouTube thumbnail previewer</h3>
+              <p>Preview thumbnails on mobile & desktop to check legibility and composition.</p>
             </div>
           </a>
 
-          <!-- 6. Instagram Grid Splitter -->
-          <a class="card" href="instagram-grid-splitter.html" role="listitem" aria-label="Instagram Grid Splitter">
+          <!-- 6. Instagram grid splitter -->
+          <a class="card" href="instagram-grid-splitter.html" role="listitem" aria-label="Instagram grid splitter">
             <div class="emoji" aria-hidden="true">🟦</div>
             <div>
-              <h3>Instagram Grid Splitter</h3>
-              <p>Cut any image into 3×3 or 3×2 grids for seamless profile layouts.</p>
+              <h3>Instagram grid splitter</h3>
+              <p>Cut images into 3×3, 3×2 or custom grids for profile layouts.</p>
             </div>
           </a>
 
-          <!-- 7. Line Break Generator -->
+          <!-- 7. line break generator -->
           <a class="card" href="line-break.html" role="listitem" aria-label="Line Break Generator">
             <div class="emoji" aria-hidden="true">↩️</div>
             <div>
@@ -117,116 +125,232 @@
             </div>
           </a>
 
-          <!-- 8. Case Converter -->
+          <!-- 8. ascii art generator -->
+          <a class="card" href="ascii-art-generator.html" role="listitem" aria-label="ASCII Art Generator">
+            <div class="emoji" aria-hidden="true">⌨️</div>
+            <div>
+              <h3>ASCII art generator</h3>
+              <p>Turn text or images into mono ASCII art for retro captions & headers.</p>
+            </div>
+          </a>
+
+          <!-- 9. brainrot translator -->
+          <a class="card" href="brainrot-translator.html" role="listitem" aria-label="Brainrot Translator">
+            <div class="emoji" aria-hidden="true">🧠</div>
+            <div>
+              <h3>Brainrot translator</h3>
+              <p>Translate normal text into Gen-Z 'brainrot' meme slang variations.</p>
+            </div>
+          </a>
+
+          <!-- 10. glitched zalgo text generator -->
+          <a class="card" href="glitched-zalgo.html" role="listitem" aria-label="Glitched Zalgo Text Generator">
+            <div class="emoji" aria-hidden="true">👾</div>
+            <div>
+              <h3>Glitched zalgo text generator</h3>
+              <p>Create cursed/glitchy Zalgo text styles and export PNGs.</p>
+            </div>
+          </a>
+
+          <!-- 11. profile ring creator -->
+          <a class="card" href="profile-ring-creator.html" role="listitem" aria-label="Profile Ring Creator">
+            <div class="emoji" aria-hidden="true">⭕</div>
+            <div>
+              <h3>Profile ring creator</h3>
+              <p>Make stylised story rings for Instagram and highlight covers.</p>
+            </div>
+          </a>
+
+          <!-- 12. tiktok earning estimator -->
+          <a class="card" href="tiktok-earning-estimator.html" role="listitem" aria-label="TikTok Earning Estimator">
+            <div class="emoji" aria-hidden="true">💸</div>
+            <div>
+              <h3>TikTok earning estimator</h3>
+              <p>Estimate revenue from views, engagement & CPMs (approximate).</p>
+            </div>
+          </a>
+
+          <!-- 13. watermark video image tool -->
+          <a class="card" href="watermark-tool.html" role="listitem" aria-label="Watermark Tool">
+            <div class="emoji" aria-hidden="true">💧</div>
+            <div>
+              <h3>Watermark video / image tool</h3>
+              <p>Quickly place and export watermarks on images and short videos.</p>
+            </div>
+          </a>
+
+          <!-- 14. youtube chapter formatter -->
+          <a class="card" href="youtube-chapter-formatter.html" role="listitem" aria-label="YouTube Chapter Formatter">
+            <div class="emoji" aria-hidden="true">⏱️</div>
+            <div>
+              <h3>YouTube chapter formatter</h3>
+              <p>Auto-format timestamps and chapter titles for YouTube descriptions.</p>
+            </div>
+          </a>
+
+          <!-- 15. case converter -->
           <a class="card" href="case-converter.html" role="listitem" aria-label="Case Converter">
             <div class="emoji" aria-hidden="true">🔤</div>
             <div>
-              <h3>Case Converter</h3>
+              <h3>Case converter</h3>
               <p>Switch between UPPER, lower, Title Case and more.</p>
             </div>
           </a>
 
-          <!-- 9. Bio Character Checker -->
+          <!-- 16. bio character checker -->
           <a class="card" href="bio-char-checker.html" role="listitem" aria-label="Bio Character Checker">
             <div class="emoji" aria-hidden="true">🧷</div>
             <div>
-              <h3>Bio Character Checker</h3>
-              <p>Validate length for Instagram/TikTok bio limits.</p>
+              <h3>Bio character checker</h3>
+              <p>Validate length for Instagram and TikTok bio limits.</p>
             </div>
           </a>
 
-          <!-- 10. Stylish Text Generator -->
+          <!-- 17. stylish text generator -->
           <a class="card" href="stylish-text.html" role="listitem" aria-label="Stylish Text Generator">
             <div class="emoji" aria-hidden="true">✨</div>
             <div>
-              <h3>Stylish Text Generator</h3>
-              <p>Create bold, italic & fancy Unicode text for bios.</p>
+              <h3>Stylish text generator</h3>
+              <p>Create bold, italic and fancy Unicode text for bios.</p>
             </div>
           </a>
 
-          <!-- 11. Hashtag Recommender -->
+          <!-- 18. hashtag recommender -->
           <a class="card" href="hashtag-recommender.html" role="listitem" aria-label="Hashtag Recommender">
             <div class="emoji" aria-hidden="true">🔍</div>
             <div>
-              <h3>Hashtag Recommender</h3>
+              <h3>Hashtag recommender</h3>
               <p>Get suggested hashtags based on your keywords.</p>
             </div>
           </a>
 
-          <!-- 12. Copy & Download -->
+          <!-- 19. copy and download -->
           <a class="card" href="copy-download.html" role="listitem" aria-label="Copy & Download">
             <div class="emoji" aria-hidden="true">📥</div>
             <div>
-              <h3>Copy & Download</h3>
+              <h3>Copy and download</h3>
               <p>One-click copy and download text/captions as files.</p>
             </div>
           </a>
 
-          <!-- 13. Text to Hashtags -->
+          <!-- 20. text to hashtags -->
           <a class="card" href="text-to-hashtags.html" role="listitem" aria-label="Text to Hashtags">
             <div class="emoji" aria-hidden="true">#️⃣</div>
             <div>
-              <h3>Text to Hashtags</h3>
+              <h3>Text to hashtags</h3>
               <p>Convert sentences into optimized hashtag lists.</p>
             </div>
           </a>
 
-          <!-- 14. Link Cleaner -->
+          <!-- 21. link cleaner -->
           <a class="card" href="link-cleaner.html" role="listitem" aria-label="Link Cleaner">
             <div class="emoji" aria-hidden="true">🔗</div>
             <div>
-              <h3>Link Cleaner</h3>
+              <h3>Link cleaner</h3>
               <p>Shorten and sanitize URLs for captions and bios.</p>
             </div>
           </a>
 
-          <!-- 15. Caption Scorer -->
+          <!-- 22. caption scorer -->
           <a class="card" href="caption-scorer.html" role="listitem" aria-label="Caption Scorer">
             <div class="emoji" aria-hidden="true">🏷️</div>
             <div>
-              <h3>Caption Scorer</h3>
+              <h3>Caption scorer</h3>
               <p>Analyze caption effectiveness and readability.</p>
             </div>
           </a>
 
-          <!-- 16. Emoji Counter & Remover -->
+          <!-- 23. emoji counter n remover -->
           <a class="card" href="emoji-counter.html" role="listitem" aria-label="Emoji Counter and Remover">
             <div class="emoji" aria-hidden="true">🔢</div>
             <div>
-              <h3>Emoji Counter &amp; Remover</h3>
+              <h3>Emoji counter &amp; remover</h3>
               <p>Count, list and strip emojis from your text.</p>
             </div>
           </a>
 
-          <!-- 17. Emoji Adder (last tool) -->
+          <!-- 24. emoji adder -->
           <a class="card" href="emoji-adder.html" role="listitem" aria-label="Emoji Adder">
             <div class="emoji" aria-hidden="true">😊</div>
             <div>
-              <h3>Emoji Adder</h3>
+              <h3>Emoji adder</h3>
               <p>Quickly insert popular emojis into captions and bios.</p>
             </div>
           </a>
         </div>
       </section>
 
-
-
       <!-- Help / article area -->
       <article class="content-area">
-        <h3>Why do you need an Invisible Space?</h3>
-        <p>Instagram, TikTok, and Facebook often remove normal line breaks. Our invisible Unicode character (U+2800) forces a clean line break so captions keep the spacing you want.</p>
+        
 
-        <h3>More free tools for social media growth</h3>
-        <p>We provide a set of browser tools to help creators write better captions, clean hashtags, and prepare content faster — everything runs locally for privacy and speed.</p>
+                <h3>Frequently Asked Questions</h3>
 
-        <h3>Frequently Asked Questions</h3>
-        <dl class="faq">
-          <dt>How do I add spaces in my Instagram bio?</dt>
-          <dd>Normal spaces often disappear. Use the invisible space tool at the top of the page.</dd>
+        <div class="faq" aria-live="polite">
+<details>
+         <summary>Why do you need an Invisible Space? <span class="faq-arrow">›</span></summary>
+            <div>Instagram, TikTok, and Facebook often remove normal line breaks. Our invisible Unicode character (U+2800) forces a clean line break so captions keep the spacing you want.</div>
+          </details>
+          <details>
+            <summary>What is the Caption Counter and how does it help? <span class="faq-arrow">›</span></summary>
+            <div>Caption Counter shows character, word, line and emoji counts and compares them to platform limits (Instagram, YouTube, TikTok). Useful for avoiding truncated captions and keeping descriptions under limits.</div>
+          </details>
 
-          <dt>Is this tool safe?</dt>
-          <dd>Yes. Everything runs locally in your browser. No data is collected.</dd>
-        </dl>
+          <details>
+            <summary>How accurate is the Safe Zone Overlay? <span class="faq-arrow">›</span></summary>
+            <div>The Safe Zone Overlay approximates typical UI placements (bottom caption bars, right-side buttons). It’s a visual guide — device variations exist, but it prevents the most common placement issues.</div>
+          </details>
+
+          <details>
+            <summary>When should I use the Full Frame Blur tool? <span class="faq-arrow">›</span></summary>
+            <div>Use Full Frame Blur to add blurred fill behind portrait content when your source aspect ratio doesn’t match the destination (e.g., post a horizontal photo in a vertical feed), or to hide sensitive background details.</div>
+          </details>
+
+          <details>
+            <summary>How does Hashtag Cleaner format tags? <span class="faq-arrow">›</span></summary>
+            <div>Paste a block of hashtags; the tool removes duplicates and stray characters, ensures each tag has a single leading “#” and outputs a tidy, copy-ready list for captions.</div>
+          </details>
+
+          <details>
+            <summary>What does the YouTube Thumbnail Previewer do? <span class="faq-arrow">›</span></summary>
+            <div>This tool simulates multiple thumbnail sizes (desktop large, desktop small, mobile) so you can check whether titles and faces remain legible at small sizes before uploading.</div>
+          </details>
+
+          <details>
+            <summary>How does Instagram Grid Splitter keep images aligned? <span class="faq-arrow">›</span></summary>
+            <div>Choose a grid like 3×3 or 3×2; the tool slices your image into tiles sized for Instagram so when uploaded in sequence the profile grid forms one seamless image.</div>
+          </details>
+
+          <details>
+            <summary>Are images uploaded to a server or kept local? <span class="faq-arrow">›</span></summary>
+            <div>All tools are designed to run locally in your browser. Files are not uploaded to external servers by default — they stay on your device unless you explicitly share them.</div>
+          </details>
+
+          <details>
+            <summary>Can I export results and what formats are supported? <span class="faq-arrow">›</span></summary>
+            <div>Most image tools export PNG or JPG. Grid tools output multiple tiles (often zipped). Text tools provide copy-to-clipboard and plain-text downloads. Export behavior is shown in each tool UI.</div>
+          </details>
+
+          <details>
+            <summary>What is Brainrot Translator and Zalgo generator used for? <span class="faq-arrow">›</span></summary>
+            <div>These are novelty/creative tools: Brainrot Translator produces meme-friendly slang variants; Glitched Zalgo creates visually distorted text for horror/edgy stylings. Use them for creative captions and graphics, not for accessibility-critical content.</div>
+          </details>
+
+          <details>
+            <summary>How does the TikTok Earning Estimator work? <span class="faq-arrow">›</span></summary>
+            <div>It provides rough revenue estimates based on view counts and example CPM ranges. Results are approximate — real earnings depend on region, CPM, and platform specifics.</div>
+          </details>
+
+          <details>
+            <summary>Which browsers/devices work best with these tools? <span class="faq-arrow">›</span></summary>
+            <div>Modern desktop browsers (Chrome, Edge, Firefox, Safari) provide best performance for large images and exports. Mobile browsers work for quick checks, but desktop is recommended for heavy edits and batch exports.</div>
+          </details>
+
+          <details>
+            <summary>How do I request a new tool or report an issue? <span class="faq-arrow">›</span></summary>
+            <div>Open an issue or feature request on the repo: <a href="https://github.com/raviosa-ui/smth-ui" target="_blank" rel="noopener">github.com/raviosa-ui/smth-ui</a> — include a short description and example images where helpful.</div>
+          </details>
+        </div>
       </article>
 
     </main>
