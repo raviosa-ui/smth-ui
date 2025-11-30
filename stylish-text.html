@@ -1,0 +1,1148 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Stylish Text Generator — SocialMediaToolsKit</title>
+  <meta name="description" content="Generate cool Unicode text styles, bold, italic, cursive, and glitch text for Instagram, TikTok, and gaming profiles. Works offline." />
+  <meta name="theme-color" content="#0f172a" />
+
+  <!-- JSON-LD Structured Data -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "WebApplication",
+    "name": "Stylish Text Generator",
+    "description": "A browser-based tool to convert normal text into various Unicode styles like bold, italic, script, and aesthetic fonts.",
+    "applicationCategory": "UtilityApplication",
+    "operatingSystem": "Any",
+    "offers": {
+      "@type": "Offer",
+      "price": "0",
+      "priceCurrency": "USD"
+    }
+  }
+  </script>
+
+  <style>
+    /* 
+      CORE STYLES (MATCHING EXISTING WEBSITE)
+      Based on user provided style.css
+    */
+    :root {
+      --bg: #0f172a;
+      --card: #1e293b;
+      --text: #f8fafc;
+      --muted: #94a3b8;
+      --border: #334155;
+      --accent-from: #38bdf8;
+      --accent-to: #818cf8;
+      --r-lg: 24px;
+      --r-md: 16px;
+      --trans: 260ms cubic-bezier(.2,.9,.3,1);
+      --font-stack: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+      --font-mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+    }
+
+    /* Light Theme Overrides */
+    [data-theme="light"] {
+      --bg: #f1f5f9;
+      --card: #ffffff;
+      --text: #0f172a;
+      --muted: #64748b;
+      --border: #e2e8f0;
+      --accent-from: #0ea5e9;
+      --accent-to: #6366f1;
+    }
+
+    * { box-sizing: border-box; }
+    html, body { height: 100%; }
+    body {
+      margin: 0;
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.45;
+      padding: 20px;
+      font-family: var(--font-stack);
+      -webkit-font-smoothing: antialiased;
+      transition: background var(--trans), color var(--trans);
+    }
+
+    a { text-decoration: none; color: inherit; }
+    button { font-family: inherit; }
+    img { max-width: 100%; height: auto; display: block; }
+    
+    .container {
+      max-width: 1120px;
+      margin: 0 auto;
+      padding-bottom: 28px;
+    }
+
+    .visually-hidden {
+      position: absolute !important;
+      left: -9999px;
+      width: 1px;
+      height: 1px;
+      overflow: hidden;
+      clip: rect(1px, 1px, 1px, 1px);
+    }
+
+    /* Header */
+    .header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 10px 6px;
+      gap: 12px;
+      margin-bottom: 20px;
+    }
+    .brand {
+      display: flex;
+      gap: 10px;
+      font-weight: 600;
+      font-size: 18px;
+      white-space: nowrap;
+      align-items: center;
+    }
+    .logo-text {
+      background: linear-gradient(90deg, var(--accent-from), var(--accent-to));
+      -webkit-background-clip: text;
+      color: transparent;
+      -webkit-text-fill-color: transparent;
+    }
+    .topnav {
+      display: flex;
+      gap: 10px;
+      font-size: 14px;
+      flex-wrap: wrap;
+    }
+    .topnav a, .theme-btn {
+      padding: 8px 10px;
+      border-radius: 10px;
+      color: var(--muted);
+      transition: var(--trans);
+      background: transparent;
+      border: none;
+      cursor: pointer;
+      font-size: 14px;
+    }
+    .topnav a:hover, .theme-btn:hover {
+      color: var(--text);
+      background: rgba(255,255,255,0.05);
+    }
+    [data-theme="light"] .topnav a:hover, [data-theme="light"] .theme-btn:hover {
+      background: rgba(0,0,0,0.05);
+    }
+
+    /* APP SPECIFIC STYLES */
+
+    /* Input Section */
+    .app-layout {
+      display: grid;
+      gap: 24px;
+    }
+    
+    .input-section {
+      background: var(--card);
+      border-radius: var(--r-lg);
+      padding: 24px;
+      border: 1px solid var(--border);
+      box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+    }
+
+    .input-wrapper {
+      position: relative;
+    }
+
+    textarea.main-input {
+      width: 100%;
+      background: rgba(0, 0, 0, 0.2);
+      border: 2px solid var(--border);
+      color: var(--text);
+      border-radius: var(--r-md);
+      padding: 16px;
+      font-size: 18px;
+      min-height: 120px;
+      resize: vertical;
+      transition: var(--trans);
+      display: block;
+    }
+    [data-theme="light"] textarea.main-input {
+      background: #f8fafc;
+    }
+    textarea.main-input:focus {
+      outline: none;
+      border-color: var(--accent-from);
+      box-shadow: 0 0 0 4px rgba(56, 189, 248, 0.1);
+    }
+
+    .input-controls {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-top: 12px;
+      flex-wrap: wrap;
+      gap: 12px;
+    }
+    .char-count {
+      color: var(--muted);
+      font-size: 13px;
+      font-variant-numeric: tabular-nums;
+    }
+    .action-row {
+      display: flex;
+      gap: 8px;
+    }
+    .btn {
+      padding: 8px 16px;
+      border-radius: 8px;
+      font-weight: 500;
+      font-size: 14px;
+      cursor: pointer;
+      border: 1px solid var(--border);
+      background: transparent;
+      color: var(--text);
+      transition: var(--trans);
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+    }
+    .btn:hover {
+      background: rgba(255, 255, 255, 0.05);
+      border-color: var(--accent-from);
+    }
+    [data-theme="light"] .btn:hover {
+      background: rgba(0,0,0,0.05);
+    }
+    .btn-primary {
+      background: linear-gradient(90deg, var(--accent-from), var(--accent-to));
+      color: #0f172a; /* Dark text on bright button */
+      border: none;
+      font-weight: 600;
+    }
+    .btn-primary:hover {
+      opacity: 0.9;
+      transform: translateY(-1px);
+      box-shadow: 0 4px 12px rgba(56, 189, 248, 0.25);
+    }
+
+    /* History Chips */
+    .history-area {
+      margin-top: 16px;
+      display: flex;
+      gap: 8px;
+      overflow-x: auto;
+      padding-bottom: 4px;
+      scrollbar-width: none; /* Firefox */
+    }
+    .history-area::-webkit-scrollbar { display: none; }
+    .chip {
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid var(--border);
+      border-radius: 99px;
+      padding: 4px 12px;
+      font-size: 12px;
+      color: var(--muted);
+      cursor: pointer;
+      white-space: nowrap;
+      transition: var(--trans);
+      max-width: 150px;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+    [data-theme="light"] .chip { background: rgba(0,0,0,0.03); }
+    .chip:hover {
+      background: var(--accent-from);
+      color: #fff;
+      border-color: var(--accent-from);
+    }
+
+    /* Output Grid */
+    .results-section {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 24px;
+    }
+    @media(min-width: 900px) {
+      .results-section {
+        grid-template-columns: 3fr 1fr; /* Main list vs Sidebar Preview */
+      }
+      .app-layout {
+        gap: 32px;
+      }
+    }
+
+    .style-list {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    .style-card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: var(--r-md);
+      padding: 16px;
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      transition: var(--trans);
+      position: relative;
+    }
+    .style-card:hover {
+      border-color: var(--accent-from);
+      transform: translateY(-2px);
+      box-shadow: 0 8px 24px rgba(0,0,0,0.2);
+    }
+    [data-theme="light"] .style-card:hover {
+      box-shadow: 0 8px 24px rgba(0,0,0,0.05);
+    }
+
+    .style-info {
+      flex: 1;
+      min-width: 0; /* Text truncation fix */
+    }
+    .style-header {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin-bottom: 4px;
+    }
+    .style-name {
+      font-size: 12px;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      color: var(--muted);
+      font-weight: 700;
+    }
+    .style-tag {
+      font-size: 10px;
+      padding: 2px 6px;
+      border-radius: 4px;
+      background: rgba(255,255,255,0.1);
+      color: var(--muted);
+    }
+    [data-theme="light"] .style-tag { background: rgba(0,0,0,0.05); }
+    
+    .warning-icon {
+      font-size: 14px;
+      cursor: help;
+      opacity: 0.7;
+    }
+
+    .style-output {
+      font-family: var(--font-stack); /* Use system font to render glyphs best */
+      font-size: 18px;
+      color: var(--text);
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      cursor: pointer;
+    }
+
+    .style-actions {
+      display: flex;
+      gap: 8px;
+      flex-shrink: 0;
+    }
+    .btn-icon {
+      width: 36px;
+      height: 36px;
+      border-radius: 8px;
+      border: 1px solid var(--border);
+      background: transparent;
+      color: var(--muted);
+      display: grid;
+      place-items: center;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+    .btn-icon:hover {
+      color: var(--text);
+      background: rgba(255,255,255,0.05);
+      border-color: var(--accent-from);
+    }
+    [data-theme="light"] .btn-icon:hover { background: rgba(0,0,0,0.05); }
+    
+    .btn-fav.active {
+      color: #fbbf24;
+      border-color: #fbbf24;
+    }
+    .btn-copy:active {
+      transform: scale(0.95);
+    }
+
+    /* Sticky Sidebar Preview */
+    .preview-sidebar {
+      display: none;
+    }
+    @media(min-width: 900px) {
+      .preview-sidebar {
+        display: block;
+        position: sticky;
+        top: 20px;
+        height: fit-content;
+      }
+    }
+    .mock-phone {
+      background: var(--bg);
+      border: 4px solid var(--border);
+      border-radius: 30px;
+      padding: 16px;
+      overflow: hidden;
+      box-shadow: 0 20px 40px rgba(0,0,0,0.3);
+    }
+    .mock-header {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 16px;
+      border-bottom: 1px solid var(--border);
+      padding-bottom: 12px;
+    }
+    .mock-avatar {
+      width: 48px;
+      height: 48px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, #ff00cc, #333399);
+    }
+    .mock-username {
+      font-weight: 700;
+      font-size: 14px;
+    }
+    .mock-bio {
+      font-size: 14px;
+      line-height: 1.5;
+      white-space: pre-wrap;
+    }
+    .mock-label {
+      font-size: 11px;
+      color: var(--muted);
+      text-align: center;
+      margin-top: 8px;
+      display: block;
+    }
+
+    /* FAQ Content */
+    .content-area {
+      max-width: 800px;
+      margin: 40px auto 0;
+      color: var(--muted);
+    }
+    .content-area h2 {
+      color: var(--text);
+      font-size: 20px;
+      margin-bottom: 16px;
+    }
+    .faq details {
+      background: var(--card);
+      border: 1px solid var(--border);
+      margin-bottom: 8px;
+      border-radius: 8px;
+      overflow: hidden;
+    }
+    .faq summary {
+      padding: 16px;
+      cursor: pointer;
+      font-weight: 600;
+      color: var(--text);
+      list-style: none;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .faq summary::-webkit-details-marker { display: none; }
+    .faq summary:after {
+      content: '+';
+      font-size: 18px;
+    }
+    .faq details[open] summary:after {
+      content: '-';
+    }
+    .faq p {
+      padding: 0 16px 16px;
+      margin: 0;
+      font-size: 14px;
+      line-height: 1.6;
+    }
+
+    /* Toast Notification */
+    .toast {
+      position: fixed;
+      bottom: 24px;
+      left: 50%;
+      transform: translateX(-50%) translateY(20px);
+      background: var(--text);
+      color: var(--bg);
+      padding: 10px 20px;
+      border-radius: 99px;
+      font-weight: 600;
+      font-size: 14px;
+      opacity: 0;
+      pointer-events: none;
+      transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+      z-index: 1000;
+      box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+    }
+    .toast.show {
+      opacity: 1;
+      transform: translateX(-50%) translateY(0);
+    }
+
+    /* Responsive */
+    @media(max-width: 600px) {
+      .input-controls { flex-direction: column; align-items: stretch; }
+      .action-row { justify-content: stretch; }
+      .action-row .btn { flex: 1; justify-content: center; }
+      .style-card { flex-direction: column; align-items: stretch; gap: 12px; }
+      .style-actions { justify-content: flex-end; }
+    }
+    
+    /* Footer */
+    footer {
+      text-align: center;
+      margin: 36px 0;
+      color: var(--muted);
+      font-size: 13px;
+    }
+  </style>
+</head>
+
+<body>
+  <div class="container">
+
+    <!-- Header -->
+    <header class="header" role="banner">
+      <a href="index.html" class="brand" aria-label="SocialMediaToolsKit">
+        <span class="brand-emoji" aria-hidden="true">⚡</span>
+        <span class="logo-text">SocialMediaToolsKit</span>
+      </a>
+
+      <nav class="topnav" role="navigation" aria-label="Primary">
+        <a href="index.html">Home</a>
+        <button id="theme-toggle" class="theme-btn" aria-label="Toggle Dark Mode">
+          <span class="icon">🌙</span>
+        </button>
+      </nav>
+    </header>
+
+    <main>
+      <!-- App Layout -->
+      <div class="app-layout">
+        
+        <!-- Input Section -->
+        <section class="input-section" aria-labelledby="input-label">
+          <div class="input-wrapper">
+            <label for="text-input" id="input-label" class="visually-hidden">Enter text to style</label>
+            <textarea id="text-input" class="main-input" placeholder="Type something cool here..." spellcheck="false" autocomplete="off"></textarea>
+          </div>
+          
+          <div class="history-area" id="history-list" role="list" aria-label="Recent History">
+            <!-- Chips injected by JS -->
+          </div>
+
+          <div class="input-controls">
+            <span class="char-count" id="char-count">0 chars</span>
+            <div class="action-row">
+              <button class="btn" id="clear-btn">Clear</button>
+              <button class="btn" id="export-btn">Download .txt</button>
+              <button class="btn btn-primary" id="copy-all-btn">Copy All Styles</button>
+            </div>
+          </div>
+        </section>
+
+        <!-- Results & Preview Grid -->
+        <section class="results-section">
+          
+          <!-- Styles List -->
+          <div class="style-list" id="style-list" role="list">
+            <!-- Style cards injected by JS -->
+            <div style="padding:40px; text-align:center; color:var(--muted);">Loading styles...</div>
+          </div>
+
+          <!-- Sidebar Preview -->
+          <aside class="preview-sidebar" aria-hidden="true">
+            <div class="mock-phone">
+              <div class="mock-header">
+                <div class="mock-avatar"></div>
+                <div>
+                  <div class="mock-username">your_name</div>
+                  <div style="font-size:12px; color:var(--muted)">Social Profile</div>
+                </div>
+              </div>
+              <div class="mock-bio" id="preview-output">Type above to see preview...</div>
+              <span class="mock-label">Instagram/TikTok Bio Preview</span>
+            </div>
+          </aside>
+
+        </section>
+
+      </div>
+
+      <!-- FAQ / SEO Content -->
+      <article class="content-area">
+        <h2>Frequently Asked Questions</h2>
+        <div class="faq">
+          <details>
+            <summary>How does this work?</summary>
+            <p>We map standard characters (A-Z) to special mathematical and symbol Unicode characters that look like bold, script, or gothic fonts. Browsers render these as text, not images.</p>
+          </details>
+          <details>
+            <summary>Will these work on Instagram/TikTok?</summary>
+            <p>Yes! Most social platforms support these Unicode characters in bios, captions, and comments. However, some older devices might not display every style perfectly.</p>
+          </details>
+          <details>
+            <summary>Is it accessible?</summary>
+            <p>While these look cool, screen readers may read them as "mathematical bold capital A". Use them sparingly for usernames or short phrases, not for important information.</p>
+          </details>
+          <details>
+            <summary>Is my data private?</summary>
+            <p>Yes. This tool runs 100% in your browser. Nothing you type is sent to any server.</p>
+          </details>
+        </div>
+      </article>
+
+    </main>
+
+    <footer>© 2025 SocialMediaToolsKit. Built for speed.</footer>
+  </div>
+
+  <!-- Toast Notification -->
+  <div id="toast" class="toast" role="alert">Copied to clipboard!</div>
+
+  <script>
+    /**
+     * Stylish Text Generator - Client Side Logic
+     * Handles text transformation, DOM rendering, and persistence.
+     */
+
+    /* --- DATA: Unicode Mapping Tables --- */
+    const STYLES = [
+      {
+        id: 'bold_serif',
+        name: 'Math Bold',
+        desc: 'Serif',
+        map: {
+          'A':'𝐀','B':'𝐁','C':'𝐂','D':'𝐃','E':'𝐄','F':'𝐅','G':'𝐆','H':'𝐇','I':'𝐈','J':'𝐉','K':'𝐊','L':'𝐋','M':'𝐌','N':'𝐍','O':'𝐎','P':'𝐏','Q':'𝐐','R':'𝐑','S':'𝐒','T':'𝐓','U':'𝐔','V':'𝐕','W':'𝐖','X':'𝐗','Y':'𝐘','Z':'𝐙',
+          'a':'𝐚','b':'𝐛','c':'𝐜','d':'𝐝','e':'𝐞','f':'𝐟','g':'𝐠','h':'𝐡','i':'𝐢','j':'𝐣','k':'𝐤','l':'𝐥','m':'𝐦','n':'𝐧','o':'𝐨','p':'𝐩','q':'𝐪','r':'𝐫','s':'𝐬','t':'𝐭','u':'𝐮','v':'𝐯','w':'𝐰','x':'𝐱','y':'𝐲','z':'𝐳',
+          '0':'𝟎','1':'𝟏','2':'𝟐','3':'𝟑','4':'𝟒','5':'𝟓','6':'𝟔','7':'𝟕','8':'𝟖','9':'𝟗'
+        }
+      },
+      {
+        id: 'bold_sans',
+        name: 'Sans Bold',
+        desc: 'Sans-Serif',
+        map: {
+          'A':'𝗔','B':'𝗕','C':'𝗖','D':'𝗗','E':'𝗘','F':'𝗙','G':'𝗚','H':'𝗛','I':'𝗜','J':'𝗝','K':'𝗞','L':'𝗟','M':'𝗠','N':'𝗡','O':'𝗢','P':'𝗣','Q':'𝗤','R':'𝗥','S':'𝗦','T':'𝗧','U':'𝗨','V':'𝗩','W':'𝗪','X':'𝗫','Y':'𝗬','Z':'𝗭',
+          'a':'𝗮','b':'𝗯','c':'𝗰','d':'𝗱','e':'𝗲','f':'𝗳','g':'𝗴','h':'𝗵','i':'𝗶','j':'𝗷','k':'𝗸','l':'𝗹','m':'𝗺','n':'𝗻','o':'𝗼','p':'𝗽','q':'𝗾','r':'𝗿','s':'𝘀','t':'𝘁','u':'𝘂','v':'𝘃','w':'𝘄','x':'𝘅','y':'𝘆','z':'𝘇',
+          '0':'𝟬','1':'𝟭','2':'𝟮','3':'𝟯','4':'𝟰','5':'𝟱','6':'𝟲','7':'𝟳','8':'𝟴','9':'𝟵'
+        }
+      },
+      {
+        id: 'italic_serif',
+        name: 'Math Italic',
+        desc: 'Serif',
+        map: {
+          'A':'𝐴','B':'𝐵','C':'𝐶','D':'𝐷','E':'𝐸','F':'𝐹','G':'𝐺','H':'𝐻','I':'𝐼','J':'𝐽','K':'𝐾','L':'𝐿','M':'𝑀','N':'𝑁','O':'𝑂','P':'𝑃','Q':'𝑄','R':'𝑅','S':'𝑆','T':'𝑇','U':'𝑈','V':'𝑉','W':'𝑊','X':'𝑋','Y':'𝑌','Z':'𝑍',
+          'a':'𝑎','b':'𝑏','c':'𝑐','d':'𝑑','e':'𝑒','f':'𝑓','g':'𝑔','h':'ℎ','i':'𝑖','j':'𝑗','k':'𝑘','l':'𝑙','m':'𝑚','n':'𝑛','o':'𝑜','p':'𝑝','q':'𝑞','r':'𝑟','s':'𝑠','t':'𝑡','u':'𝑢','v':'𝑣','w':'𝑤','x':'𝑥','y':'𝑦','z':'𝑧'
+        }
+      },
+      {
+        id: 'italic_sans',
+        name: 'Sans Italic',
+        desc: 'Sans-Serif',
+        map: {
+          'A':'𝘈','B':'𝘉','C':'𝘊','D':'𝘋','E':'𝘌','F':'𝘍','G':'𝘎','H':'𝘏','I':'𝘐','J':'𝘑','K':'𝘒','L':'𝘓','M':'𝘔','N':'𝘕','O':'𝘖','P':'𝘗','Q':'𝘘','R':'𝘙','S':'𝘚','T':'𝘛','U':'𝘜','V':'𝘝','W':'𝘞','X':'𝘟','Y':'𝘠','Z':'𝘡',
+          'a':'𝘢','b':'𝘣','c':'𝘤','d':'𝘥','e':'𝘦','f':'𝘧','g':'𝘨','h':'𝘩','i':'𝘪','j':'𝘫','k':'𝘬','l':'𝘭','m':'𝘮','n':'𝘯','o':'𝘰','p':'𝘱','q':'𝘲','r':'𝘳','s':'𝘴','t':'𝘵','u':'𝘶','v':'𝘷','w':'𝘸','x':'𝘹','y':'𝘺','z':'𝘻'
+        }
+      },
+      {
+        id: 'bold_italic_serif',
+        name: 'Bold Italic',
+        desc: 'Serif',
+        map: {
+          'A':'𝑨','B':'𝑩','C':'𝑪','D':'𝑫','E':'𝑬','F':'𝑭','G':'𝑮','H':'𝑯','I':'𝑰','J':'𝑱','K':'𝑲','L':'𝑳','M':'𝑴','N':'𝑵','O':'𝑶','P':'𝑷','Q':'𝑸','R':'𝑹','S':'𝑺','T':'𝑻','U':'𝑼','V':'𝑽','W':'𝑾','X':'𝑿','Y':'𝒀','Z':'𝒁',
+          'a':'𝒂','b':'𝒃','c':'𝒄','d':'𝒅','e':'𝒆','f':'𝒇','g':'𝒈','h':'𝒉','i':'𝒊','j':'𝒋','k':'𝒌','l':'𝒍','m':'𝒎','n':'𝒏','o':'𝒐','p':'𝒑','q':'𝒒','r':'𝒓','s':'𝒔','t':'𝒕','u':'𝒖','v':'𝒗','w':'𝒘','x':'𝒙','y':'𝒚','z':'𝒛'
+        }
+      },
+      {
+        id: 'script_bold',
+        name: 'Script Bold',
+        desc: 'Cursive',
+        map: {
+          'A':'𝓐','B':'𝓑','C':'𝓒','D':'𝓓','E':'𝓔','F':'𝓕','G':'𝓖','H':'𝓗','I':'𝓘','J':'𝓙','K':'𝓚','L':'𝓛','M':'𝓜','N':'𝓝','O':'𝓞','P':'𝓟','Q':'𝓠','R':'𝓡','S':'𝓢','T':'𝓣','U':'𝓤','V':'𝓥','W':'𝓦','X':'𝓧','Y':'𝓨','Z':'𝓩',
+          'a':'𝓪','b':'𝓫','c':'𝓬','d':'𝓭','e':'𝓮','f':'𝓯','g':'𝓰','h':'𝓱','i':'𝓲','j':'𝓳','k':'𝓴','l':'𝓵','m':'𝓶','n':'𝓷','o':'𝓸','p':'𝓹','q':'𝓺','r':'𝓻','s':'𝓼','t':'𝓽','u':'𝓾','v':'𝓿','w':'𝔀','x':'𝔁','y':'𝔂','z':'𝔃'
+        }
+      },
+      {
+        id: 'script_normal',
+        name: 'Script',
+        desc: 'Elegant',
+        map: {
+          'A':'𝒜','B':'ℬ','C':'𝒞','D':'𝒟','E':'ℰ','F':'ℱ','G':'𝒢','H':'ℋ','I':'ℐ','J':'𝒥','K':'𝒦','L':'ℒ','M':'ℳ','N':'𝒩','O':'𝒪','P':'𝒫','Q':'𝒬','R':'ℛ','S':'𝒮','T':'𝒯','U':'𝒰','V':'𝒱','W':'𝒲','X':'𝒳','Y':'𝒴','Z':'𝒵',
+          'a':'𝒶','b':'𝒷','c':'𝒸','d':'𝒹','e':'ℯ','f':'𝒻','g':'ℊ','h':'𝒽','i':'𝒾','j':'𝒿','k':'𝓀','l':'𝓁','m':'𝓂','n':'𝓃','o':'ℴ','p':'𝓅','q':'𝓆','r':'𝓇','s':'𝓈','t':'𝓉','u':'𝓋','v':'𝓋','w':'𝓌','x':'𝓍','y':'𝓎','z':'𝓏'
+        }
+      },
+      {
+        id: 'double_struck',
+        name: 'Double Struck',
+        desc: 'Blackboard',
+        map: {
+          'A':'𝔸','B':'𝔹','C':'ℂ','D':'𝔻','E':'𝔼','F':'𝔽','G':'𝔾','H':'ℍ','I':'𝕀','J':'𝕁','K':'𝕂','L':'𝕃','M':'𝕄','N':'ℕ','O':'𝕆','P':'ℙ','Q':'ℚ','R':'ℝ','S':'𝕊','T':'𝕋','U':'𝕌','V':'𝕍','W':'𝕎','X':'𝕏','Y':'𝕐','Z':'ℤ',
+          'a':'𝕒','b':'𝕓','c':'𝕔','d':'𝕕','e':'𝕖','f':'𝕗','g':'𝕘','h':'𝕙','i':'𝕚','j':'𝕛','k':'𝕜','l':'𝕝','m':'𝕞','n':'𝕟','o':'𝕠','p':'𝕡','q':'𝕢','r':'𝕣','s':'𝕤','t':'𝕥','u':'𝕦','v':'𝕧','w':'𝕨','x':'𝕩','y':'𝕪','z':'𝕫',
+          '0':'𝟘','1':'𝟙','2':'𝟚','3':'𝟛','4':'𝟜','5':'𝟝','6':'𝟞','7':'𝟟','8':'𝟠','9':'𝟡'
+        }
+      },
+      {
+        id: 'fraktur',
+        name: 'Fraktur',
+        desc: 'Gothic',
+        map: {
+          'A':'𝔄','B':'𝔅','C':'ℭ','D':'𝔇','E':'𝔈','F':'𝔉','G':'𝔊','H':'ℌ','I':'ℑ','J':'𝔍','K':'𝔎','L':'𝔏','M':'𝔐','N':'𝔑','O':'𝔒','P':'𝔓','Q':'𝔔','R':'ℜ','S':'𝔖','T':'𝔗','U':'𝔘','V':'𝔙','W':'𝔚','X':'𝔛','Y':'𝔜','Z':'ℨ',
+          'a':'𝔞','b':'𝔟','c':'𝔠','d':'𝔡','e':'𝔢','f':'𝔣','g':'𝔤','h':'𝔥','i':'𝔦','j':'𝔧','k':'𝔨','l':'𝔩','m':'𝔪','n':'𝔫','o':'𝔬','p':'𝔭','q':'𝔮','r':'𝔯','s':'𝔰','t':'𝔱','u':'𝔲','v':'𝔳','w':'𝔴','x':'𝔵','y':'𝔶','z':'𝔷'
+        }
+      },
+      {
+        id: 'fraktur_bold',
+        name: 'Fraktur Bold',
+        desc: 'Gothic',
+        map: {
+          'A':'𝕬','B':'𝕭','C':'𝕮','D':'𝕯','E':'𝕰','F':'𝕱','G':'𝕲','H':'𝕳','I':'𝕴','J':'𝕵','K':'𝕶','L':'𝕷','M':'𝕸','N':'𝕹','O':'𝕺','P':'𝕻','Q':'𝕼','R':'𝕽','S':'𝕾','T':'𝕿','U':'𝖀','V':'𝖁','W':'𝖂','X':'𝖃','Y':'𝖄','Z':'𝖅',
+          'a':'𝖆','b':'𝖇','c':'𝖈','d':'𝖉','e':'𝖊','f':'𝖋','g':'𝖌','h':'𝖍','i':'𝖎','j':'𝖏','k':'𝖐','l':'𝖑','m':'𝖒','n':'𝖓','o':'𝖔','p':'𝖕','q':'𝖖','r':'𝖗','s':'𝖘','t':'𝖙','u':'𝖚','v':'𝖛','w':'𝖜','x':'𝖝','y':'𝖞','z':'𝖟'
+        }
+      },
+      {
+        id: 'monospace',
+        name: 'Monospace',
+        desc: 'Typewriter',
+        map: {
+          'A':'𝙰','B':'𝙱','C':'𝙲','D':'𝙳','E':'𝙴','F':'𝙵','G':'𝙶','H':'𝙷','I':'𝙸','J':'𝙹','K':'𝙺','L':'𝙻','M':'𝙼','N':'𝙽','O':'𝙾','P':'𝙿','Q':'𝚀','R':'𝚁','S':'𝚂','T':'𝚃','U':'𝚄','V':'𝚅','W':'𝚆','X':'𝚇','Y':'𝚈','Z':'𝚉',
+          'a':'𝚊','b':'𝚋','c':'𝚌','d':'𝚍','e':'𝚎','f':'𝚏','g':'𝚐','h':'𝚑','i':'𝚒','j':'𝚓','k':'𝚔','l':'𝚕','m':'𝚖','n':'𝚗','o':'𝚘','p':'𝚙','q':'𝚀','r':'𝚛','s':'𝚜','t':'𝚝','u':'𝚞','v':'𝚟','w':'𝚠','x':'𝚡','y':'𝚢','z':'𝚣',
+          '0':'𝟶','1':'𝟷','2':'𝟸','3':'𝟹','4':'𝟺','5':'𝟻','6':'𝟼','7':'𝟽','8':'𝟾','9':'𝟿'
+        }
+      },
+      {
+        id: 'bubble',
+        name: 'Bubble',
+        desc: 'Circled',
+        map: {
+          'A':'Ⓐ','B':'Ⓑ','C':'Ⓒ','D':'Ⓓ','E':'Ⓔ','F':'Ⓕ','G':'Ⓖ','H':'Ⓗ','I':'Ⓘ','J':'Ⓙ','K':'Ⓚ','L':'Ⓛ','M':'Ⓜ','N':'Ⓝ','O':'Ⓞ','P':'Ⓟ','Q':'Ⓠ','R':'Ⓡ','S':'Ⓢ','T':'Ⓣ','U':'Ⓤ','V':'Ⓥ','W':'Ⓦ','X':'Ⓧ','Y':'Ⓨ','Z':'Ⓩ',
+          'a':'ⓐ','b':'ⓑ','c':'ⓒ','d':'ⓓ','e':'ⓔ','f':'ⓕ','g':'ⓖ','h':'ⓗ','i':'ⓘ','j':'ⓙ','k':'ⓚ','l':'ⓛ','m':'ⓜ','n':'ⓝ','o':'ⓞ','p':'ⓟ','q':'ⓠ','r':'ⓡ','s':'ⓢ','t':'ⓣ','u':'ⓤ','v':'ⓥ','w':'ⓦ','x':'ⓧ','y':'ⓨ','z':'ⓩ',
+          '0':'⓪','1':'①','2':'②','3':'③','4':'④','5':'⑤','6':'⑥','7':'⑦','8':'⑧','9':'⑨'
+        }
+      },
+      {
+        id: 'bubble_black',
+        name: 'Bubble Dark',
+        desc: 'Filled',
+        map: {
+          'A':'🅰','B':'🅱','C':'🅲','D':'🅳','E':'🅴','F':'🅵','G':'🅶','H':'🅷','I':'🅸','J':'🅹','K':'🅺','L':'🅻','M':'🅼','N':'🅽','O':'🅾','P':'🅿','Q':'🆀','R':'🆁','S':'🆂','T':'🆃','U':'🆄','V':'🆅','W':'🆆','X':'🆇','Y':'🆈','Z':'🆉',
+          '0':'⓿','1':'❶','2':'❷','3':'❸','4':'❹','5':'❺','6':'❻','7':'❼','8':'❽','9':'❾'
+        }
+      },
+      {
+        id: 'square',
+        name: 'Square',
+        desc: 'Boxed',
+        map: {
+          'A':'🄰','B':'🄱','C':'🄲','D':'🄳','E':'🄴','F':'🄵','G':'🄶','H':'🄷','I':'🄸','J':'🄹','K':'🄺','L':'🄻','M':'🄼','N':'🄽','O':'🄾','P':'🄿','Q':'🅀','R':'🅁','S':'🅂','T':'🅃','U':'🅄','V':'🅅','W':'🅆','X':'🅇','Y':'🅈','Z':'🅉',
+          'a':'🄰','b':'🄱','c':'🄲','d':'🄳','e':'🄴','f':'🄵','g':'🄶','h':'🄷','i':'🄸','j':'🄹','k':'🄺','l':'🄻','m':'🄼','n':'🄽','o':'🄾','p':'🄿','q':'🅀','r':'🅁','s':'🅂','t':'🅃','u':'🅄','v':'🅅','w':'🅆','x':'🅇','y':'🅈','z':'🅉'
+        }
+      },
+      {
+        id: 'square_black',
+        name: 'Square Dark',
+        desc: 'Boxed Filled',
+        map: {
+          'A':'🅰','B':'🅱','C':'🅲','D':'🅳','E':'🅴','F':'🅵','G':'🅶','H':'🅷','I':'🅸','J':'🅹','K':'🅺','L':'🅻','M':'🅼','N':'🅽','O':'🅾','P':'🅿','Q':'🆀','R':'🆁','S':'🆂','T':'🆃','U':'🆄','V':'🆅','W':'🆆','X':'🆇','Y':'🆈','Z':'🆉',
+          'a':'🅰','b':'🅱','c':'🅲','d':'🅳','e':'🅴','f':'🅵','g':'🅶','h':'🅷','i':'🅸','j':'🅹','k':'🅺','l':'🅻','m':'🅼','n':'🅽','o':'🅾','p':'🅿','q':'🆀','r':'🆁','s':'🆂','t':'🆃','u':'🆄','v':'🆅','w':'🆆','x':'🆇','y':'🆈','z':'🆉'
+        }
+      },
+      {
+        id: 'fullwidth',
+        name: 'Fullwidth',
+        desc: 'Vaporwave',
+        map: {
+          'A':'Ａ','B':'Ｂ','C':'Ｃ','D':'Ｄ','E':'Ｅ','F':'Ｆ','G':'Ｇ','H':'Ｈ','I':'Ｉ','J':'Ｊ','K':'Ｋ','L':'Ｌ','M':'Ｍ','N':'Ｎ','O':'Ｏ','P':'Ｐ','Q':'Ｑ','R':'Ｒ','S':'Ｓ','T':'Ｔ','U':'Ｕ','V':'Ｖ','W':'Ｗ','X':'Ｘ','Y':'Ｙ','Z':'Ｚ',
+          'a':'ａ','b':'ｂ','c':'ｃ','d':'ｄ','e':'ｅ','f':'ｆ','g':'ｇ','h':'ｈ','i':'ｉ','j':'ｊ','k':'ｋ','l':'ｌ','m':'ｍ','n':'ｎ','o':'ｏ','p':'ｐ','q':'ｑ','r':'ｒ','s':'ｓ','t':'ｔ','u':'ｕ','v':'ｖ','w':'ｗ','x':'ｘ','y':'ｙ','z':'ｚ',
+          '0':'０','1':'１','2':'２','3':'３','4':'４','5':'５','6':'６','7':'７','8':'８','9':'９',
+          '!':'！','?':'？',',':'，','.':'．',' ':'　'
+        }
+      },
+      {
+        id: 'small_caps',
+        name: 'Small Caps',
+        desc: 'Tiny',
+        map: {
+          'A':'ᴀ','B':'ʙ','C':'ᴄ','D':'ᴅ','E':'ᴇ','F':'ғ','G':'ɢ','H':'ʜ','I':'ɪ','J':'ᴊ','K':'ᴋ','L':'ʟ','M':'ᴍ','N':'ɴ','O':'ᴏ','P':'ᴘ','Q':'ǫ','R':'ʀ','S':'s','T':'ᴛ','U':'ᴜ','V':'ᴠ','W':'ᴡ','X':'x','Y':'ʏ','Z':'ᴢ',
+          'a':'ᴀ','b':'ʙ','c':'ᴄ','d':'ᴅ','e':'ᴇ','f':'ғ','g':'ɢ','h':'ʜ','i':'ɪ','j':'ᴊ','k':'ᴋ','l':'ʟ','m':'ᴍ','n':'ɴ','o':'ᴏ','p':'ᴘ','q':'ǫ','r':'ʀ','s':'s','t':'ᴛ','u':'ᴜ','v':'ᴠ','w':'ᴡ','x':'x','y':'ʏ','z':'ᴢ'
+        }
+      },
+      {
+        id: 'superscript',
+        name: 'Superscript',
+        desc: 'Tiny Upper',
+        map: {
+          'A':'ᴬ','B':'ᴮ','C':'ᶜ','D':'ᴰ','E':'ᴱ','F':'ᶠ','G':'ᴳ','H':'ᴴ','I':'ᴵ','J':'ᴶ','K':'ᴷ','L':'ᴸ','M':'ᴹ','N':'ᴺ','O':'ᴼ','P':'ᴾ','Q':'ᵎ','R':'ᴿ','S':'ˢ','T':'ᵀ','U':'ᵁ','V':'ⱽ','W':'ᵂ','X':'ˣ','Y':'ʸ','Z':'ᶻ',
+          'a':'ᵃ','b':'ᵇ','c':'ᶜ','d':'ᵈ','e':'ᵉ','f':'ᶠ','g':'ᵍ','h':'ʰ','i':'ⁱ','j':'ʲ','k':'ᵏ','l':'ˡ','m':'ᵐ','n':'ⁿ','o':'ᵒ','p':'ᵖ','q':'ᵎ','r':'ʳ','s':'ˢ','t':'ᵗ','u':'ᵘ','v':'ᵛ','w':'ʷ','x':'ˣ','y':'ʸ','z':'ᶻ',
+          '0':'⁰','1':'¹','2':'²','3':'³','4':'⁴','5':'⁵','6':'⁶','7':'⁷','8':'⁸','9':'⁹'
+        }
+      },
+      {
+        id: 'subscript',
+        name: 'Subscript',
+        desc: 'Tiny Lower',
+        map: {
+          'a':'ₐ','e':'ₑ','h':'ₕ','i':'ᵢ','j':'ⱼ','k':'ₖ','l':'ₗ','m':'ₘ','n':'ₙ','o':'ₒ','p':'ₚ','r':'ᵣ','s':'ₛ','t':'ₜ','u':'ᵤ','v':'ᵥ','x':'ₓ',
+          '0':'₀','1':'₁','2':'₂','3':'₃','4':'₄','5':'₅','6':'₆','7':'₇','8':'₈','9':'₉'
+        }
+      },
+      {
+        id: 'upside_down',
+        name: 'Upside Down',
+        desc: 'Flipped',
+        special: 'reverse',
+        map: {
+          'A':'∀','B':'q','C':'Ɔ','D':'p','E':'Ǝ','F':'Ⅎ','G':'פ','H':'H','I':'I','J':'ſ','K':'ʞ','L':'˥','M':'W','N':'N','O':'O','P':'d','Q':'O','R':'ᴚ','S':'S','T':'┴','U':'∩','V':'Λ','W':'M','X':'X','Y':'⅄','Z':'Z',
+          'a':'ɐ','b':'q','c':'ɔ','d':'p','e':'ǝ','f':'ɟ','g':'ƃ','h':'ɥ','i':'ᴉ','j':'ɾ','k':'ʞ','l':'l','m':'ɯ','n':'u','o':'o','p':'d','q':'b','r':'ɹ','s':'s','t':'ʇ','u':'n','v':'ʌ','w':'ʍ','x':'x','y':'ʎ','z':'z',
+          '0':'0','1':'Ɩ','2':'ᄅ','3':'Ɛ','4':'h','5':'S','6':'9','7':'L','8':'8','9':'6',
+          '?':'¿','!':'¡',',':'\'','.':'˙','_':'‾'
+        }
+      },
+      {
+        id: 'mirror',
+        name: 'Mirrored',
+        desc: 'Reversed',
+        special: 'reverse',
+        map: {
+          'A':'A','B':'ᗺ','C':'Ɔ','D':'ᗡ','E':'Ǝ','F':'Ⅎ','G':'Ꭾ','H':'H','I':'I','J':'Ⴑ','K':'⋊','L':'⅃','M':'M','N':'Ͷ','O':'O','P':'ꟼ','Q':'Ọ','R':'Я','S':'Ƨ','T':'T','U':'U','V':'V','W':'W','X':'X','Y':'Y','Z':'Ƶ',
+          'a':'ɒ','b':'d','c':'ɔ','d':'b','e':'ɘ','f':'t','g':'b','h':'ʜ','i':'i','j':'Ⴑ','k':'ʞ','l':'l','m':'m','n':'n','o':'o','p':'q','q':'p','r':'ɿ','s':'ƨ','t':'t','u':'u','v':'v','w':'w','x':'x','y':'y','z':'ƹ'
+        }
+      },
+      {
+        id: 'zalgo_s',
+        name: 'Zalgo (Small)',
+        desc: 'Glitchy',
+        isZalgo: true,
+        intensity: 2
+      },
+      {
+        id: 'zalgo_h',
+        name: 'Zalgo (Heavy)',
+        desc: 'Very Glitchy',
+        isZalgo: true,
+        intensity: 8
+      },
+      {
+        id: 'fancy_symbols',
+        name: 'Fancy Symbols',
+        desc: 'Decorated',
+        map: {
+          'A':'ᗅ','B':'ᗷ','C':'ᑕ','D':'ᗪ','E':'ᗴ','F':'ᖴ','G':'Ǥ','H':'ᕼ','I':'','J':'ᒎ','K':'ᛕ','L':'ᒪ','M':'ᗰ','N':'ᑎ','O':'ᗝ','P':'ᑭ','Q':'ᑫ','R':'ᖇ','S':'ᔕ','T':'丅','U':'ᑌ','V':'ᐯ','W':'ᗯ','X':'᙭','Y':'Ƴ','Z':'ᘔ',
+          'a':'ᗅ','b':'ᗷ','c':'ᑕ','d':'ᗪ','e':'ᗴ','f':'ᖴ','g':'Ǥ','h':'ᕼ','i':'','j':'ᒎ','k':'ᛕ','l':'ᒪ','m':'ᗰ','n':'ᑎ','o':'ᗝ','p':'ᑭ','q':'ᑫ','r':'ᖇ','s':'ᔕ','t':'丅','u':'ᑌ','v':'ᐯ','w':'ᗯ','x':'᙭','y':'Ƴ','z':'ᘔ'
+        }
+      },
+      {
+        id: 'cute_kaomoji',
+        name: 'Cute / Kawaii',
+        desc: 'Emoticons',
+        isDecorator: true,
+        decorators: [' (◕‿◕)', ' (✿◠‿◠)', ' (｡♥‿♥｡)', ' ʕ•́ᴥ•̀ʔ', ' (◡‿◡✿)', ' (づ｡◕‿‿◕｡)づ', ' ʕっ•ᴥ•ʔっ', ' (ノ・∀・)ノ', ' (☞ﾟヮﾟ)☞', ' ☜(ﾟヮﾟ☜)']
+      },
+      {
+        id: 'bracketed',
+        name: 'Bracketed',
+        desc: '[ ]',
+        map: {
+          'A':'[A]','B':'[B]','C':'[C]','D':'[D]','E':'[E]','F':'[F]','G':'[G]','H':'[H]','I':'[I]','J':'[J]','K':'[K]','L':'[L]','M':'[M]','N':'[N]','O':'[O]','P':'[P]','Q':'[Q]','R':'[R]','S':'[S]','T':'[T]','U':'[U]','V':'[V]','W':'[W]','X':'[X]','Y':'[Y]','Z':'[Z]',
+          'a':'[a]','b':'[b]','c':'[c]','d':'[d]','e':'[e]','f':'[f]','g':'[g]','h':'[h]','i':'[i]','j':'[j]','k':'[k]','l':'[l]','m':'[m]','n':'[n]','o':'[o]','p':'[p]','q':'[q]','r':'[r]','s':'[s]','t':'[t]','u':'[u]','v':'[v]','w':'[w]','x':'[x]','y':'[y]','z':'[z]',
+          ' ':'  '
+        }
+      }
+    ];
+
+    /* --- DOM ELEMENTS --- */
+    const els = {
+      input: document.getElementById('text-input'),
+      charCount: document.getElementById('char-count'),
+      styleList: document.getElementById('style-list'),
+      previewOutput: document.getElementById('preview-output'),
+      historyList: document.getElementById('history-list'),
+      toast: document.getElementById('toast'),
+      clearBtn: document.getElementById('clear-btn'),
+      copyAllBtn: document.getElementById('copy-all-btn'),
+      exportBtn: document.getElementById('export-btn'),
+      themeToggle: document.getElementById('theme-toggle')
+    };
+
+    /* --- STATE --- */
+    const getPreferredTheme = () => {
+      const stored = localStorage.getItem('stg_theme');
+      if (stored) return stored;
+      return window.matchMedia && window.matchMedia('(prefers-color-scheme: light)').matches ? 'light' : 'dark';
+    };
+
+    const state = {
+      text: '',
+      history: JSON.parse(localStorage.getItem('stg_history') || '[]'),
+      favorites: JSON.parse(localStorage.getItem('stg_favorites') || '[]'),
+      theme: getPreferredTheme()
+    };
+
+    /* --- UTILS --- */
+    // Zalgo char sets
+    const ZALGO_UP = ['\u030d', '\u030e', '\u0304', '\u0305', '\u033f', '\u0311', '\u0306', '\u0310', '\u0352', '\u0357', '\u0351', '\u0307', '\u0308', '\u030a', '\u0342', '\u0343', '\u0344', '\u034a', '\u034b', '\u034c', '\u0303', '\u0302', '\u030c', '\u0350', '\u0300', '\u0301', '\u030b', '\u030f', '\u0312', '\u0313', '\u0314', '\u033d', '\u0309', '\u0363', '\u0364', '\u0365', '\u0366', '\u0367', '\u0368', '\u0369', '\u036a', '\u036b', '\u036c', '\u036d', '\u036e', '\u036f', '\u033e', '\u035b', '\u0346', '\u031a'];
+    const ZALGO_DOWN = ['\u0316', '\u0317', '\u0318', '\u0319', '\u031c', '\u031d', '\u031e', '\u031f', '\u0320', '\u0324', '\u0325', '\u0326', '\u0329', '\u032a', '\u032b', '\u032c', '\u032d', '\u032e', '\u032f', '\u0330', '\u0331', '\u0332', '\u0333', '\u0339', '\u033a', '\u033b', '\u033c', '\u0345', '\u0347', '\u0348', '\u0349', '\u034d', '\u034e', '\u0353', '\u0354', '\u0355', '\u0356', '\u0359', '\u035a', '\u0323'];
+    const ZALGO_MID = ['\u0315', '\u031b', '\u0340', '\u0341', '\u0358', '\u0321', '\u0322', '\u0327', '\u0328', '\u0334', '\u0335', '\u0336', '\u0337', '\u0338', '\u0360', '\u0361', '\u0362'];
+
+    const getZalgo = (txt, intensity) => {
+      let newTxt = '';
+      for(let i=0; i<txt.length; i++){
+        newTxt += txt[i];
+        const numUp = Math.floor(Math.random() * intensity);
+        const numMid = Math.floor(Math.random() * (intensity/2));
+        const numDown = Math.floor(Math.random() * intensity);
+        for(let j=0; j<numUp; j++) newTxt += ZALGO_UP[Math.floor(Math.random()*ZALGO_UP.length)];
+        for(let j=0; j<numMid; j++) newTxt += ZALGO_MID[Math.floor(Math.random()*ZALGO_MID.length)];
+        for(let j=0; j<numDown; j++) newTxt += ZALGO_DOWN[Math.floor(Math.random()*ZALGO_DOWN.length)];
+      }
+      return newTxt;
+    };
+
+    const transformText = (text, style) => {
+      if (!text) return `Type something...`;
+      
+      // Zalgo Handler
+      if (style.isZalgo) return getZalgo(text, style.intensity);
+
+      // Decorator Handler
+      if (style.isDecorator) {
+        const face = style.decorators[Math.floor(Math.random() * style.decorators.length)];
+        return text + " " + face;
+      }
+
+      let res = '';
+      const chars = style.special === 'reverse' ? text.split('').reverse() : text.split('');
+      
+      chars.forEach(char => {
+        if (style.map && style.map[char]) {
+          res += style.map[char];
+        } else {
+          res += char;
+        }
+      });
+      return res;
+    };
+
+    const countUnmapped = (text, style) => {
+       if (style.isZalgo || style.isDecorator || style.special || style.id === 'normal') return 0;
+       let count = 0;
+       for (let char of text) {
+         // Check if char is "mappable" (A-Z, a-z, 0-9) but not mapped
+         if (/[A-Za-z0-9]/.test(char) && (!style.map || !style.map[char])) {
+           count++;
+         }
+       }
+       return count;
+    };
+
+    const copyToClipboard = (text) => {
+      if (navigator.clipboard && navigator.clipboard.writeText) {
+        navigator.clipboard.writeText(text).then(showToast);
+      } else {
+        const ta = document.createElement('textarea');
+        ta.value = text;
+        ta.style.position = 'fixed';
+        ta.style.left = '-9999px';
+        document.body.appendChild(ta);
+        ta.select();
+        document.execCommand('copy');
+        document.body.removeChild(ta);
+        showToast();
+      }
+    };
+
+    const showToast = () => {
+      els.toast.classList.add('show');
+      setTimeout(() => els.toast.classList.remove('show'), 2000);
+    };
+
+    const toggleFavorite = (id) => {
+      const idx = state.favorites.indexOf(id);
+      if (idx > -1) {
+        state.favorites.splice(idx, 1);
+      } else {
+        state.favorites.push(id);
+      }
+      localStorage.setItem('stg_favorites', JSON.stringify(state.favorites));
+      renderStyles(); // Re-render to sort
+    };
+
+    const addToHistory = (txt) => {
+      if (!txt || txt.trim().length === 0) return;
+      // Remove if exists then add to front
+      state.history = state.history.filter(h => h !== txt);
+      state.history.unshift(txt);
+      if (state.history.length > 5) state.history.pop();
+      localStorage.setItem('stg_history', JSON.stringify(state.history));
+      renderHistory();
+    };
+
+    /* --- RENDERING --- */
+    const renderStyles = () => {
+      const currentText = state.text || "Type something...";
+      
+      // Sort: Favorites first, then original order
+      const sortedStyles = [...STYLES].sort((a, b) => {
+        const isFavA = state.favorites.includes(a.id);
+        const isFavB = state.favorites.includes(b.id);
+        if (isFavA && !isFavB) return -1;
+        if (!isFavA && isFavB) return 1;
+        return 0;
+      });
+
+      els.styleList.innerHTML = '';
+
+      sortedStyles.forEach(style => {
+        const transformed = transformText(state.text, style);
+        const isFav = state.favorites.includes(style.id);
+        const unmapped = state.text ? countUnmapped(state.text, style) : 0;
+        
+        const card = document.createElement('div');
+        card.className = 'style-card';
+        card.setAttribute('role', 'listitem');
+        
+        card.innerHTML = `
+          <div class="style-info">
+            <div class="style-header">
+              <span class="style-name">${style.name}</span>
+              <span class="style-tag">${style.desc}</span>
+              ${unmapped > 0 ? `<span class="warning-icon" title="${unmapped} characters could not be styled (they remain normal)">⚠️</span>` : ''}
+            </div>
+            <div class="style-output" tabindex="0" title="Click to copy">${transformed || style.name}</div>
+          </div>
+          <div class="style-actions">
+            <button class="btn-icon btn-fav ${isFav ? 'active' : ''}" aria-label="${isFav ? 'Unfavorite' : 'Favorite'}" aria-pressed="${isFav}">
+              ${isFav ? '★' : '☆'}
+            </button>
+            <button class="btn-icon btn-copy" aria-label="Copy">
+              ⎘
+            </button>
+          </div>
+        `;
+
+        // Events
+        card.querySelector('.btn-copy').addEventListener('click', () => copyToClipboard(transformed));
+        card.querySelector('.style-output').addEventListener('click', () => copyToClipboard(transformed));
+        card.querySelector('.btn-fav').addEventListener('click', () => toggleFavorite(style.id));
+        
+        els.styleList.appendChild(card);
+      });
+
+      // Update Preview Sidebar
+      els.previewOutput.textContent = transformText(state.text, sortedStyles[0]) || "Preview text...";
+      
+      // Char Count
+      els.charCount.textContent = `${state.text.length} chars`;
+    };
+
+    const renderHistory = () => {
+      els.historyList.innerHTML = '';
+      state.history.forEach(txt => {
+        const chip = document.createElement('button');
+        chip.className = 'chip';
+        chip.textContent = txt;
+        chip.addEventListener('click', () => {
+          els.input.value = txt;
+          updateInput(txt);
+        });
+        els.historyList.appendChild(chip);
+      });
+    };
+
+    const updateInput = (val) => {
+      state.text = val;
+      renderStyles();
+    };
+
+    const debounce = (func, wait) => {
+      let timeout;
+      return function(...args) {
+        const later = () => {
+          clearTimeout(timeout);
+          func.apply(this, args);
+        };
+        clearTimeout(timeout);
+        timeout = setTimeout(later, wait);
+      };
+    };
+
+    /* --- THEME HANDLING --- */
+    const applyTheme = () => {
+      document.body.setAttribute('data-theme', state.theme);
+      els.themeToggle.querySelector('.icon').textContent = state.theme === 'light' ? '☀️' : '🌙';
+    };
+    
+    els.themeToggle.addEventListener('click', () => {
+      state.theme = state.theme === 'light' ? 'dark' : 'light';
+      localStorage.setItem('stg_theme', state.theme);
+      applyTheme();
+    });
+
+    /* --- EVENT LISTENERS --- */
+    const debouncedSaveHistory = debounce((txt) => addToHistory(txt), 2000);
+
+    els.input.addEventListener('input', (e) => {
+      updateInput(e.target.value);
+      if(e.target.value.length > 2) debouncedSaveHistory(e.target.value);
+    });
+
+    els.clearBtn.addEventListener('click', () => {
+      els.input.value = '';
+      updateInput('');
+      els.input.focus();
+    });
+
+    els.copyAllBtn.addEventListener('click', () => {
+      let fullText = '';
+      STYLES.forEach(s => {
+        fullText += `${s.name}: ${transformText(state.text, s)}\n`;
+      });
+      copyToClipboard(fullText);
+    });
+
+    els.exportBtn.addEventListener('click', () => {
+      let content = "Generated by SocialMediaToolsKit Stylish Text\n\n";
+      STYLES.forEach(s => {
+        content += `[${s.name}]\n${transformText(state.text, s)}\n\n`;
+      });
+      const blob = new Blob([content], { type: 'text/plain' });
+      const a = document.createElement('a');
+      a.href = URL.createObjectURL(blob);
+      a.download = 'stylish-text-export.txt';
+      a.click();
+    });
+
+    // Keyboard Shortcuts
+    document.addEventListener('keydown', (e) => {
+      if ((e.ctrlKey || e.metaKey) && e.key === 'Enter') {
+        // Copy first style
+        const firstStyle = document.querySelector('.style-output');
+        if (firstStyle) copyToClipboard(firstStyle.textContent);
+      }
+    });
+
+    /* --- INIT --- */
+    (function init(){
+      applyTheme();
+      renderHistory();
+      renderStyles();
+      // Add "Normal" style to top of list as 0th item just for reference
+      if (!STYLES.find(s => s.id === 'normal')) {
+        STYLES.unshift({ id: 'normal', name: 'Normal', desc: 'Original', map: {} });
+      }
+    })();
+
+  </script>
+</body>
+</html>
