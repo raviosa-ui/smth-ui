@@ -1,0 +1,314 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Aspect Ratio Detector & Converter — SocialMediaToolsKit</title>
+  <meta name="description" content="Drop any image → instantly know if it will be cropped on TikTok, Reels, YouTube or Instagram + get every safe resolution." />
+  <meta name="theme-color" content="#0f172a" />
+
+  <link rel="stylesheet" href="style.css">
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>Ratio</text></svg>">
+
+  <style>
+    :root{--bg:#0f172a;--card:#1e293b;--text:#f8fafc;--muted:#94a3b8;--border:#334155;--accent-from:#38bdf8;--accent-to:#818cf8;--r-lg:24px;--r-md:16px;--trans:260ms cubic-bezier(.2,.9,.3,1)}
+    .visually-hidden{position:absolute!important;left:-9999px;width:1px;height:1px;overflow:hidden}
+    .drop-zone{border:2px dashed var(--border);border-radius:var(--r-md);padding:40px;text-align:center;transition:var(--trans);background:var(--card);cursor:pointer}
+    .drop-zone.dragover{border-color:var(--accent-from);background:rgba(56,189,248,0.08)}
+    .preview-img{max-width:100%;max-height:320px;margin:20px auto;border-radius:var(--r-md);box-shadow:0 10px 30px rgba(0,0,0,0.5);display:block}
+    .ratio-box{display:inline-flex;align-items:center;justify-content:center;background:var(--card);border:1px solid var(--border);border-radius:12px;padding:12px 20px;font-size:24px;font-weight:700;margin:8px 6px}
+    .res-table{width:100%;border-collapse:collapse;margin:20px 0;background:var(--card);border-radius:var(--r-md);overflow:hidden}
+    .res-table th,.res-table td{padding:14px;text-align:left;border-bottom:1px solid var(--border)}
+    .res-table th{background:rgba(56,189,248,0.15);color:var(--accent-from)}
+    .btn-copy{background:linear-gradient(90deg,var(--accent-from),var(--accent-to));color:#06121f;border:none;padding:10px 16px;border-radius:10px;cursor:pointer;font-weight:600;transition:.2s}
+    .btn-copy:hover{transform:translateY(-3px);box-shadow:0 8px 20px rgba(56,189,248,0.4)}
+    .faq-item{margin:14px 0}
+    .faq-question{cursor:pointer;background:var(--card);padding:16px;border-radius:var(--r-md);font-weight:600;display:flex;justify-content:space-between;align-items:center;font-size:16px;transition:var(--trans)}
+    .faq-question:hover{background:rgba(255,255,255,0.04)}
+    .faq-question::after{content:"Down Arrow";font-size:13px;transition:transform .25s}
+    .faq-question.active::after{transform:rotate(180deg)}
+    .faq-answer{max-height:0;overflow:hidden;transition:max-height .45s cubic-bezier(0.4,0,0.2,1);background:var(--card);padding:0 16px;border-radius:var(--r-md);margin-top:6px}
+    .faq-answer.show{max-height:600px;padding:16px}
+    .random-tools{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:14px;margin:36px 0}
+    @media(max-width:640px){.random-tools{grid-template-columns:1fr}}
+  </style>
+</head>
+
+<body>
+  <div class="container">
+
+    <!-- Header -->
+    <header class="header" role="banner">
+      <div class="brand">
+        <a href="index.html" class="brand" aria-label="SocialMediaToolsKit homepage">
+          <span class="brand-emoji" aria-hidden="true">Lightning</span>
+          <span class="logo-text">SocialMediaToolsKit</span>
+        </a>
+      </div>
+      <nav class="topnav" role="navigation">
+        <a href="line-break.html">Line Break</a>
+        <a href="caption-counter.html">Caption Counter</a>
+        <a href="safe-zone-overlay.html">Safe Zone</a>
+      </nav>
+    </header>
+
+    <!-- Main Tool -->
+    <main>
+      <section class="hero" style="margin-top:16px;">
+        <div class="hero-inner" style="flex-direction:column;gap:28px;text-align:center;">
+          <div>
+            <h1 style="font-size:23px;margin:0;">Aspect Ratio Detector & Converter</h1>
+            <p class="lead" style="font-size:16px;">Drop any screenshot, video frame or photo → instantly see if TikTok/Reels will crop it + get every safe resolution</p>
+          </div>
+
+          <div style="width:100%;max-width:580px;margin:0 auto;">
+            <div id="dropZone" class="drop-zone">
+              <p style="margin:10px 0 0;font-size:19px;color:var(--text);">Drag image here<br><span style="color:var(--muted);font-size:15px;">or click · paste from clipboard (Ctrl+V)</span></p>
+              <input type="file" id="fileInput" accept="image/*" multiple style="display:none">
+            </div>
+            <div id="result" class="hide" style="margin-top:24px;"></div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Random 2 Tools -->
+      <div class="random-tools" id="randomTools"></div>
+
+      <!-- WhatsApp Share -->
+      <div style="text-align:center;margin:40px 0 20px;">
+        <button id="shareWhatsApp" class="btn-cta" style="min-width:300px;font-size:16px;padding:16px;">
+          Share this tool on WhatsApp
+        </button>
+      </div>
+
+      <!-- Engaging FAQs + Schema -->
+      <section class="content-area" style="margin-top:50px;">
+        <h3 style="text-align:center;font-size:19px;margin-bottom:30px;">Every Question Creators Actually Ask</h3>
+
+        <div class="faq-item">
+          <div class="faq-question active">Why does TikTok always zoom in and ruin my video?<span></span></div>
+          <div class="faq-answer show">Because you exported 16:9 (YouTube ratio) instead of 9:16. TikTok forces full-screen vertical → it auto-zooms and cuts heads/feet. Always export 1080×1920!</div>
+        </div>
+        <div class="faq-item">
+          <div class="faq-question">I recorded vertically on my phone — why are there black bars on TikTok?<span></span></div>
+          <div class="faq-answer">Your phone has a taller screen than 9:16 (usually 19.5:9 or 20:9). Export at 1080×1920 or 1080×2400 → no more black bars.</div>
+        </div>
+        <div class="faq-item">
+          <div class="faq-question">1080×1920 vs 1080×2340 — which one should I use in 2025?<span></span></div>
+          <div class="faq-answer">1080×1920 = 100% safe everywhere. 1080×2340–2400 = fills newer phones perfectly (iPhone 15 Pro, Galaxy S24) but adds tiny black bars on older devices. Most creators stick to 1080×1920.</div>
+        </div>
+        <div class="faq-item">
+          <div class="faq-question">Instagram cropped my beautiful portrait photo — help!<span></span></div>
+          <div class="faq-answer">Instagram Feed only loves 4:5 (1080×1350), 1:1 (1080×1080) or 16:9. Anything else gets cropped. Use 1080×1350 for tall portraits → no cropping!</div>
+        </div>
+        <div class="faq-item">
+          <div class="faq-question">Can I post a horizontal YouTube video on Reels without it looking terrible?<span></span></div>
+          <div class="faq-answer">Only if you add blurred side panels (use our “Full Frame Border Blur” tool) or crop to 9:16. Otherwise Reels will add huge black bars or zoom in automatically.</div>
+        </div>
+        <div class="faq-item">
+          <div class="faq-question">What resolution do the top creators actually export?<span></span></div>
+          <div class="faq-answer">99% use 1080×1920. It’s the sweet spot: maximum quality + works perfectly on TikTok, Reels, Shorts, Stories, and even Instagram Feed when cropped.</div>
+        </div>
+        <div class="faq-item">
+          <div class="faq-question">My iPhone screenshot shows 1290×2796 — is that good?<span></span></div>
+          <div class="faq-answer">That’s iPhone 15 Pro Max with Dynamic Island. For perfect TikTok use 1179×2555 or just export 1080×1920 (everyone does the latter — zero issues).</div>
+        </div>
+        <div class="faq-item">
+          <div class="faq-question">Where should I put text so it never gets cut off?<span></span></div>
+          <div class="faq-answer">Keep everything inside the center “safe zone” (about 80% of the screen). Check with our Safe Zone Overlay tool — it shows exactly where UI elements hide your content.</div>
+        </div>
+        <div class="faq-item">
+          <div class="faq-question">Do I lose quality if I export at 720p instead of 1080p?<span></span></div>
+          <div class="faq-answer">Yes — TikTok/Reels compress everything anyway, but 1080p source = noticeably sharper final video. Always export 1080 width minimum.</div>
+        </div>
+        <div class="faq-item">
+          <div class="faq-question">Is this tool really private?<span></span></div>
+          <div class="faq-answer">100%. Your images never leave your device. No servers, no tracking, works offline after first load. Add to home screen for instant access.</div>
+        </div>
+      </section>
+    </main>
+
+    <footer>© 2025 SocialMediaToolsKit. Built for speed.</footer>
+  </div>
+
+  <!-- FAQ Schema for Google Rich Results -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    "mainEntity": [
+      {
+        "@type": "Question",
+        "name": "Why does TikTok always zoom in and ruin my video?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Because you exported 16:9 (YouTube ratio) instead of 9:16. TikTok forces full-screen vertical → it auto-zooms and cuts heads/feet. Always export 1080×1920!"
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "I recorded vertically on my phone — why are there black bars on TikTok?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Your phone has a taller screen than 9:16 (usually 19.5:9 or 20:9). Export at 1080×1920 or 1080×2400 → no more black bars."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "1080×1920 vs 1080×2340 — which one should I use in 2025?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "1080×1920 = 100% safe everywhere. 1080×2340–2400 = fills newer phones perfectly but adds tiny black bars on older devices. Most creators stick to 1080×1920."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "Instagram cropped my beautiful portrait photo — help!",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Instagram Feed only loves 4:5 (1080×1350), 1:1, or 16:9. Use 1080×1350 for tall portraits → no cropping!"
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "Can I post a horizontal YouTube video on Reels without it looking terrible?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Only if you add blurred side panels (use our Full Frame Border Blur tool) or crop to 9:16. Otherwise Reels will add huge black bars or zoom in."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "What resolution do the top creators actually export?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "99% use 1080×1920. It’s the sweet spot: maximum quality + works perfectly everywhere."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "My iPhone screenshot shows 1290×2796 — is that good?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "That’s iPhone 15 Pro Max. For perfect TikTok use 1179×2555 or just export 1080×1920 (everyone does the latter)."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "Where should I put text so it never gets cut off?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Keep everything inside the center “safe zone”. Check with our Safe Zone Overlay tool."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "Do I lose quality if I export at 720p instead of 1080p?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Yes — platforms compress everything, but 1080p source = noticeably sharper final video. Always export 1080 width minimum."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "Is this tool really private?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "100%. Images never leave your device. No servers, works offline. Add to home screen!"
+        }
+      }
+    ]
+  }
+  </script>
+
+  <script>
+    // Random 2 tools
+    const allTools = [
+      {name:"Line Break Generator",url:"line-break.html",emoji:"Return"},
+      {name:"Caption Counter",url:"caption-counter.html",emoji:"Page"},
+      {name:"Safe Zone Overlay",url:"safe-zone-overlay.html",emoji:"Target"},
+      {name:"Full Frame Border Blur",url:"full-frame-border-blur.html",emoji:"Film"},
+      {name:"Hashtag Cleaner",url:"hashtag-cleaner.html",emoji:"Soap"},
+      {name:"Case Converter",url:"case-converter.html",emoji:"Text"},
+      {name:"Stylish Text Generator",url:"stylish-text.html",emoji:"Sparkles"}
+      
+    ];
+
+    function showRandomTools() {
+      const shuffled = [...allTools].sort(()=>Math.random()-0.5);
+      document.getElementById('randomTools').innerHTML = shuffled.slice(0,2).map(t=>`
+        <a href="${t.url}" class="card">
+          <div class="emoji" aria-hidden="true">${t.emoji}</div>
+          <div><h3>${t.name}</h3><p>Try this next →</p></div>
+        </a>`).join('');
+    }
+    showRandomTools();
+
+    // FAQ toggle (first one open by default)
+    document.querySelectorAll('.faq-question').forEach((q,i) => {
+      q.addEventListener('click', () => {
+        q.classList.toggle('active');
+        q.nextElementSibling.classList.toggle('show');
+      });
+      if(i===0) q.click(); // open first FAQ on load
+    });
+
+    // WhatsApp share
+    document.getElementById('shareWhatsApp').onclick = () => {
+      const text = "This free tool instantly tells you if your video/photo will be cropped on TikTok/Reels/Instagram + gives perfect resolutions!\n\nhttps://yourdomain.com/aspect-ratio-detector.html";
+      open("https://wa.me/?text="+encodeURIComponent(text),'_blank');
+    };
+
+    // Core tool logic (drag & drop, paste, etc.)
+    const dropZone = document.getElementById('dropZone');
+    const fileInput = document.getElementById('fileInput');
+    const result = document.getElementById('result');
+
+    ['dragover','dragenter'].forEach(e=>dropZone.addEventListener(e,ev=>{ev.preventDefault();dropZone.classList.add('dragover')}));
+    ['dragleave','drop'].forEach(e=>dropZone.addEventListener(e,ev=>{ev.preventDefault();dropZone.classList.remove('dragover')}));
+    dropZone.onclick = () => fileInput.click();
+    fileInput.onchange = e => handleFiles(e.target.files);
+    dropZone.ondrop = e => {e.preventDefault();handleFiles(e.dataTransfer.files);};
+    document.onpaste = e => {if(e.clipboardData.files.length) handleFiles(e.clipboardData.files);};
+
+    function handleFiles(files){
+      [...files].filter(f=>f.type.startsWith('image/')).forEach(file=>processImage(file));
+    }
+
+    function processImage(file){
+      const img = new Image();
+      img.onload = function(){
+        const w = this.naturalWidth, h = this.naturalHeight;
+        const gcd = (a,b)=> b==0 ? a : gcd(b,a%b);
+        const r = `${w/gcd(w,h)}:${h/gcd(w,h)}`;
+        const decimal = (w/h).toFixed(3);
+
+        const names = { "9:16":"TikTok/Reels/Shorts (Perfect)", "16:9":"YouTube", "1:1":"Square", "4:5":"Instagram Portrait", "19.5:9":"iPhone 14/15 Pro Max" };
+        const name = names[r] || "Custom ratio";
+
+        const bases = [2160,1440,1080,720,540,432,360];
+        const safe = bases.map(b=>`${Math.round(b*w/h)}×${b}`).filter(x=>parseInt(x.split('×')[0])>=320);
+
+        result.classList.remove('hide');
+        result.innerHTML = `
+          <img src="${URL.createObjectURL(file)}" class="preview-img" alt="Preview">
+          <h2 style="text-align:center;margin:20px 0;">${w} × ${h}</h2>
+          <div style="text-align:center;">
+            <div class="ratio-box">${r}</div>
+            <div class="ratio-box">${decimal}:1</div>
+          </div>
+          <p style="text-align:center;font-size:19px;color:var(--accent-from);margin:15px 0;">${name}</p>
+          <h3 style="margin:20px 0 10px;">Safe resolutions you can use:</h3>
+          <table class="res-table">
+            <thead><tr><th>Resolution</th><th></th></tr></thead>
+            <tbody>${safe.map(res=>`<tr><td>${res}</td><td><button class="btn-copy" onclick="navigator.clipboard.writeText('${res}')">Copy</button></td></tr>`).join('')}</tbody>
+          </table>
+          <p style="text-align:center;margin-top:25px;">
+            <button class="btn-cta" onclick="navigator.clipboard.writeText('1080×1920')">Copy Most Popular → 1080×1920</button>
+          </p>`;
+      };
+      img.src = URL.createObjectURL(file);
+    }
+  </script>
+</body>
+</html>
