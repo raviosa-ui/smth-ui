@@ -1,0 +1,530 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Emoji Counter & Remover — SocialMediaToolsKit</title>
+    <meta name="description" content="Count, analyze, and remove emojis from your text instantly. Free tool for social media creators with density calculation and breakdown analysis." />
+    <meta name="theme-color" content="#0f172a" />
+    
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+      tailwind.config = {
+        theme: {
+          extend: {
+            colors: {
+              bg: '#0f172a',
+              card: '#1e293b',
+              text: '#f8fafc',
+              muted: '#94a3b8',
+              border: '#334155',
+              accent: {
+                from: '#38bdf8',
+                to: '#818cf8',
+              }
+            },
+            fontFamily: {
+              sans: ['-apple-system', 'BlinkMacSystemFont', '"Segoe UI"', 'Roboto', 'Helvetica', 'Arial', 'sans-serif'],
+            },
+            animation: {
+              'fade-in': 'fadeIn 0.2s ease-out',
+              'slide-up': 'slideUp 0.3s ease-out',
+            },
+            keyframes: {
+              fadeIn: {
+                '0%': { opacity: '0' },
+                '100%': { opacity: '1' },
+              },
+              slideUp: {
+                '0%': { transform: 'translateY(10px)', opacity: '0' },
+                '100%': { transform: 'translateY(0)', opacity: '1' },
+              }
+            }
+          }
+        }
+      }
+    </script>
+    
+    <!-- Icons (Lucide) - Loaded as SVG strings in JS to avoid external request latency, 
+         but for simplicity in a single file, we will use inline SVGs in HTML. -->
+
+    <style>
+      /* Custom Scrollbar */
+      ::-webkit-scrollbar { width: 8px; height: 8px; }
+      ::-webkit-scrollbar-track { background: #0f172a; }
+      ::-webkit-scrollbar-thumb { background: #334155; border-radius: 4px; }
+      ::-webkit-scrollbar-thumb:hover { background: #475569; }
+
+      /* Gradient Text Utility */
+      .gradient-text {
+        background: linear-gradient(90deg, #38bdf8, #818cf8);
+        -webkit-background-clip: text;
+        color: transparent;
+        -webkit-text-fill-color: transparent;
+      }
+
+      /* Base styles */
+      body { background-color: #0f172a; color: #f8fafc; }
+      
+      /* Toast Animation */
+      .toast {
+        transition: all 0.3s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+        opacity: 0;
+        transform: translate(-50%, -20px);
+        visibility: hidden;
+      }
+      .toast.show {
+        opacity: 1;
+        transform: translate(-50%, 0);
+        visibility: visible;
+      }
+    </style>
+<script type="importmap">
+{
+  "imports": {
+    "react": "https://aistudiocdn.com/react@^19.2.0",
+    "react-dom/": "https://aistudiocdn.com/react-dom@^19.2.0/",
+    "react/": "https://aistudiocdn.com/react@^19.2.0/",
+    "lucide-react": "https://aistudiocdn.com/lucide-react@^0.555.0"
+  }
+}
+</script>
+</head>
+<body class="antialiased min-h-screen flex flex-col font-sans selection:bg-accent-from/30 selection:text-white">
+
+    <!-- Toast Notification -->
+    <div id="toast" class="toast fixed top-24 left-1/2 z-50 flex items-center gap-2 bg-card border border-accent-from/50 px-5 py-3 rounded-full shadow-2xl shadow-accent-from/10">
+        <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#38bdf8" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path><polyline points="22 4 12 14.01 9 11.01"></polyline></svg>
+        <span id="toast-message" class="text-sm font-semibold text-accent-from">Notification</span>
+    </div>
+
+    <!-- Header -->
+    <header class="sticky top-0 z-40 bg-bg/80 backdrop-blur-lg border-b border-white/5">
+        <div class="flex items-center justify-between px-4 py-3 max-w-[1120px] mx-auto w-full">
+            <a href="/" class="flex items-center gap-3 font-semibold text-lg whitespace-nowrap group">
+                <span class="text-2xl group-hover:scale-110 transition-transform duration-200" aria-hidden="true">⚡</span>
+                <span class="gradient-text font-bold tracking-tight">SocialMediaToolsKit</span>
+            </a>
+
+            <!-- Desktop Nav -->
+            <nav class="hidden md:flex gap-1" role="navigation">
+                <a href="#tools" class="px-4 py-2 rounded-xl text-muted hover:text-text hover:bg-white/5 transition-all text-sm font-medium">Tools</a>
+                <a href="#about" class="px-4 py-2 rounded-xl text-muted hover:text-text hover:bg-white/5 transition-all text-sm font-medium">About</a>
+                <a href="#requests" class="px-4 py-2 rounded-xl text-muted hover:text-text hover:bg-white/5 transition-all text-sm font-medium">Requests</a>
+            </nav>
+
+            <!-- Mobile Menu Button -->
+            <button id="menu-btn" class="md:hidden text-muted hover:text-text p-2 rounded-lg hover:bg-white/5 transition-colors" aria-label="Toggle menu">
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="4" y1="12" x2="20" y2="12"></line><line x1="4" y1="6" x2="20" y2="6"></line><line x1="4" y1="18" x2="20" y2="18"></line></svg>
+            </button>
+        </div>
+
+        <!-- Mobile Nav Dropdown -->
+        <nav id="mobile-menu" class="hidden md:hidden bg-card border-b border-border p-4 flex-col space-y-2 shadow-xl">
+            <a href="#tools" class="block px-4 py-3 rounded-lg text-muted hover:text-text hover:bg-white/5 transition-colors">Tools</a>
+            <a href="#about" class="block px-4 py-3 rounded-lg text-muted hover:text-text hover:bg-white/5 transition-colors">About</a>
+            <a href="#requests" class="block px-4 py-3 rounded-lg text-muted hover:text-text hover:bg-white/5 transition-colors">Requests</a>
+        </nav>
+    </header>
+
+    <main class="flex-1 w-full max-w-[1120px] mx-auto px-4 sm:px-6 py-8">
+        
+        <!-- Hero Section -->
+        <section class="bg-card rounded-3xl p-6 sm:p-10 shadow-[0_6px_22px_rgba(3,7,18,0.6)] border-t border-white/5 mb-8 animate-slide-up">
+            <div class="max-w-2xl">
+                <h1 class="text-3xl sm:text-4xl font-bold text-text mb-4 tracking-tight">
+                    Emoji Counter & Remover
+                </h1>
+                <p class="text-muted text-lg leading-relaxed">
+                    Analyze your text instantly. Count emojis, calculate density, and strip them out for clean, professional content. Runs 100% in your browser.
+                </p>
+            </div>
+        </section>
+
+        <!-- Tool Interface -->
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-8 items-start">
+            
+            <!-- Main Input Column -->
+            <div class="lg:col-span-2 space-y-6">
+                
+                <!-- Input Area -->
+                <div class="bg-card/50 rounded-2xl p-1 border border-border focus-within:border-accent-from transition-colors duration-300 shadow-lg relative group">
+                    <textarea
+                        id="input-text"
+                        placeholder="Paste your text with emojis here... 🚀✨"
+                        class="w-full h-72 bg-transparent text-text p-5 resize-y outline-none placeholder:text-muted/40 font-sans text-lg rounded-xl"
+                        spellcheck="false"
+                    ></textarea>
+                    
+                    <!-- Action Bar -->
+                    <div class="bg-bg/50 p-3 rounded-b-xl flex flex-wrap gap-3 items-center justify-between border-t border-white/5 backdrop-blur-sm">
+                        <div class="flex gap-3">
+                            <button id="btn-remove" class="flex items-center gap-2 bg-gradient-to-r from-accent-from to-accent-to text-[#06121f] font-bold px-5 py-2.5 rounded-xl text-sm hover:-translate-y-0.5 hover:shadow-lg hover:shadow-accent-from/20 transition-all duration-200 active:translate-y-0">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 6h18"></path><path d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6"></path><path d="M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2"></path></svg>
+                                <span>Remove Emojis</span>
+                            </button>
+                            <button id="btn-clear" class="flex items-center gap-2 px-4 py-2.5 rounded-xl text-sm font-medium text-muted hover:text-text hover:bg-white/5 transition-colors border border-transparent hover:border-white/10">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12a9 9 0 0 0-9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"></path><path d="M3 3v5h5"></path><path d="M3 12a9 9 0 0 0 9 9 9.75 9.75 0 0 0 6.74-2.74L21 16"></path><path d="M16 16h5v5"></path></svg>
+                                <span>Clear</span>
+                            </button>
+                        </div>
+
+                        <button id="btn-copy" class="flex items-center gap-2 px-4 py-2.5 rounded-xl text-sm font-medium text-accent-from hover:bg-accent-from/10 transition-colors ml-auto">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
+                            <span>Copy Text</span>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Stats Grid -->
+                <div class="grid grid-cols-2 sm:grid-cols-4 gap-4">
+                    <!-- Stat 1 -->
+                    <div class="bg-card border border-border p-5 rounded-2xl flex flex-col items-center justify-center text-center hover:border-accent-from/50 transition-colors group">
+                        <div class="text-2xl mb-3 bg-white/5 w-12 h-12 flex items-center justify-center rounded-xl group-hover:scale-110 transition-transform duration-300 shadow-inner">🔢</div>
+                        <div id="stat-total" class="text-3xl font-bold text-text mb-1 font-mono tracking-tight">0</div>
+                        <div class="text-xs text-muted uppercase tracking-wider font-semibold">Total Emojis</div>
+                    </div>
+                    <!-- Stat 2 -->
+                    <div class="bg-card border border-border p-5 rounded-2xl flex flex-col items-center justify-center text-center hover:border-accent-from/50 transition-colors group">
+                        <div class="text-2xl mb-3 bg-white/5 w-12 h-12 flex items-center justify-center rounded-xl group-hover:scale-110 transition-transform duration-300 shadow-inner">🌟</div>
+                        <div id="stat-unique" class="text-3xl font-bold text-text mb-1 font-mono tracking-tight">0</div>
+                        <div class="text-xs text-muted uppercase tracking-wider font-semibold">Unique</div>
+                    </div>
+                    <!-- Stat 3 -->
+                    <div class="bg-card border border-border p-5 rounded-2xl flex flex-col items-center justify-center text-center hover:border-accent-from/50 transition-colors group">
+                        <div class="text-2xl mb-3 bg-white/5 w-12 h-12 flex items-center justify-center rounded-xl group-hover:scale-110 transition-transform duration-300 shadow-inner">📊</div>
+                        <div id="stat-density" class="text-3xl font-bold text-text mb-1 font-mono tracking-tight">0%</div>
+                        <div class="text-xs text-muted uppercase tracking-wider font-semibold">Density</div>
+                    </div>
+                    <!-- Stat 4 -->
+                    <div class="bg-card border border-border p-5 rounded-2xl flex flex-col items-center justify-center text-center hover:border-accent-from/50 transition-colors group">
+                        <div class="text-2xl mb-3 bg-white/5 w-12 h-12 flex items-center justify-center rounded-xl group-hover:scale-110 transition-transform duration-300 shadow-inner">📝</div>
+                        <div id="stat-chars" class="text-3xl font-bold text-text mb-1 font-mono tracking-tight">0</div>
+                        <div class="text-xs text-muted uppercase tracking-wider font-semibold">Characters</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Sidebar / Breakdown -->
+            <div class="lg:col-span-1">
+                <div class="bg-card rounded-2xl border border-border overflow-hidden shadow-xl sticky top-24">
+                    <div class="p-4 border-b border-white/5 bg-white/5 flex justify-between items-center backdrop-blur">
+                        <h3 class="font-semibold text-text">Emoji Breakdown</h3>
+                        <span id="breakdown-badge" class="text-xs text-muted font-mono bg-black/20 px-2 py-1 rounded">0 found</span>
+                    </div>
+                    
+                    <div id="breakdown-list" class="max-h-[500px] overflow-y-auto p-2 scrollbar-thin min-h-[200px]">
+                        <!-- Empty State -->
+                        <div class="h-48 flex flex-col items-center justify-center text-muted">
+                            <p class="text-4xl mb-3 opacity-20 grayscale">😶</p>
+                            <p class="text-sm">No emojis found yet.</p>
+                        </div>
+                    </div>
+                    
+                    <!-- Copy Report Button (Hidden when empty) -->
+                    <div id="report-actions" class="p-3 bg-bg/30 border-t border-white/5 hidden">
+                        <button id="btn-copy-report" class="w-full py-2 text-xs font-medium text-muted hover:text-accent-from transition-colors flex items-center justify-center gap-2 group">
+                            <svg class="group-hover:translate-y-0.5 transition-transform" xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" y1="15" x2="12" y2="3"></line></svg>
+                            Download Report
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Cross Sell Grid -->
+        <section id="tools" class="mt-24" aria-labelledby="tools-title">
+            <h2 id="tools-title" class="text-lg font-bold text-text mb-6">More Creator Tools</h2>
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
+                <!-- Card 1 -->
+                <a href="line-break.html" class="flex gap-4 p-5 rounded-2xl bg-white/5 border border-border hover:bg-white/10 hover:border-accent-from hover:-translate-y-1 hover:shadow-xl transition-all duration-300 items-start group">
+                    <div class="text-2xl w-12 h-12 flex items-center justify-center bg-white/5 rounded-xl shrink-0 group-hover:scale-110 transition-transform">↩️</div>
+                    <div>
+                        <h3 class="font-semibold text-text text-sm mb-1 group-hover:text-accent-from transition-colors">Line Break Generator</h3>
+                        <p class="text-muted text-xs leading-relaxed">Fix Instagram line breaks instantly.</p>
+                    </div>
+                </a>
+                <!-- Card 2 -->
+                <a href="caption-counter.html" class="flex gap-4 p-5 rounded-2xl bg-white/5 border border-border hover:bg-white/10 hover:border-accent-from hover:-translate-y-1 hover:shadow-xl transition-all duration-300 items-start group">
+                    <div class="text-2xl w-12 h-12 flex items-center justify-center bg-white/5 rounded-xl shrink-0 group-hover:scale-110 transition-transform">🧾</div>
+                    <div>
+                        <h3 class="font-semibold text-text text-sm mb-1 group-hover:text-accent-from transition-colors">Caption Counter</h3>
+                        <p class="text-muted text-xs leading-relaxed">Live character and word counters.</p>
+                    </div>
+                </a>
+                <!-- Card 3 -->
+                <a href="hashtag-cleaner.html" class="flex gap-4 p-5 rounded-2xl bg-white/5 border border-border hover:bg-white/10 hover:border-accent-from hover:-translate-y-1 hover:shadow-xl transition-all duration-300 items-start group">
+                    <div class="text-2xl w-12 h-12 flex items-center justify-center bg-white/5 rounded-xl shrink-0 group-hover:scale-110 transition-transform">🧼</div>
+                    <div>
+                        <h3 class="font-semibold text-text text-sm mb-1 group-hover:text-accent-from transition-colors">Hashtag Cleaner</h3>
+                        <p class="text-muted text-xs leading-relaxed">Remove duplicates and clean tags.</p>
+                    </div>
+                </a>
+            </div>
+        </section>
+
+        <!-- FAQ Section -->
+        <section id="about" class="max-w-3xl mx-auto mt-20 px-4 mb-16" aria-labelledby="faq-title">
+            <h3 id="faq-title" class="text-2xl font-bold text-text mb-10 text-center">Frequently Asked Questions</h3>
+            <div class="space-y-4">
+                <details class="group bg-card/50 border border-border rounded-xl open:bg-card/80 transition-all duration-300 hover:border-accent-from/30">
+                    <summary class="flex items-center justify-between cursor-pointer p-5 font-medium text-text list-none select-none">
+                        <span>Why should I remove emojis?</span>
+                        <svg class="w-5 h-5 text-muted transition-transform group-open:rotate-180" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"></polyline></svg>
+                    </summary>
+                    <div class="px-5 pb-5 text-sm text-muted leading-relaxed">
+                        Removing emojis is useful for professional documents, academic papers, or legacy systems (like older CSV importers) that do not support Unicode characters. It also helps in NLP (Natural Language Processing) data cleaning.
+                    </div>
+                </details>
+
+                <details class="group bg-card/50 border border-border rounded-xl open:bg-card/80 transition-all duration-300 hover:border-accent-from/30">
+                    <summary class="flex items-center justify-between cursor-pointer p-5 font-medium text-text list-none select-none">
+                        <span>How is density calculated?</span>
+                        <svg class="w-5 h-5 text-muted transition-transform group-open:rotate-180" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"></polyline></svg>
+                    </summary>
+                    <div class="px-5 pb-5 text-sm text-muted leading-relaxed">
+                        Emoji density is the percentage of your text that consists of emojis. We calculate it by dividing the total count of emojis by the total character count (graphemes) and multiplying by 100.
+                    </div>
+                </details>
+
+                <details class="group bg-card/50 border border-border rounded-xl open:bg-card/80 transition-all duration-300 hover:border-accent-from/30">
+                    <summary class="flex items-center justify-between cursor-pointer p-5 font-medium text-text list-none select-none">
+                        <span>Is this data private?</span>
+                        <svg class="w-5 h-5 text-muted transition-transform group-open:rotate-180" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"></polyline></svg>
+                    </summary>
+                    <div class="px-5 pb-5 text-sm text-muted leading-relaxed">
+                        Yes, 100%. This tool runs entirely in your web browser using JavaScript. No text is ever sent to our servers, so your content remains completely private.
+                    </div>
+                </details>
+
+                <details class="group bg-card/50 border border-border rounded-xl open:bg-card/80 transition-all duration-300 hover:border-accent-from/30">
+                    <summary class="flex items-center justify-between cursor-pointer p-5 font-medium text-text list-none select-none">
+                        <span>Does it support new emojis?</span>
+                        <svg class="w-5 h-5 text-muted transition-transform group-open:rotate-180" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"></polyline></svg>
+                    </summary>
+                    <div class="px-5 pb-5 text-sm text-muted leading-relaxed">
+                        Yes. We use the browser's native <code>Intl.Segmenter</code> API and modern Regex patterns to accurately identify even the newest compound emojis and skin tone modifiers.
+                    </div>
+                </details>
+
+                 <details class="group bg-card/50 border border-border rounded-xl open:bg-card/80 transition-all duration-300 hover:border-accent-from/30">
+                    <summary class="flex items-center justify-between cursor-pointer p-5 font-medium text-text list-none select-none">
+                        <span>Is it free?</span>
+                        <svg class="w-5 h-5 text-muted transition-transform group-open:rotate-180" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"></polyline></svg>
+                    </summary>
+                    <div class="px-5 pb-5 text-sm text-muted leading-relaxed">
+                        Yes, this tool is free to use for unlimited requests.
+                    </div>
+                </details>
+            </div>
+        </section>
+
+        <!-- SEO Content -->
+        <article class="max-w-3xl mx-auto prose prose-invert prose-slate mb-12 border-t border-white/5 pt-10">
+            <h3 class="text-text font-bold text-lg mb-2">Optimizing Content for Social Media</h3>
+            <p class="text-muted text-sm leading-relaxed mb-6">
+                Emojis are essential for engagement on platforms like Instagram, TikTok, and X (Twitter). However, overusing them can look spammy. Our density counter helps you find the perfect balance. Additionally, if you are repurposing social content for blog posts or emails, stripping emojis ensures a clean, professional reading experience.
+            </p>
+        </article>
+
+    </main>
+
+    <!-- Footer -->
+    <footer class="text-center py-10 text-muted text-xs sm:text-sm border-t border-white/5 mt-auto bg-card/30">
+        <p>© 2025 SocialMediaToolsKit. Built for speed.</p>
+    </footer>
+
+    <!-- Logic -->
+    <script>
+    (function(){
+        // DOM Elements
+        const elInput = document.getElementById('input-text');
+        const elBtnRemove = document.getElementById('btn-remove');
+        const elBtnClear = document.getElementById('btn-clear');
+        const elBtnCopy = document.getElementById('btn-copy');
+        const elBtnCopyReport = document.getElementById('btn-copy-report');
+        
+        const elStatTotal = document.getElementById('stat-total');
+        const elStatUnique = document.getElementById('stat-unique');
+        const elStatDensity = document.getElementById('stat-density');
+        const elStatChars = document.getElementById('stat-chars');
+        
+        const elBreakdownList = document.getElementById('breakdown-list');
+        const elBreakdownBadge = document.getElementById('breakdown-badge');
+        const elReportActions = document.getElementById('report-actions');
+        
+        const elMenuBtn = document.getElementById('menu-btn');
+        const elMobileMenu = document.getElementById('mobile-menu');
+        const elToast = document.getElementById('toast');
+        const elToastMsg = document.getElementById('toast-message');
+
+        // State
+        let currentCleanText = '';
+        let currentStats = {};
+        let currentBreakdown = [];
+        let toastTimeout;
+
+        // Mobile Menu Toggle
+        elMenuBtn.addEventListener('click', () => {
+            elMobileMenu.classList.toggle('hidden');
+            elMobileMenu.classList.toggle('flex');
+        });
+
+        // Toast Function
+        function showToast(msg) {
+            elToastMsg.textContent = msg;
+            elToast.classList.add('show');
+            clearTimeout(toastTimeout);
+            toastTimeout = setTimeout(() => {
+                elToast.classList.remove('show');
+            }, 2000);
+        }
+
+        // Analysis Logic (Ported from React)
+        const EMOJI_REGEX = /(\p{Emoji_Presentation}|\p{Extended_Pictographic})/u;
+        
+        function analyze(text) {
+            if (!text) {
+                return {
+                    stats: { totalEmojis: 0, uniqueEmojis: 0, totalChars: 0, density: 0 },
+                    breakdown: [],
+                    cleanedText: ''
+                };
+            }
+
+            let segments;
+            // Use Intl.Segmenter if available (modern browsers)
+            if (typeof Intl !== 'undefined' && Intl.Segmenter) {
+                const segmenter = new Intl.Segmenter('en', { granularity: 'grapheme' });
+                segments = segmenter.segment(text);
+            } else {
+                // Basic fallback for older browsers (less accurate for compound emojis)
+                segments = Array.from(text).map(c => ({ segment: c }));
+            }
+
+            let totalEmojis = 0;
+            let charCount = 0;
+            let cleanTextBuilder = '';
+            const emojiCounts = new Map();
+
+            for (const seg of segments) {
+                const char = seg.segment;
+                charCount++; 
+                
+                // Check if emoji
+                if (EMOJI_REGEX.test(char) && /\p{Emoji}/u.test(char)) {
+                    totalEmojis++;
+                    emojiCounts.set(char, (emojiCounts.get(char) || 0) + 1);
+                } else {
+                    cleanTextBuilder += char;
+                }
+            }
+
+            const uniqueEmojis = emojiCounts.size;
+            const density = charCount > 0 ? (totalEmojis / charCount) * 100 : 0;
+            
+            const breakdown = Array.from(emojiCounts.entries())
+                .map(([emoji, count]) => ({ emoji, count }))
+                .sort((a, b) => b.count - a.count);
+
+            return {
+                stats: { totalEmojis, uniqueEmojis, totalChars: text.length, density },
+                breakdown,
+                cleanedText: cleanTextBuilder
+            };
+        }
+
+        // Render Function
+        function render() {
+            const text = elInput.value;
+            const result = analyze(text);
+            
+            currentCleanText = result.cleanedText;
+            currentStats = result.stats;
+            currentBreakdown = result.breakdown;
+
+            // Update Stats
+            elStatTotal.textContent = result.stats.totalEmojis.toLocaleString();
+            elStatUnique.textContent = result.stats.uniqueEmojis.toLocaleString();
+            elStatDensity.textContent = result.stats.density.toFixed(1) + '%';
+            elStatChars.textContent = result.stats.totalChars.toLocaleString();
+
+            // Update Badge
+            elBreakdownBadge.textContent = `${result.stats.totalEmojis} found`;
+
+            // Update Breakdown List
+            if (result.breakdown.length === 0) {
+                elBreakdownList.innerHTML = `
+                    <div class="h-48 flex flex-col items-center justify-center text-muted">
+                        <p class="text-4xl mb-3 opacity-20 grayscale">😶</p>
+                        <p class="text-sm">No emojis found yet.</p>
+                    </div>`;
+                elReportActions.classList.add('hidden');
+            } else {
+                elReportActions.classList.remove('hidden');
+                let html = '<div class="space-y-1">';
+                result.breakdown.forEach(item => {
+                    const percent = (item.count / result.stats.totalEmojis) * 100;
+                    const codePoint = item.emoji.codePointAt(0).toString(16).toUpperCase();
+                    html += `
+                    <div class="flex items-center justify-between p-2 rounded-lg hover:bg-white/5 transition-colors group">
+                        <div class="flex items-center gap-3">
+                            <span class="text-2xl">${item.emoji}</span>
+                            <span class="text-[10px] text-muted font-mono bg-bg px-1.5 rounded opacity-0 group-hover:opacity-100 transition-opacity">U+${codePoint}</span>
+                        </div>
+                        <div class="flex items-center gap-3">
+                            <div class="h-1.5 w-16 bg-bg rounded-full overflow-hidden">
+                                <div class="h-full bg-accent-from" style="width: ${percent}%"></div>
+                            </div>
+                            <span class="font-mono text-sm text-text min-w-[20px] text-right">${item.count}</span>
+                        </div>
+                    </div>`;
+                });
+                html += '</div>';
+                elBreakdownList.innerHTML = html;
+            }
+        }
+
+        // Event Listeners
+        elInput.addEventListener('input', render);
+
+        elBtnRemove.addEventListener('click', () => {
+            if (currentStats.totalEmojis === 0) {
+                showToast('No emojis to remove');
+                return;
+            }
+            elInput.value = currentCleanText;
+            render(); // Re-analyze
+            showToast('All emojis removed!');
+        });
+
+        elBtnClear.addEventListener('click', () => {
+            elInput.value = '';
+            render();
+            showToast('Cleared');
+            elInput.focus();
+        });
+
+        elBtnCopy.addEventListener('click', () => {
+            if (!elInput.value) return;
+            navigator.clipboard.writeText(elInput.value)
+                .then(() => showToast('Copied to clipboard!'))
+                .catch(() => showToast('Failed to copy'));
+        });
+
+        elBtnCopyReport.addEventListener('click', () => {
+            if (currentBreakdown.length === 0) return;
+            const report = currentBreakdown.map(b => `${b.emoji} x ${b.count}`).join('\n');
+            navigator.clipboard.writeText(report)
+                .then(() => showToast('Report copied!'))
+                .catch(() => showToast('Failed to copy'));
+        });
+
+        // Initialize
+        render();
+
+    })();
+    </script>
+</body>
+</html>
