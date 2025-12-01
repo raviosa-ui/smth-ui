@@ -1,0 +1,675 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Aesthetic Text Formatter — SocialMediaToolsHub</title>
+    <meta name="description" content="Transform plain text into aesthetic, spaced-out, and curated captions with custom fonts for Instagram, TikTok, and Notion. Free offline tool.">
+    <meta name="theme-color" content="#0f172a">
+    
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: {
+                        bg: '#0f172a',
+                        card: '#1e293b',
+                        text: '#f8fafc',
+                        muted: '#94a3b8',
+                        border: '#334155',
+                        accent: { from: '#38bdf8', to: '#818cf8' }
+                    },
+                    fontFamily: {
+                        sans: ['-apple-system', 'BlinkMacSystemFont', '"Segoe UI"', 'Roboto', 'Helvetica', 'Arial', 'sans-serif'],
+                    },
+                    animation: {
+                        'fall': 'fall 10s linear infinite',
+                    },
+                    keyframes: {
+                        fall: {
+                            '0%': { transform: 'translateY(-10vh) rotate(0deg)', opacity: '0.8' },
+                            '100%': { transform: 'translateY(100vh) rotate(360deg)', opacity: '0' },
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+
+    <!-- Schema.org FAQ JSON-LD -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "FAQPage",
+      "mainEntity": [
+        {
+          "@type": "Question",
+          "name": "What is aesthetic text formatting?",
+          "acceptedAnswer": { "@type": "Answer", "text": "Aesthetic text uses spacing, emojis, and Unicode symbols to make plain captions feel calming, dreamy, or curated." }
+        },
+        {
+          "@type": "Question",
+          "name": "How do I make my Instagram captions look aesthetic?",
+          "acceptedAnswer": { "@type": "Answer", "text": "Use soft line breaks, emoji bullets, spaced letters, and seasonal dividers. This tool does it all in one click." }
+        },
+        {
+          "@type": "Question",
+          "name": "Is my text saved or sent online?",
+          "acceptedAnswer": { "@type": "Answer", "text": "No. Everything runs in your browser. Your text never leaves your device—100% private." }
+        },
+        {
+          "@type": "Question",
+          "name": "Can I use the aesthetic fonts on Instagram and TikTok?",
+          "acceptedAnswer": { "@type": "Answer", "text": "Yes! The fonts (Serif, Script, Mono, Outline) use special Unicode characters that work in Instagram bios, captions, comments, and TikTok profiles." }
+        },
+        {
+          "@type": "Question",
+          "name": "What is the difference between the font styles?",
+          "acceptedAnswer": { "@type": "Answer", "text": "Standard is plain text. Serif adds an elegant italic look. Mono looks like a typewriter. Script mimics cursive handwriting. Outline creates double-struck letters." }
+        },
+        {
+          "@type": "Question",
+          "name": "Does this work on both Android and iOS?",
+          "acceptedAnswer": { "@type": "Answer", "text": "Yes, it is a responsive web tool that works on all modern smartphones, tablets, and desktops." }
+        },
+        {
+          "@type": "Question",
+          "name": "Why do some characters look like boxes?",
+          "acceptedAnswer": { "@type": "Answer", "text": "Some older devices or specific apps might not support all Unicode characters (especially the Script or Outline fonts). If this happens, try the 'Serif' or 'Minimal' options." }
+        },
+        {
+          "@type": "Question",
+          "name": "Can I use this for Notion or journaling?",
+          "acceptedAnswer": { "@type": "Answer", "text": "Absolutely! The clean, minimalist output works beautifully in Notion, Obsidian, or any plain-text journal app to create headers and vibes." }
+        }
+      ]
+    }
+    </script>
+
+    <style>
+        /* Custom scrollbars & utilities */
+        ::-webkit-scrollbar { width: 8px; height: 8px; }
+        ::-webkit-scrollbar-track { background: #0f172a; }
+        ::-webkit-scrollbar-thumb { background: #334155; border-radius: 4px; }
+        ::-webkit-scrollbar-thumb:hover { background: #475569; }
+        
+        .petals-container { position: fixed; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; z-index: 50; overflow: hidden; }
+        .petal { position: absolute; top: -20px; font-size: 1.5rem; animation: fall linear infinite; }
+        .preview-content { white-space: pre-wrap; word-wrap: break-word; }
+        
+        /* Custom checkbox style */
+        .custom-checkbox { appearance: none; width: 1rem; height: 1rem; border-radius: 0.25rem; background-color: transparent; border: 1px solid #334155; display: grid; place-content: center; margin-top: 0.15rem; cursor: pointer; }
+        .custom-checkbox::before { content: ""; width: 0.65rem; height: 0.65rem; transform: scale(0); transition: 120ms transform ease-in-out; box-shadow: inset 1em 1em #38bdf8; transform-origin: center; clip-path: polygon(14% 44%, 0 65%, 50% 100%, 100% 16%, 80% 0%, 43% 62%); }
+        .custom-checkbox:checked::before { transform: scale(1); }
+        .custom-checkbox:checked { border-color: #38bdf8; }
+        
+        /* Hide scrollbar for horizontal lists but keep functionality */
+        .no-scrollbar::-webkit-scrollbar { display: none; }
+        .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+    </style>
+<script type="importmap">
+{
+  "imports": {
+    "react": "https://aistudiocdn.com/react@^19.2.0",
+    "react/": "https://aistudiocdn.com/react@^19.2.0/"
+  }
+}
+</script>
+</head>
+<body class="bg-bg text-text antialiased selection:bg-accent-from selection:text-white flex flex-col min-h-screen">
+    
+    <!-- Falling Animation Layer -->
+    <div id="petals" class="petals-container" aria-hidden="true"></div>
+
+    <!-- Header -->
+    <header class="border-b border-border/10 bg-bg/50 backdrop-blur-md sticky top-0 z-40">
+        <div class="container mx-auto px-4 py-3 max-w-[1120px] flex items-center justify-between">
+            <a href="index.html" class="flex items-center gap-2 font-semibold text-lg hover:opacity-80 transition-opacity" aria-label="Go to Homepage">
+                <span class="text-2xl" aria-hidden="true">⚡</span>
+                <span class="bg-gradient-to-r from-accent-from to-accent-to bg-clip-text text-transparent">SocialMediaToolsHub</span>
+            </a>
+            <nav class="flex gap-4 text-sm font-medium text-muted">
+                <a href="#" class="hover:text-text px-3 py-2 rounded-lg hover:bg-white/5 transition-colors">Home</a>
+            </nav>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="container mx-auto px-4 py-8 max-w-[1120px] flex-grow">
+        
+        <!-- Hero Section -->
+        <div class="bg-card border border-border rounded-3xl p-6 md:p-8 shadow-2xl relative overflow-hidden mb-8 text-center md:text-left z-10">
+            <div class="absolute top-0 right-0 p-8 opacity-5 text-9xl select-none pointer-events-none">✨</div>
+            <h1 class="text-2xl md:text-3xl font-bold mb-3 text-white">Aesthetic Text Formatter</h1>
+            <p class="text-muted max-w-2xl text-[15px] leading-relaxed mx-auto md:mx-0">
+                Transform your words into visually soothing, mood-enhancing aesthetic text—using only spacing, delicate emojis, and Unicode fonts. Perfect for Instagram, TikTok, and Notion.
+            </p>
+        </div>
+
+        <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 relative z-10">
+            
+            <!-- Left Column: Controls -->
+            <div class="lg:col-span-5 space-y-6">
+                
+                <!-- Theme Selection -->
+                <div class="bg-card border border-border rounded-2xl p-4">
+                    <h2 class="text-xs font-bold text-muted uppercase tracking-wider mb-3">Select Theme</h2>
+                    <div class="grid grid-cols-4 sm:grid-cols-7 gap-2" id="theme-grid" role="list">
+                        <!-- Themes injected by JS -->
+                    </div>
+                </div>
+
+                <!-- Font Selection -->
+                <div class="bg-card border border-border rounded-2xl p-4">
+                    <h2 class="text-xs font-bold text-muted uppercase tracking-wider mb-3">Typography Style</h2>
+                    <div class="flex gap-2 overflow-x-auto pb-2 no-scrollbar" id="font-list" role="list">
+                        <!-- Fonts injected by JS -->
+                    </div>
+                </div>
+
+                <!-- Text Input -->
+                <div class="bg-card border border-border rounded-2xl p-1 shadow-lg focus-within:border-accent-from transition-colors">
+                    <textarea id="input-text" class="w-full h-48 bg-transparent text-text p-4 resize-none outline-none font-sans text-base leading-relaxed placeholder:text-slate-600" placeholder="Paste or type your note here..." aria-label="Input Text"></textarea>
+                </div>
+
+                <!-- Settings Panel -->
+                <div class="bg-card border border-border rounded-2xl p-5 space-y-4">
+                    <h2 class="text-xs font-bold text-muted uppercase tracking-wider mb-2">Refine Style</h2>
+                    
+                    <div class="grid grid-cols-2 gap-3 text-sm">
+                        <label class="flex items-center gap-3 cursor-pointer select-none hover:bg-white/5 p-1.5 rounded-lg transition-colors">
+                            <input type="checkbox" id="opt-lowercase" class="custom-checkbox"> 
+                            <span>Lowercase</span>
+                        </label>
+                        <label class="flex items-center gap-3 cursor-pointer select-none hover:bg-white/5 p-1.5 rounded-lg transition-colors">
+                            <input type="checkbox" id="opt-spaced" class="custom-checkbox"> 
+                            <span>S p a c e d</span>
+                        </label>
+                        <label class="flex items-center gap-3 cursor-pointer select-none hover:bg-white/5 p-1.5 rounded-lg transition-colors">
+                            <input type="checkbox" id="opt-dividers" class="custom-checkbox" checked> 
+                            <span>Dividers</span>
+                        </label>
+                        <label class="flex items-center gap-3 cursor-pointer select-none hover:bg-white/5 p-1.5 rounded-lg transition-colors">
+                            <input type="checkbox" id="opt-mood" class="custom-checkbox" checked> 
+                            <span>Mood Emojis</span>
+                        </label>
+                        <label class="flex items-center gap-3 cursor-pointer select-none hover:bg-white/5 p-1.5 rounded-lg transition-colors">
+                            <input type="checkbox" id="opt-clean" class="custom-checkbox" checked> 
+                            <span>Clean Lines</span>
+                        </label>
+                        <label class="flex items-center gap-3 cursor-pointer select-none hover:bg-white/5 p-1.5 rounded-lg transition-colors">
+                            <input type="checkbox" id="opt-soft" class="custom-checkbox"> 
+                            <span>Soft Punctuation</span>
+                        </label>
+                    </div>
+
+                    <div class="pt-3 border-t border-border mt-3">
+                         <label class="block text-xs text-muted mb-2 font-medium" for="opt-signature">SIGNATURE</label>
+                         <input type="text" id="opt-signature" placeholder="e.g. — daily notes 🕊️" class="w-full bg-bg border border-border rounded-lg px-3 py-2 text-sm text-text focus:border-accent-from outline-none transition-colors">
+                    </div>
+                </div>
+            </div>
+
+            <!-- Right Column: Preview -->
+            <div class="lg:col-span-7 flex flex-col gap-6">
+                
+                <!-- Action Buttons -->
+                <div class="flex gap-3">
+                    <button id="btn-copy" class="flex-1 flex items-center justify-center gap-2 py-3.5 rounded-xl font-bold text-sm bg-gradient-to-r from-accent-from to-accent-to text-slate-900 shadow-lg hover:-translate-y-1 hover:shadow-accent-from/20 transition-all active:translate-y-0">
+                        <span id="copy-icon" aria-hidden="true">✂️</span> 
+                        <span id="copy-text">Copy Aesthetic Text</span>
+                    </button>
+                    <button id="btn-download" class="bg-card border border-border text-muted hover:text-text hover:border-accent-from rounded-xl px-4 transition-colors" title="Download .txt" aria-label="Download text file">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+                    </button>
+                </div>
+
+                <!-- Preview Card -->
+                <div class="bg-card border border-border rounded-2xl overflow-hidden flex flex-col h-full min-h-[500px] shadow-2xl">
+                    <div class="flex border-b border-border bg-bg/50 backdrop-blur-md overflow-x-auto no-scrollbar" id="tab-container" role="tablist">
+                        <!-- Tabs injected by JS -->
+                    </div>
+                    
+                    <div id="preview-area" class="flex-grow p-6 md:p-10 transition-colors duration-500 overflow-y-auto bg-white text-black">
+                        <!-- Mockup User Header -->
+                        <div class="mb-4 flex items-center gap-3">
+                            <div class="w-8 h-8 rounded-full bg-gray-200 overflow-hidden flex-shrink-0">
+                                <svg class="w-full h-full text-gray-400" fill="currentColor" viewBox="0 0 24 24"><path d="M24 20.993V24H0v-2.996A14.977 14.977 0 0112.004 15c4.904 0 9.26 2.354 11.996 5.993zM16.002 8.999a4 4 0 11-8 0 4 4 0 018 0z" /></svg>
+                            </div>
+                            <div class="flex flex-col">
+                                <span class="text-xs font-bold leading-tight" id="preview-username">username</span>
+                                <span class="text-[10px] opacity-60" id="preview-sub">Just now</span>
+                            </div>
+                        </div>
+                        
+                        <!-- Actual Content -->
+                        <div id="output-text" class="preview-content font-sans text-[15px] leading-relaxed"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- NEW SECTION: Share & Tools -->
+        <div class="max-w-3xl mx-auto mt-20 mb-8 space-y-12">
+            
+            <!-- WhatsApp Share -->
+            <div class="text-center">
+                <button onclick="shareToWhatsapp()" class="inline-flex items-center gap-2 bg-[#25D366] hover:bg-[#20bd5a] text-white px-8 py-3.5 rounded-full font-bold transition-all hover:-translate-y-1 shadow-lg shadow-green-900/20 active:scale-95">
+                    <svg viewBox="0 0 24 24" width="22" height="22" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.008-.57-.008-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.359-5.298c0-5.435 4.408-9.85 9.823-9.85 2.624 0 5.094 1.022 6.95 2.878 1.856 1.856 2.878 4.326 2.878 6.949-.001 5.437-4.413 9.852-9.921 9.953"/></svg>
+                    Share on WhatsApp
+                </button>
+            </div>
+
+            <!-- Random Tools Grid -->
+            <div>
+                <h3 class="text-xs font-bold text-muted uppercase tracking-wider mb-5 text-center flex items-center justify-center gap-3 before:content-[''] before:h-px before:w-12 before:bg-border after:content-[''] after:h-px after:w-12 after:bg-border">More Free Tools</h3>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <a href="#" class="group bg-card border border-border hover:border-accent-from rounded-2xl p-4 flex items-center gap-4 transition-all hover:bg-white/5">
+                        <div class="w-12 h-12 rounded-full bg-blue-500/10 text-blue-400 flex items-center justify-center text-xl group-hover:scale-110 transition-transform">#️⃣</div>
+                        <div>
+                            <h4 class="font-bold text-text group-hover:text-accent-from transition-colors">Hashtag Generator</h4>
+                            <p class="text-xs text-muted">Generate viral tags instantly.</p>
+                        </div>
+                    </a>
+                    <a href="#" class="group bg-card border border-border hover:border-accent-from rounded-2xl p-4 flex items-center gap-4 transition-all hover:bg-white/5">
+                        <div class="w-12 h-12 rounded-full bg-purple-500/10 text-purple-400 flex items-center justify-center text-xl group-hover:scale-110 transition-transform">✨</div>
+                        <div>
+                            <h4 class="font-bold text-text group-hover:text-accent-from transition-colors">Bio Decorator</h4>
+                            <p class="text-xs text-muted">Curate your profile bio.</p>
+                        </div>
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <!-- FAQ Section -->
+        <section class="max-w-3xl mx-auto pb-20" id="faq-section" aria-labelledby="faq-title">
+            <h3 id="faq-title" class="text-xl font-bold mb-6 text-white flex items-center gap-2">
+                <span class="text-accent-from">?</span> Frequently Asked Questions
+            </h3>
+            <div id="faq-list" class="space-y-3">
+                <!-- FAQs injected by JS -->
+            </div>
+        </section>
+
+    </main>
+
+    <!-- Footer -->
+    <footer class="mt-12 py-8 text-center text-xs text-muted border-t border-border bg-card/30">
+        <p>© 2025 SocialMediaToolsHub. Built for speed.</p>
+    </footer>
+
+    <!-- Main Logic -->
+    <script>
+        // --- Configuration & Data ---
+        const THEMES = [
+            { id: 'minimal', name: 'Minimal', icon: '⚪', divider: '───────', bullet: '▫️' },
+            { id: 'spring', name: 'Spring', icon: '🌸', divider: '──── ✧ 🌸 ✧ ────', bullet: '🌸', petal: '🌸' },
+            { id: 'summer', name: 'Summer', icon: '☀️', divider: '──── ☀ 🌊 ☀ ────', bullet: '🍉' },
+            { id: 'autumn', name: 'Autumn', icon: '🍂', divider: '──── 🍂 🍁 🍂 ────', bullet: '🍁', petal: '🍂' },
+            { id: 'winter', name: 'Winter', icon: '❄️', divider: '──── ❄️ ☃️ ❄️ ────', bullet: '❄️', petal: '❄️' },
+            { id: 'celestial', name: 'Celestial', icon: '🌙', divider: '──── ✧ ⋆ 🌙 ⋆ ✧ ────', bullet: '❖' },
+            { id: 'floral', name: 'Floral', icon: '🌿', divider: '──── 🍃 ❂ 🍃 ────', bullet: '🕊️' }
+        ];
+
+        const FONTS = [
+            { id: 'default', name: 'Normal', preview: 'Aesthetic' },
+            { id: 'serif', name: 'Serif', preview: '𝘈𝘦𝘴𝘵𝘩𝘦𝘵𝘪𝘤' },
+            { id: 'typewriter', name: 'Mono', preview: '𝙰𝚎𝚜𝚝𝚑𝚎𝚝𝚒𝚌' },
+            { id: 'script', name: 'Script', preview: '𝒜𝑒𝓈𝓉𝒽𝑒𝓉𝒾𝒸' },
+            { id: 'outline', name: 'Outline', preview: '𝔸𝕖𝕤𝕥𝕙𝕖𝕥𝕚𝕔' }
+        ];
+
+        const TABS = [
+            { id: 'instagram', name: 'Instagram', icon: '📸', bg: 'bg-white text-black' },
+            { id: 'tiktok', name: 'TikTok', icon: '🎵', bg: 'bg-black text-white/90' },
+            { id: 'notion', name: 'Notion', icon: '📝', bg: 'bg-[#fffefc] text-[#37352f]' }
+        ];
+
+        const MOOD_MAP = {
+            'cozy': '🕯️', 'dreamy': '☁️', 'fresh': '🍃', 'glow': '✨', 
+            'love': '🤍', 'peace': '🕊️', 'moon': '🌙', 'star': '⭐',
+            'coffee': '☕', 'study': '📖', 'rain': '🌧️'
+        };
+
+        const FAQS = [
+            { q: "What is aesthetic text formatting?", a: "Aesthetic text uses spacing, emojis, and Unicode symbols to make plain captions feel calming, dreamy, or curated." },
+            { q: "How do I make my Instagram captions look aesthetic?", a: "Use soft line breaks, emoji bullets (▫️), spaced letters, and seasonal dividers. This tool does it all in one click." },
+            { q: "Is my text saved or sent online?", a: "No. Everything runs in your browser. Your text never leaves your device—100% private." },
+            { q: "Can I use the aesthetic fonts on Instagram and TikTok?", a: "Yes! The fonts (Serif, Script, Mono, Outline) use special Unicode characters that work in Instagram bios, captions, comments, and TikTok profiles." },
+            { q: "What is the difference between the font styles?", a: "Standard is plain text. Serif adds an elegant italic look. Mono looks like a typewriter. Script mimics cursive handwriting. Outline creates double-struck letters." },
+            { q: "Does this work on both Android and iOS?", a: "Yes, it is a responsive web tool that works on all modern smartphones, tablets, and desktops." },
+            { q: "Why do some characters look like boxes?", a: "Some older devices or specific apps might not support all Unicode characters (especially the Script or Outline fonts). If this happens, try the 'Serif' or 'Minimal' options." },
+            { q: "Can I use this for Notion or journaling?", a: "Absolutely! The clean, minimalist output works beautifully in Notion, Obsidian, or any plain-text journal app to create headers and vibes." }
+        ];
+
+        // --- State Management ---
+        let state = {
+            input: "Morning Routine\n- Wake up\n- Meditate\n- Coffee time #cozy",
+            themeId: 'spring',
+            fontId: 'default',
+            tabId: 'instagram',
+            settings: {
+                lowercase: false,
+                spaced: false,
+                dividers: true,
+                mood: true,
+                clean: true,
+                soft: false,
+                signature: ''
+            }
+        };
+
+        // --- DOM Elements ---
+        const els = {
+            themeGrid: document.getElementById('theme-grid'),
+            fontList: document.getElementById('font-list'),
+            input: document.getElementById('input-text'),
+            output: document.getElementById('output-text'),
+            petals: document.getElementById('petals'),
+            tabs: document.getElementById('tab-container'),
+            previewArea: document.getElementById('preview-area'),
+            previewUser: document.getElementById('preview-username'),
+            previewSub: document.getElementById('preview-sub'),
+            faqList: document.getElementById('faq-list'),
+            copyBtn: document.getElementById('btn-copy'),
+            copyText: document.getElementById('copy-text'),
+            copyIcon: document.getElementById('copy-icon'),
+            dlBtn: document.getElementById('btn-download'),
+            opts: {
+                lowercase: document.getElementById('opt-lowercase'),
+                spaced: document.getElementById('opt-spaced'),
+                dividers: document.getElementById('opt-dividers'),
+                mood: document.getElementById('opt-mood'),
+                clean: document.getElementById('opt-clean'),
+                soft: document.getElementById('opt-soft'),
+                signature: document.getElementById('opt-signature')
+            }
+        };
+
+        // --- Initialization ---
+        function init() {
+            // Render Themes
+            els.themeGrid.innerHTML = THEMES.map(t => `
+                <button onclick="setTheme('${t.id}')" 
+                    class="theme-btn flex flex-col items-center justify-center p-2 rounded-xl border transition-all duration-200 outline-none focus:ring-2 focus:ring-accent-from/50" 
+                    data-id="${t.id}" title="${t.name}" aria-label="Select ${t.name} theme">
+                    <span class="text-2xl mb-1">${t.icon}</span>
+                    <span class="text-[10px] font-medium">${t.name}</span>
+                </button>
+            `).join('');
+
+            // Render Fonts
+            els.fontList.innerHTML = FONTS.map(f => `
+                <button onclick="setFont('${f.id}')"
+                    class="font-btn flex-shrink-0 px-4 py-2 rounded-lg border text-sm transition-all duration-200 outline-none focus:ring-1 focus:ring-accent-from"
+                    data-id="${f.id}" title="${f.name}">
+                    <span class="block text-xs opacity-60 mb-0.5 uppercase tracking-wide">${f.name}</span>
+                    <span class="text-base">${f.preview}</span>
+                </button>
+            `).join('');
+
+            // Render Tabs
+            els.tabs.innerHTML = TABS.map(t => `
+                <button onclick="setTab('${t.id}')" 
+                    class="tab-btn flex-shrink-0 flex items-center gap-2 px-6 py-3 text-xs font-semibold uppercase tracking-wide transition-colors relative outline-none" 
+                    data-id="${t.id}" role="tab" aria-selected="false">
+                    <span class="text-base">${t.icon}</span> ${t.name}
+                </button>
+            `).join('');
+
+            // Render FAQs
+            els.faqList.innerHTML = FAQS.map(f => `
+                <details class="group bg-card border border-border rounded-xl open:border-accent-from/50 transition-colors">
+                    <summary class="flex items-center justify-between p-4 cursor-pointer list-none font-medium text-sm text-muted group-open:text-text select-none">
+                        ${f.q}
+                        <span class="transform group-open:rotate-180 transition-transform duration-200">▼</span>
+                    </summary>
+                    <div class="px-4 pb-4 pt-0 text-muted text-sm leading-relaxed border-t border-transparent group-open:border-border/30 transition-all">
+                        <div class="pt-3">${f.a}</div>
+                    </div>
+                </details>
+            `).join('');
+
+            // Bind Events
+            els.input.value = state.input;
+            els.input.addEventListener('input', (e) => { state.input = e.target.value; update(); });
+            
+            Object.keys(els.opts).forEach(key => {
+                const el = els.opts[key];
+                if (key === 'signature') {
+                    el.value = state.settings.signature;
+                    el.addEventListener('input', (e) => { state.settings.signature = e.target.value; update(); });
+                } else {
+                    el.checked = state.settings[key];
+                    el.addEventListener('change', (e) => { state.settings[key] = e.target.checked; update(); });
+                }
+            });
+
+            els.copyBtn.addEventListener('click', copyText);
+            els.dlBtn.addEventListener('click', downloadText);
+
+            // Initial Render
+            update();
+        }
+
+        // --- Actions ---
+        window.setTheme = (id) => { state.themeId = id; update(); };
+        window.setFont = (id) => { state.fontId = id; update(); };
+        window.setTab = (id) => { state.tabId = id; update(); };
+        window.shareToWhatsapp = () => {
+            const text = "Check out this Aesthetic Text Formatter! ✨\n\nCreate cool captions and fonts: " + window.location.href;
+            window.open(`https://wa.me/?text=${encodeURIComponent(text)}`, '_blank');
+        };
+
+        // --- Main Update Loop ---
+        function update() {
+            // 1. Update Theme Buttons State
+            document.querySelectorAll('.theme-btn').forEach(b => {
+                const active = b.dataset.id === state.themeId;
+                b.className = `theme-btn flex flex-col items-center justify-center p-2 rounded-xl border transition-all duration-200 outline-none focus:ring-2 focus:ring-accent-from/50 ${active ? 'bg-accent-from/10 border-accent-from text-accent-from scale-105' : 'border-transparent hover:bg-white/5 text-muted hover:text-white'}`;
+            });
+
+            // 2. Update Font Buttons State
+            document.querySelectorAll('.font-btn').forEach(b => {
+                const active = b.dataset.id === state.fontId;
+                b.className = `font-btn flex-shrink-0 px-4 py-2 rounded-lg border text-sm transition-all duration-200 outline-none focus:ring-1 focus:ring-accent-from ${active ? 'bg-accent-from/10 border-accent-from text-accent-from' : 'border-border bg-bg/50 text-muted hover:border-accent-from/50 hover:text-text'}`;
+            });
+
+            // 3. Update Tab Buttons State
+            document.querySelectorAll('.tab-btn').forEach(b => {
+                const active = b.dataset.id === state.tabId;
+                b.setAttribute('aria-selected', active);
+                b.className = `tab-btn flex-shrink-0 flex items-center gap-2 px-6 py-3 text-xs font-semibold uppercase tracking-wide transition-colors relative outline-none ${active ? 'text-accent-from bg-white/5' : 'text-muted hover:text-text'}`;
+                // Add underline indicator if active
+                if (active && !b.querySelector('.indicator')) {
+                    b.innerHTML += '<div class="indicator absolute bottom-0 left-0 w-full h-[2px] bg-accent-from"></div>';
+                } else if (!active && b.querySelector('.indicator')) {
+                    b.querySelector('.indicator').remove();
+                }
+            });
+
+            // 4. Update Preview Styling
+            const tab = TABS.find(t => t.id === state.tabId);
+            els.previewArea.className = `flex-grow p-6 md:p-10 transition-colors duration-500 overflow-y-auto ${tab.bg}`;
+            els.previewUser.style.color = state.tabId === 'notion' ? '#37352f' : 'inherit';
+            els.previewSub.style.display = state.tabId === 'instagram' ? 'block' : 'none';
+
+            // 5. Process Text
+            const theme = THEMES.find(t => t.id === state.themeId);
+            const processed = processText(state.input, state.settings, theme, state.fontId);
+            els.output.textContent = processed;
+
+            // 6. Update Falling Petals
+            renderPetals(theme);
+        }
+
+        // --- Text Processor Engine ---
+        function applyFont(char, fontId) {
+            const code = char.charCodeAt(0);
+            
+            // Helper for applying offset
+            const offset = (base, target) => String.fromCodePoint(target + (code - base));
+
+            if (fontId === 'serif') {
+                // Math Sans-Serif Italic (often used for aesthetic serif look on web)
+                if (code >= 97 && code <= 122) return offset(97, 0x1D622); // a-z
+                if (code >= 65 && code <= 90) return offset(65, 0x1D608); // A-Z
+            } 
+            else if (fontId === 'typewriter') {
+                // Monospace
+                if (code >= 97 && code <= 122) return offset(97, 0x1D68A);
+                if (code >= 65 && code <= 90) return offset(65, 0x1D670);
+                if (code >= 48 && code <= 57) return offset(48, 0x1D7F6);
+            }
+            else if (fontId === 'script') {
+                // Script
+                if (code >= 97 && code <= 122) return offset(97, 0x1D4B6);
+                if (code >= 65 && code <= 90) return offset(65, 0x1D49C);
+            }
+            else if (fontId === 'outline') {
+                // Double Struck
+                if (code >= 97 && code <= 122) return offset(97, 0x1D552);
+                if (code >= 65 && code <= 90) return offset(65, 0x1D538); // Simplification; specific chars like C,H,N,P,Q,R,Z have holes in this block but browsers often handle or map roughly
+                if (code >= 48 && code <= 57) return offset(48, 0x1D7D8);
+            }
+            return char;
+        }
+
+        function processText(text, settings, theme, fontId) {
+            let lines = text.split('\n');
+            
+            // Clean empty lines
+            if (settings.clean) {
+                lines = lines.filter((l, i) => l.trim() !== '' || (lines[i-1] && lines[i-1].trim() !== ''));
+            }
+
+            const processedLines = lines.map(line => {
+                let content = line;
+                
+                // 1. Lowercase
+                if (settings.lowercase) content = content.toLowerCase();
+                
+                // 2. Soft Punctuation
+                if (settings.soft) {
+                    content = content
+                        .replace(/\./g, ' ·')
+                        .replace(/,/g, ' ､')
+                        .replace(/"/g, '')
+                        .replace(/'/g, '’');
+                }
+
+                // 3. Apply Font (Transformation)
+                if (fontId !== 'default') {
+                    content = content.split('').map(c => applyFont(c, fontId)).join('');
+                }
+
+                // 4. Spaced Letters (ignore URLs/Hashtags)
+                if (settings.spaced) {
+                    // We only split words that don't look like links
+                    content = content.split(' ').map(w => {
+                        if (w.match(/^https?:\/\//) || w.startsWith('#') || w.startsWith('@')) return w;
+                        // Avoid double spacing characters that are already special? 
+                        // Actually, just spreading them is usually fine.
+                        return Array.from(w).join(' '); 
+                    }).join('   '); // Triple space between words
+                }
+
+                // 5. Bullet Replacement
+                // Note: Regex might need to be looser if font changed digits
+                const bulletMatch = content.match(/^(\s*)([-*•]|\d+\.)\s+(.*)/);
+                if (bulletMatch) {
+                    content = `${bulletMatch[1]}${theme.bullet} ${bulletMatch[3]}`;
+                }
+
+                // 6. Mood Accents
+                if (settings.mood) {
+                    const lowerOriginal = line.toLowerCase();
+                    for (let k in MOOD_MAP) {
+                        if (lowerOriginal.includes(k) && !content.includes(MOOD_MAP[k])) {
+                            content += ` ${MOOD_MAP[k]}`;
+                            break; 
+                        }
+                    }
+                }
+                return content;
+            });
+
+            // Append Signature
+            if (settings.signature) {
+                let sig = settings.signature;
+                if (fontId !== 'default') {
+                    sig = sig.split('').map(c => applyFont(c, fontId)).join('');
+                }
+                processedLines.push('');
+                processedLines.push(sig);
+            }
+
+            // Wrap in Dividers
+            if (settings.dividers) {
+                return `${theme.divider}\n\n${processedLines.join('\n')}\n\n${theme.divider}`;
+            }
+
+            return processedLines.join('\n');
+        }
+
+        // --- FX Engine ---
+        function renderPetals(theme) {
+            els.petals.innerHTML = '';
+            if (!theme.petal) return;
+            
+            // Create 12 random petals
+            const frag = document.createDocumentFragment();
+            for (let i = 0; i < 12; i++) {
+                const p = document.createElement('div');
+                p.className = 'petal';
+                p.textContent = theme.petal;
+                p.style.left = Math.random() * 100 + '%';
+                p.style.animationDelay = Math.random() * 5 + 's';
+                p.style.animationDuration = (5 + Math.random() * 5) + 's';
+                frag.appendChild(p);
+            }
+            els.petals.appendChild(frag);
+        }
+
+        // --- Utilities ---
+        function copyText() {
+            navigator.clipboard.writeText(els.output.textContent).then(() => {
+                const originalText = els.copyText.textContent;
+                const originalIcon = els.copyIcon.textContent;
+                
+                // Visual feedback
+                els.copyText.textContent = "Copied!";
+                els.copyIcon.textContent = "✓";
+                els.copyBtn.classList.remove('bg-gradient-to-r', 'from-accent-from', 'to-accent-to', 'text-slate-900');
+                els.copyBtn.classList.add('bg-green-500', 'text-white');
+
+                // Reset after 1.5s
+                setTimeout(() => {
+                    els.copyText.textContent = originalText;
+                    els.copyIcon.textContent = originalIcon;
+                    els.copyBtn.classList.remove('bg-green-500', 'text-white');
+                    els.copyBtn.classList.add('bg-gradient-to-r', 'from-accent-from', 'to-accent-to', 'text-slate-900');
+                }, 1500);
+            });
+        }
+
+        function downloadText() {
+            const blob = new Blob([els.output.textContent], {type: 'text/plain'});
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = 'aesthetic-note.txt';
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+        }
+
+        // Start
+        init();
+    </script>
+</body>
+</html>
