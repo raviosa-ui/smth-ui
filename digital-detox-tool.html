@@ -1,0 +1,460 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Mindful Moments — SocialMediaToolsKit</title>
+  <meta name="description" content="Generate a printable digital detox toolkit. Track screen time habits and discover analog activities." />
+  <meta name="theme-color" content="#0f172a" />
+  
+  <!-- Tailwind CSS -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          colors: {
+            // Derived from original style.css
+            bg: '#0f172a',    // slate-900
+            card: '#1e293b',  // slate-800
+            text: '#f8fafc',  // slate-50
+            muted: '#94a3b8', // slate-400
+            border: '#334155',
+            'accent-from': '#38bdf8', // sky-400
+            'accent-to': '#818cf8',   // indigo-400
+          },
+          fontFamily: {
+            sans: ['-apple-system', 'BlinkMacSystemFont', '"Segoe UI"', 'Roboto', 'Helvetica', 'Arial', 'sans-serif'],
+            handwriting: ['"Segoe Print"', '"Bradley Hand"', 'Chilanka', 'TSCu_Comic', 'casual', 'cursive'],
+          }
+        }
+      }
+    }
+  </script>
+
+  <style>
+    /* Print Optimizations */
+    @media print {
+      @page { margin: 0; size: auto; }
+      body { 
+        -webkit-print-color-adjust: exact; 
+        print-color-adjust: exact; 
+        background: white !important; 
+        color: black !important; 
+      }
+      .no-print { display: none !important; }
+      .print-break-after { break-after: page; page-break-after: always; }
+      
+      /* Reset layout for paper */
+      .print-container { 
+        width: 100% !important; 
+        max-width: none !important; 
+        padding: 0 !important; 
+        margin: 0 !important; 
+        border: none !important; 
+        box-shadow: none !important; 
+        background: white !important; 
+      }
+      
+      /* Ensure checkboxes print clearly */
+      input[type="checkbox"] { -webkit-appearance: none; appearance: none; }
+      
+      /* Force bg colors for specific elements */
+      .print-bg-slate-50 { background-color: #f8fafc !important; }
+      .print-border-slate-300 { border-color: #cbd5e1 !important; }
+    }
+    
+    /* Utility */
+    .visually-hidden { position: absolute !important; left: -9999px; width: 1px; height: 1px; overflow: hidden; }
+  </style>
+</head>
+<body class="bg-bg text-text min-h-screen flex flex-col font-sans">
+
+  <!-- Header -->
+  <div class="container mx-auto px-4 max-w-[1120px]">
+    <header class="flex items-center justify-between py-5 mb-4 gap-4 no-print border-b border-white/5 md:border-none">
+      <a href="/" class="flex gap-2.5 font-semibold text-lg whitespace-nowrap items-center text-text hover:opacity-90 transition-opacity">
+        <span class="text-2xl" aria-hidden="true">⚡</span>
+        <span class="bg-gradient-to-r from-accent-from to-accent-to bg-clip-text text-transparent">
+          SocialMediaToolsKit
+        </span>
+      </a>
+
+      <nav class="flex gap-2 text-sm flex-wrap justify-end" role="navigation" aria-label="Primary">
+        <a href="/" class="px-3 py-2 rounded-lg text-muted transition-colors duration-200 hover:text-text hover:bg-white/5">
+          Home
+        </a>
+        <a href="caption-counter.html" class="px-3 py-2 rounded-lg text-muted transition-colors duration-200 hover:text-text hover:bg-white/5 hidden sm:inline-block">
+          Caption Counter
+        </a>
+        <a href="hashtag-cleaner.html" class="px-3 py-2 rounded-lg text-muted transition-colors duration-200 hover:text-text hover:bg-white/5 hidden sm:inline-block">
+          Hashtag Cleaner
+        </a>
+        <a href="safe-zone-overlay.html" class="px-3 py-2 rounded-lg text-muted transition-colors duration-200 hover:text-text hover:bg-white/5">
+          Safe Zone
+        </a>
+      </nav>
+    </header>
+
+    <main class="w-full flex flex-col items-center pb-12">
+      
+      <!-- Controls Area (Screen Only) -->
+      <section class="no-print w-full max-w-[800px] mb-8 p-6 bg-card rounded-2xl border border-border shadow-xl flex flex-col md:flex-row items-center justify-between gap-6">
+        <div>
+          <h1 class="text-xl font-bold text-text mb-2">Mindful Moments Offline</h1>
+          <p class="text-muted text-sm leading-relaxed">
+            A printable, analog tool to help you reconnect. Fill out the sections below (or print blank), then click Print to generate your PDF.
+          </p>
+        </div>
+        <button 
+          onclick="window.print()"
+          class="flex items-center gap-2 px-6 py-3 rounded-xl font-semibold text-[15px] bg-gradient-to-r from-accent-from to-accent-to text-slate-900 shadow-lg shadow-sky-900/20 hover:-translate-y-1 transition-all active:translate-y-0 whitespace-nowrap"
+        >
+          <!-- Printer Icon -->
+          <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9V2h12v7"/><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"/><path d="M6 14h12v8H6z"/></svg>
+          Print Toolkit
+        </button>
+      </section>
+
+      <!-- Printable Area Wrapper -->
+      <!-- On screen: A4-ish aspect ratio, shadow. On print: 100% width, reset styles -->
+      <div class="print-container bg-white text-slate-800 w-full max-w-[210mm] shadow-2xl overflow-hidden rounded-sm print:shadow-none print:max-w-none print:rounded-none">
+        
+        <!-- === FRONT SIDE === -->
+        <div class="w-full aspect-[1/1.414] p-8 md:p-12 flex flex-col gap-6 relative print:p-8 print:h-screen print-break-after">
+            
+            <!-- Header -->
+            <header class="border-b-2 border-slate-200 pb-4 flex justify-between items-end">
+                <div>
+                    <h2 class="text-3xl font-light text-slate-700 font-sans tracking-tight">Mindful Moments <span class="font-bold text-slate-900">Offline</span></h2>
+                    <p class="text-slate-500 text-sm mt-1">Your Static Digital Detox Toolkit</p>
+                </div>
+                <div class="text-xs text-slate-400 uppercase tracking-widest font-semibold">Front Side</div>
+            </header>
+
+            <!-- Section 1: Audit -->
+            <section class="bg-slate-50 p-6 rounded-xl border border-slate-100 print-bg-slate-50 print-border-slate-300">
+                <div class="flex items-center gap-2 mb-4 text-slate-800 font-semibold uppercase tracking-wider text-xs">
+                    <span class="w-6 h-6 rounded-full bg-slate-200 flex items-center justify-center text-[10px]">1</span>
+                    Digital Habits Audit
+                </div>
+
+                <div class="space-y-4">
+                    <div class="flex flex-wrap items-center gap-y-3 gap-x-4 text-sm">
+                        <span class="font-medium mr-1">My top 3 screen-time triggers:</span>
+                        
+                        <!-- Checkbox Component -->
+                        <label class="flex items-center gap-1.5 cursor-pointer">
+                          <input type="checkbox" class="peer hidden" />
+                          <div class="w-4 h-4 border border-slate-400 rounded flex items-center justify-center transition-colors bg-white peer-checked:bg-slate-800 peer-checked:border-slate-800">
+                             <svg class="text-white hidden peer-checked:block pointer-events-none" width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>
+                          </div>
+                          <span>Boredom</span>
+                        </label>
+                        
+                        <label class="flex items-center gap-1.5 cursor-pointer">
+                          <input type="checkbox" class="peer hidden" />
+                          <div class="w-4 h-4 border border-slate-400 rounded flex items-center justify-center transition-colors bg-white peer-checked:bg-slate-800 peer-checked:border-slate-800">
+                             <svg class="text-white hidden peer-checked:block pointer-events-none" width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>
+                          </div>
+                          <span>Stress</span>
+                        </label>
+
+                        <label class="flex items-center gap-1.5 cursor-pointer">
+                          <input type="checkbox" class="peer hidden" />
+                          <div class="w-4 h-4 border border-slate-400 rounded flex items-center justify-center transition-colors bg-white peer-checked:bg-slate-800 peer-checked:border-slate-800">
+                             <svg class="text-white hidden peer-checked:block pointer-events-none" width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>
+                          </div>
+                          <span>Notifications</span>
+                        </label>
+
+                        <label class="flex items-center gap-1.5 cursor-pointer">
+                          <input type="checkbox" class="peer hidden" />
+                          <div class="w-4 h-4 border border-slate-400 rounded flex items-center justify-center transition-colors bg-white peer-checked:bg-slate-800 peer-checked:border-slate-800">
+                             <svg class="text-white hidden peer-checked:block pointer-events-none" width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>
+                          </div>
+                          <span>Habit</span>
+                        </label>
+
+                        <label class="flex items-center gap-1.5 cursor-pointer">
+                          <input type="checkbox" class="peer hidden" />
+                          <div class="w-4 h-4 border border-slate-400 rounded flex items-center justify-center transition-colors bg-white peer-checked:bg-slate-800 peer-checked:border-slate-800">
+                             <svg class="text-white hidden peer-checked:block pointer-events-none" width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>
+                          </div>
+                          <span>FOMO</span>
+                        </label>
+                    </div>
+
+                    <div class="flex items-baseline gap-2 text-sm pt-2">
+                        <span>On average, I spend</span>
+                        <input type="text" class="border-b border-slate-400 w-16 text-center bg-transparent focus:outline-none font-handwriting text-slate-900 placeholder:text-slate-300" placeholder="__" />
+                        <span>hours/day on non-essential screen use.</span>
+                    </div>
+
+                    <div class="flex flex-col gap-1 text-sm w-full pt-1">
+                        <span>One thing I miss when I'm online too much:</span>
+                        <input type="text" class="border-b border-slate-400 w-full bg-transparent focus:outline-none py-1 font-handwriting text-slate-900 placeholder:text-slate-300" placeholder="e.g. Reading, Sleep, Real conversation..." />
+                    </div>
+                </div>
+            </section>
+
+            <!-- Section 2: Calendar -->
+            <section class="flex-1 flex flex-col">
+                <div class="flex items-center gap-2 mb-4 text-slate-800 font-semibold uppercase tracking-wider text-xs">
+                    <span class="w-6 h-6 rounded-full bg-slate-200 flex items-center justify-center text-[10px]">2</span>
+                    7-Day Detox Calendar
+                </div>
+
+                <div class="grid grid-cols-1 divide-y divide-slate-200 border-t border-b border-slate-200 print-border-slate-300">
+                    <!-- Row Generator -->
+                    <div class="py-2.5 flex items-center gap-4">
+                        <div class="w-10 font-bold text-slate-500 text-sm">Mon</div>
+                        <div class="flex-1 bg-slate-50 rounded-lg p-2 border border-slate-100 flex justify-between items-center print-bg-slate-50 print:border-none print:p-1">
+                            <div class="flex flex-col">
+                                <span class="text-[10px] uppercase font-bold text-slate-400 tracking-wide">Window: 7–8 PM</span>
+                                <span class="text-sm font-medium text-slate-700">Walk without phone</span>
+                            </div>
+                            <div class="w-6 h-6 rounded-full border-2 border-slate-300 mr-2 print:border-slate-400"></div>
+                        </div>
+                    </div>
+                    
+                    <div class="py-2.5 flex items-center gap-4">
+                        <div class="w-10 font-bold text-slate-500 text-sm">Tue</div>
+                        <div class="flex-1 bg-slate-50 rounded-lg p-2 border border-slate-100 flex justify-between items-center print-bg-slate-50 print:border-none print:p-1">
+                            <div class="flex flex-col">
+                                <span class="text-[10px] uppercase font-bold text-slate-400 tracking-wide">Window: 7–8 PM</span>
+                                <span class="text-sm font-medium text-slate-700">Read a physical book</span>
+                            </div>
+                            <div class="w-6 h-6 rounded-full border-2 border-slate-300 mr-2 print:border-slate-400"></div>
+                        </div>
+                    </div>
+
+                    <div class="py-2.5 flex items-center gap-4">
+                        <div class="w-10 font-bold text-slate-500 text-sm">Wed</div>
+                        <div class="flex-1 bg-slate-50 rounded-lg p-2 border border-slate-100 flex justify-between items-center print-bg-slate-50 print:border-none print:p-1">
+                            <div class="flex flex-col">
+                                <span class="text-[10px] uppercase font-bold text-slate-400 tracking-wide">Window: 7–8 PM</span>
+                                <span class="text-sm font-medium text-slate-700">Cook meal (no recipe app)</span>
+                            </div>
+                            <div class="w-6 h-6 rounded-full border-2 border-slate-300 mr-2 print:border-slate-400"></div>
+                        </div>
+                    </div>
+
+                    <div class="py-2.5 flex items-center gap-4">
+                        <div class="w-10 font-bold text-slate-500 text-sm">Thu</div>
+                        <div class="flex-1 bg-slate-50 rounded-lg p-2 border border-slate-100 flex justify-between items-center print-bg-slate-50 print:border-none print:p-1">
+                            <div class="flex flex-col">
+                                <span class="text-[10px] uppercase font-bold text-slate-400 tracking-wide">Window: 7–8 PM</span>
+                                <span class="text-sm font-medium text-slate-700">Journal or draw</span>
+                            </div>
+                            <div class="w-6 h-6 rounded-full border-2 border-slate-300 mr-2 print:border-slate-400"></div>
+                        </div>
+                    </div>
+
+                    <div class="py-2.5 flex items-center gap-4">
+                        <div class="w-10 font-bold text-slate-500 text-sm">Fri</div>
+                        <div class="flex-1 bg-slate-50 rounded-lg p-2 border border-slate-100 flex justify-between items-center print-bg-slate-50 print:border-none print:p-1">
+                            <div class="flex flex-col">
+                                <span class="text-[10px] uppercase font-bold text-slate-400 tracking-wide">Window: 7–8 PM</span>
+                                <span class="text-sm font-medium text-slate-700">Board games / Puzzles</span>
+                            </div>
+                            <div class="w-6 h-6 rounded-full border-2 border-slate-300 mr-2 print:border-slate-400"></div>
+                        </div>
+                    </div>
+
+                    <div class="py-2.5 flex items-center gap-4">
+                        <div class="w-10 font-bold text-slate-900 text-sm">Sat</div>
+                        <div class="flex-1 bg-slate-50 rounded-lg p-2 border border-slate-100 flex justify-between items-center print-bg-slate-50 print:border-none print:p-1">
+                            <div class="flex flex-col">
+                                <span class="text-[10px] uppercase font-bold text-slate-400 tracking-wide">Window: 9 AM–12 PM</span>
+                                <span class="text-sm font-medium text-slate-700">Morning hike/stroll</span>
+                            </div>
+                            <div class="w-6 h-6 rounded-full border-2 border-slate-300 mr-2 print:border-slate-400"></div>
+                        </div>
+                    </div>
+
+                    <div class="py-2.5 flex items-center gap-4">
+                        <div class="w-10 font-bold text-slate-900 text-sm">Sun</div>
+                        <div class="flex-1 bg-slate-50 rounded-lg p-2 border border-slate-100 flex justify-between items-center print-bg-slate-50 print:border-none print:p-1">
+                            <div class="flex flex-col">
+                                <span class="text-[10px] uppercase font-bold text-slate-400 tracking-wide">Window: 9 AM–12 PM</span>
+                                <span class="text-sm font-medium text-slate-700">Device-free brunch</span>
+                            </div>
+                            <div class="w-6 h-6 rounded-full border-2 border-slate-300 mr-2 print:border-slate-400"></div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </div>
+
+        <!-- === BACK SIDE === -->
+        <div class="w-full aspect-[1/1.414] p-8 md:p-12 flex flex-col gap-6 relative border-t-8 border-slate-100 print:border-none print:h-screen">
+             <!-- Header Back -->
+             <header class="border-b-2 border-slate-200 pb-4 flex justify-between items-end">
+                <div>
+                    <h2 class="text-2xl font-light text-slate-700">Activities & Tools</h2>
+                </div>
+                <div class="text-xs text-slate-400 uppercase tracking-widest font-semibold">Back Side</div>
+            </header>
+
+            <!-- Section 3: Analog Grid -->
+            <section>
+                 <div class="flex items-center gap-2 mb-4 text-slate-800 font-semibold uppercase tracking-wider text-xs">
+                    <span class="w-6 h-6 rounded-full bg-slate-200 flex items-center justify-center text-[10px]">3</span>
+                    Analog Activity Menu
+                </div>
+                <div class="grid grid-cols-4 gap-3">
+                    <!-- 1 -->
+                    <div class="aspect-square border border-slate-200 rounded-lg p-2 flex flex-col items-center justify-center text-center gap-1 print-border-slate-300">
+                        <svg class="text-slate-400 mb-1" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17.7 7.7a2.5 2.5 0 1 1 1.8 4.3H2"/><path d="M9.6 4.6A2 2 0 1 1 11 8H2"/><path d="M12.6 19.4A2 2 0 1 0 14 16H2"/></svg>
+                        <span class="text-[9px] leading-tight text-slate-600 font-medium">Breathe for 1 minute</span>
+                    </div>
+                    <!-- 2 -->
+                    <div class="aspect-square border border-slate-200 rounded-lg p-2 flex flex-col items-center justify-center text-center gap-1 print-border-slate-300">
+                        <svg class="text-slate-400 mb-1" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 12s3-7 10-7 10 7 10 7-3 7-10 7-10-7-10-7Z"/><circle cx="12" cy="12" r="3"/></svg>
+                        <span class="text-[9px] leading-tight text-slate-600 font-medium">Describe room (eyes closed)</span>
+                    </div>
+                    <!-- 3 -->
+                    <div class="aspect-square border border-slate-200 rounded-lg p-2 flex flex-col items-center justify-center text-center gap-1 print-border-slate-300">
+                        <svg class="text-slate-400 mb-1" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m12 19 7-7 3 3-7 7-3-3z"/><path d="m18 13-1.5-7.5L2 2l3.5 14.5L13 18l5-5z"/><path d="m2 2 7.586 7.586"/><path d="m11 11-4 4"/></svg>
+                        <span class="text-[9px] leading-tight text-slate-600 font-medium">Doodle your mood</span>
+                    </div>
+                    <!-- 4 -->
+                    <div class="aspect-square border border-slate-200 rounded-lg p-2 flex flex-col items-center justify-center text-center gap-1 print-border-slate-300">
+                        <svg class="text-slate-400 mb-1" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/></svg>
+                        <span class="text-[9px] leading-tight text-slate-600 font-medium">Write a haiku</span>
+                    </div>
+                    <!-- 5 -->
+                    <div class="aspect-square border border-slate-200 rounded-lg p-2 flex flex-col items-center justify-center text-center gap-1 print-border-slate-300">
+                        <svg class="text-slate-400 mb-1" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 20A7 7 0 0 1 9.8 6.1C15.5 5 17 4.48 19 2c1 2 2 6.5-2 12A7 7 0 0 1 11 20z"/><path d="M11 20v-9"/></svg>
+                        <span class="text-[9px] leading-tight text-slate-600 font-medium">Step outside barefoot</span>
+                    </div>
+                    <!-- 6 -->
+                    <div class="aspect-square border border-slate-200 rounded-lg p-2 flex flex-col items-center justify-center text-center gap-1 print-border-slate-300">
+                        <svg class="text-slate-400 mb-1" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M8 14s1.5 2 4 2 4-2 4-2"/><line x1="9" x2="9.01" y1="9" y2="9"/><line x1="15" x2="15.01" y1="9" y2="9"/></svg>
+                        <span class="text-[9px] leading-tight text-slate-600 font-medium">Ask: What made you smile?</span>
+                    </div>
+                    <!-- 7 -->
+                    <div class="aspect-square border border-slate-200 rounded-lg p-2 flex flex-col items-center justify-center text-center gap-1 print-border-slate-300">
+                        <svg class="text-slate-400 mb-1" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 8h1a4 4 0 0 1 0 8h-1"/><path d="M2 8h16v9a4 4 0 0 1-4 4H6a4 4 0 0 1-4-4V8z"/><line x1="6" x2="6" y1="1" y2="4"/><line x1="10" x2="10" y1="1" y2="4"/><line x1="14" x2="14" y1="1" y2="4"/></svg>
+                        <span class="text-[9px] leading-tight text-slate-600 font-medium">Drink water slowly</span>
+                    </div>
+                    <!-- 8 -->
+                    <div class="aspect-square border border-slate-200 rounded-lg p-2 flex flex-col items-center justify-center text-center gap-1 print-border-slate-300">
+                        <svg class="text-slate-400 mb-1" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z"/></svg>
+                        <span class="text-[9px] leading-tight text-slate-600 font-medium">Stretch like a cat</span>
+                    </div>
+                    <!-- 9 -->
+                    <div class="aspect-square border border-slate-200 rounded-lg p-2 flex flex-col items-center justify-center text-center gap-1 print-border-slate-300">
+                        <svg class="text-slate-400 mb-1" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/></svg>
+                        <span class="text-[9px] leading-tight text-slate-600 font-medium">Read 1 page of a book</span>
+                    </div>
+                    <!-- 10 -->
+                    <div class="aspect-square border border-slate-200 rounded-lg p-2 flex flex-col items-center justify-center text-center gap-1 print-border-slate-300">
+                        <svg class="text-slate-400 mb-1" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m12 19 7-7 3 3-7 7-3-3z"/><path d="m18 13-1.5-7.5L2 2l3.5 14.5L13 18l5-5z"/><path d="m2 2 7.586 7.586"/><path d="m11 11-4 4"/></svg>
+                        <span class="text-[9px] leading-tight text-slate-600 font-medium">List 3 gratitude items</span>
+                    </div>
+                    <!-- 11 -->
+                    <div class="aspect-square border border-slate-200 rounded-lg p-2 flex flex-col items-center justify-center text-center gap-1 print-border-slate-300">
+                        <svg class="text-slate-400 mb-1" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 20A7 7 0 0 1 9.8 6.1C15.5 5 17 4.48 19 2c1 2 2 6.5-2 12A7 7 0 0 1 11 20z"/><path d="M11 20v-9"/></svg>
+                        <span class="text-[9px] leading-tight text-slate-600 font-medium">Water a plant</span>
+                    </div>
+                    <!-- 12 -->
+                    <div class="aspect-square border border-slate-200 rounded-lg p-2 flex flex-col items-center justify-center text-center gap-1 print-border-slate-300">
+                        <svg class="text-slate-400 mb-1" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M8 14s1.5 2 4 2 4-2 4-2"/><line x1="9" x2="9.01" y1="9" y2="9"/><line x1="15" x2="15.01" y1="9" y2="9"/></svg>
+                        <span class="text-[9px] leading-tight text-slate-600 font-medium">Compliment a stranger</span>
+                    </div>
+                    <!-- 13 -->
+                    <div class="aspect-square border border-slate-200 rounded-lg p-2 flex flex-col items-center justify-center text-center gap-1 print-border-slate-300">
+                        <svg class="text-slate-400 mb-1" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17.7 7.7a2.5 2.5 0 1 1 1.8 4.3H2"/><path d="M9.6 4.6A2 2 0 1 1 11 8H2"/><path d="M12.6 19.4A2 2 0 1 0 14 16H2"/></svg>
+                        <span class="text-[9px] leading-tight text-slate-600 font-medium">5-4-3-2-1 Grounding</span>
+                    </div>
+                    <!-- 14 -->
+                    <div class="aspect-square border border-slate-200 rounded-lg p-2 flex flex-col items-center justify-center text-center gap-1 print-border-slate-300">
+                        <svg class="text-slate-400 mb-1" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m12 19 7-7 3 3-7 7-3-3z"/><path d="m18 13-1.5-7.5L2 2l3.5 14.5L13 18l5-5z"/><path d="m2 2 7.586 7.586"/><path d="m11 11-4 4"/></svg>
+                        <span class="text-[9px] leading-tight text-slate-600 font-medium">Write a letter (don't send)</span>
+                    </div>
+                    <!-- 15 -->
+                    <div class="aspect-square border border-slate-200 rounded-lg p-2 flex flex-col items-center justify-center text-center gap-1 print-border-slate-300">
+                        <svg class="text-slate-400 mb-1" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z"/></svg>
+                        <span class="text-[9px] leading-tight text-slate-600 font-medium">Sit in silence (2 min)</span>
+                    </div>
+                    <!-- 16 -->
+                    <div class="aspect-square border border-slate-200 rounded-lg p-2 flex flex-col items-center justify-center text-center gap-1 print-border-slate-300">
+                        <svg class="text-slate-400 mb-1" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M8 14s1.5 2 4 2 4-2 4-2"/><line x1="9" x2="9.01" y1="9" y2="9"/><line x1="15" x2="15.01" y1="9" y2="9"/></svg>
+                        <span class="text-[9px] leading-tight text-slate-600 font-medium">Call a friend (audio only)</span>
+                    </div>
+                </div>
+            </section>
+
+             <div class="flex gap-6 flex-1">
+                <!-- Section 4: Boredom Buster -->
+                <section class="flex-1">
+                    <div class="flex items-center gap-2 mb-3 text-slate-800 font-semibold uppercase tracking-wider text-xs">
+                        <span class="w-6 h-6 rounded-full bg-slate-200 flex items-center justify-center text-[10px]">4</span>
+                        Boredom Emergency
+                    </div>
+                    <div class="bg-slate-50 border border-slate-200 rounded-lg p-4 h-full print-bg-slate-50 print-border-slate-300">
+                         <p className="text-[10px] text-slate-400 uppercase mb-3 text-center">Do one of these right now</p>
+                         <ul class="list-disc pl-4 space-y-2">
+                            <li class="text-xs text-slate-700 pl-1">Name 3 things you hear right now.</li>
+                            <li class="text-xs text-slate-700 pl-1">Write your name with non-dominant hand.</li>
+                            <li class="text-xs text-slate-700 pl-1">Stand up and spin once slowly.</li>
+                            <li class="text-xs text-slate-700 pl-1">Count all the blue items in the room.</li>
+                            <li class="text-xs text-slate-700 pl-1">Hum your favorite song chorus.</li>
+                         </ul>
+                    </div>
+                </section>
+
+                 <!-- Decorative graphic/quote area -->
+                 <div class="w-1/3 flex flex-col justify-center items-center text-center p-4 border border-dashed border-slate-300 rounded-lg">
+                    <svg class="text-slate-300 mb-2" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/><polyline points="3.27 6.96 12 12.01 20.73 6.96"/><line x1="12" y1="22.08" x2="12" y2="12"/></svg>
+                    <p class="text-xs font-serif italic text-slate-500">"Almost everything will work again if you unplug it for a few minutes, including you."</p>
+                    <p class="text-[10px] text-slate-400 mt-2">— Anne Lamott</p>
+                 </div>
+             </div>
+
+            <!-- Section 5: Coupons -->
+            <section class="mt-auto pt-4">
+                 <div class="flex items-center gap-2 mb-4 text-slate-800 font-semibold uppercase tracking-wider text-xs">
+                    <span class="w-6 h-6 rounded-full bg-slate-200 flex items-center justify-center text-[10px]">5</span>
+                    Phone Jail Coupons
+                </div>
+                <div class="flex gap-4">
+                    <!-- Coupon 1 -->
+                    <div class="flex-1 border-2 border-dashed border-slate-300 rounded-lg p-3 relative bg-slate-50 print-bg-slate-50">
+                        <svg class="absolute -top-2 left-1/2 -translate-x-1/2 text-slate-400 bg-white px-1" width="20" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="6" cy="6" r="3"/><circle cx="6" cy="18" r="3"/><line x1="20" x2="8.12" y1="4" y2="15.88"/><line x1="14.47" x2="20" y1="14.48" y2="20"/><line x1="8.12" x2="12" y1="8.12" y2="12"/></svg>
+                        <h4 class="font-bold text-xs uppercase text-slate-800 mb-1">Phone Jail</h4>
+                        <p class="text-[10px] leading-relaxed text-slate-600">I pledge 45 minutes of phone-free time. Device goes in the drawer!</p>
+                    </div>
+                    <!-- Coupon 2 -->
+                    <div class="flex-1 border-2 border-dashed border-slate-300 rounded-lg p-3 relative bg-slate-50 print-bg-slate-50">
+                        <svg class="absolute -top-2 left-1/2 -translate-x-1/2 text-slate-400 bg-white px-1" width="20" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="6" cy="6" r="3"/><circle cx="6" cy="18" r="3"/><line x1="20" x2="8.12" y1="4" y2="15.88"/><line x1="14.47" x2="20" y1="14.48" y2="20"/><line x1="8.12" x2="12" y1="8.12" y2="12"/></svg>
+                        <h4 class="font-bold text-xs uppercase text-slate-800 mb-1">Reward Unlocked</h4>
+                        <p class="text-[10px] leading-relaxed text-slate-600">I get to sip tea while reading if I skip Instagram tonight.</p>
+                    </div>
+                    <!-- Coupon 3 -->
+                    <div class="flex-1 border-2 border-dashed border-slate-300 rounded-lg p-3 relative bg-slate-50 print-bg-slate-50">
+                        <svg class="absolute -top-2 left-1/2 -translate-x-1/2 text-slate-400 bg-white px-1" width="20" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="6" cy="6" r="3"/><circle cx="6" cy="18" r="3"/><line x1="20" x2="8.12" y1="4" y2="15.88"/><line x1="14.47" x2="20" y1="14.48" y2="20"/><line x1="8.12" x2="12" y1="8.12" y2="12"/></svg>
+                        <h4 class="font-bold text-xs uppercase text-slate-800 mb-1">Family Detox</h4>
+                        <p class="text-[10px] leading-relaxed text-slate-600">All phones in the basket during dinner. No exceptions!</p>
+                    </div>
+                </div>
+            </section>
+        </div>
+
+      </div>
+
+      <div class="no-print mt-8 mb-12 text-muted text-sm text-center max-w-lg">
+        <p>Tip: Click "Print Toolkit". In your printer settings, enable <strong>Double-Sided printing</strong> (flip on long edge) and ensure <strong>Background Graphics</strong> are turned on if available, though we designed this to use minimal ink.</p>
+      </div>
+      
+    </main>
+
+    <footer class="no-print text-center py-8 text-muted text-sm border-t border-white/5">
+      © 2025 SocialMediaToolsKit. Built for speed.
+    </footer>
+  </div>
+</body>
+</html>
