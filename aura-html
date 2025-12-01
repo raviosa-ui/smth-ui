@@ -1,0 +1,486 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Aura - Digital Sanctuary | SocialMediaToolsKit</title>
+  <meta name="description" content="A calming browser homepage. Time, weather-aware scenes & daily mindfulness quotes. Your moment of peace in a noisy digital world." />
+  <meta name="theme-color" content="#0f172a" />
+  
+  <style>
+    /* Base styles matching your site */
+    :root {
+      --bg: #0f172a;
+      --card: #1e293b;
+      --text: #f8fafc;
+      --muted: #94a3b8;
+      --border: #334155;
+      --accent-from: #38bdf8;
+      --accent-to: #818cf8;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    }
+    
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+    
+    body {
+      min-height: 100vh;
+      background: var(--bg);
+      color: var(--text);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+      transition: background 1.5s ease;
+      overflow: hidden;
+      position: relative;
+    }
+    
+    /* Sanctuary container */
+    .sanctuary-container {
+      width: 100%;
+      max-width: 800px;
+      text-align: center;
+      z-index: 10;
+      padding: 30px;
+      background: rgba(30, 41, 59, 0.7);
+      backdrop-filter: blur(10px);
+      border-radius: 24px;
+      border: 1px solid rgba(255, 255, 255, 0.05);
+      box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+      animation: fadeIn 1s ease;
+    }
+    
+    /* Time display */
+    .aura-time {
+      font-size: 5rem;
+      font-weight: 300;
+      margin-bottom: 10px;
+      font-feature-settings: "tnum";
+      letter-spacing: -0.5px;
+      text-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+    }
+    
+    .aura-date {
+      font-size: 1.2rem;
+      color: var(--muted);
+      margin-bottom: 40px;
+      font-weight: 400;
+    }
+    
+    /* Quote section */
+    .quote-container {
+      max-width: 600px;
+      margin: 0 auto 40px;
+      padding: 25px;
+      background: rgba(15, 23, 42, 0.5);
+      border-radius: 16px;
+      border-left: 3px solid var(--accent-from);
+      transition: opacity 0.5s ease;
+    }
+    
+    .aura-quote {
+      font-size: 1.3rem;
+      font-style: italic;
+      line-height: 1.6;
+      margin-bottom: 12px;
+      color: rgba(248, 250, 252, 0.95);
+    }
+    
+    .aura-author {
+      font-size: 0.9rem;
+      color: var(--accent-from);
+    }
+    
+    /* Weather display */
+    .weather-display {
+      display: inline-flex;
+      align-items: center;
+      gap: 12px;
+      padding: 12px 20px;
+      background: rgba(15, 23, 42, 0.5);
+      border-radius: 50px;
+      margin-bottom: 30px;
+      font-size: 0.95rem;
+    }
+    
+    .weather-icon {
+      font-size: 1.5rem;
+    }
+    
+    /* Controls */
+    .controls {
+      display: flex;
+      gap: 15px;
+      justify-content: center;
+      margin-top: 30px;
+      flex-wrap: wrap;
+    }
+    
+    .aura-btn {
+      padding: 12px 24px;
+      border-radius: 12px;
+      border: none;
+      background: rgba(56, 189, 248, 0.15);
+      color: var(--text);
+      font-size: 0.9rem;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      border: 1px solid rgba(56, 189, 248, 0.3);
+    }
+    
+    .aura-btn:hover {
+      background: rgba(56, 189, 248, 0.25);
+      transform: translateY(-2px);
+    }
+    
+    .primary-btn {
+      background: linear-gradient(90deg, var(--accent-from), var(--accent-to));
+      color: var(--bg);
+      font-weight: 600;
+    }
+    
+    .primary-btn:hover {
+      background: linear-gradient(90deg, #0ea5e9, #6366f1);
+    }
+    
+    /* Background scenes */
+    .scene-bg {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      z-index: -1;
+      opacity: 0.6;
+      transition: opacity 1.5s ease;
+    }
+    
+    /* Home link */
+    .home-link {
+      position: absolute;
+      top: 20px;
+      left: 20px;
+      padding: 8px 16px;
+      background: rgba(30, 41, 59, 0.8);
+      border-radius: 10px;
+      color: var(--muted);
+      text-decoration: none;
+      font-size: 0.85rem;
+      border: 1px solid rgba(255, 255, 255, 0.05);
+      transition: all 0.3s ease;
+    }
+    
+    .home-link:hover {
+      color: var(--text);
+      background: rgba(30, 41, 59, 0.95);
+      border-color: var(--accent-from);
+    }
+    
+    /* Instructions */
+    .instructions {
+      position: absolute;
+      bottom: 20px;
+      left: 0;
+      right: 0;
+      text-align: center;
+      font-size: 0.8rem;
+      color: var(--muted);
+      opacity: 0.7;
+    }
+    
+    /* Animations */
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(20px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    
+    @keyframes float {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(-10px); }
+    }
+    
+    /* Responsive */
+    @media (max-width: 768px) {
+      .aura-time { font-size: 3.5rem; }
+      .sanctuary-container { padding: 20px; }
+      .quote-container { padding: 20px; }
+      .controls { flex-direction: column; }
+      .aura-btn { width: 100%; }
+    }
+    
+    /* Scene-specific styles */
+    .scene-morning { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); }
+    .scene-day { background: linear-gradient(120deg, #84fab0 0%, #8fd3f4 100%); }
+    .scene-evening { background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%); }
+    .scene-night { background: linear-gradient(135deg, #3b4371 0%, #141e30 100%); }
+    .scene-rain { background: linear-gradient(135deg, #4b6cb7 0%, #182848 100%); }
+    .scene-snow { background: linear-gradient(135deg, #e6dada 0%, #274046 100%); }
+  </style>
+</head>
+<body>
+  <!-- Background Scene -->
+  <div class="scene-bg" id="sceneBg"></div>
+  
+  <!-- Home Link -->
+  <a href="index.html" class="home-link">← Back to Tools</a>
+  
+  <!-- Main Sanctuary Content -->
+  <div class="sanctuary-container">
+    <!-- Time Display -->
+    <div class="aura-time" id="currentTime">00:00</div>
+    <div class="aura-date" id="currentDate">Monday, January 1</div>
+    
+    <!-- Weather Display -->
+    <div class="weather-display" id="weatherDisplay">
+      <span class="weather-icon">🌤️</span>
+      <span id="weatherText">Weather data loading...</span>
+    </div>
+    
+    <!-- Quote Section -->
+    <div class="quote-container">
+      <div class="aura-quote" id="dailyQuote">
+        The present moment is the only time over which we have dominion.
+      </div>
+      <div class="aura-author" id="quoteAuthor">Thich Nhat Hanh</div>
+    </div>
+    
+    <!-- Controls -->
+    <div class="controls">
+      <button class="aura-btn" id="newQuoteBtn">New Quote</button>
+      <button class="aura-btn" id="toggleSceneBtn">Change Scene</button>
+      <button class="aura-btn primary-btn" id="setHomepageBtn">Set as Homepage</button>
+    </div>
+  </div>
+  
+  <!-- Instructions -->
+  <div class="instructions">
+    Aura - Digital Sanctuary | Part of <a href="index.html" style="color: var(--accent-from);">SocialMediaToolsKit</a>
+  </div>
+  
+  <script>
+    // Quote Database
+    const quoteDatabase = [
+      { text: "The present moment is the only time over which we have dominion.", author: "Thich Nhat Hanh" },
+      { text: "Feel the rain on your skin. No one else can feel it for you.", author: "Unknown" },
+      { text: "The quieter you become, the more you can hear.", author: "Ram Dass" },
+      { text: "In the midst of movement and chaos, keep stillness inside of you.", author: "Deepak Chopra" },
+      { text: "Your calm mind is the ultimate weapon against your challenges.", author: "Bryant McGill" },
+      { text: "Peace is the result of retraining your mind to process life as it is.", author: "Wayne Dyer" },
+      { text: "The art of being wise is knowing what to overlook.", author: "William James" },
+      { text: "We cannot change anything until we accept it.", author: "Carl Jung" },
+      { text: "The best way to capture moments is to pay attention.", author: "Jon Kabat-Zinn" },
+      { text: "Do not dwell in the past, do not dream of the future, concentrate the mind on the present moment.", author: "Buddha" },
+      { text: "Mindfulness isn't difficult, we just need to remember to do it.", author: "Sharon Salzberg" },
+      { text: "Nothing can harm you as much as your own thoughts unguarded.", author: "Buddha" },
+      { text: "The mind is everything. What you think you become.", author: "Buddha" }
+    ];
+    
+    // Scene types with emojis
+    const scenes = [
+      { id: 'morning', name: 'Morning', emoji: '🌅', color: 'scene-morning' },
+      { id: 'day', name: 'Day', emoji: '🌤️', color: 'scene-day' },
+      { id: 'evening', name: 'Evening', emoji: '🌇', color: 'scene-evening' },
+      { id: 'night', name: 'Night', emoji: '🌙', color: 'scene-night' },
+      { id: 'rain', name: 'Rain', emoji: '🌧️', color: 'scene-rain' },
+      { id: 'snow', name: 'Snow', emoji: '❄️', color: 'scene-snow' }
+    ];
+    
+    // DOM Elements
+    const timeEl = document.getElementById('currentTime');
+    const dateEl = document.getElementById('currentDate');
+    const quoteEl = document.getElementById('dailyQuote');
+    const authorEl = document.getElementById('quoteAuthor');
+    const weatherEl = document.getElementById('weatherText');
+    const weatherIconEl = document.querySelector('.weather-icon');
+    const sceneBgEl = document.getElementById('sceneBg');
+    const newQuoteBtn = document.getElementById('newQuoteBtn');
+    const toggleSceneBtn = document.getElementById('toggleSceneBtn');
+    const setHomepageBtn = document.getElementById('setHomepageBtn');
+    
+    // State
+    let currentQuoteIndex = 0;
+    let currentSceneIndex = 2; // Start with 'day' scene
+    
+    // Initialize
+    function initAura() {
+      updateTime();
+      setInterval(updateTime, 1000);
+      
+      // Load random quote
+      currentQuoteIndex = Math.floor(Math.random() * quoteDatabase.length);
+      updateQuote();
+      
+      // Set initial scene based on time of day
+      setSceneByTime();
+      
+      // Set up weather (simulated for demo)
+      updateWeather();
+      
+      // Event listeners
+      newQuoteBtn.addEventListener('click', getNewQuote);
+      toggleSceneBtn.addEventListener('click', cycleScene);
+      setHomepageBtn.addEventListener('click', guideToSetHomepage);
+      
+      // Auto-refresh weather every 30 minutes
+      setInterval(updateWeather, 30 * 60 * 1000);
+    }
+    
+    // Update time display
+    function updateTime() {
+      const now = new Date();
+      const timeString = now.toLocaleTimeString([], { 
+        hour: '2-digit', 
+        minute: '2-digit',
+        hour12: false 
+      });
+      
+      const dateString = now.toLocaleDateString([], { 
+        weekday: 'long', 
+        year: 'numeric', 
+        month: 'long', 
+        day: 'numeric' 
+      });
+      
+      timeEl.textContent = timeString;
+      dateEl.textContent = dateString;
+      
+      // If time changed significantly, update scene
+      const hour = now.getHours();
+      const storedHour = localStorage.getItem('aura-last-hour');
+      if (storedHour !== String(hour)) {
+        setSceneByTime();
+        localStorage.setItem('aura-last-hour', hour);
+      }
+    }
+    
+    // Update quote
+    function updateQuote() {
+      quoteEl.textContent = quoteDatabase[currentQuoteIndex].text;
+      authorEl.textContent = quoteDatabase[currentQuoteIndex].author;
+    }
+    
+    // Get new random quote (not repeating immediately)
+    function getNewQuote() {
+      let newIndex;
+      do {
+        newIndex = Math.floor(Math.random() * quoteDatabase.length);
+      } while (newIndex === currentQuoteIndex && quoteDatabase.length > 1);
+      
+      currentQuoteIndex = newIndex;
+      updateQuote();
+      
+      // Animation
+      quoteEl.style.opacity = '0';
+      setTimeout(() => {
+        quoteEl.style.opacity = '1';
+      }, 300);
+    }
+    
+    // Set scene based on time of day
+    function setSceneByTime() {
+      const hour = new Date().getHours();
+      let sceneIndex;
+      
+      if (hour >= 5 && hour < 10) sceneIndex = 0; // Morning
+      else if (hour >= 10 && hour < 17) sceneIndex = 1; // Day
+      else if (hour >= 17 && hour < 20) sceneIndex = 2; // Evening
+      else sceneIndex = 3; // Night
+      
+      currentSceneIndex = sceneIndex;
+      applyScene(sceneIndex);
+    }
+    
+    // Cycle through scenes manually
+    function cycleScene() {
+      currentSceneIndex = (currentSceneIndex + 1) % scenes.length;
+      applyScene(currentSceneIndex);
+    }
+    
+    // Apply scene to background
+    function applyScene(index) {
+      const scene = scenes[index];
+      sceneBgEl.className = 'scene-bg ' + scene.color;
+      toggleSceneBtn.textContent = `Scene: ${scene.name} ${scene.emoji}`;
+      
+      // Update weather icon if scene matches weather
+      if (scene.id === 'rain') weatherIconEl.textContent = '🌧️';
+      else if (scene.id === 'snow') weatherIconEl.textContent = '❄️';
+      
+      localStorage.setItem('aura-scene', index);
+    }
+    
+    // Update weather display (simulated for demo)
+    function updateWeather() {
+      const conditions = ['Sunny', 'Partly Cloudy', 'Cloudy', 'Rain', 'Clear'];
+      const emojis = ['☀️', '⛅', '☁️', '🌧️', '🌙'];
+      const temps = ['22°C', '18°C', '15°C', '12°C', '10°C'];
+      
+      const random = Math.floor(Math.random() * conditions.length);
+      
+      weatherEl.textContent = `${conditions[random]}, ${temps[random]}`;
+      weatherIconEl.textContent = emojis[random];
+      
+      // If weather is rain/snow, suggest matching scene
+      if (conditions[random] === 'Rain' && currentSceneIndex !== 4) {
+        setTimeout(() => {
+          if (confirm('Rain detected. Switch to rain scene?')) {
+            currentSceneIndex = 4;
+            applyScene(4);
+          }
+        }, 1000);
+      }
+    }
+    
+    // Guide user to set as homepage
+    function guideToSetHomepage() {
+      const isChrome = /Chrome/.test(navigator.userAgent);
+      const isFirefox = /Firefox/.test(navigator.userAgent);
+      const isSafari = /Safari/.test(navigator.userAgent);
+      
+      let message = 'To set Aura as your homepage:\n\n';
+      
+      if (isChrome) {
+        message += '1. Click Chrome menu (⋮) → Settings\n';
+        message += '2. Under "On startup" select "Open a specific page"\n';
+        message += '3. Click "Add a new page" and enter:\n';
+        message += '   ' + window.location.href + '\n\n';
+      } else if (isFirefox) {
+        message += '1. Click Firefox menu (☰) → Settings\n';
+        message += '2. Go to "Home" section\n';
+        message += '3. Under "Homepage and new windows" select "Custom URLs"\n';
+        message += '4. Enter: ' + window.location.href;
+      } else if (isSafari) {
+        message += '1. Safari → Preferences → General\n';
+        message += '2. Set "Homepage" to:\n';
+        message += '   ' + window.location.href;
+      } else {
+        message += '1. Go to your browser settings\n';
+        message += '2. Find "Homepage" or "On startup" settings\n';
+        message += '3. Set it to: ' + window.location.href;
+      }
+      
+      alert(message);
+    }
+    
+    // Restore saved settings
+    function restoreSettings() {
+      const savedScene = localStorage.getItem('aura-scene');
+      if (savedScene !== null) {
+        currentSceneIndex = parseInt(savedScene);
+        applyScene(currentSceneIndex);
+      }
+    }
+    
+    // Start when page loads
+    document.addEventListener('DOMContentLoaded', () => {
+      restoreSettings();
+      initAura();
+    });
+  </script>
+</body>
+</html>
