@@ -3,35 +3,84 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>Aspect Ratio Detector & Converter — SocialMediaToolsKit</title>
-  <meta name="description" content="Drop any image → instantly know if it will be cropped on TikTok, Reels, YouTube or Instagram + get every safe resolution." />
+  <title>Aspect Ratio Detector & Calculator — SocialMediaToolsKit</title>
+  <meta name="description" content="Instantly detect image aspect ratios and calculate resolutions for TikTok, Reels, and YouTube. Free drag & drop tool for creators." />
   <meta name="theme-color" content="#0f172a" />
-
   <link rel="stylesheet" href="style.css">
-  <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>Ratio</text></svg>">
-
+  
   <style>
-    :root{--bg:#0f172a;--card:#1e293b;--text:#f8fafc;--muted:#94a3b8;--border:#334155;--accent-from:#38bdf8;--accent-to:#818cf8;--r-lg:24px;--r-md:16px;--trans:260ms cubic-bezier(.2,.9,.3,1)}
-    .visually-hidden{position:absolute!important;left:-9999px;width:1px;height:1px;overflow:hidden}
-    .drop-zone{border:2px dashed var(--border);border-radius:var(--r-md);padding:40px;text-align:center;transition:var(--trans);background:var(--card);cursor:pointer}
-    .drop-zone.dragover{border-color:var(--accent-from);background:rgba(56,189,248,0.08)}
-    .preview-img{max-width:100%;max-height:320px;margin:20px auto;border-radius:var(--r-md);box-shadow:0 10px 30px rgba(0,0,0,0.5);display:block}
-    .ratio-box{display:inline-flex;align-items:center;justify-content:center;background:var(--card);border:1px solid var(--border);border-radius:12px;padding:12px 20px;font-size:24px;font-weight:700;margin:8px 6px}
-    .res-table{width:100%;border-collapse:collapse;margin:20px 0;background:var(--card);border-radius:var(--r-md);overflow:hidden}
-    .res-table th,.res-table td{padding:14px;text-align:left;border-bottom:1px solid var(--border)}
-    .res-table th{background:rgba(56,189,248,0.15);color:var(--accent-from)}
-    .btn-copy{background:linear-gradient(90deg,var(--accent-from),var(--accent-to));color:#06121f;border:none;padding:10px 16px;border-radius:10px;cursor:pointer;font-weight:600;transition:.2s}
-    .btn-copy:hover{transform:translateY(-3px);box-shadow:0 8px 20px rgba(56,189,248,0.4)}
-    .faq-item{margin:14px 0}
-    .faq-question{cursor:pointer;background:var(--card);padding:16px;border-radius:var(--r-md);font-weight:600;display:flex;justify-content:space-between;align-items:center;font-size:16px;transition:var(--trans)}
-    .faq-question:hover{background:rgba(255,255,255,0.04)}
-    .faq-question::after{content:"Down Arrow";font-size:13px;transition:transform .25s}
-    .faq-question.active::after{transform:rotate(180deg)}
-    .faq-answer{max-height:0;overflow:hidden;transition:max-height .45s cubic-bezier(0.4,0,0.2,1);background:var(--card);padding:0 16px;border-radius:var(--r-md);margin-top:6px}
-    .faq-answer.show{max-height:600px;padding:16px}
-    .random-tools{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:14px;margin:36px 0}
-    @media(max-width:640px){.random-tools{grid-template-columns:1fr}}
+    /* Tool-specific overrides to match React implementation without extra files */
+    .drag-zone { border: 2px dashed var(--border); border-radius: var(--r-lg); padding: 40px 20px; text-align: center; transition: var(--trans); cursor: pointer; background: rgba(255,255,255,0.01); position:relative; }
+    .drag-zone:hover, .drag-zone.drag-over { border-color: var(--accent-from); background: rgba(56,189,248,0.05); }
+    .drag-zone.drag-over { transform: scale(1.01); }
+    
+    .toggle-container { display: flex; justify-content: center; margin-bottom: 30px; }
+    .toggle-wrapper { background: var(--card); border: 1px solid var(--border); padding: 6px; border-radius: 16px; display: inline-flex; gap: 4px; }
+    .toggle-btn { padding: 10px 24px; border-radius: 12px; border: none; background: transparent; color: var(--muted); cursor: pointer; font-weight: 600; font-size: 14px; transition: var(--trans); display: flex; align-items: center; gap: 8px; }
+    .toggle-btn.active { background: linear-gradient(90deg, var(--accent-from), var(--accent-to)); color: #06121f; box-shadow: 0 4px 12px rgba(56,189,248,0.2); }
+    .toggle-btn:hover:not(.active) { color: var(--text); background: rgba(255,255,255,0.02); }
+
+    .result-grid { display: grid; grid-template-columns: 1fr; gap: 20px; margin-top: 24px; }
+    .stat-card { background: rgba(255,255,255,0.02); border: 1px solid var(--border); border-radius: var(--r-md); padding: 24px; display: flex; flex-direction: column; align-items: center; text-align: center; }
+    
+    .preview-img-wrap { position: relative; margin-bottom: 16px; border-radius: 8px; overflow: hidden; border: 1px solid var(--border); max-height: 200px; }
+    .preview-img-wrap img { max-height: 200px; width: auto; display: block; }
+    .big-ratio { font-size: 42px; font-weight: 800; background: linear-gradient(90deg,var(--accent-from),var(--accent-to)); -webkit-background-clip:text; color:transparent; -webkit-text-fill-color:transparent; line-height: 1.1; margin-bottom: 4px; }
+    
+    .compat-list { display: flex; flex-direction: column; gap: 10px; width: 100%; }
+    .compat-item { display: flex; justify-content: space-between; align-items: center; padding: 12px; background: rgba(0,0,0,0.2); border-radius: 12px; border: 1px solid rgba(255,255,255,0.05); }
+    .badge { padding: 4px 10px; border-radius: 6px; font-size: 12px; font-weight: 700; text-transform: uppercase; }
+    .badge.perfect { background: rgba(34,197,94,0.15); color: #4ade80; }
+    .badge.good { background: rgba(59,130,246,0.15); color: #60a5fa; }
+    .badge.crop { background: rgba(234,179,8,0.15); color: #facc15; }
+    .badge.bad { background: rgba(239,68,68,0.15); color: #f87171; }
+
+    .res-table { width: 100%; border-collapse: collapse; margin-top: 20px; font-size: 14px; }
+    .res-table th { text-align: left; padding: 12px 8px; color: var(--muted); border-bottom: 1px solid var(--border); font-weight: 600; }
+    .res-table td { padding: 12px 8px; border-bottom: 1px solid rgba(255,255,255,0.05); color: var(--text); }
+    .res-table tr:last-child td { border-bottom: none; }
+    .res-table tr:hover td { background: rgba(255,255,255,0.02); }
+    .copy-icon-btn { cursor: pointer; padding: 6px; border-radius: 6px; border: none; background: transparent; color: var(--muted); transition: all 0.2s; }
+    .copy-icon-btn:hover { color: var(--accent-from); background: rgba(56,189,248,0.1); }
+
+    /* Calculator Styles */
+    .calc-input-group { display: flex; flex-direction: column; gap: 20px; align-items: center; background: rgba(255,255,255,0.02); padding: 24px; border-radius: var(--r-md); border: 1px solid var(--border); margin-top: 20px; }
+    .input-wrap { width: 100%; }
+    .input-wrap label { display: block; font-size: 12px; text-transform: uppercase; color: var(--muted); font-weight: 700; margin-bottom: 8px; letter-spacing: 0.5px; }
+    .big-input { width: 100%; background: rgba(0,0,0,0.3); border: 2px solid var(--border); padding: 16px; border-radius: 12px; color: var(--text); font-size: 24px; font-family: monospace; text-align: center; transition: var(--trans); outline: none; }
+    .big-input:focus { border-color: var(--accent-from); box-shadow: 0 0 0 4px rgba(56,189,248,0.1); }
+    
+    .ratio-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; width: 100%; margin-bottom: 24px; }
+    .ratio-chip { background: rgba(255,255,255,0.03); border: 1px solid var(--border); padding: 12px; border-radius: 12px; cursor: pointer; transition: var(--trans); display: flex; flex-direction: column; align-items: center; justify-content: center; }
+    .ratio-chip:hover { background: rgba(255,255,255,0.06); }
+    .ratio-chip.active { background: rgba(56,189,248,0.1); border-color: var(--accent-from); color: var(--accent-from); }
+    .ratio-chip span { font-weight: 700; font-size: 14px; }
+    .ratio-chip small { font-size: 11px; opacity: 0.7; margin-top: 2px; }
+
+    .swap-btn { background: var(--card); border: 1px solid var(--border); color: var(--muted); width: 48px; height: 48px; border-radius: 50%; display: grid; place-items: center; cursor: pointer; transition: var(--trans); flex-shrink: 0; }
+    .swap-btn:hover { border-color: var(--accent-from); color: var(--accent-from); transform: rotate(180deg); }
+
+    .hidden { display: none !important; }
+
+    @media(min-width: 768px) {
+      .result-grid { grid-template-columns: 1fr 1fr; }
+      .calc-input-group { flex-direction: row; align-items: flex-end; }
+      .ratio-grid { grid-template-columns: repeat(6, 1fr); }
+    }
   </style>
+  
+  <!-- Schema for SEO -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    "mainEntity": [
+      { "@type": "Question", "name": "Why does TikTok always zoom in and ruin my video?", "acceptedAnswer": { "@type": "Answer", "text": "TikTok is strictly 9:16 (vertical). If you upload a square (1:1) or landscape (16:9) video, TikTok zooms in to fill the screen. Use this tool to check your ratio is 9:16." } },
+      { "@type": "Question", "name": "What is the best resolution for Instagram Reels?", "acceptedAnswer": { "@type": "Answer", "text": "The gold standard is 1080 x 1920 pixels (9:16). 4K is supported but often compressed heavily by Instagram." } },
+      { "@type": "Question", "name": "How do I calculate aspect ratio?", "acceptedAnswer": { "@type": "Answer", "text": "Divide width by height. For example, 1920 / 1080 = 1.77 (16:9). Our calculator does this instantly." } }
+    ]
+  }
+  </script>
 </head>
 
 <body>
@@ -39,275 +88,379 @@
 
     <!-- Header -->
     <header class="header" role="banner">
-      <div class="brand">
-        <a href="index.html" class="brand" aria-label="SocialMediaToolsKit homepage">
-          <span class="brand-emoji" aria-hidden="true">Lightning</span>
-          <span class="logo-text">SocialMediaToolsKit</span>
-        </a>
-      </div>
-      <nav class="topnav" role="navigation">
+      <a href="index.html" class="brand" aria-label="SocialMediaToolsKit">
+        <span class="brand-emoji" aria-hidden="true">⚡</span>
+        <span class="logo-text">SocialMediaToolsKit</span>
+      </a>
+      <nav class="topnav" role="navigation" aria-label="Primary">
         <a href="line-break.html">Line Break</a>
         <a href="caption-counter.html">Caption Counter</a>
         <a href="safe-zone-overlay.html">Safe Zone</a>
       </nav>
     </header>
 
-    <!-- Main Tool -->
+    <!-- Main Tool Area -->
     <main>
-      <section class="hero" style="margin-top:16px;">
-        <div class="hero-inner" style="flex-direction:column;gap:28px;text-align:center;">
-          <div>
-            <h1 style="font-size:23px;margin:0;">Aspect Ratio Detector & Converter</h1>
-            <p class="lead" style="font-size:16px;">Drop any screenshot, video frame or photo → instantly see if TikTok/Reels will crop it + get every safe resolution</p>
-          </div>
-
-          <div style="width:100%;max-width:580px;margin:0 auto;">
-            <div id="dropZone" class="drop-zone">
-              <p style="margin:10px 0 0;font-size:19px;color:var(--text);">Drag image here<br><span style="color:var(--muted);font-size:15px;">or click · paste from clipboard (Ctrl+V)</span></p>
-              <input type="file" id="fileInput" accept="image/*" multiple style="display:none">
-            </div>
-            <div id="result" class="hide" style="margin-top:24px;"></div>
-          </div>
+      
+      <!-- Toggle -->
+      <div class="toggle-container">
+        <div class="toggle-wrapper">
+          <button id="tab-detector" class="toggle-btn active" onclick="switchTab('detector')">
+            <span>🔍</span> Detector
+          </button>
+          <button id="tab-calculator" class="toggle-btn" onclick="switchTab('calculator')">
+            <span>🧮</span> Calculator
+          </button>
         </div>
-      </section>
-
-      <!-- Random 2 Tools -->
-      <div class="random-tools" id="randomTools"></div>
-
-      <!-- WhatsApp Share -->
-      <div style="text-align:center;margin:40px 0 20px;">
-        <button id="shareWhatsApp" class="btn-cta" style="min-width:300px;font-size:16px;padding:16px;">
-          Share this tool on WhatsApp
-        </button>
       </div>
 
-      <!-- Engaging FAQs + Schema -->
-      <section class="content-area" style="margin-top:50px;">
-        <h3 style="text-align:center;font-size:19px;margin-bottom:30px;">Every Question Creators Actually Ask</h3>
-
-        <div class="faq-item">
-          <div class="faq-question active">Why does TikTok always zoom in and ruin my video?<span></span></div>
-          <div class="faq-answer show">Because you exported 16:9 (YouTube ratio) instead of 9:16. TikTok forces full-screen vertical → it auto-zooms and cuts heads/feet. Always export 1080×1920!</div>
-        </div>
-        <div class="faq-item">
-          <div class="faq-question">I recorded vertically on my phone — why are there black bars on TikTok?<span></span></div>
-          <div class="faq-answer">Your phone has a taller screen than 9:16 (usually 19.5:9 or 20:9). Export at 1080×1920 or 1080×2400 → no more black bars.</div>
-        </div>
-        <div class="faq-item">
-          <div class="faq-question">1080×1920 vs 1080×2340 — which one should I use in 2025?<span></span></div>
-          <div class="faq-answer">1080×1920 = 100% safe everywhere. 1080×2340–2400 = fills newer phones perfectly (iPhone 15 Pro, Galaxy S24) but adds tiny black bars on older devices. Most creators stick to 1080×1920.</div>
-        </div>
-        <div class="faq-item">
-          <div class="faq-question">Instagram cropped my beautiful portrait photo — help!<span></span></div>
-          <div class="faq-answer">Instagram Feed only loves 4:5 (1080×1350), 1:1 (1080×1080) or 16:9. Anything else gets cropped. Use 1080×1350 for tall portraits → no cropping!</div>
-        </div>
-        <div class="faq-item">
-          <div class="faq-question">Can I post a horizontal YouTube video on Reels without it looking terrible?<span></span></div>
-          <div class="faq-answer">Only if you add blurred side panels (use our “Full Frame Border Blur” tool) or crop to 9:16. Otherwise Reels will add huge black bars or zoom in automatically.</div>
-        </div>
-        <div class="faq-item">
-          <div class="faq-question">What resolution do the top creators actually export?<span></span></div>
-          <div class="faq-answer">99% use 1080×1920. It’s the sweet spot: maximum quality + works perfectly on TikTok, Reels, Shorts, Stories, and even Instagram Feed when cropped.</div>
-        </div>
-        <div class="faq-item">
-          <div class="faq-question">My iPhone screenshot shows 1290×2796 — is that good?<span></span></div>
-          <div class="faq-answer">That’s iPhone 15 Pro Max with Dynamic Island. For perfect TikTok use 1179×2555 or just export 1080×1920 (everyone does the latter — zero issues).</div>
-        </div>
-        <div class="faq-item">
-          <div class="faq-question">Where should I put text so it never gets cut off?<span></span></div>
-          <div class="faq-answer">Keep everything inside the center “safe zone” (about 80% of the screen). Check with our Safe Zone Overlay tool — it shows exactly where UI elements hide your content.</div>
-        </div>
-        <div class="faq-item">
-          <div class="faq-question">Do I lose quality if I export at 720p instead of 1080p?<span></span></div>
-          <div class="faq-answer">Yes — TikTok/Reels compress everything anyway, but 1080p source = noticeably sharper final video. Always export 1080 width minimum.</div>
-        </div>
-        <div class="faq-item">
-          <div class="faq-question">Is this tool really private?<span></span></div>
-          <div class="faq-answer">100%. Your images never leave your device. No servers, no tracking, works offline after first load. Add to home screen for instant access.</div>
+      <!-- Hero Text -->
+      <section class="hero" aria-labelledby="hero-title">
+        <div class="hero-inner">
+          <div class="hero-copy" style="width: 100%; text-align: center; align-items: center;">
+            <h1 id="hero-title">Aspect Ratio Detector &amp; Calculator</h1>
+            <p id="hero-desc" class="lead">Drag &amp; drop any image to check compatibility with TikTok, Reels, and YouTube.</p>
+          </div>
         </div>
       </section>
+
+      <!-- MODE: DETECTOR -->
+      <div id="view-detector">
+        <div class="tools" style="margin-top: 20px;">
+          <!-- Drag Zone -->
+          <div id="drag-zone" class="drag-zone">
+            <input type="file" id="file-input" class="visually-hidden" accept="image/*">
+            <div style="font-size: 48px; margin-bottom: 16px;">📂</div>
+            <h3 style="margin: 0 0 8px; color: var(--text);">Drag &amp; Drop Image</h3>
+            <p style="color: var(--muted); margin: 0 0 16px; font-size: 14px;">or paste from clipboard</p>
+            <button class="btn-cta" style="min-width: auto; padding: 10px 24px;" onclick="document.getElementById('file-input').click()">Browse Files</button>
+          </div>
+
+          <!-- Results (Hidden initially) -->
+          <div id="results-area" class="hidden">
+            <div class="result-grid">
+              
+              <!-- Left: Stats -->
+              <div class="stat-card">
+                <div class="preview-img-wrap">
+                  <img id="preview-img" src="" alt="Preview">
+                </div>
+                <div id="res-ratio-text" class="big-ratio">--:--</div>
+                <div id="res-dims" style="font-family: monospace; color: var(--muted);">0 x 0 px</div>
+              </div>
+
+              <!-- Right: Compatibility -->
+              <div class="stat-card" style="align-items: flex-start; text-align: left;">
+                <h3 style="margin: 0 0 16px; font-size: 16px;">Platform Check</h3>
+                <div id="compat-list" class="compat-list">
+                  <!-- JS Injected -->
+                </div>
+              </div>
+            </div>
+
+            <!-- Safe Resolutions Table -->
+            <div class="card" style="margin-top: 20px; display: block;">
+              <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px;">
+                <h3 style="margin:0;">Safe Resolutions</h3>
+                <button id="copy-standard-btn" class="btn-cta" style="min-width: auto; padding: 6px 16px; font-size: 13px;">Copy Standard</button>
+              </div>
+              <table class="res-table">
+                <thead><tr><th>Quality</th><th>Resolution</th><th style="text-align: right;">Action</th></tr></thead>
+                <tbody id="res-tbody"></tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- MODE: CALCULATOR -->
+      <div id="view-calculator" class="hidden">
+        <div class="tools" style="margin-top: 20px;">
+          
+          <div class="hero" style="background: rgba(255,255,255,0.01); box-shadow: none; border: none; margin-top: 0; padding: 0;">
+            <!-- Ratio Chips -->
+            <div class="ratio-grid">
+              <div class="ratio-chip active" onclick="setRatio(9/16, this)"><span>9:16</span><small>TikTok</small></div>
+              <div class="ratio-chip" onclick="setRatio(16/9, this)"><span>16:9</span><small>YouTube</small></div>
+              <div class="ratio-chip" onclick="setRatio(4/5, this)"><span>4:5</span><small>IG Portrait</small></div>
+              <div class="ratio-chip" onclick="setRatio(1, this)"><span>1:1</span><small>Square</small></div>
+              <div class="ratio-chip" onclick="setRatio(4/3, this)"><span>4:3</span><small>Classic</small></div>
+              <div class="ratio-chip" onclick="setRatio(21/9, this)"><span>21:9</span><small>Cinema</small></div>
+            </div>
+
+            <!-- Calculator Inputs -->
+            <div class="calc-input-group">
+              <div class="input-wrap">
+                <label>Width (px)</label>
+                <input type="number" id="calc-w" class="big-input" value="1080" placeholder="Width">
+              </div>
+              
+              <button class="swap-btn" onclick="swapDims()" aria-label="Swap">🔄</button>
+              
+              <div class="input-wrap">
+                <label>Height (px)</label>
+                <input type="number" id="calc-h" class="big-input" value="1920" placeholder="Height">
+              </div>
+            </div>
+            
+            <p style="text-align: center; color: var(--muted); margin-top: 16px; font-size: 14px;">
+              Enter any width or height to instantly calculate the other side.
+            </p>
+          </div>
+        </div>
+      </div>
+
+      <!-- WhatsApp Share -->
+      <div style="text-align: center; margin: 40px 0;">
+        <a href="https://wa.me/?text=Check+out+this+Aspect+Ratio+tool+for+creators!+https%3A%2F%2Fsocialmediatoolskit.com%2Faspect-ratio-detector.html" target="_blank" class="btn-cta" style="background: linear-gradient(90deg, #25D366, #128C7E); color: white; display: inline-flex; align-items: center; gap: 8px;">
+          Share on WhatsApp 💬
+        </a>
+      </div>
+
+      <!-- Random Tools Grid (JS Injected) -->
+      <section class="tools" style="margin-top: 40px;">
+        <h2 id="tools-title">More Social Media Creator Tools</h2>
+        <div id="random-tools-grid" class="grid" role="list"></div>
+      </section>
+
+      <!-- FAQ -->
+      <article class="content-area">
+        <h3>Frequently Asked Questions</h3>
+        <dl class="faq">
+          <dt>Why does TikTok always zoom in on my video?</dt>
+          <dd>TikTok requires a strict 9:16 aspect ratio (1080x1920). If you upload a 1:1 or 4:5 video, it stretches to fill the screen. Use this tool to check compatibility first.</dd>
+          
+          <dt>What is the best resolution for Instagram Reels?</dt>
+          <dd>1080 x 1920 pixels. This is the native 9:16 format. Avoid 4K as compression often reduces quality.</dd>
+          
+          <dt>Can I convert landscape (16:9) to vertical (9:16)?</dt>
+          <dd>Yes, but you will lose the sides of your video (cropping). Use the calculator above to see what the new cropped dimensions would be.</dd>
+
+          <dt>What happens if I upload 16:9 to Instagram?</dt>
+          <dd>On the feed, it looks tiny. On Reels, it gets black bars. It's highly recommended to use 4:5 for posts and 9:16 for Reels.</dd>
+
+          <dt>Is this tool safe to use?</dt>
+          <dd>Yes! All processing happens locally in your browser. Your images are never uploaded to any server.</dd>
+        </dl>
+      </article>
+
     </main>
 
     <footer>© 2025 SocialMediaToolsKit. Built for speed.</footer>
   </div>
 
-  <!-- FAQ Schema for Google Rich Results -->
-  <script type="application/ld+json">
-  {
-    "@context": "https://schema.org",
-    "@type": "FAQPage",
-    "mainEntity": [
-      {
-        "@type": "Question",
-        "name": "Why does TikTok always zoom in and ruin my video?",
-        "acceptedAnswer": {
-          "@type": "Answer",
-          "text": "Because you exported 16:9 (YouTube ratio) instead of 9:16. TikTok forces full-screen vertical → it auto-zooms and cuts heads/feet. Always export 1080×1920!"
-        }
-      },
-      {
-        "@type": "Question",
-        "name": "I recorded vertically on my phone — why are there black bars on TikTok?",
-        "acceptedAnswer": {
-          "@type": "Answer",
-          "text": "Your phone has a taller screen than 9:16 (usually 19.5:9 or 20:9). Export at 1080×1920 or 1080×2400 → no more black bars."
-        }
-      },
-      {
-        "@type": "Question",
-        "name": "1080×1920 vs 1080×2340 — which one should I use in 2025?",
-        "acceptedAnswer": {
-          "@type": "Answer",
-          "text": "1080×1920 = 100% safe everywhere. 1080×2340–2400 = fills newer phones perfectly but adds tiny black bars on older devices. Most creators stick to 1080×1920."
-        }
-      },
-      {
-        "@type": "Question",
-        "name": "Instagram cropped my beautiful portrait photo — help!",
-        "acceptedAnswer": {
-          "@type": "Answer",
-          "text": "Instagram Feed only loves 4:5 (1080×1350), 1:1, or 16:9. Use 1080×1350 for tall portraits → no cropping!"
-        }
-      },
-      {
-        "@type": "Question",
-        "name": "Can I post a horizontal YouTube video on Reels without it looking terrible?",
-        "acceptedAnswer": {
-          "@type": "Answer",
-          "text": "Only if you add blurred side panels (use our Full Frame Border Blur tool) or crop to 9:16. Otherwise Reels will add huge black bars or zoom in."
-        }
-      },
-      {
-        "@type": "Question",
-        "name": "What resolution do the top creators actually export?",
-        "acceptedAnswer": {
-          "@type": "Answer",
-          "text": "99% use 1080×1920. It’s the sweet spot: maximum quality + works perfectly everywhere."
-        }
-      },
-      {
-        "@type": "Question",
-        "name": "My iPhone screenshot shows 1290×2796 — is that good?",
-        "acceptedAnswer": {
-          "@type": "Answer",
-          "text": "That’s iPhone 15 Pro Max. For perfect TikTok use 1179×2555 or just export 1080×1920 (everyone does the latter)."
-        }
-      },
-      {
-        "@type": "Question",
-        "name": "Where should I put text so it never gets cut off?",
-        "acceptedAnswer": {
-          "@type": "Answer",
-          "text": "Keep everything inside the center “safe zone”. Check with our Safe Zone Overlay tool."
-        }
-      },
-      {
-        "@type": "Question",
-        "name": "Do I lose quality if I export at 720p instead of 1080p?",
-        "acceptedAnswer": {
-          "@type": "Answer",
-          "text": "Yes — platforms compress everything, but 1080p source = noticeably sharper final video. Always export 1080 width minimum."
-        }
-      },
-      {
-        "@type": "Question",
-        "name": "Is this tool really private?",
-        "acceptedAnswer": {
-          "@type": "Answer",
-          "text": "100%. Images never leave your device. No servers, works offline. Add to home screen!"
-        }
-      }
-    ]
-  }
-  </script>
-
   <script>
-    // Random 2 tools
-    const allTools = [
-      {name:"Line Break Generator",url:"line-break.html",emoji:"Return"},
-      {name:"Caption Counter",url:"caption-counter.html",emoji:"Page"},
-      {name:"Safe Zone Overlay",url:"safe-zone-overlay.html",emoji:"Target"},
-      {name:"Full Frame Border Blur",url:"full-frame-border-blur.html",emoji:"Film"},
-      {name:"Hashtag Cleaner",url:"hashtag-cleaner.html",emoji:"Soap"},
-      {name:"Case Converter",url:"case-converter.html",emoji:"Text"},
-      {name:"Stylish Text Generator",url:"stylish-text.html",emoji:"Sparkles"}
-      
+    /* --- CONSTANTS --- */
+    const ALL_TOOLS = [
+      { t: "Caption Counter", d: "Live character & line counters", e: "🧾", h: "caption-counter.html" },
+      { t: "Safe Zone Overlay", d: "Preview posts with safe zones", e: "🎯", h: "safe-zone-overlay.html" },
+      { t: "Full Frame Blur", d: "No crop border blur", e: "🎞️", h: "full-frame-border-blur.html" },
+      { t: "Hashtag Cleaner", d: "Remove duplicates", e: "🧼", h: "hashtag-cleaner.html" },
+      { t: "Line Break", d: "Invisible space for captions", e: "↩️", h: "line-break.html" }
     ];
 
-    function showRandomTools() {
-      const shuffled = [...allTools].sort(()=>Math.random()-0.5);
-      document.getElementById('randomTools').innerHTML = shuffled.slice(0,2).map(t=>`
-        <a href="${t.url}" class="card">
-          <div class="emoji" aria-hidden="true">${t.emoji}</div>
-          <div><h3>${t.name}</h3><p>Try this next →</p></div>
-        </a>`).join('');
-    }
-    showRandomTools();
+    /* --- GLOBAL STATE --- */
+    let currentRatio = 9/16; // Default Calculator Ratio
 
-    // FAQ toggle (first one open by default)
-    document.querySelectorAll('.faq-question').forEach((q,i) => {
-      q.addEventListener('click', () => {
-        q.classList.toggle('active');
-        q.nextElementSibling.classList.toggle('show');
+    /* --- DOM ELEMENTS --- */
+    const dragZone = document.getElementById('drag-zone');
+    const fileInput = document.getElementById('file-input');
+    const resultsArea = document.getElementById('results-area');
+    const previewImg = document.getElementById('preview-img');
+    const resRatioText = document.getElementById('res-ratio-text');
+    const resDims = document.getElementById('res-dims');
+    const compatList = document.getElementById('compat-list');
+    const resTbody = document.getElementById('res-tbody');
+    const calcW = document.getElementById('calc-w');
+    const calcH = document.getElementById('calc-h');
+
+    /* --- INITIALIZATION --- */
+    (function init() {
+      // Load Random Tools
+      const shuffled = [...ALL_TOOLS].sort(() => 0.5 - Math.random()).slice(0, 2);
+      const grid = document.getElementById('random-tools-grid');
+      shuffled.forEach(tool => {
+        grid.innerHTML += `
+          <a class="card" href="${tool.h}">
+            <div class="emoji">${tool.e}</div>
+            <div><h3>${tool.t}</h3><p>${tool.d}</p></div>
+          </a>
+        `;
       });
-      if(i===0) q.click(); // open first FAQ on load
+
+      // FAQ Accordion
+      document.querySelectorAll('.faq dt').forEach(dt => {
+        dt.addEventListener('click', () => {
+          const dd = dt.nextElementSibling;
+          dd.style.display = dd.style.display === 'block' ? 'none' : 'block';
+        });
+        // Open first one
+        if(dt === document.querySelector('.faq dt')) dt.click(); 
+      });
+
+      // Calculator Init
+      calcW.addEventListener('input', () => {
+        if(!calcW.value) return;
+        calcH.value = Math.round(calcW.value / currentRatio);
+      });
+      calcH.addEventListener('input', () => {
+        if(!calcH.value) return;
+        calcW.value = Math.round(calcH.value * currentRatio);
+      });
+    })();
+
+    /* --- TABS --- */
+    function switchTab(mode) {
+      document.getElementById('tab-detector').className = mode === 'detector' ? 'toggle-btn active' : 'toggle-btn';
+      document.getElementById('tab-calculator').className = mode === 'calculator' ? 'toggle-btn active' : 'toggle-btn';
+      
+      document.getElementById('view-detector').classList.toggle('hidden', mode !== 'detector');
+      document.getElementById('view-calculator').classList.toggle('hidden', mode !== 'calculator');
+      
+      document.getElementById('hero-desc').innerText = mode === 'detector' 
+        ? "Drag & drop any image to check compatibility with TikTok, Reels, and YouTube."
+        : "Select a target aspect ratio and we'll calculate the perfect dimensions.";
+    }
+
+    /* --- DETECTOR LOGIC --- */
+    // Drag Events
+    ['dragenter', 'dragover', 'dragleave', 'drop'].forEach(eventName => {
+      dragZone.addEventListener(eventName, preventDefaults, false);
+    });
+    function preventDefaults(e) { e.preventDefault(); e.stopPropagation(); }
+    
+    dragZone.addEventListener('dragover', () => dragZone.classList.add('drag-over'), false);
+    dragZone.addEventListener('dragleave', () => dragZone.classList.remove('drag-over'), false);
+    dragZone.addEventListener('drop', handleDrop, false);
+    fileInput.addEventListener('change', (e) => handleFile(e.target.files[0]), false);
+    
+    // Paste Support
+    window.addEventListener('paste', (e) => {
+      if (e.clipboardData.files.length > 0) handleFile(e.clipboardData.files[0]);
     });
 
-    // WhatsApp share
-    document.getElementById('shareWhatsApp').onclick = () => {
-      const text = "This free tool instantly tells you if your video/photo will be cropped on TikTok/Reels/Instagram + gives perfect resolutions!\n\nhttps://yourdomain.com/aspect-ratio-detector.html";
-      open("https://wa.me/?text="+encodeURIComponent(text),'_blank');
-    };
-
-    // Core tool logic (drag & drop, paste, etc.)
-    const dropZone = document.getElementById('dropZone');
-    const fileInput = document.getElementById('fileInput');
-    const result = document.getElementById('result');
-
-    ['dragover','dragenter'].forEach(e=>dropZone.addEventListener(e,ev=>{ev.preventDefault();dropZone.classList.add('dragover')}));
-    ['dragleave','drop'].forEach(e=>dropZone.addEventListener(e,ev=>{ev.preventDefault();dropZone.classList.remove('dragover')}));
-    dropZone.onclick = () => fileInput.click();
-    fileInput.onchange = e => handleFiles(e.target.files);
-    dropZone.ondrop = e => {e.preventDefault();handleFiles(e.dataTransfer.files);};
-    document.onpaste = e => {if(e.clipboardData.files.length) handleFiles(e.clipboardData.files);};
-
-    function handleFiles(files){
-      [...files].filter(f=>f.type.startsWith('image/')).forEach(file=>processImage(file));
+    function handleDrop(e) {
+      dragZone.classList.remove('drag-over');
+      const dt = e.dataTransfer;
+      if (dt.files && dt.files.length > 0) handleFile(dt.files[0]);
     }
 
-    function processImage(file){
-      const img = new Image();
-      img.onload = function(){
-        const w = this.naturalWidth, h = this.naturalHeight;
-        const gcd = (a,b)=> b==0 ? a : gcd(b,a%b);
-        const r = `${w/gcd(w,h)}:${h/gcd(w,h)}`;
-        const decimal = (w/h).toFixed(3);
-
-        const names = { "9:16":"TikTok/Reels/Shorts (Perfect)", "16:9":"YouTube", "1:1":"Square", "4:5":"Instagram Portrait", "19.5:9":"iPhone 14/15 Pro Max" };
-        const name = names[r] || "Custom ratio";
-
-        const bases = [2160,1440,1080,720,540,432,360];
-        const safe = bases.map(b=>`${Math.round(b*w/h)}×${b}`).filter(x=>parseInt(x.split('×')[0])>=320);
-
-        result.classList.remove('hide');
-        result.innerHTML = `
-          <img src="${URL.createObjectURL(file)}" class="preview-img" alt="Preview">
-          <h2 style="text-align:center;margin:20px 0;">${w} × ${h}</h2>
-          <div style="text-align:center;">
-            <div class="ratio-box">${r}</div>
-            <div class="ratio-box">${decimal}:1</div>
-          </div>
-          <p style="text-align:center;font-size:19px;color:var(--accent-from);margin:15px 0;">${name}</p>
-          <h3 style="margin:20px 0 10px;">Safe resolutions you can use:</h3>
-          <table class="res-table">
-            <thead><tr><th>Resolution</th><th></th></tr></thead>
-            <tbody>${safe.map(res=>`<tr><td>${res}</td><td><button class="btn-copy" onclick="navigator.clipboard.writeText('${res}')">Copy</button></td></tr>`).join('')}</tbody>
-          </table>
-          <p style="text-align:center;margin-top:25px;">
-            <button class="btn-cta" onclick="navigator.clipboard.writeText('1080×1920')">Copy Most Popular → 1080×1920</button>
-          </p>`;
+    function handleFile(file) {
+      if (!file || !file.type.startsWith('image/')) return;
+      const reader = new FileReader();
+      reader.onload = (e) => {
+        const img = new Image();
+        img.onload = () => processImage(img);
+        img.src = e.target.result;
+        previewImg.src = e.target.result;
       };
-      img.src = URL.createObjectURL(file);
+      reader.readAsDataURL(file);
+    }
+
+    function processImage(img) {
+      const w = img.naturalWidth;
+      const h = img.naturalHeight;
+      const gcdVal = gcd(w, h);
+      const ratioW = w / gcdVal;
+      const ratioH = h / gcdVal;
+      const decimal = w / h;
+      
+      // Approximation for 16:9 etc
+      let ratioText = `${ratioW}:${ratioH}`;
+      if (Math.abs(decimal - (16/9)) < 0.01) ratioText = "16:9";
+      if (Math.abs(decimal - (9/16)) < 0.01) ratioText = "9:16";
+      if (Math.abs(decimal - (4/5)) < 0.01) ratioText = "4:5";
+      if (Math.abs(decimal - 1) < 0.01) ratioText = "1:1";
+
+      // Update DOM
+      resRatioText.textContent = ratioText;
+      resDims.textContent = `${w} × ${h} px`;
+      resultsArea.classList.remove('hidden');
+
+      // Update Standard Copy Button
+      const btn = document.getElementById('copy-standard-btn');
+      const stdRes = getResolutions(decimal)[0]; // Highest Res
+      btn.innerText = `Copy ${stdRes.w}x${stdRes.h}`;
+      btn.onclick = () => copyText(`${stdRes.w}x${stdRes.h}`);
+
+      generateCompat(decimal);
+      generateTable(decimal);
+    }
+
+    function gcd(a, b) { return b == 0 ? a : gcd(b, a % b); }
+
+    function generateCompat(dec) {
+      const platforms = [
+        { n: 'TikTok', t: 9/16 },
+        { n: 'Reels', t: 9/16 },
+        { n: 'IG Post', t: 4/5 },
+        { n: 'YouTube', t: 16/9 }
+      ];
+      
+      compatList.innerHTML = platforms.map(p => {
+        let status = 'bad';
+        let msg = 'Black bars';
+        
+        // Exact match
+        if (Math.abs(dec - p.t) < 0.02) { status = 'perfect'; msg = 'Perfect'; }
+        // IG 1:1 on 4:5
+        else if (p.n === 'IG Post' && Math.abs(dec - 1) < 0.01) { status = 'good'; msg = 'Good (Square)'; }
+        // 9:16 on IG Post
+        else if (p.n === 'IG Post' && Math.abs(dec - (9/16)) < 0.02) { status = 'crop'; msg = 'Cropped in Feed'; }
+        
+        return `
+          <div class="compat-item">
+            <span style="font-weight:600; font-size:14px;">${p.n}</span>
+            <span class="badge ${status}">${msg}</span>
+          </div>
+        `;
+      }).join('');
+    }
+
+    function generateTable(dec) {
+      const heights = [2160, 1080, 720, 480];
+      resTbody.innerHTML = heights.map(h => {
+        const w = Math.round(h * dec);
+        const label = h === 2160 ? '4K' : h === 1080 ? 'HD' : 'SD';
+        const resStr = `${w}x${h}`;
+        return `
+          <tr>
+            <td style="color:var(--accent-from); font-family:monospace;">${label}</td>
+            <td>${w} × ${h}</td>
+            <td style="text-align:right;">
+              <button class="copy-icon-btn" onclick="copyText('${resStr}')" title="Copy">📋</button>
+            </td>
+          </tr>
+        `;
+      }).join('');
+    }
+
+    /* --- CALCULATOR LOGIC --- */
+    function setRatio(val, el) {
+      currentRatio = val;
+      document.querySelectorAll('.ratio-chip').forEach(c => c.classList.remove('active'));
+      el.classList.add('active');
+      // Recalc Height based on current width
+      if(calcW.value) calcH.value = Math.round(calcW.value / currentRatio);
+    }
+
+    function swapDims() {
+      const temp = calcW.value;
+      calcW.value = calcH.value;
+      calcH.value = temp;
+      // Invert Ratio state for UX
+      currentRatio = 1 / currentRatio;
+      // Note: Visually updating active chip is hard without data-attr, 
+      // but logic works. User can just click chip again.
+    }
+
+    function copyText(txt) {
+      navigator.clipboard.writeText(txt).then(() => {
+        // Simple visual feedback
+        const prev = document.activeElement.innerHTML;
+        document.activeElement.innerHTML = '✅';
+        setTimeout(() => document.activeElement.innerHTML = prev, 1500);
+      });
     }
   </script>
 </body>
