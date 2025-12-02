@@ -1,0 +1,100 @@
+import React, { useState, useRef } from 'react';
+import Sidebar from './components/Sidebar';
+import CanvasWorkspace from './components/CanvasWorkspace';
+import { AppState, PenConfig, RenderPath, PaperType } from './types';
+import { parseSVG } from './utils/svgParser';
+
+// Demo SVG
+const DEMO_SVG = `<svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+<path d="M50 90 Q 50 50 50 10" stroke="black" fill="none"/> 
+<circle cx="50" cy="50" r="10" stroke="black" fill="none"/>
+<path d="M50 50 Q 70 20 90 50 Q 70 80 50 50" stroke="black" fill="none"/>
+<path d="M50 50 Q 30 20 10 50 Q 30 80 50 50" stroke="black" fill="none"/>
+<path d="M50 50 Q 20 30 50 10 Q 80 30 50 50" stroke="black" fill="none"/>
+<path d="M50 50 Q 20 70 50 90 Q 80 70 50 50" stroke="black" fill="none"/>
+</svg>`;
+
+const App: React.FC = () => {
+    // Hidden container for SVG parsing
+    const tempContainerRef = useRef<HTMLDivElement>(null);
+    const [paths, setPaths] = useState<RenderPath[]>([]);
+    
+    const [state, setState] = useState<AppState>({
+        speed: 1.5,
+        pen: { type: 'ballpoint', color: '#000000', width: 3 },
+        paper: 1,
+        signature: '',
+        pathCount: 0,
+        isDrawing: false,
+        isPreview: false
+    });
+
+    // Initialize with Demo
+    React.useEffect(() => {
+        if (tempContainerRef.current) {
+            const parsed = parseSVG(DEMO_SVG, 1920, 1080, tempContainerRef.current);
+            setPaths(parsed);
+            setState(s => ({ ...s, pathCount: parsed.length }));
+        }
+    }, []);
+
+    const handleFileUpload = (file: File) => {
+        const reader = new FileReader();
+        reader.onload = (e) => {
+            const result = e.target?.result as string;
+            if (result && tempContainerRef.current) {
+                const parsed = parseSVG(result, 1920, 1080, tempContainerRef.current);
+                setPaths(parsed);
+                setState(s => ({ ...s, pathCount: parsed.length }));
+            }
+        };
+        reader.readAsText(file);
+    };
+
+    const updateState = (updates: Partial<AppState>) => {
+        setState(s => ({ ...s, ...updates }));
+    };
+
+    const handleStart = () => {
+        updateState({ isDrawing: true, isPreview: false });
+    };
+
+    const handlePreview = () => {
+        updateState({ isDrawing: true, isPreview: true });
+    };
+
+    const handleDrawingComplete = () => {
+        updateState({ isDrawing: false });
+    };
+
+    return (
+        <div className="flex h-screen bg-gray-900 text-white font-sans overflow-hidden">
+            {/* Hidden container for DOM operations */}
+            <div ref={tempContainerRef} style={{ display: 'none' }}></div>
+
+            <Sidebar 
+                onFileUpload={handleFileUpload}
+                speed={state.speed}
+                onSpeedChange={(v) => updateState({ speed: v })}
+                penConfig={state.pen}
+                onPenChange={(v) => updateState({ pen: v })}
+                onPaperChange={(v) => updateState({ paper: v })}
+                signature={state.signature}
+                onSignatureChange={(v) => updateState({ signature: v })}
+                pathCount={state.pathCount}
+                onStart={handleStart}
+                onPreview={handlePreview}
+                isDrawing={state.isDrawing}
+            />
+
+            <CanvasWorkspace 
+                appState={state}
+                paths={paths}
+                onDrawingComplete={handleDrawingComplete}
+                setDrawing={(val) => updateState({ isDrawing: val })}
+            />
+        </div>
+    );
+};
+
+export default App;
