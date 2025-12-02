@@ -1,0 +1,705 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>ASCII Art Generator — SocialMediaToolsHub</title>
+    <meta name="description" content="Turn text and images into retro ASCII art. Free generator for Instagram, Twitter, and Reddit comments. Fast, secure, and runs locally." />
+    <meta name="theme-color" content="#0f172a" />
+    
+    <!-- JSON-LD for FAQ -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "FAQPage",
+      "mainEntity": [
+        {
+          "@type": "Question",
+          "name": "How does the Image to ASCII converter work?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "The tool scans your image pixel by pixel. It calculates the brightness of each pixel and maps it to a specific character from the selected 'ramp'. Darker pixels get dense characters, while lighter pixels get light characters. All processing happens instantly in your browser."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Is my data safe?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Yes, absolutely. This tool runs 100% locally in your browser using JavaScript. No images or text are ever uploaded to a server."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Why does the ASCII art look distorted on Instagram?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Instagram uses a variable-width font, which messes up the alignment of ASCII art. This tool is best for platforms that support monospaced code blocks (like Discord, Reddit, GitHub) or for use in bios/captions where rough alignment is acceptable."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Can I use this for YouTube comments?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Yes! The 'Standard' or 'Braille' ramps work reasonably well in YouTube comments, though large art might get truncated by the 'Read More' button."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "What is the best width for mobile?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "For mobile screens (like WhatsApp or iMessage), keep the width between 20 and 30 characters. For desktop, you can go up to 80 or 100."
+          }
+        }
+      ]
+    }
+    </script>
+
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+      tailwind.config = {
+        theme: {
+          extend: {
+            colors: {
+              bg: '#0f172a',
+              card: '#1e293b',
+              text: '#f8fafc',
+              muted: '#94a3b8',
+              border: '#334155',
+              accent: {
+                from: '#38bdf8',
+                to: '#818cf8',
+              }
+            },
+            fontFamily: {
+              sans: ['-apple-system', 'BlinkMacSystemFont', '"Segoe UI"', 'Roboto', 'Helvetica', 'Arial', 'sans-serif'],
+              mono: ['"JetBrains Mono"', '"Fira Mono"', 'monospace'],
+            },
+            animation: {
+              'fade-in': 'fadeIn 0.3s ease-out forwards',
+            },
+            keyframes: {
+              fadeIn: {
+                '0%': { opacity: '0', transform: 'translateY(10px)' },
+                '100%': { opacity: '1', transform: 'translateY(0)' },
+              }
+            }
+          }
+        }
+      }
+    </script>
+
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
+
+    <!-- Canvas Confetti -->
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+    
+    <style>
+      body { background-color: #0f172a; color: #f8fafc; }
+      /* Custom scrollbar */
+      .ascii-scroll::-webkit-scrollbar { width: 8px; height: 8px; }
+      .ascii-scroll::-webkit-scrollbar-track { background: #1e293b; }
+      .ascii-scroll::-webkit-scrollbar-thumb { background: #334155; border-radius: 4px; }
+      .ascii-scroll::-webkit-scrollbar-thumb:hover { background: #475569; }
+      
+      /* Range slider styling */
+      input[type=range] {
+        -webkit-appearance: none;
+        background: transparent;
+      }
+      input[type=range]::-webkit-slider-thumb {
+        -webkit-appearance: none;
+        height: 16px;
+        width: 16px;
+        border-radius: 50%;
+        background: #38bdf8;
+        cursor: pointer;
+        margin-top: -6px;
+      }
+      input[type=range]::-webkit-slider-runnable-track {
+        width: 100%;
+        height: 4px;
+        cursor: pointer;
+        background: #334155;
+        border-radius: 2px;
+      }
+    </style>
+  <script type="importmap">
+{
+  "imports": {
+    "react": "https://aistudiocdn.com/react@^19.2.0",
+    "react/": "https://aistudiocdn.com/react@^19.2.0/"
+  }
+}
+</script>
+</head>
+  <body class="bg-bg text-text min-h-screen flex flex-col">
+    
+    <!-- Header -->
+    <header class="flex items-center justify-between p-3 md:p-5 gap-3 max-w-[1120px] mx-auto w-full">
+      <div class="flex gap-2.5 items-center font-semibold text-lg whitespace-nowrap" aria-label="SocialMediaToolsHub">
+        <span class="text-2xl" aria-hidden="true">⚡</span>
+        <span class="bg-gradient-to-r from-sky-400 to-indigo-400 bg-clip-text text-transparent">
+          SocialMediaToolsHub
+        </span>
+      </div>
+
+      <nav class="flex gap-2.5 text-sm flex-wrap" role="navigation" aria-label="Primary">
+        <a href="#about" class="px-2.5 py-2 rounded-lg text-muted hover:text-text hover:bg-white/5 transition-colors">About</a>
+        <a href="#faq" class="px-2.5 py-2 rounded-lg text-muted hover:text-text hover:bg-white/5 transition-colors">FAQ</a>
+      </nav>
+    </header>
+
+    <div class="container mx-auto pb-7 px-4 flex-1">
+      <main>
+        <!-- Hero Section -->
+        <section class="bg-card rounded-3xl p-6 mt-4 shadow-lg border border-white/5" aria-labelledby="hero-title">
+          <div class="flex flex-col md:flex-row items-center justify-between gap-6">
+            <div class="text-center md:text-left">
+              <h1 id="hero-title" class="text-2xl font-bold mb-2 text-text">ASCII Art Generator</h1>
+              <p class="text-muted text-sm md:text-base max-w-lg">
+                Convert text or images into retro ASCII art instantly. 
+                Perfect for comments, bios, and coding projects.
+              </p>
+            </div>
+            
+            <!-- Mode Switcher -->
+            <div class="flex bg-bg p-1 rounded-xl border border-border">
+              <button id="btn-mode-text" class="px-6 py-2 rounded-lg text-sm font-semibold transition-all bg-gradient-to-r from-sky-400 to-indigo-400 text-slate-900 shadow-lg">
+                Text to ASCII
+              </button>
+              <button id="btn-mode-image" class="px-6 py-2 rounded-lg text-sm font-semibold transition-all text-muted hover:text-text">
+                Image to ASCII
+              </button>
+            </div>
+          </div>
+        </section>
+
+        <!-- Tool Section -->
+        <section class="mt-6 grid grid-cols-1 lg:grid-cols-3 gap-6">
+          
+          <!-- Left Column: Controls -->
+          <div class="lg:col-span-1 space-y-4">
+            
+            <!-- Text Controls -->
+            <div id="controls-text" class="bg-card p-5 rounded-2xl border border-border space-y-4 animate-fade-in">
+              <div>
+                <label class="block text-sm font-medium text-muted mb-2">Input Text</label>
+                <textarea
+                  id="input-text"
+                  class="w-full bg-bg border border-border rounded-xl p-3 text-text focus:outline-none focus:border-accent-from transition-colors h-32 resize-none"
+                  placeholder="Type something..."
+                ></textarea>
+              </div>
+              <div>
+                <label class="block text-sm font-medium text-muted mb-2">Font Style</label>
+                <div class="grid grid-cols-3 gap-2" id="font-style-group">
+                  <button data-font="standard" class="font-btn py-2 px-1 text-xs font-medium rounded-lg border bg-transparent border-border text-muted hover:bg-white/5">Standard</button>
+                  <button data-font="wide" class="font-btn py-2 px-1 text-xs font-medium rounded-lg border bg-transparent border-border text-muted hover:bg-white/5">Wide</button>
+                  <button data-font="block" class="font-btn py-2 px-1 text-xs font-medium rounded-lg border bg-accent-from/10 border-accent-from text-accent-from">Block</button>
+                </div>
+              </div>
+            </div>
+
+            <!-- Image Controls -->
+            <div id="controls-image" class="bg-card p-5 rounded-2xl border border-border space-y-4 animate-fade-in hidden">
+              <div>
+                <label class="block text-sm font-medium text-muted mb-2">Upload Image</label>
+                <div id="upload-zone" class="border-2 border-dashed border-border rounded-xl p-6 text-center cursor-pointer hover:border-accent-from hover:bg-white/5 transition-all group">
+                  <div class="text-4xl mb-2 group-hover:scale-110 transition-transform">🖼️</div>
+                  <p class="text-xs text-muted">Click to upload (JPG, PNG)</p>
+                  <input type="file" id="file-input" class="hidden" accept="image/*" />
+                </div>
+              </div>
+
+              <!-- Sliders -->
+              <div class="space-y-4">
+                <div>
+                  <div class="flex justify-between text-xs text-muted mb-1">
+                    <span>Width (Resolution)</span>
+                    <span id="val-resolution">60 chars</span>
+                  </div>
+                  <input type="range" id="range-resolution" min="20" max="150" value="60" class="w-full">
+                </div>
+                <div>
+                  <div class="flex justify-between text-xs text-muted mb-1">
+                    <span>Contrast</span>
+                    <span id="val-contrast">1.0</span>
+                  </div>
+                  <input type="range" id="range-contrast" min="0.5" max="3.0" step="0.1" value="1.0" class="w-full">
+                </div>
+                <div>
+                  <div class="flex justify-between text-xs text-muted mb-1">
+                    <span>Brightness</span>
+                    <span id="val-brightness">1.0</span>
+                  </div>
+                  <input type="range" id="range-brightness" min="0.5" max="2.0" step="0.1" value="1.0" class="w-full">
+                </div>
+                
+                <div class="flex items-center gap-2">
+                   <input type="checkbox" id="check-invert" class="rounded border-border bg-bg text-sky-400 focus:ring-sky-400">
+                   <label for="check-invert" class="text-sm text-muted">Invert Colors</label>
+                </div>
+
+                <div>
+                  <label class="block text-sm font-medium text-muted mb-2">Character Set</label>
+                  <select id="select-ramp" class="w-full bg-bg border border-border text-muted text-sm rounded-lg p-2.5 focus:border-accent-from outline-none">
+                    <option value="standard">Standard (Detailed)</option>
+                    <option value="short">Short (Clean)</option>
+                    <option value="blocks">Blocks (Solid)</option>
+                    <option value="binary">Binary (01)</option>
+                    <option value="braille">Braille</option>
+                  </select>
+                </div>
+              </div>
+            </div>
+            
+            <!-- Actions -->
+            <div class="bg-card p-5 rounded-2xl border border-border space-y-3">
+              <button id="btn-copy" class="w-full py-3 px-4 rounded-xl bg-gradient-to-r from-sky-400 to-indigo-400 text-slate-900 font-bold shadow-lg hover:-translate-y-1 transition-transform flex items-center justify-center gap-2">
+                <span>✂️</span> Copy to Clipboard
+              </button>
+              <button id="btn-download" class="w-full py-3 px-4 rounded-xl bg-white/5 text-text hover:bg-white/10 font-semibold border border-border transition-colors flex items-center justify-center gap-2">
+                <span>📥</span> Download .txt
+              </button>
+            </div>
+
+          </div>
+
+          <!-- Right Column: Output Preview -->
+          <div class="lg:col-span-2">
+            <div class="bg-card rounded-2xl border border-border p-1 h-full min-h-[500px] flex flex-col relative overflow-hidden group">
+              <div id="preview-badge" class="absolute top-4 right-4 text-xs text-muted bg-bg/80 px-2 py-1 rounded border border-border opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none">
+                Preview
+              </div>
+              
+              <pre id="output-pre" class="ascii-scroll flex-1 p-4 overflow-auto font-mono text-[10px] md:text-xs leading-[1.0] md:leading-[1.1] text-text whitespace-pre bg-[#0f172a] rounded-xl h-full w-full" style="font-family: 'JetBrains Mono', monospace">Type something...</pre>
+            </div>
+          </div>
+
+        </section>
+
+        <!-- Share & More Tools Section -->
+        <section class="max-w-3xl mx-auto mt-12 px-4 space-y-10">
+          
+          <!-- WhatsApp Share -->
+          <div class="flex justify-center">
+            <a href="https://wa.me/?text=Check%20out%20this%20ASCII%20Art%20Generator!%20https%3A%2F%2Fsocialmediatoolshub.com%2Fascii-art-generator.html" 
+               target="_blank" 
+               rel="noopener noreferrer"
+               class="inline-flex items-center gap-3 px-8 py-4 rounded-2xl bg-gradient-to-r from-[#25D366] to-[#128C7E] text-white font-extrabold text-lg shadow-xl hover:-translate-y-0.5 transition-transform hover:shadow-2xl hover:brightness-105 active:translate-y-0">
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" class="drop-shadow-sm"><path d="M21.47 2.53A11.99 11.99 0 0012 0C5.373 0 .001 5.373.001 12a11.63 11.63 0 001.64 6.05L0 24l6.23-1.62A11.97 11.97 0 0012 24c6.627 0 12-5.373 12-12 0-3.2-1.09-6.17-2.53-8.47z" fill="#fff" opacity=".1"/><path d="M17.472 14.382c-.297-.148-1.758-.867-2.03-.967-.273-.099-.472-.148-.672.148-.198.297-.768.967-.942 1.164-.173.198-.347.223-.644.074-.297-.148-1.255-.462-2.39-1.476-.885-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.447-.52.15-.174.198-.297.298-.495.099-.198.05-.371-.025-.519-.074-.148-.672-1.622-.919-2.222-.242-.583-.487-.504-.672-.513l-.573-.01c-.198 0-.519.074-.792.371s-1.04 1.016-1.04 2.479 1.065 2.876 1.213 3.074c.148.198 2.095 3.2 5.073 4.487 0 0 .084.037.198.018.131-.02 1.758-.719 2.006-.799.247-.083.397-.12.571.074.174.198.672.768.863.992.198.223.347.248.644.148.297-.099 1.758-.647 2.006-.901.247-.248.247-.463.173-.647-.074-.184-.272-.297-.569-.445z" fill="#fff"/></svg>
+              Share to WhatsApp
+            </a>
+          </div>
+
+          <!-- Other Tools Grid -->
+          <div>
+            <h3 class="text-xl font-bold text-center mb-6 text-text">More Creator Tools</h3>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <!-- Tool 1: Caption Counter -->
+              <a href="caption-counter.html" class="flex items-start gap-4 p-5 bg-card border border-border rounded-2xl hover:bg-white/5 hover:border-accent-from/50 transition-all group shadow-md">
+                <div class="text-3xl bg-bg p-3 rounded-xl border border-border group-hover:scale-110 transition-transform">🧾</div>
+                <div>
+                  <h4 class="font-bold text-text text-lg group-hover:text-accent-from transition-colors">Caption Counter</h4>
+                  <p class="text-sm text-muted mt-1 leading-relaxed">Live character, word and line counters with export options.</p>
+                </div>
+              </a>
+
+              <!-- Tool 2: Aspect Ratio Detector -->
+              <a href="aspect-ratio-detector.html" class="flex items-start gap-4 p-5 bg-card border border-border rounded-2xl hover:bg-white/5 hover:border-accent-from/50 transition-all group shadow-md">
+                <div class="text-3xl bg-bg p-3 rounded-xl border border-border group-hover:scale-110 transition-transform">📐</div>
+                <div>
+                  <h4 class="font-bold text-text text-lg group-hover:text-accent-from transition-colors">Aspect Ratio Detector</h4>
+                  <p class="text-sm text-muted mt-1 leading-relaxed">Quickly check frame aspect ratios and safe crop areas.</p>
+                </div>
+              </a>
+            </div>
+          </div>
+          
+        </section>
+
+        <!-- Content / SEO Area -->
+        <article class="max-w-3xl mx-auto mt-16 text-muted space-y-8">
+           <section>
+             <h2 class="text-xl font-bold text-text mb-3" id="about">Why use ASCII Art?</h2>
+             <p class="leading-relaxed">
+               ASCII art dates back to the early days of computing when printers lacked graphics capability. 
+               Today, it's a stylistic choice for social media comments, code documentation, and retro-themed websites. 
+               This tool processes everything <strong>locally</strong> in your browser using the HTML5 Canvas API.
+             </p>
+           </section>
+
+           <section id="faq">
+             <h2 class="text-xl font-bold text-text mb-4">Frequently Asked Questions</h2>
+             <div class="space-y-3" id="faq-container">
+               <!-- FAQs injected here via JS to match data -->
+             </div>
+           </section>
+        </article>
+
+      </main>
+    </div>
+
+    <!-- Footer -->
+    <footer class="text-center my-9 text-muted text-sm">
+      © 2025 SocialMediaToolsHub. Built for speed.
+    </footer>
+
+    <!-- Main Logic -->
+    <script>
+      (function() {
+        // --- Constants ---
+        const RAMPS = {
+            standard: "$@B%8&WM#*oahkbdpqwmZO0QLCJUYXzcvunxrjft/\\|()1{}[]?-_+~<>i!lI;:,\"^`'. ",
+            short: "@%#*+=-:. ",
+            blocks: "█▓▒░ ",
+            binary: "01 ",
+            braille: "⣿⣧⣏⡟⢿⣻⣹⣸⣷⣯⣮⣽⣾⣼⣫⣵⣳⣱⣰⣪⣩⣨⣧⣏⡟⢿⣻⣹⣸⣷⣯⣮⣽⣾⣼⣫⣵⣳⣱⣰⣪⣩⣨⡿⠻⠹⠸⠷⠯⠮⠽⠾⠼⠫⠵⠳⠱⠰⠪⠩⠨⡇⠏⠟⠻⠹⠸⠷⠯⠮⠽⠾⠼⠫⠵⠳⠱⠰⠪⠩⠨⡇⢏⡟⢿⣻⣹⣸⣷⣯⣮⣽⣾⣼⣫⣵⣳⣱⣰⣪⣩⣨⡿⠻⠹⠸⠷⠯⠮⠽⠾⠼⠫⠵⠳⠱⠰⠪⠩⠨⡇⠏⢟⡻⢹⢸⢷⢯⢮⢽⢾⢼⢫⢵⢳⢱⢰⢪⢩⢨⢸⢏⡟⢿⣻⣹⣸⣷⣯⣮⣽⣾⣼⣫⣵⣳⣱⣰⣪⣩⣨⡿⠻⠹⠸⠷⠯⠮⠽⠾⠼⠫⠵⠳⠱⠰⠪⠩⠨⡇⠏⠟⠻⠹⠸⠷⠯⠮⠽⠾⠼⠫⠵⠳⠱⠰⠪⠩⠨⡇⢏⡟⢿⣻⣹⣸⣷⣯⣮⣽⣾⣼⣫⣵⣳⣱⣰⣪⣩⣨⡿⠻⠹⠸⠷⠯⠮⠽⠾⠼⠫⠵⠳⠱⠰⠪⠩⠨⡇⠏ ",
+        };
+
+        const BLOCK_FONT = {
+            'A': [' ████ ', '██  ██', '██████', '██  ██', '██  ██'],
+            'B': ['█████ ', '██  ██', '█████ ', '██  ██', '█████ '],
+            'C': [' ████ ', '██    ', '██    ', '██    ', ' ████ '],
+            'D': ['████  ', '██  ██', '██  ██', '██  ██', '████  '],
+            'E': ['██████', '██    ', '█████ ', '██    ', '██████'],
+            'F': ['██████', '██    ', '█████ ', '██    ', '██    '],
+            'G': [' ████ ', '██    ', '██  ██', '██  ██', ' ████ '],
+            'H': ['██  ██', '██  ██', '██████', '██  ██', '██  ██'],
+            'I': ['██████', '  ██  ', '  ██  ', '  ██  ', '██████'],
+            'J': ['██████', '  ██  ', '  ██  ', '████  ', ' ██   '],
+            'K': ['██  ██', '██ ██ ', '████  ', '██ ██ ', '██  ██'],
+            'L': ['██    ', '██    ', '██    ', '██    ', '██████'],
+            'M': ['██  ██', '██████', '██████', '██  ██', '██  ██'],
+            'N': ['██  ██', '███ ██', '██████', '██ ███', '██  ██'],
+            'O': [' ████ ', '██  ██', '██  ██', '██  ██', ' ████ '],
+            'P': ['█████ ', '██  ██', '█████ ', '██    ', '██    '],
+            'Q': [' ████ ', '██  ██', '██  ██', '██  ██', ' █████'],
+            'R': ['█████ ', '██  ██', '█████ ', '██  ██', '██  ██'],
+            'S': [' ████ ', '██    ', ' ████ ', '    ██', '█████ '],
+            'T': ['██████', '  ██  ', '  ██  ', '  ██  ', '  ██  '],
+            'U': ['██  ██', '██  ██', '██  ██', '██  ██', ' ████ '],
+            'V': ['██  ██', '██  ██', '██  ██', ' ████ ', '  ██  '],
+            'W': ['██  ██', '██  ██', '██████', '██████', '██  ██'],
+            'X': ['██  ██', ' ████ ', '  ██  ', ' ████ ', '██  ██'],
+            'Y': ['██  ██', ' ████ ', '  ██  ', '  ██  ', '  ██  '],
+            'Z': ['██████', '   ██ ', '  ██  ', ' ██   ', '██████'],
+            '0': [' ████ ', '██  ██', '██  ██', '██  ██', ' ████ '],
+            '1': ['  ██  ', ' ███  ', '  ██  ', '  ██  ', '██████'],
+            '2': [' ████ ', '██  ██', '   ██ ', '  ██  ', '██████'],
+            '3': ['█████ ', '    ██', ' ████ ', '    ██', '█████ '],
+            '4': ['██  ██', '██  ██', '██████', '    ██', '    ██'],
+            '5': ['██████', '██    ', '█████ ', '    ██', '█████ '],
+            '6': [' ████ ', '██    ', '█████ ', '██  ██', ' ████ '],
+            '7': ['██████', '   ██ ', '  ██  ', ' ██   ', '██    '],
+            '8': [' ████ ', '██  ██', ' ████ ', '██  ██', ' ████ '],
+            '9': [' ████ ', '██  ██', ' █████', '    ██', ' ████ '],
+            ' ': ['      ', '      ', '      ', '      ', '      '],
+            '?': [' ████ ', '    ██', '  ██  ', '      ', '  ██  '],
+            '!': ['  ██  ', '  ██  ', '  ██  ', '      ', '  ██  '],
+        };
+
+        const FAQS = [
+            {
+                question: "How does the Image to ASCII converter work?",
+                answer: "The tool scans your image pixel by pixel. It calculates the brightness of each pixel and maps it to a specific character from the selected 'ramp'. Darker pixels get dense characters (like 'M' or '█'), while lighter pixels get light characters (like '.' or ' '). All processing happens instantly in your browser."
+            },
+            {
+                question: "Is my data safe?",
+                answer: "Yes, absolutely. This tool runs 100% locally in your browser using JavaScript. No images or text are ever uploaded to a server."
+            },
+            {
+                question: "Why does the ASCII art look distorted on Instagram?",
+                answer: "Instagram uses a variable-width font (San Francisco or Roboto), which messes up the alignment of ASCII art. This tool is best for platforms that support monospaced code blocks (like Discord, Reddit, GitHub) or for use in bios/captions where rough alignment is acceptable."
+            },
+            {
+                question: "Can I use this for YouTube comments?",
+                answer: "Yes! The 'Standard' or 'Braille' ramps work reasonably well in YouTube comments, though large art might get truncated by the 'Read More' button."
+            },
+            {
+                question: "What is the best width for mobile?",
+                answer: "For mobile screens (like WhatsApp or iMessage), keep the width between 20 and 30 characters. For desktop, you can go up to 80 or 100."
+            }
+        ];
+
+        // --- State ---
+        let state = {
+          mode: 'text', // 'text' | 'image'
+          text: '',
+          font: 'block', // 'standard' | 'wide' | 'block'
+          imageSrc: null,
+          imageAscii: '',
+          settings: {
+            resolution: 60,
+            inverted: false,
+            contrast: 1.0,
+            brightness: 1.0,
+            ramp: 'standard'
+          }
+        };
+
+        // --- DOM Elements ---
+        const els = {
+          btnModeText: document.getElementById('btn-mode-text'),
+          btnModeImage: document.getElementById('btn-mode-image'),
+          controlsText: document.getElementById('controls-text'),
+          controlsImage: document.getElementById('controls-image'),
+          inputText: document.getElementById('input-text'),
+          fontBtns: document.querySelectorAll('.font-btn'),
+          uploadZone: document.getElementById('upload-zone'),
+          fileInput: document.getElementById('file-input'),
+          rangeRes: document.getElementById('range-resolution'),
+          rangeCon: document.getElementById('range-contrast'),
+          rangeBri: document.getElementById('range-brightness'),
+          valRes: document.getElementById('val-resolution'),
+          valCon: document.getElementById('val-contrast'),
+          valBri: document.getElementById('val-brightness'),
+          checkInvert: document.getElementById('check-invert'),
+          selectRamp: document.getElementById('select-ramp'),
+          outputPre: document.getElementById('output-pre'),
+          previewBadge: document.getElementById('preview-badge'),
+          btnCopy: document.getElementById('btn-copy'),
+          btnDownload: document.getElementById('btn-download'),
+          faqContainer: document.getElementById('faq-container')
+        };
+
+        // --- Logic: Services ---
+        const convertTextToAscii = (text, fontType) => {
+          if (!text) return "";
+          if (fontType === 'standard') return text;
+          if (fontType === 'wide') return text.split('').join(' ');
+          if (fontType === 'block') {
+            const rows = ['', '', '', '', ''];
+            const upperText = text.toUpperCase();
+            for (const char of upperText) {
+                const charMap = BLOCK_FONT[char] || BLOCK_FONT['?'];
+                // Some chars might not be in map, fallback to space if absolutely missing or ?
+                const map = charMap || BLOCK_FONT[' ']; 
+                for (let i = 0; i < 5; i++) {
+                    rows[i] += (map[i] + '  ');
+                }
+            }
+            return rows.join('\n');
+          }
+          return text;
+        };
+
+        const convertImageToAscii = (imageData, settings) => {
+            const { resolution, inverted, contrast, brightness, ramp: rampKey } = settings;
+            const ramp = RAMPS[rampKey] || RAMPS.standard;
+            const { width, height, data } = imageData;
+            
+            let asciiStr = "";
+            const rampLength = ramp.length;
+
+            for (let i = 0; i < height; i++) {
+                for (let j = 0; j < width; j++) {
+                    const offset = (i * width + j) * 4;
+                    const r = data[offset];
+                    const g = data[offset + 1];
+                    const b = data[offset + 2];
+                    const a = data[offset + 3];
+
+                    if (a === 0) {
+                        asciiStr += " ";
+                        continue;
+                    }
+
+                    // Luminance
+                    let gray = (0.299 * r + 0.587 * g + 0.114 * b);
+                    // Contrast
+                    gray = (gray - 128) * contrast + 128;
+                    // Brightness
+                    gray = gray * brightness;
+                    // Clamp
+                    gray = Math.max(0, Math.min(255, gray));
+                    // Invert
+                    if (inverted) gray = 255 - gray;
+
+                    const charIndex = Math.floor((gray / 255) * (rampLength - 1));
+                    asciiStr += ramp[charIndex] || ' '; // Safety fallback
+                }
+                asciiStr += "\n";
+            }
+            return asciiStr;
+        };
+
+        const processImage = () => {
+          if (!state.imageSrc) return;
+          const img = new Image();
+          img.src = state.imageSrc;
+          img.crossOrigin = "Anonymous";
+          img.onload = () => {
+             const canvas = document.createElement('canvas');
+             const ctx = canvas.getContext('2d');
+             const aspectRatio = img.height / img.width;
+             const finalWidth = state.settings.resolution;
+             const finalHeight = Math.floor(finalWidth * aspectRatio * 0.5);
+             
+             canvas.width = finalWidth;
+             canvas.height = finalHeight;
+             ctx.drawImage(img, 0, 0, finalWidth, finalHeight);
+             const imageData = ctx.getImageData(0, 0, finalWidth, finalHeight);
+             state.imageAscii = convertImageToAscii(imageData, state.settings);
+             renderOutput();
+          };
+        };
+
+        let debounceTimer;
+        const triggerImageProcess = () => {
+          if (state.mode !== 'image') return;
+          clearTimeout(debounceTimer);
+          debounceTimer = setTimeout(processImage, 50);
+        };
+
+        // --- Render UI ---
+        const renderMode = () => {
+          if (state.mode === 'text') {
+            els.btnModeText.className = "px-6 py-2 rounded-lg text-sm font-semibold transition-all bg-gradient-to-r from-sky-400 to-indigo-400 text-slate-900 shadow-lg";
+            els.btnModeImage.className = "px-6 py-2 rounded-lg text-sm font-semibold transition-all text-muted hover:text-text";
+            els.controlsText.classList.remove('hidden');
+            els.controlsImage.classList.add('hidden');
+            els.previewBadge.textContent = "Preview";
+          } else {
+            els.btnModeText.className = "px-6 py-2 rounded-lg text-sm font-semibold transition-all text-muted hover:text-text";
+            els.btnModeImage.className = "px-6 py-2 rounded-lg text-sm font-semibold transition-all bg-gradient-to-r from-sky-400 to-indigo-400 text-slate-900 shadow-lg";
+            els.controlsText.classList.add('hidden');
+            els.controlsImage.classList.remove('hidden');
+            renderImageBadges();
+          }
+          renderOutput();
+        };
+
+        const renderImageBadges = () => {
+          els.valRes.textContent = state.settings.resolution + " chars";
+          els.valCon.textContent = state.settings.contrast.toFixed(1);
+          els.valBri.textContent = state.settings.brightness.toFixed(1);
+          els.previewBadge.textContent = state.settings.resolution + " chars wide";
+        };
+
+        const renderFontBtns = () => {
+          els.fontBtns.forEach(btn => {
+            const font = btn.getAttribute('data-font');
+            if (font === state.font) {
+              btn.className = "font-btn py-2 px-1 text-xs font-medium rounded-lg border bg-accent-from/10 border-accent-from text-accent-from";
+            } else {
+              btn.className = "font-btn py-2 px-1 text-xs font-medium rounded-lg border bg-transparent border-border text-muted hover:bg-white/5";
+            }
+          });
+        };
+
+        const renderOutput = () => {
+          const content = state.mode === 'text' 
+            ? convertTextToAscii(state.text, state.font) 
+            : (state.imageAscii || 'Upload an image...');
+          els.outputPre.textContent = content || (state.mode === 'text' ? 'Type something...' : 'Upload an image...');
+        };
+
+        const renderFaqs = () => {
+          els.faqContainer.innerHTML = FAQS.map(faq => `
+            <details class="group bg-card border border-border rounded-xl">
+               <summary class="flex cursor-pointer items-center justify-between p-4 font-medium text-text">
+                 ${faq.question}
+                 <span class="transition group-open:rotate-180">
+                   <svg fill="none" height="24" shape-rendering="geometricPrecision" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" viewBox="0 0 24 24" width="24"><path d="M6 9l6 6 6-6"></path></svg>
+                 </span>
+               </summary>
+               <p class="group-open:animate-fade-in p-4 pt-0 text-sm leading-6">${faq.answer}</p>
+             </details>
+          `).join('');
+        };
+
+        // --- Event Listeners ---
+        
+        // Mode Switching
+        els.btnModeText.addEventListener('click', () => { state.mode = 'text'; renderMode(); });
+        els.btnModeImage.addEventListener('click', () => { state.mode = 'image'; renderMode(); });
+
+        // Text Inputs
+        els.inputText.addEventListener('input', (e) => {
+          state.text = e.target.value;
+          renderOutput();
+        });
+
+        els.fontBtns.forEach(btn => {
+          btn.addEventListener('click', () => {
+            state.font = btn.getAttribute('data-font');
+            renderFontBtns();
+            renderOutput();
+          });
+        });
+
+        // Image Inputs
+        els.uploadZone.addEventListener('click', () => els.fileInput.click());
+        els.fileInput.addEventListener('change', (e) => {
+          if (e.target.files && e.target.files[0]) {
+            const reader = new FileReader();
+            reader.onload = (evt) => {
+              if (evt.target.result) {
+                state.imageSrc = evt.target.result;
+                triggerImageProcess();
+              }
+            };
+            reader.readAsDataURL(e.target.files[0]);
+          }
+        });
+
+        // Sliders
+        const updateSetting = (key, val) => {
+          state.settings[key] = val;
+          renderImageBadges();
+          triggerImageProcess();
+        };
+
+        els.rangeRes.addEventListener('input', (e) => updateSetting('resolution', Number(e.target.value)));
+        els.rangeCon.addEventListener('input', (e) => updateSetting('contrast', Number(e.target.value)));
+        els.rangeBri.addEventListener('input', (e) => updateSetting('brightness', Number(e.target.value)));
+        els.checkInvert.addEventListener('change', (e) => updateSetting('inverted', e.target.checked));
+        els.selectRamp.addEventListener('change', (e) => updateSetting('ramp', e.target.value));
+
+        // Copy / Download
+        const getFinalText = () => state.mode === 'text' ? convertTextToAscii(state.text, state.font) : state.imageAscii;
+
+        els.btnCopy.addEventListener('click', () => {
+          const txt = getFinalText();
+          if(!txt) return;
+          navigator.clipboard.writeText(txt).then(() => {
+            if (window.confetti) {
+              window.confetti({
+                particleCount: 100,
+                spread: 70,
+                origin: { y: 0.6 },
+                colors: ['#38bdf8', '#818cf8', '#ffffff']
+              });
+            }
+          });
+        });
+
+        els.btnDownload.addEventListener('click', () => {
+           const txt = getFinalText();
+           if(!txt) return;
+           const element = document.createElement("a");
+           const file = new Blob([txt], { type: 'text/plain' });
+           element.href = URL.createObjectURL(file);
+           element.download = "ascii-art.txt";
+           document.body.appendChild(element);
+           element.click();
+           document.body.removeChild(element);
+        });
+
+        // Init
+        renderFaqs();
+        renderMode();
+        renderFontBtns();
+
+      })();
+    </script>
+  </body>
+</html>
