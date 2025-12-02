@@ -143,12 +143,12 @@
     
     <!-- Header -->
     <header class="flex items-center justify-between p-3 md:p-5 gap-3 max-w-[1120px] mx-auto w-full">
-      <div class="flex gap-2.5 items-center font-semibold text-lg whitespace-nowrap" aria-label="SocialMediaToolsHub">
+      <a href="index.html" class="flex gap-2.5 items-center font-semibold text-lg whitespace-nowrap hover:opacity-80 transition-opacity" aria-label="SocialMediaToolsHub">
         <span class="text-2xl" aria-hidden="true">⚡</span>
         <span class="bg-gradient-to-r from-sky-400 to-indigo-400 bg-clip-text text-transparent">
           SocialMediaToolsHub
         </span>
-      </div>
+      </a>
 
       <nav class="flex gap-2.5 text-sm flex-wrap" role="navigation" aria-label="Primary">
         <a href="#about" class="px-2.5 py-2 rounded-lg text-muted hover:text-text hover:bg-white/5 transition-colors">About</a>
@@ -288,14 +288,24 @@
         <!-- Share & More Tools Section -->
         <section class="max-w-3xl mx-auto mt-12 px-4 space-y-10">
           
-          <!-- WhatsApp Share -->
-          <div class="flex justify-center">
+          <!-- Share Buttons -->
+          <div class="flex justify-center gap-4 flex-wrap">
+            <!-- WhatsApp Share -->
             <a href="https://wa.me/?text=Check%20out%20this%20ASCII%20Art%20Generator!%20https%3A%2F%2Fsocialmediatoolshub.com%2Fascii-art-generator.html" 
                target="_blank" 
                rel="noopener noreferrer"
-               class="inline-flex items-center gap-3 px-8 py-4 rounded-2xl bg-gradient-to-r from-[#25D366] to-[#128C7E] text-white font-extrabold text-lg shadow-xl hover:-translate-y-0.5 transition-transform hover:shadow-2xl hover:brightness-105 active:translate-y-0">
+               class="inline-flex items-center gap-3 px-6 py-3 md:px-8 md:py-4 rounded-2xl bg-gradient-to-r from-[#25D366] to-[#128C7E] text-white font-extrabold text-base md:text-lg shadow-xl hover:-translate-y-0.5 transition-transform hover:shadow-2xl hover:brightness-105 active:translate-y-0">
               <svg width="24" height="24" viewBox="0 0 24 24" fill="none" class="drop-shadow-sm"><path d="M21.47 2.53A11.99 11.99 0 0012 0C5.373 0 .001 5.373.001 12a11.63 11.63 0 001.64 6.05L0 24l6.23-1.62A11.97 11.97 0 0012 24c6.627 0 12-5.373 12-12 0-3.2-1.09-6.17-2.53-8.47z" fill="#fff" opacity=".1"/><path d="M17.472 14.382c-.297-.148-1.758-.867-2.03-.967-.273-.099-.472-.148-.672.148-.198.297-.768.967-.942 1.164-.173.198-.347.223-.644.074-.297-.148-1.255-.462-2.39-1.476-.885-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.447-.52.15-.174.198-.297.298-.495.099-.198.05-.371-.025-.519-.074-.148-.672-1.622-.919-2.222-.242-.583-.487-.504-.672-.513l-.573-.01c-.198 0-.519.074-.792.371s-1.04 1.016-1.04 2.479 1.065 2.876 1.213 3.074c.148.198 2.095 3.2 5.073 4.487 0 0 .084.037.198.018.131-.02 1.758-.719 2.006-.799.247-.083.397-.12.571.074.174.198.672.768.863.992.198.223.347.248.644.148.297-.099 1.758-.647 2.006-.901.247-.248.247-.463.173-.647-.074-.184-.272-.297-.569-.445z" fill="#fff"/></svg>
               Share to WhatsApp
+            </a>
+
+            <!-- Reddit Share -->
+            <a href="https://www.reddit.com/submit?url=https%3A%2F%2Fsocialmediatoolshub.com%2Fascii-art-generator.html&title=ASCII%20Art%20Generator%20-%20Convert%20text%20and%20images%20to%20ASCII" 
+               target="_blank" 
+               rel="noopener noreferrer"
+               class="inline-flex items-center gap-3 px-6 py-3 md:px-8 md:py-4 rounded-2xl bg-gradient-to-r from-[#FF4500] to-[#CC3700] text-white font-extrabold text-base md:text-lg shadow-xl hover:-translate-y-0.5 transition-transform hover:shadow-2xl hover:brightness-105 active:translate-y-0">
+               <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor" class="drop-shadow-sm"><path d="M12 0A12 12 0 0 0 0 12a12 12 0 0 0 12 12 12 12 0 0 0 12-12A12 12 0 0 0 12 0zm5.01 4.744c.688 0 1.25.561 1.25 1.249a1.25 1.25 0 0 1-2.498.056l-2.597-.547-.8 3.747c1.824.07 3.48.632 4.674 1.488.308-.309.73-.491 1.207-.491.968 0 1.754.786 1.754 1.754 0 .716-.435 1.333-1.01 1.614a3.111 3.111 0 0 1 .042.52c0 2.694-3.13 4.87-7.004 4.87-3.874 0-7.004-2.176-7.004-4.87 0-.183.015-.366.043-.534A1.748 1.748 0 0 1 4.028 12c0-.968.786-1.754 1.754-1.754.463 0 .898.196 1.207.49 1.207-.883 2.878-1.43 4.744-1.487l.885-4.182a.342.342 0 0 1 .14-.197.35.35 0 0 1 .238-.042l2.906.617a1.214 1.214 0 0 1 1.108-.701zM9.25 12C8.561 12 8 12.562 8 13.25c0 .687.561 1.248 1.25 1.248.687 0 1.248-.561 1.248-1.249 0-.688-.561-1.249-1.249-1.249zm5.5 0c-.687 0-1.248.561-1.248 1.25 0 .687.561 1.248 1.249 1.248.688 0 1.249-.561 1.249-1.249 0-.687-.562-1.249-1.25-1.249zm-5.466 3.99a.327.327 0 0 0-.231.094.33.33 0 0 0 0 .463c.842.842 2.484.913 2.961.913.477 0 2.105-.056 2.961-.913a.361.361 0 0 0 .029-.463.33.33 0 0 0-.464 0c-.547.533-1.684.73-2.512.73-.828 0-1.979-.196-2.512-.73a.326.326 0 0 0-.232-.095z"/></svg>
+               Share to Reddit
             </a>
           </div>
 
