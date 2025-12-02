@@ -27,24 +27,646 @@
     details > summary { list-style: none; }
     details > summary::-webkit-details-marker { display: none; }
     
-    /* Animation classes */
-    .fade-in { animation: fadeIn 0.2s ease-in-out; }
-    @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+    .hidden { display: none !important; }
   </style>
 <script type="importmap">
 {
   "imports": {
     "react": "https://aistudiocdn.com/react@^19.2.0",
-    "react-dom/client": "https://aistudiocdn.com/react-dom@^19.2.0/client",
-    "react-dom": "https://aistudiocdn.com/react-dom@^19.2.0",
-    "lucide-react": "https://aistudiocdn.com/lucide-react@^0.555.0",
     "react-dom/": "https://aistudiocdn.com/react-dom@^19.2.0/",
-    "react/": "https://aistudiocdn.com/react@^19.2.0/"
+    "react/": "https://aistudiocdn.com/react@^19.2.0/",
+    "lucide-react": "https://aistudiocdn.com/lucide-react@^0.555.0"
   }
 }
 </script>
 </head>
 <body class="min-h-screen pb-20">
-  <div id="root"></div>
+
+  <div class="min-h-screen container mx-auto px-4 max-w-6xl pb-20">
+    
+    <!-- Header -->
+    <header class="flex items-center justify-between py-3 px-2 mb-4">
+      <a href="/" class="flex items-center gap-2 text-lg font-semibold hover:opacity-90 transition-opacity">
+        <span class="text-2xl">⚡</span>
+        <span class="bg-gradient-to-r from-sky-400 to-indigo-400 bg-clip-text text-transparent">
+          SocialMediaToolsHub
+        </span>
+      </a>
+      <nav class="flex gap-4 text-sm text-slate-400">
+        <a href="/" class="hover:text-white transition-colors">Home</a>
+      </nav>
+    </header>
+
+    <main>
+      <!-- Hero -->
+      <div class="bg-slate-800 rounded-3xl p-6 md:p-8 shadow-2xl border border-white/5 mb-6 text-center">
+        <h1 class="text-2xl md:text-3xl font-bold mb-3 bg-clip-text text-transparent bg-gradient-to-r from-white to-slate-400">
+          Caption Counter & Formatter
+        </h1>
+        <p class="text-slate-400 max-w-2xl mx-auto">
+          Platform previews, hook analysis, emoji counting, history and export — built for creators who want perfect captions every time.
+        </p>
+      </div>
+
+      <!-- Main Editor Section -->
+      <div class="grid lg:grid-cols-12 gap-6">
+        
+        <!-- LEFT: Editor (7 cols) -->
+        <div class="lg:col-span-7 flex flex-col gap-4">
+          <div class="bg-slate-800 rounded-2xl p-4 md:p-6 shadow-xl border border-white/5">
+            <label for="caption" class="sr-only">Caption</label>
+            <textarea
+              id="caption"
+              placeholder="Type or paste your caption here..."
+              class="w-full h-48 md:h-64 bg-transparent border border-white/5 rounded-xl p-4 text-slate-200 placeholder-slate-600 focus:outline-none focus:border-sky-500/50 resize-none font-medium leading-relaxed"
+            ></textarea>
+            
+            <!-- Stats Row -->
+            <div class="flex flex-wrap gap-3 mt-4 pb-4 border-b border-white/5">
+               <div class="bg-slate-900/50 px-3 py-1.5 rounded-lg text-xs md:text-sm text-slate-400 border border-white/5">
+                  Chars: <strong id="count-chars" class="text-white">0</strong>
+               </div>
+               <div class="bg-slate-900/50 px-3 py-1.5 rounded-lg text-xs md:text-sm text-slate-400 border border-white/5">
+                  Words: <strong id="count-words" class="text-white">0</strong>
+               </div>
+               <div class="bg-slate-900/50 px-3 py-1.5 rounded-lg text-xs md:text-sm text-slate-400 border border-white/5">
+                  Lines: <strong id="count-lines" class="text-white">0</strong>
+               </div>
+               <div class="bg-slate-900/50 px-3 py-1.5 rounded-lg text-xs md:text-sm text-slate-400 border border-white/5">
+                  Emojis: <strong id="count-emojis" class="text-white">0</strong>
+               </div>
+            </div>
+
+            <!-- Controls Row -->
+            <div class="flex flex-wrap items-center justify-between gap-4 mt-4">
+               
+               <div class="flex flex-wrap items-center gap-2 w-full md:w-auto">
+                 <select id="preset-select" class="bg-slate-900/50 text-slate-300 text-sm border border-white/10 rounded-lg px-3 py-2 focus:outline-none focus:border-sky-500">
+                    <option value="instagram">Instagram Caption</option>
+                    <option value="bio">Instagram Bio</option>
+                    <option value="twitter">Twitter/X Post</option>
+                    <option value="youtube_title">YouTube Title (Shorts)</option>
+                    <option value="youtube">YouTube Description</option>
+                    <option value="custom">Custom Limit...</option>
+                 </select>
+
+                 <input 
+                   id="custom-limit-input"
+                   type="number" 
+                   value="2200" 
+                   class="w-20 bg-slate-900/50 text-slate-300 text-sm border border-white/10 rounded-lg px-2 py-2 text-right focus:outline-none focus:border-sky-500 hidden"
+                 />
+
+                 <label class="flex items-center gap-2 text-sm text-slate-400 cursor-pointer ml-2 select-none">
+                    <input id="truncate-checkbox" type="checkbox" class="rounded bg-slate-700 border-transparent focus:ring-0 text-sky-500 w-4 h-4" />
+                    Auto-truncate
+                 </label>
+               </div>
+
+               <div id="remaining-container" class="text-sm font-medium text-slate-400">
+                  Remaining: <span id="count-remaining">2200</span>
+               </div>
+            </div>
+
+            <!-- Action Buttons -->
+            <div class="flex flex-wrap gap-2 mt-6">
+              <button id="btn-copy" class="flex items-center gap-2 px-4 py-2 bg-slate-700 hover:bg-slate-600 rounded-lg text-sm text-white transition-colors">
+                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="14" height="14" x="8" y="8" rx="2" ry="2"/><path d="M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2"/></svg> Copy
+              </button>
+              <button id="btn-download" class="flex items-center gap-2 px-4 py-2 bg-slate-700 hover:bg-slate-600 rounded-lg text-sm text-white transition-colors">
+                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" x2="12" y1="15" y2="3"/></svg> Download
+              </button>
+              <button id="btn-save" class="flex items-center gap-2 px-4 py-2 bg-slate-700 hover:bg-slate-600 rounded-lg text-sm text-white transition-colors">
+                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15.2 3a2 2 0 0 1 1.4.6l3.8 3.8a2 2 0 0 1 .6 1.4V19a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2z"/><path d="M17 21v-8H7v8"/><path d="M7 3v5h8"/></svg> Save
+              </button>
+              <button id="btn-fix" class="flex items-center gap-2 px-4 py-2 bg-gradient-to-r from-sky-500 to-indigo-500 hover:opacity-90 rounded-lg text-sm text-white font-semibold transition-opacity ml-auto">
+                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m21.64 3.64-1.28-1.28a1.21 1.21 0 0 0-1.72 0L2.36 18.64a1.21 1.21 0 0 0 0 1.72l1.28 1.28a1.2 1.2 0 0 0 1.72 0L21.64 5.36a1.2 1.2 0 0 0 0-1.72Z"/><path d="m14 7 3 3"/><path d="M5 6v4"/><path d="M19 14v4"/><path d="M10 2v2"/><path d="M7 8H3"/><path d="M21 16h-4"/><path d="M11 3H9"/></svg> Fix Caption
+              </button>
+              <button id="btn-clear" class="flex items-center gap-2 px-3 py-2 bg-transparent hover:bg-red-900/20 text-red-400 hover:text-red-300 rounded-lg text-sm transition-colors border border-transparent hover:border-red-900/30">
+                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m7 21-4.3-4.3c-1-1-1-2.5 0-3.4l9.6-9.6c1-1 2.5-1 3.4 0l5.6 5.6c1 1 1 2.5 0 3.4L13 21"/><path d="M22 21H7"/><path d="m5 11 9 9"/></svg> Clear
+              </button>
+            </div>
+
+          </div>
+
+          <!-- Hook Analysis Component -->
+          <div id="hook-analyzer" class="bg-slate-800 border border-white/5 rounded-xl p-4 mt-4">
+            <div class="flex justify-between items-start mb-2">
+              <h3 class="text-slate-400 text-xs uppercase tracking-wider font-semibold">First-line Hook Analysis</h3>
+              <div id="hook-rating-text" class="text-xs px-2 py-1 rounded border bg-slate-700 text-slate-400">
+                —
+              </div>
+            </div>
+
+            <div id="hook-preview" class="font-semibold text-slate-100 text-lg mb-2 min-h-[1.75rem]">
+              No input yet
+            </div>
+
+            <p id="hook-tip" class="text-slate-500 text-sm mb-4">Start typing to get hook feedback</p>
+
+            <div id="hook-chips" class="flex flex-wrap gap-2">
+              <!-- Chips injected via JS -->
+            </div>
+            
+            <div class="mt-3 text-right text-xs text-slate-600">
+              Score: <strong id="hook-score" class="text-slate-400">0</strong>
+            </div>
+          </div>
+
+          <!-- History Section -->
+          <div class="bg-slate-800 rounded-2xl p-4 border border-white/5">
+             <div class="flex justify-between items-center mb-3">
+                <h3 class="text-slate-400 text-sm font-semibold flex items-center gap-2">
+                  <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 12"/><path d="M3 3v9h9"/><polyline points="12 7 12 12 15 15"/></svg>
+                  Recent History
+                </h3>
+                <div class="flex gap-2">
+                   <button id="btn-export-history" class="text-xs text-sky-400 hover:text-sky-300 px-2 py-1">Export</button>
+                   <button id="btn-clear-history" class="text-xs text-red-400 hover:text-red-300 px-2 py-1">Clear</button>
+                </div>
+             </div>
+             <div id="history-list" class="flex flex-col gap-2 max-h-48 overflow-y-auto pr-1">
+                <div class="text-slate-600 text-sm italic py-2">No saved captions yet.</div>
+             </div>
+          </div>
+        </div>
+
+        <!-- RIGHT: Live Preview (5 cols) -->
+        <div class="lg:col-span-5 flex flex-col gap-6">
+          <div class="sticky top-4">
+            <div class="bg-gradient-to-b from-slate-900 to-slate-900/50 p-4 rounded-xl border border-white/5">
+              <div class="flex justify-between items-center mb-4">
+                <div>
+                   <div class="text-slate-400 text-xs font-semibold uppercase tracking-wider">Live Preview</div>
+                   <div id="preview-mode-label" class="text-slate-500 text-xs mt-0.5 capitalize">Instagram Caption</div>
+                </div>
+                <div class="px-2 py-1 rounded bg-white/5 text-xs text-slate-400 border border-white/5">
+                    Limit: <span id="preview-limit-label">2200</span>
+                </div>
+              </div>
+              
+              <div id="live-preview-container" class="relative">
+                <!-- Preview content injected via JS -->
+              </div>
+              
+              <div class="text-center text-xs text-slate-600 mt-3">
+                Preview is simplified and may vary by device.
+              </div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- Tools Section -->
+      <section class="max-w-5xl mx-auto mt-12 px-4">
+        <h3 class="text-lg font-semibold text-slate-200 mb-6 flex items-center gap-2">
+          <span>⚡</span> More Creator Tools
+        </h3>
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <!-- Tool 1: Line Break Generator -->
+          <a href="#" class="block p-5 rounded-xl bg-slate-800 border border-slate-700 hover:border-sky-500/50 transition-all group">
+            <div class="flex items-start gap-4">
+              <div class="text-3xl bg-slate-900/50 p-3 rounded-lg group-hover:scale-110 transition-transform">
+                ↩️
+              </div>
+              <div>
+                <h4 class="font-bold text-slate-100 text-lg group-hover:text-sky-400 transition-colors">Line Break Generator</h4>
+                <p class="text-slate-400 text-sm mt-1 leading-relaxed">
+                  Invisible space tool to preserve paragraph breaks on Instagram. Stop Instagram from ruining your captions.
+                </p>
+              </div>
+            </div>
+          </a>
+
+          <!-- Tool 2: Aspect Ratio Detector -->
+          <a href="#" class="block p-5 rounded-xl bg-slate-800 border border-slate-700 hover:border-indigo-500/50 transition-all group">
+            <div class="flex items-start gap-4">
+              <div class="text-3xl bg-slate-900/50 p-3 rounded-lg group-hover:scale-110 transition-transform">
+                📐
+              </div>
+              <div>
+                <h4 class="font-bold text-slate-100 text-lg group-hover:text-indigo-400 transition-colors">Aspect Ratio Detector</h4>
+                <p class="text-slate-400 text-sm mt-1 leading-relaxed">
+                  Quickly check frame aspect ratios for vertical/horizontal targets and safe crop areas for all platforms.
+                </p>
+              </div>
+            </div>
+          </a>
+        </div>
+      </section>
+
+      <!-- Share Buttons -->
+      <div class="flex flex-col md:flex-row justify-center items-center gap-4 mt-12 mb-8">
+        <a 
+          id="share-whatsapp"
+          href="#"
+          target="_blank" 
+          rel="noopener noreferrer"
+          class="flex items-center gap-2 px-6 py-3 rounded-full bg-[#25D366] text-white font-bold shadow-lg shadow-green-900/20 hover:-translate-y-1 transition-transform"
+        >
+          <svg viewBox="0 0 24 24" width="20" height="20" fill="currentColor" class="opacity-90">
+              <path d="M17.472 14.382c-.297-.148-1.758-.867-2.03-.967-.273-.099-.472-.148-.672.148-.198.297-.768.967-.942 1.164-.173.198-.347.223-.644.074-.297-.148-1.255-.462-2.39-1.476-.885-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.447-.52.15-.174.198-.297.298-.495.099-.198.05-.371-.025-.519-.074-.148-.672-1.622-.919-2.222-.242-.583-.487-.504-.672-.513l-.573-.01c-.198 0-.519.074-.792.371s-1.04 1.016-1.04 2.479 1.065 2.876 1.213 3.074c.148.198 2.095 3.2 5.073 4.487 0 0 .084.037.198.018.131-.02 1.758-.719 2.006-.799.247-.083.397-.12.571.074.174.198.672.768.863.992.198.223.347.248.644.148.297-.099 1.758-.647 2.006-.901.247-.248.247-.463.173-.647-.074-.184-.272-.297-.569-.445z" />
+          </svg>
+          Share on WhatsApp
+        </a>
+
+        <a 
+          id="share-reddit"
+          href="#"
+          target="_blank" 
+          rel="noopener noreferrer"
+          class="flex items-center gap-2 px-6 py-3 rounded-full bg-[#FF4500] text-white font-bold shadow-lg shadow-orange-900/20 hover:-translate-y-1 transition-transform"
+        >
+          <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="opacity-90"><path d="M4 12v8a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-8"/><polyline points="16 6 12 2 8 6"/><line x1="12" x2="12" y1="2" y2="15"/></svg>
+          Share on Reddit
+        </a>
+      </div>
+
+      <!-- FAQ Section -->
+      <section class="max-w-4xl mx-auto mt-8 mb-16 p-4">
+        <h2 class="text-xl font-bold text-slate-100 mb-6 text-center">Frequently asked questions</h2>
+        <div class="space-y-1" id="faq-container">
+           <!-- FAQ items injected via JS -->
+        </div>
+      </section>
+
+    </main>
+
+    <footer class="mt-12 text-center text-slate-500 text-sm pb-8">
+      © 2025 SocialMediaToolsHub. Built for speed.
+    </footer>
+  </div>
+
+  <script>
+    (function() {
+      // --- Constants & Config ---
+      const PRESETS = {
+        instagram: { name: 'Instagram Caption', limit: 2200, previewMode: 'instagram' },
+        bio: { name: 'Instagram Bio', limit: 150, previewMode: 'bio' },
+        twitter: { name: 'Twitter/X Post', limit: 280, previewMode: 'twitter' },
+        youtube_title: { name: 'YouTube Title (Shorts)', limit: 100, previewMode: 'youtube_title' },
+        youtube: { name: 'YouTube Description', limit: 5000, previewMode: 'youtube' },
+        custom: { name: 'Custom Limit...', limit: 2200, previewMode: 'instagram' }
+      };
+
+      const FAQs = [
+        { q: "What are Instagram caption limits and best practices?", a: "Instagram allows up to 2,200 characters, but the first ~125 characters are most visible before the '…more' link. Place your hook or call-to-action early, use line breaks for readability and keep primary hashtags close to the top if you want them seen." },
+        { q: "What's the Instagram bio character limit and tips for bios?", a: "Instagram bios are limited to 150 characters. Use the bio preview to check your handle, line breaks and emoji. Prioritize concise value statements and a single link or a link service if you need multiple destinations." },
+        { q: "How does Twitter/X character counting work?", a: "Twitter/X posts are limited to 280 characters. Mentions, hashtags and emoji count as characters. Use compact wording or threads for larger thoughts and preview to check truncation." },
+        { q: "Why are emojis counted separately and how do they affect length?", a: "Emojis are counted as characters and may occupy multiple Unicode codepoints. The emoji counter helps you track heavy emoji usage so captions stay within platform limits while staying readable." },
+        { q: "What are the YouTube options: Shorts title vs description?", a: "Use 'YouTube Title (Shorts)' — 100 characters — for the short upload title; use 'YouTube Description' for the full description up to 5,000 characters. Keep the title punchy and put links or timestamps in the description." },
+        { q: "How does the first-line hook analyser help me?", a: "The hook analyzer evaluates the first 125 characters for attention signals (question, emoji, CTA, power words and length). It suggests small edits to increase the likelihood a viewer taps 'more', comments or engages." },
+        { q: "What does Auto truncate do and when should I use it?", a: "Auto truncate trims your text automatically to the chosen platform limit as you type or paste. Turn it on when you want to guarantee platform-safe captions (e.g., Twitter or YouTube Title)." },
+        { q: "How do I clean and fix formatting with Fix Caption?", a: "Fix Caption removes invisible control characters, normalises line breaks, collapses extra blank lines and trims stray spaces before punctuation so your caption posts cleanly across platforms." },
+        { q: "How many captions can I save and can I export them?", a: "This tool stores up to 30 saved captions locally in your browser. Use the Export feature to download them as a text file for content planning or sharing with your team." },
+        { q: "Can I use this tool with other platforms like Facebook or LinkedIn?", a: "Yes — the counter and formatting tools are generic and work for any platform. Choose a custom limit for platform-specific needs (e.g., LinkedIn post length) and use Auto truncate if you want hard limits enforced." },
+        { q: "Does SocialMediaToolsHub collect my captions or data?", a: "No. All processing — counting, previews, hook analysis and fixes — runs locally in your browser. Saved entries are stored in local storage and are not uploaded by default." },
+        { q: "Best practices for hashtags, mentions and URLs in captions?", a: "Keep hashtags relevant and concise. Instagram allows up to 30 hashtags but quality beats quantity. Mentions count as characters; use them thoughtfully in the first line. URLs are not clickable in captions — put important links in your bio or description." }
+      ];
+
+      // --- Elements ---
+      const captionEl = document.getElementById('caption');
+      const presetSelect = document.getElementById('preset-select');
+      const customLimitInput = document.getElementById('custom-limit-input');
+      const truncateCheckbox = document.getElementById('truncate-checkbox');
+      
+      const countCharsEl = document.getElementById('count-chars');
+      const countWordsEl = document.getElementById('count-words');
+      const countLinesEl = document.getElementById('count-lines');
+      const countEmojisEl = document.getElementById('count-emojis');
+      const remainingContainer = document.getElementById('remaining-container');
+      const countRemainingEl = document.getElementById('count-remaining');
+
+      const hookRatingText = document.getElementById('hook-rating-text');
+      const hookPreview = document.getElementById('hook-preview');
+      const hookTip = document.getElementById('hook-tip');
+      const hookChips = document.getElementById('hook-chips');
+      const hookScore = document.getElementById('hook-score');
+
+      const historyList = document.getElementById('history-list');
+      const previewModeLabel = document.getElementById('preview-mode-label');
+      const previewLimitLabel = document.getElementById('preview-limit-label');
+      const livePreviewContainer = document.getElementById('live-preview-container');
+
+      // --- State ---
+      let history = [];
+      try {
+        const saved = localStorage.getItem('smth_caption_history_vanilla');
+        if (saved) history = JSON.parse(saved);
+      } catch (e) { console.error(e); }
+
+      // --- Utils ---
+      function countWords(s) { return (!s || !s.trim()) ? 0 : s.trim().split(/\s+/).length; }
+      function countLines(s) { return (!s) ? 0 : s.split(/\r?\n/).length; }
+      function countEmojis(s) {
+        try { const r = s.match(/\p{Extended_Pictographic}/gu); return r ? r.length : 0; } 
+        catch (e) { const r = s.match(/[\uD800-\uDBFF][\uDC00-\uDFFF]/g); return r ? r.length : 0; }
+      }
+      function fixCaption(text) {
+        if (!text) return '';
+        let t = text.replace(/\u00A0/g, ' ').replace(/[\u200B-\u200F\uFEFF]/g, '');
+        t = t.replace(/\r\n/g, '\n').replace(/\r/g, '\n');
+        t = t.split('\n').map(ln => ln.replace(/[ \t]+/g, ' ').trimEnd()).join('\n');
+        t = t.replace(/\n{3,}/g, '\n\n').trim();
+        t = t.replace(/\s+([.,!?;:])/g, '$1');
+        return t;
+      }
+
+      function analyzeHook(text) {
+        const SEE_MORE_LIMIT = 125;
+        const first = (text || '').slice(0, SEE_MORE_LIMIT).trim();
+        if (!first) return { score: 0, ratingText: '—', tip: 'Start typing to get hook feedback', cls: 'bg-slate-700 text-slate-400', chips: [], preview: 'No input yet' };
+
+        const hasQuestion = /\?/.test(first);
+        let hasEmoji = false;
+        try { hasEmoji = /\p{Extended_Pictographic}/u.test(first); } catch (e) { hasEmoji = /[\uD800-\uDBFF][\uDC00-\uDFFF]/.test(first); }
+        const hasCTA = /\b(save|tap|watch|click|link|follow|share|buy|shop|subscribe|try|get|check|reply)\b/i.test(first);
+        const firstNormalized = first.replace(/[\u2018\u2019\u201C\u201D]/g, "'");
+        const hasPower = /\b(stop|wait|warning|alert|dont|must|now|today|new|exclusive|free|urgent|breaking|important|must-see|amazing)\b/i.test(firstNormalized);
+        const lengthScore = (first.length >= 12 && first.length <= SEE_MORE_LIMIT);
+
+        let score = 0;
+        if (hasQuestion) score += 2;
+        if (hasEmoji) score += 1;
+        if (hasCTA) score += 2;
+        if (hasPower) score += 1;
+        if (lengthScore) score += 1;
+
+        let ratingText = 'Weak hook', tip = 'Try starting with a question, emoji, or bold statement in the first line.', cls = 'bg-red-500/20 text-red-200 border border-red-500/30';
+        if (score >= 5) { ratingText = 'Strong hook'; tip = 'Great — the first line is attention grabbing. Keep it concise.'; cls = 'bg-green-500/20 text-green-200 border border-green-500/30'; }
+        else if (score >= 3) { ratingText = 'Okay hook'; tip = 'Good start — consider adding an emoji or a short CTA to boost engagement.'; cls = 'bg-yellow-500/20 text-yellow-200 border border-yellow-500/30'; }
+
+        return {
+          score, ratingText, tip, cls,
+          chips: [
+            { label: 'Question', active: hasQuestion },
+            { label: 'Emoji', active: hasEmoji },
+            { label: 'CTA', active: hasCTA },
+            { label: 'Power word', active: hasPower },
+            { label: 'Good length', active: lengthScore }
+          ],
+          preview: first.length > 80 ? first.slice(0, 80) + '…' : first
+        };
+      }
+
+      function escapeHtml(text) {
+        if (!text) return '';
+        return text.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;").replace(/'/g, "&#039;");
+      }
+
+      // --- UI Updates ---
+      function updateUI() {
+        let text = captionEl.value || '';
+        const presetKey = presetSelect.value;
+        const preset = PRESETS[presetKey];
+        let limit = preset.limit;
+
+        if (presetKey === 'custom') {
+          customLimitInput.classList.remove('hidden');
+          limit = parseInt(customLimitInput.value) || 2200;
+        } else {
+          customLimitInput.classList.add('hidden');
+        }
+
+        // Auto truncate
+        if (truncateCheckbox.checked && text.length > limit) {
+          text = text.slice(0, limit);
+          captionEl.value = text;
+        }
+
+        const remaining = limit - text.length;
+
+        // Stats
+        countCharsEl.textContent = text.length;
+        countWordsEl.textContent = countWords(text);
+        countLinesEl.textContent = countLines(text);
+        countEmojisEl.textContent = countEmojis(text);
+        countRemainingEl.textContent = remaining;
+        remainingContainer.className = remaining < 0 ? "text-sm font-medium text-red-400" : "text-sm font-medium text-slate-400";
+        previewLimitLabel.textContent = limit;
+        previewModeLabel.textContent = presetKey.replace('_', ' ');
+
+        // Hook
+        const hook = analyzeHook(text);
+        hookRatingText.textContent = hook.ratingText;
+        hookRatingText.className = `text-xs px-2 py-1 rounded ${hook.cls}`;
+        hookPreview.textContent = hook.preview;
+        hookTip.textContent = hook.tip;
+        hookScore.textContent = hook.score;
+        
+        hookChips.innerHTML = hook.chips.map(c => `
+          <span class="text-xs px-2 py-1 rounded-full ${c.active ? 'bg-gradient-to-r from-sky-400 to-indigo-400 text-slate-900 font-bold' : 'bg-white/5 text-slate-500'}">
+            ${c.label}
+          </span>
+        `).join('');
+
+        // Live Preview Render
+        renderPreview(text, preset.previewMode, limit);
+      }
+
+      function renderPreview(text, mode, limit) {
+        let html = '';
+        const safeText = escapeHtml(text);
+        
+        if (mode === 'instagram') {
+          const igPreview = text.length > 125 ? text.slice(0, 125) : text;
+          html = `
+            <div class="bg-white text-black p-4 rounded-lg font-sans text-[14px] leading-snug border border-gray-200">
+               <div class="flex items-center gap-2 mb-3">
+                  <div class="w-8 h-8 rounded-full bg-gradient-to-tr from-yellow-400 via-red-500 to-purple-600 p-[2px]">
+                     <div class="w-full h-full bg-white rounded-full p-[2px]">
+                         <div class="w-full h-full bg-slate-200 rounded-full flex items-center justify-center font-bold text-xs text-slate-600">SM</div>
+                     </div>
+                  </div>
+                  <div><div class="font-bold text-xs">socialmediatoolshub</div></div>
+               </div>
+               <div class="space-y-1">
+                  <p>
+                    <span class="font-bold mr-1">socialmediatoolshub</span>
+                    <span class="whitespace-pre-wrap break-words">${escapeHtml(igPreview) || 'No caption yet...'}</span>
+                    ${text.length > 125 ? '<span class="text-slate-500 cursor-pointer"> ... more</span>' : ''}
+                  </p>
+               </div>
+            </div>`;
+        } else if (mode === 'bio') {
+          html = `
+            <div class="bg-white text-black p-4 rounded-lg font-sans text-[14px] border border-gray-200">
+               <div class="flex items-start gap-4">
+                   <div class="w-20 h-20 rounded-full bg-slate-200 flex items-center justify-center font-bold text-2xl text-slate-500 shrink-0">SM</div>
+                   <div class="flex-1 min-w-0">
+                       <div class="flex justify-between items-center mb-2">
+                          <div class="font-bold text-lg truncate">SocialMediaToolsHub</div>
+                       </div>
+                       <div class="flex gap-4 mb-3 text-sm">
+                          <div class="text-center"><span class="font-bold">342</span> posts</div>
+                          <div class="text-center"><span class="font-bold">14.2k</span> followers</div>
+                          <div class="text-center"><span class="font-bold">24</span> following</div>
+                       </div>
+                       <div class="whitespace-pre-wrap break-words text-sm">${safeText || 'Bio text appears here...'}</div>
+                   </div>
+               </div>
+            </div>`;
+        } else if (mode === 'twitter') {
+          const twLimit = 280;
+          const twText = text.length > twLimit ? text.slice(0, twLimit) : text;
+          html = `
+            <div class="bg-white text-black p-4 rounded-lg font-sans text-[15px] border border-gray-200">
+              <div class="flex gap-3">
+                <div class="w-10 h-10 rounded-full bg-slate-300 flex items-center justify-center font-bold text-slate-600 shrink-0">S</div>
+                <div class="flex-1 min-w-0">
+                  <div class="flex items-center gap-1">
+                     <span class="font-bold text-black">SMTH</span>
+                     <span class="text-slate-500">@smth_tools · 1m</span>
+                  </div>
+                  <div class="whitespace-pre-wrap break-words mt-1">${escapeHtml(twText) || 'Tweet text...'}</div>
+                  ${text.length > twLimit ? '<div class="mt-2 text-xs text-red-500 font-medium">(Preview truncated at 280 chars)</div>' : ''}
+                  <div class="flex gap-6 mt-3 text-slate-500 text-sm">
+                      <span>💬 0</span><span>Retweet 0</span><span>❤️ 0</span><span>📊 24</span>
+                  </div>
+                </div>
+              </div>
+            </div>`;
+        } else if (mode.startsWith('youtube')) {
+          const title = mode === 'youtube_title' ? (safeText || 'Video Title Goes Here') : 'How to create the perfect social media post';
+          html = `
+            <div class="bg-white text-black p-4 rounded-lg font-sans border border-gray-200">
+               <div class="flex gap-3 items-start">
+                  <div class="w-[100px] h-[56px] bg-black rounded flex items-center justify-center shrink-0">
+                     <span class="text-xl">▶️</span>
+                  </div>
+                  <div class="flex-1 min-w-0">
+                     <div class="font-medium text-sm line-clamp-2 leading-tight">${title}</div>
+                     <div class="text-xs text-slate-500 mt-1">SocialMediaToolsHub · 12K views · 2 hours ago</div>
+                  </div>
+               </div>
+               ${mode !== 'youtube_title' ? `
+                 <div class="mt-4 pt-3 border-t border-gray-100">
+                     <div class="text-xs font-bold mb-1">Description</div>
+                     <div class="text-xs whitespace-pre-wrap break-words text-slate-700">${safeText || 'Description text...'}</div>
+                 </div>` : ''}
+            </div>`;
+        }
+        livePreviewContainer.innerHTML = html;
+      }
+
+      // --- History ---
+      function renderHistory() {
+        if (history.length === 0) {
+          historyList.innerHTML = '<div class="text-slate-600 text-sm italic py-2">No saved captions yet.</div>';
+          return;
+        }
+        historyList.innerHTML = history.map(item => `
+          <div class="flex items-start justify-between bg-slate-900/40 p-3 rounded-lg border border-white/5 group hover:border-white/10 transition-colors">
+             <div class="text-xs text-slate-400 truncate max-w-[70%] leading-relaxed">${escapeHtml(item.text)}</div>
+             <div class="flex gap-2 shrink-0">
+                <button onclick="window.restoreHistory(${item.id})" class="text-slate-500 hover:text-sky-400" title="Restore"><svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 12"/><path d="M3 3v9h9"/><polyline points="12 7 12 12 15 15"/></svg></button>
+                <button onclick="window.deleteHistory(${item.id})" class="text-slate-500 hover:text-red-400" title="Delete"><svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 6h18"/><path d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6"/><path d="M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2"/></svg></button>
+             </div>
+          </div>
+        `).join('');
+      }
+
+      window.restoreHistory = (id) => {
+        const item = history.find(h => h.id === id);
+        if (item) {
+          captionEl.value = item.text;
+          updateUI();
+        }
+      };
+
+      window.deleteHistory = (id) => {
+        history = history.filter(h => h.id !== id);
+        localStorage.setItem('smth_caption_history_vanilla', JSON.stringify(history));
+        renderHistory();
+      };
+
+      // --- Listeners ---
+      captionEl.addEventListener('input', updateUI);
+      presetSelect.addEventListener('change', updateUI);
+      customLimitInput.addEventListener('input', updateUI);
+      truncateCheckbox.addEventListener('change', updateUI);
+
+      document.getElementById('btn-copy').addEventListener('click', async () => {
+        const text = captionEl.value;
+        const limit = parseInt(previewLimitLabel.textContent);
+        if (text.length > limit && !confirm(`Text is ${text.length} chars but limit is ${limit}. Copy anyway?`)) return;
+        try { await navigator.clipboard.writeText(text); alert('Copied!'); } catch (e) { alert('Failed to copy'); }
+      });
+
+      document.getElementById('btn-download').addEventListener('click', () => {
+        const blob = new Blob([captionEl.value], { type: 'text/plain;charset=utf-8' });
+        const a = document.createElement('a');
+        a.href = URL.createObjectURL(blob);
+        a.download = 'caption.txt';
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+      });
+
+      document.getElementById('btn-save').addEventListener('click', () => {
+        const txt = captionEl.value;
+        if (!txt.trim()) return;
+        history = [{ id: Date.now(), text: txt }, ...history].slice(0, 30);
+        localStorage.setItem('smth_caption_history_vanilla', JSON.stringify(history));
+        renderHistory();
+        alert('Saved to history');
+      });
+
+      document.getElementById('btn-fix').addEventListener('click', () => {
+        captionEl.value = fixCaption(captionEl.value);
+        updateUI();
+      });
+
+      document.getElementById('btn-clear').addEventListener('click', () => {
+        if (confirm("Clear text area?")) { captionEl.value = ''; updateUI(); }
+      });
+
+      document.getElementById('btn-export-history').addEventListener('click', () => {
+        const blob = new Blob([history.map(h => h.text).join('\n\n---\n\n')], { type: 'text/plain' });
+        const a = document.createElement('a');
+        a.href = URL.createObjectURL(blob);
+        a.download = 'caption-history.txt';
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+      });
+
+      document.getElementById('btn-clear-history').addEventListener('click', () => {
+        if (confirm("Clear all history?")) {
+          history = [];
+          localStorage.removeItem('smth_caption_history_vanilla');
+          renderHistory();
+        }
+      });
+
+      // --- FAQ Render ---
+      const faqContainer = document.getElementById('faq-container');
+      faqContainer.innerHTML = FAQs.map((f, i) => `
+        <details class="group bg-slate-800 border border-white/5 rounded-xl mb-3 overflow-hidden">
+          <summary class="flex items-center justify-between p-3 cursor-pointer select-none">
+            <div class="font-semibold text-slate-100 text-sm md:text-base pr-4">${f.q}</div>
+            <div class="w-7 h-7 flex items-center justify-center rounded-md bg-gradient-to-r from-sky-400 to-indigo-400 text-slate-900 font-bold text-xs shrink-0 group-open:rotate-180 transition-transform duration-200">
+              ${i + 1}
+            </div>
+          </summary>
+          <div class="p-3 pt-0 text-slate-400 text-sm leading-relaxed border-t border-white/5 mt-2">
+            ${f.a}
+          </div>
+        </details>
+      `).join('');
+
+      // --- Share Links Update ---
+      const targetUrl = 'socialmediatoolshub.com/caption-counter.html';
+      const fullUrl = 'https://' + targetUrl;
+      const shareText = "Check out this Caption Counter by SocialMediaToolsHub!";
+      document.getElementById('share-whatsapp').href = `https://wa.me/?text=${encodeURIComponent(shareText + ' ' + fullUrl)}`;
+      document.getElementById('share-reddit').href = `https://reddit.com/submit?url=${encodeURIComponent(fullUrl)}&title=${encodeURIComponent(shareText)}`;
+
+      // --- Init ---
+      renderHistory();
+      updateUI();
+    })();
+  </script>
 </body>
 </html>
