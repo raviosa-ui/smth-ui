@@ -1,61 +1,149 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Cookie Policy — SocialMediaToolsHub</title>
-  <meta name="description" content="Cookie Policy for SocialMediaToolsHub explaining use of GA4 analytics and user privacy rights." />
-  <meta name="theme-color" content="#0f172a" />
-  <script src="https://cdn.tailwindcss.com"></script>
-  <script>
-    tailwind.config = {
-      theme: {
-        extend: {
-          colors: {
-            slate: {
-              850: '#151e32',
-              900: '#0f172a',
-            }
-          },
-          fontFamily: {
-            sans: ['Inter', 'ui-sans-serif', 'system-ui', '-apple-system', 'BlinkMacSystemFont', 'Segoe UI', 'Roboto', 'Helvetica Neue', 'Arial', 'sans-serif'],
-          }
-        }
-      }
-    }
-  </script>
-  <style>
-    body {
-      background-color: #0f172a;
-      color: #e2e8f0;
-    }
-    /* Custom scrollbar for webkit */
-    ::-webkit-scrollbar {
-      width: 8px;
-    }
-    ::-webkit-scrollbar-track {
-      background: #0f172a; 
-    }
-    ::-webkit-scrollbar-thumb {
-      background: #334155; 
-      border-radius: 4px;
-    }
-    ::-webkit-scrollbar-thumb:hover {
-      background: #475569; 
-    }
-  </style>
-<script type="importmap">
-{
-  "imports": {
-    "react": "https://aistudiocdn.com/react@^19.2.0",
-    "react-dom/": "https://aistudiocdn.com/react-dom@^19.2.0/",
-    "react/": "https://aistudiocdn.com/react@^19.2.0/",
-    "lucide-react": "https://aistudiocdn.com/lucide-react@^0.555.0"
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>Cookie Policy — SocialMediaToolsHub</title>
+<meta name="description" content="Cookie Policy for SocialMediaToolsHub – we only use Google Analytics 4 to understand how visitors use our free tools." />
+<meta name="theme-color" content="#0f172a" />
+<link rel="stylesheet" href="style.css">
+
+<style>
+  /* Reuse exact same collapsible FAQ styling as homepage */
+  .faq details{margin-bottom:10px;border-radius:10px;padding:10px;background:rgba(255,255,255,0.01);border:1px solid rgba(255,255,255,0.02)}
+  .faq summary{display:flex;justify-content:space-between;align-items:center;cursor:pointer;font-weight:700}
+  .faq summary::-webkit-details-marker{display:none}
+  .faq .faq-arrow{color:var(--muted);transition:transform .18s}
+  details[open] .faq-arrow{transform:rotate(90deg)}
+
+  /* Page-specific adjustments – keep everything consistent with the dark theme */
+  .policy-header {
+    text-align: center;
+    padding: 4rem 1rem 2rem;
   }
-}
-</script>
+  .policy-header h1 {
+    font-size: 2.4rem;
+    margin-bottom: 0.5rem;
+  }
+  .policy-header p {
+    font-size: 1.1rem;
+    opacity: 0.8;
+  }
+  .policy-content {
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 0 1rem 4rem;
+    line-height: 1.7;
+  }
+  .policy-content h2 {
+    margin-top: 2.5rem;
+    margin-bottom: 1rem;
+    font-size: 1.5rem;
+    color: var(--accent-from, #38bdf8);
+  }
+  .last-updated {
+    text-align: center;
+    margin: 3rem 0;
+    opacity: 0.7;
+    font-size: 0.95rem;
+  }
+</style>
 </head>
-<body class="bg-slate-900 text-slate-200 font-sans selection:bg-sky-500/30 selection:text-sky-200">
-  <div id="root"></div>
+<body>
+<div class="container">
+
+<!-- Header – identical to homepage -->
+<header class="header" role="banner">
+  <div class="brand" aria-label="SocialMediaToolsHub">
+    <span class="brand-emoji" aria-hidden="true">⚡</span>
+    <span class="logo-text">SocialMediaToolsHub</span>
+  </div>
+  <nav class="topnav" role="navigation" aria-label="Primary">
+    <a href="/">Home</a>
+    <a class="menu-contact" href="contact-us.html">Contact Us</a>
+  </nav>
+</header>
+
+<main>
+  <section class="policy-header">
+    <h1>Cookie Policy</h1>
+    <p>How we use cookies on SocialMediaToolsHub</p>
+  </section>
+
+  <article class="policy-content">
+
+    <p>This Cookie Policy explains what cookies are and how SocialMediaToolsHub uses them. We keep things simple: we only use cookies to understand how visitors use our free tools so we can keep improving them.</p>
+
+    <div class="last-updated">
+      Last updated: December 3, 2025
+    </div>
+
+    <div class="faq">
+
+      <details open>
+        <summary>What Are Cookies? <span class="faq-arrow">›</span></summary>
+        <div>
+          Cookies are tiny text files that a website places on your computer or mobile device when you visit it. They help the site remember certain information (like language preferences) and allow website owners to see how people use their site.
+        </div>
+      </details>
+
+      <details open>
+        <summary>How We Use Cookies <span class="faq-arrow">›</span></summary>
+        <div>
+          SocialMediaToolsHub is a completely free utility hub. We do not show ads, sell data, or track you across the web.<br><br>
+          The only cookies we use are <strong>performance/analytical cookies</strong> from Google Analytics 4 (GA4). These help us see things like:
+          <ul style="margin: 1rem 0;">
+            <li>How many people visit the site</li>
+            <li>Which tools are most popular</li>
+            <li>How visitors move between pages</li>
+          </ul>
+          This information lets us fix bugs faster and build the tools you actually want.
+        </div>
+      </details>
+
+      <details open>
+        <summary>Types of Cookies Used <span class="faq-arrow">›</span></summary>
+        <div>
+          <strong>We only use the following:</strong><br><br>
+          <strong>Performance/Analytical Cookies (Third-party)</strong><br>
+          Set by Google Analytics 4 (GA4). These are placed by Google (a third party), not by us directly.<br><br>
+          <strong>No Strictly Necessary Cookies</strong><br>
+          Our site works perfectly without any cookies at all — the GA4 cookies are optional and only used for site improvement.<br><br>
+          We do <strong>not</strong> use advertising cookies, targeting cookies, or social media cookies.
+        </div>
+      </details>
+
+      <details open>
+        <summary>Managing Your Cookie Preferences <span class="faq-arrow">›</span></summary>
+        <div>
+          When you first visit SocialMediaToolsHub, a small cookie banner appears asking for your consent.<br><br>
+          • You can <strong>accept</strong> the analytics cookies<br>
+          • You can <strong>decline</strong> them — the site works exactly the same<br><br>
+          You can also delete or block cookies at any time through your browser settings. Most browsers let you:
+          <ul style="margin: 1rem 0;">
+            <li>See what cookies are stored and delete them individually</li>
+            <li>Block third-party cookies</li>
+            <li>Block cookies from specific sites</li>
+            <li>Clear all cookies when you close the browser</li>
+          </ul>
+          If you disable cookies, all our tools will still work perfectly.
+        </div>
+      </details>
+
+      <details open>
+        <summary>Contact Us <span class="faq-arrow">›</span></summary>
+        <div>
+          If you have any questions about this Cookie Policy or how we handle data, please visit our <a href="contact-us.html">Contact Us</a> page.<br><br>
+          We don’t have a formal Data Protection Officer because we collect the absolute minimum amount of data possible — but we’re always happy to help.
+        </div>
+      </details>
+
+    </div>
+
+  </article>
+</main>
+
+<footer>© 2025 SocialMediaToolsHub. Built for speed.</footer>
+</div>
 </body>
 </html>
