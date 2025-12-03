@@ -141,11 +141,13 @@
 
       const Header = () => {
         return (
-           <header class="header" role="banner">
-      <a href="index.html" class="brand" aria-label="SocialMediaToolsHub">
-        <span class="brand-emoji" aria-hidden="true">⚡</span>
-        <span class="logo-text">SocialMediaToolsHub</span>
-      </a>
+            <header className="flex items-center justify-between py-6 gap-4">
+            <a href="/" className="flex items-center gap-2.5 font-bold text-lg whitespace-nowrap select-none">
+  <span className="text-2xl">L</span>
+  <span className="brand-gradient">SocialMediaToolsHub</span>
+</a>
+
+
             <nav className="flex gap-2 text-sm md:text-base flex-wrap justify-end">
               <a href="#tool" className="px-4 py-2 rounded-xl text-slate-400 hover:text-white hover:bg-slate-800 transition-colors">
                 Tool
