@@ -1,0 +1,544 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Instagram Grid Splitter — SocialMediaToolsHub</title>
+    <meta name="description" content="Split high-res images into 3x1, 3x2, or 3x3 grids for your Instagram profile banner instantly. Free client-side tool." />
+    <meta name="theme-color" content="#0f172a" />
+    
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+      tailwind.config = {
+        theme: {
+          extend: {
+            colors: {
+              background: '#0f172a',
+              surface: '#1e293b',
+              primary: '#38bdf8',
+              secondary: '#64748b',
+            }
+          }
+        }
+      }
+    </script>
+
+    <!-- JSZip for Zip Downloads -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
+
+    <style>
+      body {
+        background-color: #0f172a;
+        color: #f8fafc;
+      }
+      /* Custom scrollbar */
+      ::-webkit-scrollbar { width: 8px; }
+      ::-webkit-scrollbar-track { background: #0f172a; }
+      ::-webkit-scrollbar-thumb { background: #334155; border-radius: 4px; }
+      ::-webkit-scrollbar-thumb:hover { background: #475569; }
+      
+      /* Loader Animation */
+      .loader {
+        border: 3px solid rgba(255,255,255,0.3);
+        border-radius: 50%;
+        border-top: 3px solid #ffffff;
+        width: 20px;
+        height: 20px;
+        -webkit-animation: spin 1s linear infinite; /* Safari */
+        animation: spin 1s linear infinite;
+      }
+      @keyframes spin {
+        0% { transform: rotate(0deg); }
+        100% { transform: rotate(360deg); }
+      }
+    </style>
+<script type="importmap">
+{
+  "imports": {
+    "react": "https://aistudiocdn.com/react@^19.2.0",
+    "lucide-react": "https://aistudiocdn.com/lucide-react@^0.555.0",
+    "jszip": "https://aistudiocdn.com/jszip@^3.10.1",
+    "react/": "https://aistudiocdn.com/react@^19.2.0/"
+  }
+}
+</script>
+</head>
+<body class="min-h-screen flex flex-col font-sans selection:bg-primary/20 selection:text-primary">
+
+    <!-- Header -->
+    <header class="py-6 border-b border-slate-800 bg-surface/50 backdrop-blur-sm sticky top-0 z-50">
+        <div class="container mx-auto px-4 flex items-center justify-between max-w-5xl">
+            <a href="index.html" class="flex items-center gap-2 text-slate-100 hover:text-white transition-colors group">
+                <span class="text-2xl group-hover:animate-pulse">⚡</span>
+                <span class="font-bold text-lg tracking-tight">SocialMediaToolsHub</span>
+            </a>
+            <nav>
+                <a href="index.html" class="text-sm font-medium text-slate-400 hover:text-primary transition-colors">
+                    ← Back to home
+                </a>
+            </nav>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="flex-grow container mx-auto px-4 py-10 max-w-5xl">
+
+        <!-- Hero Section -->
+        <section class="mb-10">
+            <h1 class="text-3xl md:text-5xl font-extrabold text-white mb-4 leading-tight">
+                Instagram Grid Splitter
+            </h1>
+            <p class="text-lg text-slate-400 max-w-2xl leading-relaxed">
+                Split a single image into a 3-column grid banner for your profile. 
+                Create 3x1, 3x2, or 3x3 layouts instantly. No apps, no watermarks, completely free.
+            </p>
+        </section>
+
+        <!-- Tool Interface -->
+        <section class="flex flex-col md:flex-row gap-6 mt-6">
+            
+            <!-- Controls (Left) -->
+            <div class="flex-1 max-w-md flex flex-col gap-5">
+                
+                <!-- Drop Zone -->
+                <div id="drop-zone"
+                    class="border-2 border-dashed border-slate-700 bg-slate-800/30 hover:border-primary hover:bg-slate-800/50 rounded-xl p-8 text-center cursor-pointer transition-colors relative group">
+                    <input type="file" id="file-input" accept="image/png, image/jpeg, image/jpg" class="hidden" />
+                    <div id="upload-icon-container" class="mb-3 transition-colors text-slate-500 group-hover:text-primary">
+                        <!-- Upload Icon -->
+                        <svg xmlns="http://www.w3.org/2000/svg" width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="mx-auto"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" x2="12" y1="3" y2="15"/></svg>
+                    </div>
+                    <p id="file-label" class="text-slate-400 text-sm font-medium">
+                        Click to upload an image
+                    </p>
+                </div>
+
+                <!-- Configuration -->
+                <div class="space-y-2">
+                    <label class="block text-slate-400 text-sm font-semibold">Grid Layout</label>
+                    <select id="grid-select" disabled
+                        class="w-full p-3 bg-surface border border-slate-700 rounded-xl text-slate-100 focus:outline-none focus:border-primary disabled:opacity-50 transition-colors">
+                        <option value="0">3 x 1 Row (3 images)</option>
+                        <option value="1" selected>3 x 2 Rows (6 images)</option>
+                        <option value="2">3 x 3 Rows (9 images)</option>
+                    </select>
+                </div>
+
+                <!-- Actions -->
+                <div class="grid grid-cols-1 gap-3">
+                    <button id="btn-split" disabled
+                        class="flex items-center justify-center gap-2 bg-primary hover:bg-sky-400 text-slate-900 font-bold py-3 px-4 rounded-xl transition-all disabled:opacity-50 disabled:cursor-not-allowed">
+                        <svg id="icon-split" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="6" cy="6" r="3"/><circle cx="6" cy="18" r="3"/><line x1="20" x2="8.12" y1="4" y2="15.88"/><line x1="14.47" x2="20" y1="14.48" y2="20"/><line x1="8.12" x2="12" y1="8.12" y2="12"/></svg>
+                        <div id="loader-split" class="loader hidden"></div>
+                        <span id="text-split">Split & Download All</span>
+                    </button>
+                    
+                    <button id="btn-zip" disabled
+                        class="flex items-center justify-center gap-2 bg-slate-700 hover:bg-slate-600 text-white font-bold py-3 px-4 rounded-xl transition-all disabled:opacity-50 disabled:cursor-not-allowed border border-slate-600">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="20" height="5" x="2" y="3" rx="1"/><path d="M4 8v11a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8"/><path d="M10 12h4"/><polyline points="12 12 12 16 12 16"/></svg>
+                        <span>Download in Zip</span>
+                    </button>
+                </div>
+                
+                <p id="note-text" class="text-xs text-slate-500 text-center hidden">
+                    Note: Individual downloads may require permission for multiple files.
+                </p>
+            </div>
+
+            <!-- Preview (Right) -->
+            <div id="preview-container" class="flex-[2] bg-surface border border-slate-700 rounded-2xl p-6 min-h-[300px] flex flex-col items-center justify-center relative overflow-hidden">
+                <div id="preview-placeholder" class="text-center text-slate-500">
+                    <p>Upload an image to see the grid preview here.</p>
+                </div>
+                <div id="preview-content" class="w-full max-w-[400px] hidden">
+                    <h4 class="text-slate-400 text-sm mb-4 font-medium">Preview Result:</h4>
+                    <div id="grid-render" class="grid grid-cols-3 gap-[2px] bg-slate-900 border-2 border-slate-900 mx-auto">
+                        <!-- Images will be injected here -->
+                    </div>
+                    <p class="text-slate-500 text-xs mt-4 text-center">
+                        This is how it will look on your profile.
+                    </p>
+                </div>
+            </div>
+
+        </section>
+
+        <!-- How to Use -->
+        <article class="mt-16 mb-8 prose prose-invert max-w-none text-slate-300">
+            <h3 class="text-white text-xl font-bold mb-4">How to create an Instagram Grid Banner</h3>
+            <ol class="list-decimal pl-5 space-y-2 text-slate-400">
+                <li>Upload a high-quality image (landscape orientation usually works best for banners).</li>
+                <li>Choose how many rows you want (1, 2, or 3). We always split into 3 columns to match Instagram's layout.</li>
+                <li>The tool will automatically center-crop your image to fit the square tiles.</li>
+                <li>Click <strong>Download in Zip</strong> for a single file, or <strong>Split & Download All</strong> for individual files.</li>
+                <li>Post them to Instagram in reverse order (start with the last image numbered 1, end with the first image).</li>
+            </ol>
+        </article>
+
+        <!-- Share Buttons -->
+        <div class="flex flex-col sm:flex-row justify-center gap-4 my-10">
+            <a id="share-whatsapp" href="#" target="_blank" rel="noopener noreferrer"
+               class="flex items-center justify-center gap-2 px-6 py-4 rounded-full font-bold text-white bg-gradient-to-r from-[#25D366] to-[#128C7E] hover:shadow-lg hover:shadow-[#128C7E]/20 hover:-translate-y-0.5 transition-all">
+                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="currentColor" class="w-5 h-5"><path d="M17.472 14.382c-.297-.148-1.758-.867-2.03-.967-.273-.099-.472-.148-.672.148-.198.297-.768.967-.942 1.164-.173.198-.347.223-.644.074-.297-.148-1.255-.462-2.39-1.476-.885-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.447-.52.15-.174.198-.297.298-.495.099-.198.05-.371-.025-.519-.074-.148-.672-1.622-.919-2.222-.242-.583-.487-.504-.672-.513l-.573-.01c-.198 0-.519.074-.792.371s-1.04 1.016-1.04 2.479 1.065 2.876 1.213 3.074c.148.198 2.095 3.2 5.073 4.487 0 0 .084.037.198.018.131-.02 1.758-.719 2.006-.799.247-.083.397-.12.571.074.174.198.672.768.863.992.198.223.347.248.644.148.297-.099 1.758-.647 2.006-.901.247-.248.247-.463.173-.647-.074-.184-.272-.297-.569-.445z"/></svg>
+                Share on WhatsApp
+            </a>
+            
+            <a id="share-reddit" href="#" target="_blank" rel="noopener noreferrer"
+               class="flex items-center justify-center gap-2 px-6 py-4 rounded-full font-bold text-white bg-gradient-to-r from-[#FF4500] to-[#E03900] hover:shadow-lg hover:shadow-[#FF4500]/20 hover:-translate-y-0.5 transition-all">
+                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="14.31" x2="20.05" y1="8" y2="17.94"/><line x1="9.69" x2="21.17" y1="8" y2="8"/><line x1="7.38" x2="13.12" y1="12" y2="2.06"/><line x1="9.69" x2="3.95" y1="16" y2="6.06"/><line x1="14.31" x2="2.83" y1="16" y2="16"/><line x1="16.62" x2="10.88" y1="12" y2="21.94"/></svg>
+                Share on Reddit
+            </a>
+        </div>
+
+        <!-- Related Tools -->
+        <section class="mt-16 mb-12">
+            <h2 class="text-xl md:text-2xl font-bold text-slate-100 mb-6 flex items-center gap-2">
+                <span>⚡</span> Try these other tools
+            </h2>
+            <div id="related-tools-grid" class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <!-- Dynamically populated -->
+            </div>
+        </section>
+
+        <!-- FAQ -->
+        <section class="bg-surface/30 rounded-3xl p-6 md:p-8 mt-12 mb-16 border border-slate-800">
+            <h3 class="text-2xl font-bold text-white mb-6">Frequently Asked Questions</h3>
+            <div id="faq-container" class="space-y-3">
+                <!-- Dynamically populated -->
+            </div>
+        </section>
+
+    </main>
+
+    <!-- Footer -->
+    <footer class="border-t border-slate-800 py-8 text-center text-slate-500 text-sm">
+        <p>© 2025 SocialMediaToolsHub. Built for speed.</p>
+    </footer>
+
+    <script>
+        // --- Constants & Data ---
+        const GRID_OPTIONS = [
+            { rows: 1, cols: 3, label: '3 x 1 Row (3 images)' },
+            { rows: 2, cols: 3, label: '3 x 2 Rows (6 images)' },
+            { rows: 3, cols: 3, label: '3 x 3 Rows (9 images)' },
+        ];
+
+        const TOOLS_LIST = [
+            { id: '1', icon: '🧾', title: 'Caption Counter', description: 'Live character, word and line counters with export options.', link: 'caption-counter.html' },
+            { id: '2', icon: '📐', title: 'Aspect Ratio Detector', description: 'Quickly check frame aspect ratios for vertical/horizontal targets.', link: 'aspect-ratio-detector.html' },
+            { id: '3', icon: '🎯', title: 'Safe zone overlay', description: 'Preview posts with on-screen safe zones for Reels, Shorts & posts.', link: 'safe-zone-overlay.html' },
+            { id: '4', icon: '🎞️', title: 'Full frame blur tool', description: 'Post entire pictures without cropping by adding blurred backgrounds.', link: 'full-frame-border-blur.html' },
+            { id: '5', icon: '🧼', title: 'Hashtag cleaner', description: 'Remove duplicates and format hashtags for posting.', link: 'hashtag-cleaner.html' },
+            { id: '6', icon: '📺', title: 'YouTube thumbnail previewer', description: 'Preview thumbnails on mobile & desktop to check legibility.', link: 'youtube-thumbnail-previewer.html' },
+            { id: '7', icon: '🟦', title: 'Instagram grid splitter', description: 'Cut images into 3×3, 3×2 or custom grids for profile layouts.', link: 'instagram-grid-splitter.html' },
+            { id: '8', icon: '↩️', title: 'Line Break Generator', description: 'Invisible space tool to preserve paragraph breaks on Instagram.', link: 'line-break.html' },
+            { id: '9', icon: '⌨️', title: 'ASCII art generator', description: 'Turn text or images into mono ASCII art for retro captions.', link: 'ascii-art-generator.html' },
+            { id: '10', icon: '👾', title: 'Glitched Zalgo Text', description: 'Create cursed/glitchy Zalgo text styles and export PNGs.', link: 'glitched-zalgo.html' },
+            { id: '11', icon: '⭕', title: 'Profile ring creator', description: 'Make stylised story rings for Instagram and highlight covers.', link: 'profile-ring-creator.html' },
+            { id: '12', icon: '💸', title: 'TikTok earning estimator', description: 'Estimate revenue from views, engagement & CPMs.', link: 'tiktok-earning-estimator.html' },
+            { id: '13', icon: '💧', title: 'Watermark tool', description: 'Quickly place and export watermarks on images and short videos.', link: 'watermark-tool.html' },
+            { id: '14', icon: '⏱️', title: 'YouTube chapter formatter', description: 'Auto-format timestamps and chapter titles for YouTube descriptions.', link: 'youtube-chapter-formatter.html' },
+            { id: '15', icon: '🔤', title: 'Case converter', description: 'Switch between UPPER, lower, Title Case and more.', link: 'case-converter.html' },
+            { id: '16', icon: '✨', title: 'Stylish text generator', description: 'Create bold, italic and fancy Unicode text for bios.', link: 'stylish-text.html' },
+            { id: '17', icon: '🔢', title: 'Emoji counter & remover', description: 'Count, list and strip emojis from your text.', link: 'emoji-counter.html' },
+            { id: '18', icon: '🎨', title: 'Aesthetic text formatter', description: 'Generate spaced, vaporwave, and decorative text styles.', link: 'aesthetic-text-formatter.html' },
+            { id: '19', icon: '🖋️', title: 'SVG ASMR Drawing', description: 'Animate drawing of vector files for ASMR videos.', link: 'svg-asmr-record.html' },
+            { id: '20', icon: '🧠', title: 'Brainrot translator', description: 'Translate normal text into Gen-Z slang variations.', link: 'brainrot-translator.html' },
+            { id: '21', icon: '☯️', title: 'Aura — Digital Sanctuary', description: 'Calming homepage with live clock and ambient backgrounds.', link: 'aura-digital-sanctuary.html' },
+            { id: '22', icon: '🛠️', title: 'Digital detox tool', description: 'Printable Mindful Moments toolkit and detox calendar.', link: 'digital-detox-tool.html' },
+        ];
+
+        const GRID_FAQ = [
+            {
+                question: "How does the Instagram Grid Splitter work?",
+                answer: "This tool takes your high-resolution image and slices it into perfect 1:1 squares based on a 3-column layout. It processes everything locally in your browser, ensuring privacy."
+            },
+            {
+                question: "What image formats are supported?",
+                answer: "We support standard web image formats including JPG, PNG, and JPEG. High-resolution landscape or portrait images work best."
+            },
+            {
+                question: "Why are the images downloaded individually?",
+                answer: "By default, browser security makes bulk downloading tricky. We recommend using the 'Download in Zip' button we added to get everything in one package!"
+            },
+            {
+                question: "In what order should I post the images?",
+                answer: "To ensure your profile grid looks correct, post the images in reverse order: start with the bottom-right image and finish with the top-left image."
+            },
+            {
+                question: "Does this tool lower image quality?",
+                answer: "We use high-quality HTML5 canvas processing (0.95 quality factor for JPEGs) to maintain as much detail as possible in the split tiles."
+            },
+            {
+                question: "Can I choose a layout other than 3x3?",
+                answer: "Yes! You can choose between 3x1 (3 images), 3x2 (6 images), or 3x3 (9 images) depending on how much screen space you want your banner to occupy."
+            },
+            {
+                question: "Is there a watermark on the results?",
+                answer: "No. SocialMediaToolsHub provides this tool completely free with zero watermarks on your generated images."
+            },
+            {
+                question: "Do I need to install an app?",
+                answer: "No, this is a web-based tool. You can use it directly from Chrome, Safari, or any modern mobile or desktop browser."
+            },
+            {
+                question: "Is my data sent to a server?",
+                answer: "No. All image processing happens client-side using JavaScript. Your photos never leave your device."
+            },
+            {
+                question: "What is the best resolution for the source image?",
+                answer: "For a 3x3 grid, we recommend an image that is at least 3240px wide (1080px per column) for the sharpest results on Retina displays."
+            },
+        ];
+
+        // --- State Management ---
+        const state = {
+            image: null,
+            blobs: [],
+            selectedGridIndex: 1, // Default 3x2
+            fileName: '',
+            isProcessing: false
+        };
+
+        // --- DOM Elements ---
+        const dropZone = document.getElementById('drop-zone');
+        const fileInput = document.getElementById('file-input');
+        const fileLabel = document.getElementById('file-label');
+        const gridSelect = document.getElementById('grid-select');
+        const btnSplit = document.getElementById('btn-split');
+        const btnZip = document.getElementById('btn-zip');
+        const noteText = document.getElementById('note-text');
+        
+        const previewPlaceholder = document.getElementById('preview-placeholder');
+        const previewContent = document.getElementById('preview-content');
+        const gridRender = document.getElementById('grid-render');
+        
+        const iconSplit = document.getElementById('icon-split');
+        const loaderSplit = document.getElementById('loader-split');
+
+        // --- Event Listeners ---
+        
+        // 1. File Upload
+        dropZone.addEventListener('click', () => fileInput.click());
+        dropZone.addEventListener('dragover', (e) => { e.preventDefault(); dropZone.classList.add('border-primary'); });
+        dropZone.addEventListener('dragleave', () => dropZone.classList.remove('border-primary'));
+        dropZone.addEventListener('drop', (e) => {
+            e.preventDefault();
+            dropZone.classList.remove('border-primary');
+            if (e.dataTransfer.files.length) handleFile(e.dataTransfer.files[0]);
+        });
+        fileInput.addEventListener('change', (e) => {
+            if (e.target.files.length) handleFile(e.target.files[0]);
+        });
+
+        // 2. Grid Change
+        gridSelect.addEventListener('change', (e) => {
+            state.selectedGridIndex = parseInt(e.target.value);
+            if (state.image) processImage();
+        });
+
+        // 3. Downloads
+        btnSplit.addEventListener('click', downloadAllIndividual);
+        btnZip.addEventListener('click', downloadZip);
+
+        // --- Logic ---
+
+        function handleFile(file) {
+            if (!file.type.match('image.*')) return alert('Please upload an image file.');
+            
+            state.fileName = file.name;
+            fileLabel.textContent = `Selected: ${file.name}`;
+            
+            // Visual feedback for upload
+            dropZone.classList.add('border-primary', 'bg-slate-800/50');
+            
+            const reader = new FileReader();
+            reader.onload = (e) => {
+                const img = new Image();
+                img.onload = () => {
+                    state.image = img;
+                    gridSelect.disabled = false;
+                    processImage();
+                };
+                img.src = e.target.result;
+            };
+            reader.readAsDataURL(file);
+        }
+
+        async function processImage() {
+            if (!state.image) return;
+            
+            // UI Loading state
+            gridSelect.disabled = true;
+            btnSplit.disabled = true;
+            btnZip.disabled = true;
+            
+            // Cleanup old URLs
+            state.blobs.forEach(b => URL.revokeObjectURL(b.url));
+            state.blobs = [];
+
+            // Short delay to allow UI render
+            await new Promise(r => setTimeout(r, 50));
+
+            const config = GRID_OPTIONS[state.selectedGridIndex];
+            const { rows, cols } = config;
+            const totalTiles = rows * cols;
+            
+            // Calc
+            const sliceSide = state.image.width / cols;
+            const totalNeededHeight = sliceSide * rows;
+            const startY = (state.image.height - totalNeededHeight) / 2;
+
+            for (let row = 0; row < rows; row++) {
+                for (let col = 0; col < cols; col++) {
+                    const canvas = document.createElement('canvas');
+                    canvas.width = sliceSide;
+                    canvas.height = sliceSide;
+                    const ctx = canvas.getContext('2d');
+                    
+                    const sx = col * sliceSide;
+                    const sy = startY + (row * sliceSide);
+                    
+                    ctx.drawImage(state.image, sx, sy, sliceSide, sliceSide, 0, 0, sliceSide, sliceSide);
+                    
+                    const blob = await new Promise(resolve => canvas.toBlob(resolve, 'image/jpeg', 0.95));
+                    
+                    if (blob) {
+                        // Naming logic: Reverse order (9, 8, 7...) for Instagram
+                        const index = row * cols + col;
+                        const reverseIndex = totalTiles - index;
+                        const blobUrl = URL.createObjectURL(blob);
+                        
+                        state.blobs.push({
+                            blob,
+                            filename: `insta-split-${reverseIndex}.jpg`,
+                            url: blobUrl,
+                            row, col
+                        });
+                    }
+                }
+            }
+
+            renderPreview(config);
+            
+            // Re-enable UI
+            gridSelect.disabled = false;
+            btnSplit.disabled = false;
+            btnZip.disabled = false;
+            noteText.classList.remove('hidden');
+        }
+
+        function renderPreview(config) {
+            previewPlaceholder.classList.add('hidden');
+            previewContent.classList.remove('hidden');
+            
+            // Update Aspect Ratio
+            gridRender.style.aspectRatio = `3 / ${config.rows}`;
+            gridRender.innerHTML = '';
+            
+            state.blobs.forEach((item) => {
+                const img = document.createElement('img');
+                img.src = item.url;
+                img.className = 'w-full h-full object-cover block bg-slate-800';
+                gridRender.appendChild(img);
+            });
+        }
+
+        async function downloadAllIndividual() {
+            if (!state.blobs.length) return;
+            
+            const btn = btnSplit;
+            const originalText = document.getElementById('text-split').textContent;
+            
+            // Loading state
+            iconSplit.classList.add('hidden');
+            loaderSplit.classList.remove('hidden');
+            btn.disabled = true;
+
+            for (let i = 0; i < state.blobs.length; i++) {
+                const item = state.blobs[i];
+                const link = document.createElement('a');
+                link.href = item.url;
+                link.download = item.filename;
+                document.body.appendChild(link);
+                link.click();
+                document.body.removeChild(link);
+                await new Promise(r => setTimeout(r, 300)); // Delay prevents blocking
+            }
+
+            // Reset state
+            iconSplit.classList.remove('hidden');
+            loaderSplit.classList.add('hidden');
+            btn.disabled = false;
+        }
+
+        async function downloadZip() {
+            if (!state.blobs.length) return;
+            
+            const zip = new JSZip();
+            const folder = zip.folder("instagram-grid");
+            
+            state.blobs.forEach(item => {
+                folder.file(item.filename, item.blob);
+            });
+            
+            const content = await zip.generateAsync({ type: "blob" });
+            const link = document.createElement('a');
+            link.href = URL.createObjectURL(content);
+            link.download = "instagram-grid-split.zip";
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+            setTimeout(() => URL.revokeObjectURL(link.href), 1000);
+        }
+
+        // --- Initialization: Share Links & Random Tools & FAQ ---
+
+        (function init() {
+            // 1. Share Links
+            const shareUrl = "https://socialmediatoolshub.com/instagram-grid-splitter.html";
+            const shareText = "Check out this free Instagram Grid Splitter tool! ⚡";
+            document.getElementById('share-whatsapp').href = `https://wa.me/?text=${encodeURIComponent(shareText + ' ' + shareUrl)}`;
+            document.getElementById('share-reddit').href = `https://www.reddit.com/submit?url=${encodeURIComponent(shareUrl)}&title=${encodeURIComponent(shareText)}`;
+
+            // 2. Random Tools (Filter out current tool ID '7')
+            const otherTools = TOOLS_LIST.filter(t => t.id !== '7');
+            const shuffled = otherTools.sort(() => 0.5 - Math.random());
+            const selectedTools = shuffled.slice(0, 2);
+            
+            const toolsContainer = document.getElementById('related-tools-grid');
+            toolsContainer.innerHTML = selectedTools.map(tool => `
+                <a href="${tool.link}" class="flex items-start gap-4 p-5 rounded-2xl bg-surface border border-slate-700 hover:border-primary/50 hover:bg-slate-800 transition-all group">
+                    <div class="text-4xl select-none group-hover:scale-110 transition-transform duration-300">
+                        ${tool.icon}
+                    </div>
+                    <div>
+                        <h3 class="text-lg font-bold text-slate-100 mb-1 group-hover:text-primary transition-colors">
+                            ${tool.title}
+                        </h3>
+                        <p class="text-slate-400 text-sm leading-relaxed">
+                            ${tool.description}
+                        </p>
+                    </div>
+                </a>
+            `).join('');
+
+            // 3. Render FAQ
+            const faqContainer = document.getElementById('faq-container');
+            faqContainer.innerHTML = GRID_FAQ.map(item => `
+                <details class="group bg-slate-900/50 rounded-xl border border-slate-700/50 open:border-slate-600 transition-colors">
+                    <summary class="flex items-center justify-between p-4 cursor-pointer list-none font-semibold text-slate-200 hover:text-white">
+                        <span>${item.question}</span>
+                        <svg class="w-5 h-5 text-slate-500 transition-transform group-open:rotate-90 group-hover:text-primary" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m9 18 6-6-6-6"/></svg>
+                    </summary>
+                    <div class="px-4 pb-4 pt-0 text-slate-400 text-sm leading-relaxed border-t border-transparent group-open:border-slate-800 group-open:pt-3">
+                        ${item.answer}
+                    </div>
+                </details>
+            `).join('');
+        })();
+
+    </script>
+</body>
+</html>
