@@ -17,10 +17,61 @@
     .faq summary::-webkit-details-marker{display:none}
     .faq .faq-arrow{color:var(--muted);transition:transform .18s}
     details[open] .faq-arrow{transform:rotate(90deg)}
-    .share-row{display:flex;justify-content:flex-end;margin:16px 0;gap:8px}
-    .btn-whatsapp{display:inline-flex;align-items:center;gap:8px;padding:10px 14px;border-radius:12px;background:linear-gradient(90deg,#25D366,#128C7E);color:white;text-decoration:none;font-weight:700;border:0}
+
+    /* Inline share row now centered and larger */
+    .share-row{display:flex;justify-content:center;margin:28px 0;gap:12px}
+    .btn-whatsapp{
+      display:inline-flex;
+      align-items:center;
+      gap:12px;
+      padding:16px 22px;
+      border-radius:18px;
+      background:linear-gradient(90deg,#25D366,#128C7E);
+      color:white;
+      text-decoration:none;
+      font-weight:800;
+      font-size:18px;
+      border:0;
+      box-shadow:0 12px 30px rgba(18,140,126,0.14), 0 6px 18px rgba(0,0,0,0.25);
+    }
+    .btn-whatsapp svg{filter:drop-shadow(0 1px 0 rgba(0,0,0,0.12))}
+    .btn-whatsapp:active{transform:translateY(1px);}
+
+    /* remove previous floating center button styles (no-op kept for clarity) */
     .menu-contact{padding:8px 10px;border-radius:10px;color:var(--muted);transition:var(--trans)}
     .menu-contact:hover{color:var(--text);background:rgba(255,255,255,0.02)}
+
+    /* Footer Styling */
+    footer {
+      margin-top: 60px;
+      padding: 40px 20px;
+      text-align: center;
+      border-top: 1px solid rgba(255, 255, 255, 0.05); /* Subtle divider line */
+    }
+
+    .footer-nav {
+      display: flex;
+      justify-content: center;
+      flex-wrap: wrap;
+      gap: 20px; /* Space between links */
+      margin-bottom: 16px;
+    }
+
+    .footer-nav a {
+      color: #94a3b8; /* Muted slate color to match your theme */
+      text-decoration: none;
+      font-size: 0.9rem;
+      transition: color 0.2s ease;
+    }
+
+    .footer-nav a:hover {
+      color: #ffffff; /* White on hover */
+    }
+
+    .copyright {
+      color: #475569; /* Darker text for the copyright line */
+      font-size: 0.85rem;
+    }
   </style>
 </head>
 
@@ -36,8 +87,8 @@
 
       <nav class="topnav" role="navigation" aria-label="Primary">
         <a href="#about">About</a>
-        <a href="#requests">Requests</a>
-        <a class="menu-contact" href="mailto:hello@socialmediatoolshub.com">Contact Us</a>
+        <!-- Requests removed as requested -->
+        <a class="menu-contact" href="contact-us.html">Contact Us</a>
       </nav>
     </header>
 
@@ -177,7 +228,7 @@
           </a>
 
           <!-- 13. watermark video image tool -->
-          <a class="card" href="watermark-tool.html" role="listitem" aria-label="Watermark Tool">
+          <a class="card" href="watermark-video-tool.html" role="listitem" aria-label="Watermark Tool">
             <div class="emoji" aria-hidden="true">💧</div>
             <div>
               <h3>Watermark video / image tool</h3>
@@ -231,7 +282,7 @@
           </a>
 
           <!-- 19. svg asmr drawing -->
-          <a class="card" href="svg-asmr-drawing.html" role="listitem" aria-label="SVG ASMR Drawing">
+          <a class="card" href="svg-asmr-record.html" role="listitem" aria-label="SVG ASMR Drawing">
             <div class="emoji" aria-hidden="true">🖋️</div>
             <div>
               <h3>SVG ASMR Drawing</h3>
@@ -248,16 +299,7 @@
             </div>
           </a>
 
-          <!-- 21. Hashtag cleaner (duplicate entry as requested) -->
-          <a class="card" href="hashtag-cleaner.html" role="listitem" aria-label="Hashtag cleaner duplicate">
-            <div class="emoji" aria-hidden="true">🧼</div>
-            <div>
-              <h3>Hashtag cleaner</h3>
-              <p>Remove duplicates and format hashtags for posting.</p>
-            </div>
-          </a>
-
-          <!-- 22. aura digital sanctuary -->
+          <!-- 21. aura digital sanctuary -->
           <a class="card" href="aura-digital-sanctuary.html" role="listitem" aria-label="Aura Digital Sanctuary">
             <div class="emoji" aria-hidden="true">☯️</div>
             <div>
@@ -266,7 +308,7 @@
             </div>
           </a>
 
-          <!-- 23. digital detox tool -->
+          <!-- 22. digital detox tool -->
           <a class="card" href="digital-detox-tool.html" role="listitem" aria-label="Digital Detox Tool">
             <div class="emoji" aria-hidden="true">🛠️</div>
             <div>
@@ -277,10 +319,11 @@
         </div>
       </section>
 
-      <!-- Share row (WhatsApp) -->
+      <!-- Share row (WhatsApp) - now centered and larger -->
       <div class="share-row" aria-hidden="false">
         <a id="whatsappShare" class="btn-whatsapp" href="#" target="_blank" rel="noopener noreferrer" aria-label="Share to WhatsApp">
-          <span>Share</span> <span aria-hidden="true">💬</span>
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M21.47 2.53A11.99 11.99 0 0012 0C5.373 0 .001 5.373.001 12a11.63 11.63 0 001.64 6.05L0 24l6.23-1.62A11.97 11.97 0 0012 24c6.627 0 12-5.373 12-12 0-3.2-1.09-6.17-2.53-8.47z" fill="#fff" opacity=".06"/><path d="M17.472 14.382c-.297-.148-1.758-.867-2.03-.967-.273-.099-.472-.148-.672.148-.198.297-.768.967-.942 1.164-.173.198-.347.223-.644.074-.297-.148-1.255-.462-2.39-1.476-.885-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.447-.52.15-.174.198-.297.298-.495.099-.198.05-.371-.025-.519-.074-.148-.672-1.622-.919-2.222-.242-.583-.487-.504-.672-.513l-.573-.01c-.198 0-.519.074-.792.371s-1.04 1.016-1.04 2.479 1.065 2.876 1.213 3.074c.148.198 2.095 3.2 5.073 4.487 0 0 .084.037.198.018.131-.02 1.758-.719 2.006-.799.247-.083.397-.12.571.074.174.198.672.768.863.992.198.223.347.248.644.148.297-.099 1.758-.647 2.006-.901.247-.248.247-.463.173-.647-.074-.184-.272-.297-.569-.445z" fill="#fff"/></svg>
+          <span>Share SocialMediaToolsHub</span>
         </a>
       </div>
 
@@ -348,7 +391,18 @@
 
     </main>
 
-    <footer>© 2025 SocialMediaToolsHub. Built for speed.</footer>
+   <footer>
+      <nav class="footer-nav" aria-label="Footer Policy Links">
+        <a href="about-us.html">About Us</a>
+        <a href="contact-us.html">Contact</a>
+        <a href="privacy.html">Privacy Policy</a>
+        <a href="terms.html">Terms of Service</a>
+        <a href="cookies-policy.html">Cookie Policy</a>
+      </nav>
+      <div class="copyright">
+        © 2025 SocialMediaToolsHub. Built for speed.
+      </div>
+    </footer>
   </div>
 
   <!-- Minimal JavaScript (kept tiny for perf) -->
@@ -389,10 +443,11 @@
         }
       });
     }
+
     document.addEventListener('DOMContentLoaded', function(){
       if(hidden && (!hidden.value || hidden.value.trim()==='')) hidden.value = '\u2800';
 
-      // WhatsApp share link: share current page URL (can be changed to include custom text)
+      // WhatsApp share link: share current page URL
       var wa = document.getElementById('whatsappShare');
       if(wa){
         var page = location.href;
