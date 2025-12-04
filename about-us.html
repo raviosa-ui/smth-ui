@@ -23,6 +23,38 @@
       body {
         font-family: ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
       }
+
+       /* Footer Styling */
+    footer {
+      margin-top: 60px;
+      padding: 40px 20px;
+      text-align: center;
+      border-top: 1px solid rgba(255, 255, 255, 0.05); /* Subtle divider line */
+    }
+
+    .footer-nav {
+      display: flex;
+      justify-content: center;
+      flex-wrap: wrap;
+      gap: 20px; /* Space between links */
+      margin-bottom: 16px;
+    }
+
+    .footer-nav a {
+      color: #94a3b8; /* Muted slate color to match your theme */
+      text-decoration: none;
+      font-size: 0.9rem;
+      transition: color 0.2s ease;
+    }
+
+    .footer-nav a:hover {
+      color: #ffffff; /* White on hover */
+    }
+
+    .copyright {
+      color: #475569; /* Darker text for the copyright line */
+      font-size: 0.85rem;
+    }
     </style>
   </head>
   <body class="bg-background text-slate-200 antialiased selection:bg-blue-500 selection:text-white flex flex-col min-h-screen">
@@ -296,11 +328,16 @@
     </main>
 
     <!-- Footer -->
-    <footer class="border-t border-slate-800 py-8 mt-12 bg-slate-900">
-      <div class="max-w-6xl mx-auto px-4 text-center">
-        <p class="text-slate-500 text-sm">
-          &copy; 2025 SocialMediaToolsHub. Built for speed.
-        </p>
+   <footer>
+      <nav class="footer-nav" aria-label="Footer Policy Links">
+        <a href="about-us.html">About Us</a>
+        <a href="contact-us.html">Contact</a>
+        <a href="privacy.html">Privacy Policy</a>
+        <a href="terms.html">Terms of Service</a>
+        <a href="cookies-policy.html">Cookie Policy</a>
+      </nav>
+      <div class="copyright">
+        © 2025 SocialMediaToolsHub. Built for speed.
       </div>
     </footer>
   </body>
