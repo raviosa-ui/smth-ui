@@ -41,6 +41,37 @@
       ::-webkit-scrollbar-track { background: #0f172a; }
       ::-webkit-scrollbar-thumb { background: #334155; border-radius: 4px; }
       ::-webkit-scrollbar-thumb:hover { background: #475569; }
+         /* Footer Styling */
+    footer {
+      margin-top: 60px;
+      padding: 40px 20px;
+      text-align: center;
+      border-top: 1px solid rgba(255, 255, 255, 0.05); /* Subtle divider line */
+    }
+
+    .footer-nav {
+      display: flex;
+      justify-content: center;
+      flex-wrap: wrap;
+      gap: 20px; /* Space between links */
+      margin-bottom: 16px;
+    }
+
+    .footer-nav a {
+      color: #94a3b8; /* Muted slate color to match your theme */
+      text-decoration: none;
+      font-size: 0.9rem;
+      transition: color 0.2s ease;
+    }
+
+    .footer-nav a:hover {
+      color: #ffffff; /* White on hover */
+    }
+
+    .copyright {
+      color: #475569; /* Darker text for the copyright line */
+      font-size: 0.85rem;
+    }
     </style>
   </head>
 
@@ -131,9 +162,18 @@
         </div>
       </div>
 
-      <footer class="mt-12 text-slate-600 text-sm font-light">
-        &copy; <span id="year"></span> SocialMediaToolsHub. Built For Speed.
-      </footer>
+      <footer>
+      <nav class="footer-nav" aria-label="Footer Policy Links">
+        <a href="about-us.html">About Us</a>
+        <a href="contact-us.html">Contact</a>
+        <a href="privacy.html">Privacy Policy</a>
+        <a href="terms.html">Terms of Service</a>
+        <a href="cookies-policy.html">Cookie Policy</a>
+      </nav>
+      <div class="copyright">
+        © 2025 SocialMediaToolsHub. Built for speed.
+      </div>
+    </footer>
     </div>
 
     <script>
