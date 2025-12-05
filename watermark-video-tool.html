@@ -20,7 +20,11 @@
     <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
     <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
-    
+      <link rel="icon" href="favicon.ico" type="image/x-icon">
+<link rel="apple-touch-icon" href="apple-touch-icon.png">
+<link rel="icon" type="image/png" sizes="32x32" href="favicon-32x32.png">
+<link rel="icon" type="image/png" sizes="16x16" href="favicon-16x16.png">
+<link rel="manifest" href="site.webmanifest">
     <style>
       body {
         font-family: 'Inter', sans-serif;
@@ -65,6 +69,38 @@
         from { opacity: 0; transform: translateY(5px); }
         to { opacity: 1; transform: translateY(0); }
       }
+
+        /* Footer Styling */
+    footer {
+      margin-top: 60px;
+      padding: 40px 20px;
+      text-align: center;
+      border-top: 1px solid rgba(255, 255, 255, 0.05); /* Subtle divider line */
+    }
+
+    .footer-nav {
+      display: flex;
+      justify-content: center;
+      flex-wrap: wrap;
+      gap: 20px; /* Space between links */
+      margin-bottom: 16px;
+    }
+
+    .footer-nav a {
+      color: #94a3b8; /* Muted slate color to match your theme */
+      text-decoration: none;
+      font-size: 0.9rem;
+      transition: color 0.2s ease;
+    }
+
+    .footer-nav a:hover {
+      color: #ffffff; /* White on hover */
+    }
+
+    .copyright {
+      color: #475569; /* Darker text for the copyright line */
+      font-size: 0.85rem;
+    }
     </style>
 
     <!-- Import Map for React and Lucide -->
@@ -162,9 +198,18 @@
 
       const Footer = () => {
         return (
-          <footer className="mt-12 text-center text-slate-500 text-sm py-8 border-t border-slate-800">
-            <p>© 2025 SocialMediaToolsHub. Built for speed & privacy.</p>
-          </footer>
+          <footer>
+      <nav class="footer-nav" aria-label="Footer Policy Links">
+        <a href="about-us.html">About Us</a>
+        <a href="contact-us.html">Contact</a>
+        <a href="privacy.html">Privacy Policy</a>
+        <a href="terms.html">Terms of Service</a>
+        <a href="cookies-policy.html">Cookie Policy</a>
+      </nav>
+      <div class="copyright">
+        © 2025 SocialMediaToolsHub. Built for speed.
+      </div>
+    </footer>
         );
       };
 
