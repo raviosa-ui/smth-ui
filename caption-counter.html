@@ -22,7 +22,6 @@
 <link rel="icon" type="image/png" sizes="32x32" href="favicon-32x32.png">
 <link rel="icon" type="image/png" sizes="16x16" href="favicon-16x16.png">
 <link rel="manifest" href="site.webmanifest">
-    <link rel="stylesheet" href="style.css">
   <script type="application/ld+json">
   {
     "@context": "https://schema.org",
@@ -33,7 +32,9 @@
     "description": "A browser-based character and word counting tool for social media posts.",
     "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" }
   }
-
+  </script>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
     :root {
       --bg: #0f172a;
       --card: #1e293b;
@@ -87,7 +88,16 @@
       font-size: 0.85rem;
     }
   </style>
-
+<script type="importmap">
+{
+  "imports": {
+    "react": "https://aistudiocdn.com/react@^19.2.0",
+    "react-dom/": "https://aistudiocdn.com/react-dom@^19.2.0/",
+    "react/": "https://aistudiocdn.com/react@^19.2.0/",
+    "lucide-react": "https://aistudiocdn.com/lucide-react@^0.555.0"
+  }
+}
+</script>
 </head>
 <body class="min-h-screen pb-20">
 
