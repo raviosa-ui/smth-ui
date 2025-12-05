@@ -85,6 +85,37 @@
     @media(min-width:640px){.hero-inner{flex-direction:row;text-align:left;align-items:center}.cta-wrap{align-items:flex-end}}
     @media(max-width:880px){.tool-grid{flex-direction:column}.left-col{max-width:none}}
     @media(max-width:420px){.controls-row{flex-direction:column;align-items:stretch}.two-cols{flex-direction:column;align-items:stretch}}
+   /* Footer Styling */
+    footer {
+      margin-top: 60px;
+      padding: 40px 20px;
+      text-align: center;
+      border-top: 1px solid rgba(255, 255, 255, 0.05); /* Subtle divider line */
+    }
+
+    .footer-nav {
+      display: flex;
+      justify-content: center;
+      flex-wrap: wrap;
+      gap: 20px; /* Space between links */
+      margin-bottom: 16px;
+    }
+
+    .footer-nav a {
+      color: #94a3b8; /* Muted slate color to match your theme */
+      text-decoration: none;
+      font-size: 0.9rem;
+      transition: color 0.2s ease;
+    }
+
+    .footer-nav a:hover {
+      color: #ffffff; /* White on hover */
+    }
+
+    .copyright {
+      color: #475569; /* Darker text for the copyright line */
+      font-size: 0.85rem;
+    }
   </style>
 
   <!-- FAQ JSON-LD (10 items). Uses SocialMediaToolsHub -->
@@ -296,7 +327,18 @@
 
     </main>
 
-    <footer style="margin-top:28px">© 2025 SocialMediaToolsKit. Built for speed.</footer>
+      <footer>
+      <nav class="footer-nav" aria-label="Footer Policy Links">
+        <a href="about-us.html">About Us</a>
+        <a href="contact-us.html">Contact</a>
+        <a href="privacy.html">Privacy Policy</a>
+        <a href="terms.html">Terms of Service</a>
+        <a href="cookies-policy.html">Cookie Policy</a>
+      </nav>
+      <div class="copyright">
+        © 2025 SocialMediaToolsHub. Built for speed.
+      </div>
+    </footer>
   </div>
 
   <div id="copy-status" class="visually-hidden" aria-live="polite" aria-atomic="true"></div>
