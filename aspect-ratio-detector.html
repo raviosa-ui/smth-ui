@@ -586,15 +586,23 @@
     }
 
     function copyText(txt) {
-      if (navigator.clipboard && navigator.clipboard.writeText) {
-          navigator.clipboard.writeText(txt).then(() => {
-              const prev = document.activeElement.innerHTML;
-              document.activeElement.innerHTML = '✅';
-              setTimeout(() => document.activeElement.innerHTML = prev, 1500);
-          }).catch(err => {
-              console.error('Failed to copy: ', err);
-              fallbackCopyText(txt);
-          });
+     if (navigator.clipboard && navigator.clipboard.writeText) {
+  navigator.clipboard.writeText(txt).then(() => {
+    const el = document.activeElement;
+
+    if (el && el.tagName === 'BUTTON') {
+      const prev = el.innerHTML;
+      el.innerHTML = '✅';
+      setTimeout(() => {
+        el.innerHTML = prev;
+      }, 1500);
+    }
+
+  }).catch(err => {
+    console.error('Failed to copy: ', err);
+    fallbackCopyText(txt);
+  });
+
       } else {
           fallbackCopyText(txt);
       }
@@ -611,11 +619,17 @@
         textArea.select();
         try {
             var successful = document.execCommand('copy');
-            if(successful) {
-               const prev = document.activeElement.innerHTML;
-               document.activeElement.innerHTML = '✅';
-               setTimeout(() => document.activeElement.innerHTML = prev, 1500);
-            }
+           if (successful) {
+  const el = document.activeElement;
+  if (el && el.tagName === 'BUTTON') {
+    const prev = el.innerHTML;
+    el.innerHTML = '✅';
+    setTimeout(() => {
+      el.innerHTML = prev;
+    }, 1500);
+  }
+}
+
         } catch (err) {
             console.error('Fallback: Oops, unable to copy', err);
         }
