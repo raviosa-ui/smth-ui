@@ -2,204 +2,147 @@
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
-    <!-- Google tag (gtag.js) -->
-<script async src="https://www.googletagmanager.com/gtag/js?id=G-TV63D6J6RW"></script>
-<script>
-  window.dataLayer = window.dataLayer || [];
-  function gtag(){dataLayer.push(arguments);}
-  gtag('js', new Date());
 
-  gtag('config', 'G-TV63D6J6RW');
-</script>
+    <!-- Google Analytics -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-TV63D6J6RW"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+      gtag('config', 'G-TV63D6J6RW');
+    </script>
+
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Contact Us - SocialMediaToolsHub</title>
     <link rel="canonical" href="https://socialmediatoolshub.com/contact-us">
 
+    <!-- Tailwind -->
     <script src="https://cdn.tailwindcss.com"></script>
-<link rel="icon" href="/favicon.ico" type="image/x-icon">
-<link rel="apple-touch-icon" href="/apple-touch-icon.png">
-<link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
-<link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
-<link rel="manifest" href="/site.webmanifest">
+
+    <!-- Favicon -->
+    <link rel="icon" href="/favicon.ico">
+    <link rel="apple-touch-icon" href="/apple-touch-icon.png">
+    <link rel="manifest" href="/site.webmanifest">
+
+    <!-- Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+    <!-- EmailJS -->
+    <script src="https://cdn.jsdelivr.net/npm/emailjs-com@3/dist/email.min.js"></script>
+    <script>
+      (function () {
+        emailjs.init("FnVjMcGz3ZRKXhAZm");
+      })();
+    </script>
 
     <script>
       tailwind.config = {
         theme: {
           extend: {
-            fontFamily: { sans: ['Inter', 'sans-serif'] },
-            animation: {
-              'blob': 'blob 10s infinite',
-              'fade-in': 'fadeIn 0.8s ease-out forwards',
-              'slide-up': 'slideUp 0.6s ease-out forwards',
-            },
-            keyframes: {
-              blob: {
-                '0%': { transform: 'translate(0px, 0px) scale(1)' },
-                '33%': { transform: 'translate(30px, -50px) scale(1.1)' },
-                '66%': { transform: 'translate(-20px, 20px) scale(0.9)' },
-                '100%': { transform: 'translate(0px, 0px) scale(1)' },
-              },
-              fadeIn: { '0%': { opacity: '0' }, '100%': { opacity: '1' } },
-              slideUp: { '0%': { opacity: '0', transform: 'translateY(20px)' }, '100%': { opacity: '1', transform: 'translateY(0)' } }
-            }
+            fontFamily: { sans: ['Inter', 'sans-serif'] }
           }
         }
       }
     </script>
 
     <style>
-      body { background-color: #0f172a; color: #fff; overflow-x: hidden; }
-      ::-webkit-scrollbar { width: 8px; }
-      ::-webkit-scrollbar-track { background: #0f172a; }
-      ::-webkit-scrollbar-thumb { background: #334155; border-radius: 4px; }
-      ::-webkit-scrollbar-thumb:hover { background: #475569; }
-         /* Footer Styling */
-    footer {
-      margin-top: 60px;
-      padding: 40px 20px;
-      text-align: center;
-      border-top: 1px solid rgba(255, 255, 255, 0.05); /* Subtle divider line */
-    }
-
-    .footer-nav {
-      display: flex;
-      justify-content: center;
-      flex-wrap: wrap;
-      gap: 20px; /* Space between links */
-      margin-bottom: 16px;
-    }
-
-    .footer-nav a {
-      color: #94a3b8; /* Muted slate color to match your theme */
-      text-decoration: none;
-      font-size: 0.9rem;
-      transition: color 0.2s ease;
-    }
-
-    .footer-nav a:hover {
-      color: #ffffff; /* White on hover */
-    }
-
-    .copyright {
-      color: #475569; /* Darker text for the copyright line */
-      font-size: 0.85rem;
-    }
+      body { background-color:#0f172a; color:#fff }
+      footer { margin-top:60px; padding:40px 20px; text-align:center; border-top:1px solid rgba(255,255,255,.05) }
+      .footer-nav { display:flex; justify-content:center; gap:20px; flex-wrap:wrap; margin-bottom:16px }
+      .footer-nav a { color:#94a3b8; font-size:.9rem }
+      .footer-nav a:hover { color:#fff }
+      .copyright { color:#475569; font-size:.85rem }
     </style>
   </head>
 
-  <body class="selection:bg-purple-500/30 min-h-screen flex items-center justify-center relative">
-    <!-- Background -->
-    <div class="fixed inset-0 w-full h-full pointer-events-none overflow-hidden z-0">
-      <div class="absolute inset-0 bg-slate-900"></div>
-      <div class="absolute top-0 -left-4 w-96 h-96 bg-purple-500 rounded-full mix-blend-multiply filter blur-3xl opacity-20 animate-blob"></div>
-      <div class="absolute top-0 -right-4 w-96 h-96 bg-yellow-500 rounded-full mix-blend-multiply filter blur-3xl opacity-20 animate-blob animation-delay-2000" style="animation-delay: 2s"></div>
-      <div class="absolute -bottom-8 left-20 w-96 h-96 bg-pink-500 rounded-full mix-blend-multiply filter blur-3xl opacity-20 animate-blob animation-delay-4000" style="animation-delay: 4s"></div>
-      <div class="absolute inset-0 bg-gradient-to-b from-slate-900/50 via-slate-900/20 to-slate-900/90"></div>
-      <div class="absolute inset-0 opacity-10" style="background-image: url('data:image/svg+xml,%3Csvg viewBox=%220 0 200 200%22 xmlns=%22http://www.w3.org/2000/svg%22%3E%3Cfilter id=%22noiseFilter%22%3E%3CfeTurbulence type=%22fractalNoise%22 baseFrequency=%220.65%22 numOctaves=%223%22 stitchTiles=%22stitch%22/%3E%3C/filter%3E%3Crect width=%22100%25%22 height=%22100%25%22 filter=%22url(%23noiseFilter)%22 opacity=%221%22/%3E%3C/svg%3E');"></div>
-    </div>
+  <body class="min-h-screen flex items-center justify-center relative">
 
-    <div class="relative z-10 w-full max-w-4xl mx-auto flex flex-col items-center justify-center p-4">
-      <header class="mb-8 text-center animate-slide-up">
-        <h1 class="text-4xl md:text-6xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-blue-200 via-purple-200 to-pink-200 tracking-tight mb-3">
+    <div class="relative z-10 w-full max-w-4xl mx-auto p-4">
+
+      <header class="mb-8 text-center">
+        <h1 class="text-4xl md:text-6xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-blue-200 via-purple-200 to-pink-200">
           Get in Touch
         </h1>
-        <p class="text-slate-400 text-lg max-w-md mx-auto font-light leading-relaxed">
-          Have a new tool in mind or found a bug. Message Us.
+        <p class="text-slate-400 text-lg mt-2">
+          Have a new tool in mind or found a bug? Message us.
         </p>
       </header>
 
-      <!-- Success Message (hidden by default) -->
-      <div id="successMessage" class="hidden flex flex-col items-center text-center space-y-6 animate-slide-up">
-        <svg class="w-20 h-20 text-green-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
-        </svg>
-        <h2 class="text-4xl font-bold text-white">Thank You!</h2>
-        <p class="text-xl text-slate-300 max-w-md">Your message has been sent successfully.<br>We'll get back to you very soon.</p>
+      <!-- Success Message -->
+      <div id="successMessage" class="hidden text-center space-y-6">
+        <h2 class="text-4xl font-bold text-green-400">Thank You!</h2>
+        <p class="text-xl text-slate-300">
+          Your message was sent successfully.<br>
+          We’ll reply within 24 hours.
+        </p>
       </div>
 
-      <!-- Contact Form -->
-      <div id="contactFormContainer" class="w-full max-w-lg relative group animate-slide-up" style="animation-delay: 0.1s">
-        <div class="relative overflow-hidden rounded-3xl bg-white/5 backdrop-blur-xl border border-white/10 shadow-2xl transition-all duration-500 hover:shadow-purple-500/10 hover:border-white/20">
-          <div class="absolute top-0 left-[-100%] w-[200%] h-full bg-gradient-to-r from-transparent via-white/5 to-transparent skew-x-12 pointer-events-none transition-transform duration-1000 group-hover:translate-x-1/2"></div>
+      <!-- Form -->
+      <div id="contactFormContainer" class="max-w-lg mx-auto">
+        <form id="contactForm" class="space-y-6 bg-white/5 p-8 rounded-3xl border border-white/10">
 
-          <form 
-            action="https://formsubmit.co/socialmediatoolshub@gmail.com" 
-            method="POST" 
-            class="p-8 md:p-10 space-y-6 relative z-10"
-            id="contactForm">
-            
-            <div class="space-y-2">
-              <label for="name" class="text-sm font-medium text-slate-300 flex items-center gap-2">
-                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-purple-400"><path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
-                Your Name
-              </label>
-              <input type="text" name="name" id="name" required class="w-full bg-slate-900/50 border border-white/10 rounded-xl px-4 py-3 text-slate-200 placeholder-slate-500 outline-none focus:ring-2 focus:ring-purple-500/20 focus:border-purple-500/50 transition-all" placeholder="Jane Doe">
-            </div>
+          <input id="name" required placeholder="Your Name"
+            class="w-full bg-slate-900/50 border border-white/10 rounded-xl px-4 py-3">
 
-            <div class="space-y-2">
-              <label for="subject" class="text-sm font-medium text-slate-300 flex items-center gap-2">
-                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-blue-400"><path d="m12 19 7-7 3 3-7 7-3-3z"/><path d="m18 13-1.5-7.5L2 2l3.5 14.5L13 18l5-5z"/><path d="m2 2 7.586 7.586"/><circle cx="11" cy="11" r="2"/></svg>
-                Subject
-              </label>
-              <input type="text" name="subject" id="subject" required class="w-full bg-slate-900/50 border border-white/10 rounded-xl px-4 py-3 text-slate-200 placeholder-slate-500 outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500/50 transition-all" placeholder="Project Inquiry">
-            </div>
+          <input id="subject" required placeholder="Subject"
+            class="w-full bg-slate-900/50 border border-white/10 rounded-xl px-4 py-3">
 
-            <div class="space-y-2">
-              <label for="message" class="text-sm font-medium text-slate-300 flex items-center gap-2">
-                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-pink-400"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
-                Message
-              </label>
-              <textarea name="message" id="message" rows="4" required class="w-full bg-slate-900/50 border border-white/10 rounded-xl px-4 py-3 text-slate-200 placeholder-slate-500 outline-none focus:ring-2 focus:ring-pink-500/20 focus:border-pink-500/50 transition-all resize-none" placeholder="Tell us about your ideas..."></textarea>
-            </div>
+          <textarea id="message" required rows="4" placeholder="Your message"
+            class="w-full bg-slate-900/50 border border-white/10 rounded-xl px-4 py-3 resize-none"></textarea>
 
-            <!-- Hidden anti-spam & config fields -->
-            <input type="text" name="_honey" style="display:none">
-            <input type="hidden" name="_captcha" value="false">
-            <input type="hidden" name="_subject" value="New Contact Form Submission - SocialMediaToolsHub">
-            <input type="hidden" name="_autoresponse" value="Thank you for contacting us! We received your message and will reply within 24 hours.">
+          <button id="sendBtn" type="submit"
+            class="w-full rounded-xl bg-gradient-to-r from-blue-600 via-purple-600 to-pink-600 px-6 py-4 font-semibold">
+            Send Message
+          </button>
 
-            <!-- This keeps the user on the same page and shows our custom thank-you -->
-            <input type="hidden" name="_next" value="https://socialmediatoolshub.com/thanks">
-
-            <button type="submit" class="w-full relative group overflow-hidden rounded-xl bg-gradient-to-r from-blue-600 via-purple-600 to-pink-600 p-[1px] transition-all duration-300 hover:shadow-[0_0_2rem_-0.5rem_#8b5cf6] hover:scale-[1.01] active:scale-[0.99]">
-              <div class="relative h-full w-full bg-slate-900/90 rounded-xl px-6 py-4 flex items-center justify-center gap-3 transition-all duration-300 group-hover:bg-transparent">
-                <span class="font-semibold text-white tracking-wide">Send Message</span>
-                <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-white transition-transform duration-500 group-hover:translate-x-1 group-hover:-translate-y-1">
-                  <line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/>
-                </svg>
-              </div>
-              <div class="absolute inset-0 bg-white/20 translate-y-full blur-lg transition-transform duration-500 group-hover:translate-y-0"></div>
-            </button>
-          </form>
-        </div>
+        </form>
       </div>
 
       <footer>
-      <nav class="footer-nav" aria-label="Footer Policy Links">
-        <a href="/about-us">About Us</a>
-        <a href="/contact-us">Contact</a>
-        <a href="/privacy">Privacy Policy</a>
-        <a href="/terms">Terms of Service</a>
-        <a href="/cookie-policy">Cookie Policy</a>
-      </nav>
-      <div class="copyright">
-        © 2025 SocialMediaToolsHub. Built for speed.
-      </div>
-    </footer>
+        <nav class="footer-nav">
+          <a href="/about-us">About Us</a>
+          <a href="/contact-us">Contact</a>
+          <a href="/privacy">Privacy Policy</a>
+          <a href="/terms">Terms</a>
+          <a href="/cookie-policy">Cookies</a>
+        </nav>
+        <div class="copyright">
+          © 2025 SocialMediaToolsHub. Built for speed.
+        </div>
+      </footer>
+
     </div>
 
+    <!-- EmailJS Logic -->
     <script>
-      document.getElementById('year').textContent = new Date().getFullYear();
+      const form = document.getElementById("contactForm");
+      const btn = document.getElementById("sendBtn");
 
-      // Show thank-you message after successful submit
-      const urlParams = new URLSearchParams(window.location.search);
-      if (urlParams.get('success')) {
-        document.getElementById('contactFormContainer').classList.add('hidden');
-        document.getElementById('successMessage').classList.remove('hidden');
-      }
+      form.addEventListener("submit", function (e) {
+        e.preventDefault();
+        btn.disabled = true;
+        btn.textContent = "Sending…";
+
+        emailjs.send(
+          "service_ygz2n8i",
+          "template_nsx4v69",
+          {
+            name: document.getElementById("name").value,
+            subject: document.getElementById("subject").value,
+            message: document.getElementById("message").value
+          }
+        ).then(() => {
+          document.getElementById("contactFormContainer").classList.add("hidden");
+          document.getElementById("successMessage").classList.remove("hidden");
+        }).catch(() => {
+          alert("Failed to send message. Please try again later.");
+          btn.disabled = false;
+          btn.textContent = "Send Message";
+        });
+      });
     </script>
+
   </body>
 </html>
