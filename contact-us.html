@@ -64,22 +64,35 @@
       <div class="max-w-lg mx-auto">
         <form id="contactForm" class="space-y-6 bg-white/5 p-8 rounded-3xl border border-white/10">
 
-          <input id="name" required placeholder="Your Name"
-            class="w-full bg-slate-900/50 border border-white/10 rounded-xl px-4 py-3">
- <input
-      type="email"
-      id="email"
-      name="email"
-      placeholder="Email (optional)"
-      class="w-full bg-slate-900/50 border border-white/10 rounded-xl px-4 py-3">
-
-          <input id="subject" required placeholder="Subject"
+          <input
+            id="name"
+            required
+            placeholder="Your Name"
             class="w-full bg-slate-900/50 border border-white/10 rounded-xl px-4 py-3">
 
-          <textarea id="message" required rows="4" placeholder="Your message"
+          <input
+            type="email"
+            id="email"
+            name="email"
+            placeholder="Email (optional)"
+            class="w-full bg-slate-900/50 border border-white/10 rounded-xl px-4 py-3">
+
+          <input
+            id="subject"
+            required
+            placeholder="Subject"
+            class="w-full bg-slate-900/50 border border-white/10 rounded-xl px-4 py-3">
+
+          <textarea
+            id="message"
+            required
+            rows="4"
+            placeholder="Your message"
             class="w-full bg-slate-900/50 border border-white/10 rounded-xl px-4 py-3 resize-none"></textarea>
 
-          <button id="sendBtn" type="submit"
+          <button
+            id="sendBtn"
+            type="submit"
             class="w-full rounded-xl bg-gradient-to-r from-blue-600 via-purple-600 to-pink-600 px-6 py-4 font-semibold">
             Send Message
           </button>
@@ -102,7 +115,7 @@
 
     </div>
 
-    <!-- EmailJS Logic -->
+    <!-- EmailJS Logic (UPDATED) -->
     <script>
       const form = document.getElementById("contactForm");
       const btn = document.getElementById("sendBtn");
@@ -112,16 +125,21 @@
         btn.disabled = true;
         btn.textContent = "Sending…";
 
+        const name = document.getElementById("name").value.trim();
+        const email = document.getElementById("email").value.trim();
+        const subject = document.getElementById("subject").value.trim();
+        const message = document.getElementById("message").value.trim();
+
         emailjs.send(
           "service_ygz2n8i",
           "template_nsx4v69",
           {
-            name: document.getElementById("name").value,
-            subject: document.getElementById("subject").value,
-            message: document.getElementById("message").value
+            name: name,
+            email: email || "Not provided",
+            subject: subject,
+            message: message
           }
         ).then(() => {
-          // ✅ Redirect to your existing thanks page
           window.location.href = "/thanks";
         }).catch(() => {
           alert("Failed to send message. Please try again later.");
