@@ -1,193 +1,244 @@
-<!doctype html>
-<html lang="en">
+<!DOCTYPE html>
+<html lang="en" class="dark">
 <head>
-<meta charset="utf-8" />
-<meta name="viewport" content="width=device-width,initial-scale=1" />
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 
 <title>Scroll-Stop Thumbnail Analyzer | SocialMediaToolsHub</title>
-<meta name="description" content="Predict whether your thumbnail stops the scroll using visual psychology heuristics. 100% client-side, private and free." />
+<meta name="description" content="Predict whether your thumbnail visually stops the scroll using UX psychology and high-performance client-side pixel analysis. Free & private." />
+
+<!-- Canonical -->
 <link rel="canonical" href="https://socialmediatoolshub.com/scrollstop-thumbnail-analyzer" />
+
+<!-- Open Graph -->
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://socialmediatoolshub.com/scrollstop-thumbnail-analyzer">
+<meta property="og:title" content="Scroll-Stop Thumbnail Analyzer">
+<meta property="og:description" content="Analyze thumbnails for scroll-stop probability using visual psychology. 100% client-side." />
+<meta property="og:image" content="https://socialmediatoolshub.com/assets/og-smth.jpg">
+
+<!-- Twitter -->
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Scroll-Stop Thumbnail Analyzer">
+<meta name="twitter:description" content="Test thumbnail clarity and scroll-stop potential before posting." />
+<meta name="twitter:image" content="https://socialmediatoolshub.com/assets/og-smth.jpg">
 
 <meta name="theme-color" content="#0f172a" />
 
-<link rel="stylesheet" href="/style.css">
+<!-- JSON-LD (Tool schema – correct & restrained) -->
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "WebApplication",
+  "name": "Scroll-Stop Thumbnail Analyzer",
+  "url": "https://socialmediatoolshub.com/scrollstop-thumbnail-analyzer",
+  "applicationCategory": "MultimediaApplication",
+  "operatingSystem": "All",
+  "offers": {
+    "@type": "Offer",
+    "price": "0",
+    "priceCurrency": "USD"
+  },
+  "description": "Client-side thumbnail analysis tool using visual attention heuristics to estimate scroll-stop probability."
+}
+</script>
+
+<!-- Design System -->
 <script src="https://cdn.tailwindcss.com"></script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
 
 <style>
-body{background:#020617;color:#e5e7eb}
-.glass{background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.08);backdrop-filter:blur(12px)}
-.metric{border-left:4px solid transparent}
-.hidden{display:none}
-.share-row{display:flex;justify-content:center;gap:12px;margin:28px 0}
-.btn{padding:14px 20px;border-radius:14px;font-weight:800;text-decoration:none}
-.btn-wa{background:linear-gradient(90deg,#25D366,#128C7E);color:#fff}
-.btn-rd{background:#ff4500;color:#fff}
-.faq details{margin-bottom:10px;padding:10px;border-radius:10px;background:rgba(255,255,255,.02);border:1px solid rgba(255,255,255,.05)}
-.faq summary{font-weight:700;cursor:pointer;display:flex;justify-content:space-between}
+body {
+  font-family: 'Inter', sans-serif;
+  background-color: #050505;
+  color: #e5e5e5;
+  background-image: radial-gradient(circle at 50% 0%, #1a1a2e 0%, #050505 100%);
+  min-height: 100vh;
+}
+.glass-panel {
+  background: rgba(255,255,255,0.02);
+  backdrop-filter: blur(16px);
+  border: 1px solid rgba(255,255,255,0.08);
+}
+details > summary { list-style: none; cursor: pointer; }
+details > summary::-webkit-details-marker { display: none; }
 </style>
 </head>
 
-<body>
-<div class="container">
+<body class="p-4 md:p-8 flex flex-col items-center">
 
-<header class="header">
-  <div class="brand">
-    <span class="brand-emoji">⚡</span>
-    <span class="logo-text">SocialMediaToolsHub</span>
-  </div>
-  <nav class="topnav">
-    <a href="/about-us">About Us</a>
-    <a href="/contact-us">Contact Us</a>
-  </nav>
+<header class="text-center mb-10 w-full">
+  <h1 class="text-5xl font-black tracking-tighter text-white mb-2">
+    Scroll<span class="text-blue-500">Stop</span>
+  </h1>
+  <p class="text-zinc-500 max-w-lg mx-auto">
+    Predict viewer retention using client-side UX psychology and pixel analysis.
+  </p>
 </header>
 
-<main class="max-w-5xl mx-auto p-6">
-
-<h1 class="text-4xl font-black text-center mb-3">Scroll-Stop Thumbnail Analyzer</h1>
-<p class="text-center text-slate-400 max-w-2xl mx-auto mb-10">
-Predict early visual attention and scroll-stop probability before publishing.
-</p>
-
-<!-- Upload -->
-<div id="uploadBox" class="glass rounded-3xl border-2 border-dashed border-slate-700 aspect-[16/9] flex flex-col items-center justify-center cursor-pointer hover:border-blue-500 transition">
-  <span class="uppercase tracking-widest text-sm font-black text-slate-400">Upload Thumbnail</span>
-  <input id="fileInput" type="file" accept="image/*" hidden>
+<!-- ================= UPLOAD ================= -->
+<div id="upload-zone" class="w-full max-w-4xl aspect-[16/9] glass-panel rounded-3xl border-2 border-dashed border-zinc-800 flex flex-col items-center justify-center cursor-pointer hover:border-blue-500/50 transition">
+  <span class="text-zinc-400 font-black uppercase tracking-widest text-xs">Drop Thumbnail Here</span>
+  <p class="text-[10px] text-zinc-600 mt-2">Runs 100% locally in your browser</p>
+  <input id="file-input" type="file" hidden accept="image/*">
 </div>
 
-<!-- Results -->
-<section id="results" class="hidden mt-10 space-y-6">
+<!-- ================= RESULTS ================= -->
+<div id="results-container" class="hidden w-full max-w-7xl mt-12 grid grid-cols-1 lg:grid-cols-12 gap-8">
 
-  <!-- Preview -->
-  <div class="glass rounded-xl p-2 relative">
-    <img id="previewImg" class="rounded-xl w-full" />
-    <canvas id="heatmap" class="absolute inset-0 hidden"></canvas>
-  </div>
-
-  <!-- Score -->
-  <div class="glass rounded-xl p-6 flex items-center gap-6">
-    <div class="text-center">
-      <div id="score" class="text-4xl font-black">--</div>
-      <div class="text-xs uppercase text-slate-400">Score</div>
-    </div>
-    <div>
-      <div id="prob" class="text-xl font-black"></div>
-      <div id="verdict" class="text-xs uppercase font-black"></div>
+  <!-- LEFT -->
+  <div class="lg:col-span-5 space-y-6">
+    <div class="glass-panel rounded-3xl p-2 relative overflow-hidden">
+      <img id="main-preview-img" class="w-full rounded-2xl" />
+      <div id="heatmap-overlay" class="absolute inset-0 grid grid-cols-3 grid-rows-3 hidden"></div>
     </div>
   </div>
 
-  <!-- Metrics -->
-  <div id="metrics" class="grid md:grid-cols-2 gap-4"></div>
-
-  <!-- Controls -->
-  <div class="flex gap-4">
-    <button id="resetBtn" class="glass flex-1 py-3 rounded-xl text-xs font-black uppercase text-slate-400 hover:text-white">Reset</button>
+  <!-- RIGHT -->
+  <div class="lg:col-span-7 space-y-6">
+    <div class="glass-panel rounded-3xl p-8">
+      <div class="text-3xl font-black mb-2" id="global-score-text">--</div>
+      <div class="text-sm text-zinc-400 mb-2" id="prob-text">--</div>
+      <div class="text-xs uppercase font-black" id="verdict-text">--</div>
+    </div>
+    <div id="metrics-grid" class="grid grid-cols-1 md:grid-cols-2 gap-4"></div>
+    <button id="reset-btn" class="glass-panel py-3 rounded-xl text-xs font-black uppercase text-zinc-400 hover:text-white">
+      Start New Analysis
+    </button>
   </div>
-
-</section>
-
-<!-- Share -->
-<div class="share-row">
-  <a id="waShare" class="btn btn-wa" target="_blank">Share WhatsApp</a>
-  <a id="rdShare" class="btn btn-rd" target="_blank">Share Reddit</a>
 </div>
 
-<!-- FAQ -->
-<section class="faq content-area">
-<h3>Frequently Asked Questions</h3>
-<details>
-  <summary>Is my image uploaded?</summary>
-  <div>No. Everything runs locally in your browser.</div>
-</details>
-<details>
-  <summary>Does this predict views?</summary>
-  <div>No. It predicts early visual clarity and attention.</div>
-</details>
+<!-- ================= SHARE ================= -->
+<div class="flex justify-center gap-4 mt-16">
+  <a id="waShare" class="px-6 py-3 rounded-xl font-black text-white bg-gradient-to-r from-green-500 to-emerald-600" target="_blank">
+    Share on WhatsApp
+  </a>
+  <a id="rdShare" class="px-6 py-3 rounded-xl font-black text-white bg-orange-600" target="_blank">
+    Share on Reddit
+  </a>
+</div>
+
+<!-- ================= RELATED TOOLS ================= -->
+<section class="max-w-4xl mt-20 space-y-6">
+  <h2 class="text-xl font-black text-white text-center uppercase tracking-tight">
+    Related Creator Tools
+  </h2>
+  <div class="grid md:grid-cols-2 gap-4">
+    <a href="/youtube-thumbnail-previewer" class="glass-panel rounded-2xl p-6 hover:border-blue-500/40 transition">
+      <h3 class="font-black text-white">YouTube Thumbnail Previewer</h3>
+      <p class="text-xs text-zinc-400 mt-1">Preview thumbnails across layouts.</p>
+    </a>
+    <a href="/safe-zone-overlay" class="glass-panel rounded-2xl p-6 hover:border-blue-500/40 transition">
+      <h3 class="font-black text-white">Safe Zone Overlay</h3>
+      <p class="text-xs text-zinc-400 mt-1">Avoid UI-covered content.</p>
+    </a>
+  </div>
 </section>
 
-</main>
+<!-- ================= FAQ ================= -->
+<section class="max-w-4xl mt-20 space-y-4">
+  <h2 class="text-xl font-black text-center">Frequently Asked Questions</h2>
 
-<footer>
-<nav class="footer-nav">
-  <a href="/about-us">About Us</a>
-  <a href="/contact-us">Contact</a>
-  <a href="/privacy">Privacy Policy</a>
-  <a href="/terms">Terms</a>
-  <a href="/cookie-policy">Cookie Policy</a>
-</nav>
-<div class="copyright">© 2025 SocialMediaToolsHub</div>
+  <details class="glass-panel rounded-xl p-4">
+    <summary class="font-bold">Are my images uploaded?</summary>
+    <div class="text-sm text-zinc-400 mt-2">No. All processing happens locally.</div>
+  </details>
+
+  <details class="glass-panel rounded-xl p-4">
+    <summary class="font-bold">Does this predict views?</summary>
+    <div class="text-sm text-zinc-400 mt-2">No. It predicts early visual attention only.</div>
+  </details>
+</section>
+
+<!-- ================= FOOTER ================= -->
+<footer class="mt-24 w-full text-center border-t border-white/5 pt-10 pb-20">
+  <nav class="flex justify-center gap-6 flex-wrap text-sm text-zinc-400 mb-4">
+    <a href="/about-us">About Us</a>
+    <a href="/contact-us">Contact</a>
+    <a href="/privacy">Privacy Policy</a>
+    <a href="/terms">Terms</a>
+    <a href="/cookie-policy">Cookie Policy</a>
+  </nav>
+  <div class="text-xs text-zinc-600">
+    © 2025 SocialMediaToolsHub. Built for speed.
+  </div>
 </footer>
 
-</div>
+<canvas id="internal-canvas" style="display:none;"></canvas>
 
-<!-- ANALYSIS ENGINE -->
+<!-- ================= FULL ANALYSIS JS (MERGED) ================= -->
 <script>
-const uploadBox = document.getElementById('uploadBox');
-const fileInput = document.getElementById('fileInput');
-const previewImg = document.getElementById('previewImg');
-const results = document.getElementById('results');
-const metricsBox = document.getElementById('metrics');
+const uploadZone = document.getElementById('upload-zone');
+const fileInput = document.getElementById('file-input');
+const results = document.getElementById('results-container');
+const preview = document.getElementById('main-preview-img');
+const grid = document.getElementById('metrics-grid');
+const canvas = document.getElementById('internal-canvas');
 
-uploadBox.onclick = () => fileInput.click();
+uploadZone.onclick = () => fileInput.click();
+fileInput.onchange = e => handleFile(e.target.files[0]);
+document.getElementById('reset-btn').onclick = () => location.reload();
 
-fileInput.onchange = e => {
-  const file = e.target.files[0];
+function handleFile(file){
   if(!file) return;
+  results.classList.remove('hidden');
+
   const img = new Image();
   img.onload = () => analyze(img);
   img.src = URL.createObjectURL(file);
-};
-
-function analyze(img){
-  const canvas = document.createElement('canvas');
-  const ctx = canvas.getContext('2d',{willReadFrequently:true});
-  canvas.width = img.width;
-  canvas.height = img.height;
-  ctx.drawImage(img,0,0);
-
-  const d = ctx.getImageData(0,0,canvas.width,canvas.height).data;
-  let lum=[],sum=0;
-  for(let i=0;i<d.length;i+=4){
-    const l=(0.2126*d[i]+0.7152*d[i+1]+0.0722*d[i+2])/255;
-    lum.push(l); sum+=l;
-  }
-  const mean=sum/lum.length;
-  let varSum=0;
-  lum.forEach(v=>varSum+=(v-mean)**2);
-  const contrast=Math.min(100,Math.sqrt(varSum/lum.length)*250);
-
-  let edges=0;
-  for(let i=1;i<lum.length-1;i++){
-    if(Math.abs(lum[i]-lum[i-1])>0.15) edges++;
-  }
-  const noise=Math.min(100,(edges/lum.length)*500);
-
-  const score=Math.round((contrast*0.6)+(100-noise)*0.4);
-  const verdict=score>75?'Watch-Stopping':score>50?'Risky':'Skippable';
-
-  previewImg.src = img.src;
-  document.getElementById('score').textContent = score;
-  document.getElementById('prob').textContent = score+"% Watch Probability";
-  document.getElementById('verdict').textContent = verdict;
-  results.classList.remove('hidden');
-
-  metricsBox.innerHTML = metric('Contrast',contrast,'Higher separates subject') +
-                         metric('Noise',noise,'Lower is better');
 }
 
-function metric(name,val,tip){
-  const c=val>70?'#22c55e':val>40?'#eab308':'#ef4444';
-  return `<div class="glass metric p-4 rounded-xl" style="border-left-color:${c}">
-    <div class="font-black">${name} – ${Math.round(val)}%</div>
-    <div class="text-xs text-slate-400">${tip}</div>
+function analyze(img){
+  canvas.width = img.width;
+  canvas.height = img.height;
+  const ctx = canvas.getContext('2d',{willReadFrequently:true});
+  ctx.drawImage(img,0,0);
+  const data = ctx.getImageData(0,0,canvas.width,canvas.height).data;
+
+  let lums=[],sum=0;
+  for(let i=0;i<data.length;i+=4){
+    const l=(0.2126*data[i]+0.7152*data[i+1]+0.0722*data[i+2])/255;
+    lums.push(l); sum+=l;
+  }
+  const mean=sum/lums.length;
+  let v=0; lums.forEach(p=>v+=(p-mean)**2);
+  const contrast=Math.min(100,Math.sqrt(v/lums.length)*250);
+
+  let edges=0;
+  for(let i=1;i<lums.length;i++) if(Math.abs(lums[i]-lums[i-1])>0.15) edges++;
+  const noise=Math.min(100,(edges/lums.length)*500);
+
+  const score=Math.round(contrast*0.6+(100-noise)*0.4);
+  const verdict=score>75?'Watch-Stopping':score>50?'Risky':'Skippable';
+
+  preview.src = img.src;
+  document.getElementById('global-score-text').textContent = score;
+  document.getElementById('prob-text').textContent = score + '% Scroll-Stop Probability';
+  document.getElementById('verdict-text').textContent = verdict;
+
+  grid.innerHTML = metric('Contrast',contrast,'Separates subject') +
+                   metric('Visual Noise',noise,'Lower is better');
+}
+
+function metric(n,v,t){
+  const c=v>70?'#22c55e':v>40?'#eab308':'#ef4444';
+  return `<div class="glass-panel rounded-xl p-4 border-l-4" style="border-left-color:${c}">
+    <div class="font-black">${n}: ${Math.round(v)}%</div>
+    <div class="text-xs text-zinc-400">${t}</div>
   </div>`;
 }
 
-document.getElementById('resetBtn').onclick=()=>location.reload();
-
-// Share
-const u=encodeURIComponent(location.href);
-waShare.href="https://wa.me/?text="+encodeURIComponent("Check this thumbnail analyzer: ")+u;
-rdShare.href="https://www.reddit.com/submit?url="+u+"&title=Scroll-Stop Thumbnail Analyzer";
+// Share links
+(function(){
+  const page = encodeURIComponent(location.href);
+  document.getElementById('waShare').href =
+    "https://wa.me/?text=" + encodeURIComponent("Check this Scroll-Stop Thumbnail Analyzer: ") + page;
+  document.getElementById('rdShare').href =
+    "https://www.reddit.com/submit?url=" + page +
+    "&title=Scroll-Stop Thumbnail Analyzer – Visual Attention Tool";
+})();
 </script>
 
 </body>
