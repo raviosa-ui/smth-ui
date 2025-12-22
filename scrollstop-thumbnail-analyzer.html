@@ -36,48 +36,6 @@
     <link rel="icon" href="/favicon.ico" type="image/x-icon">
     <link rel="manifest" href="/site.webmanifest">
 
-    <!-- Schema.org -->
-    <script type="application/ld+json">
-    {
-      "@context": "https://schema.org",
-      "@type": "WebApplication",
-      "name": "ScrollStop Thumbnail Analyzer",
-      "url": "https://socialmediatoolshub.com/scrollstop-thumbnail-analyzer",
-      "applicationCategory": "MultimediaApplication",
-      "operatingSystem": "All",
-      "offers": {
-        "@type": "Offer",
-        "price": "0",
-        "priceCurrency": "USD"
-      },
-      "description": "A high-performance thumbnail evaluation tool that uses client-side pixel analysis to predict viewer retention based on UX psychology heuristics."
-    }
-    </script>
-    <script type="application/ld+json">
-    {
-      "@context": "https://schema.org",
-      "@type": "FAQPage",
-      "mainEntity": [
-        {
-          "@type": "Question",
-          "name": "How does ScrollStop calculate the Global Index score?",
-          "acceptedAnswer": {
-            "@type": "Answer",
-            "text": "The score is a weighted average of Contrast (30%), Focal Dominance (30%), Mobile Survival (20%), and Asymmetry (20%). High-noise or high-text density images receive penalties because they increase cognitive load."
-          }
-        },
-        {
-          "@type": "Question",
-          "name": "Is my image uploaded to any server?",
-          "acceptedAnswer": {
-            "@type": "Answer",
-            "text": "No. All pixel analysis happens 100% locally in your browser's memory using Canvas API and Javascript. Your data never leaves your machine, ensuring total privacy."
-          }
-        }
-      ]
-    }
-    </script>
-
     <meta name="theme-color" content="#0f172a" />
     <script src="https://cdn.tailwindcss.com"></script>
     
@@ -125,34 +83,40 @@
         .active-view-btn { background: var(--accent-from) !important; color: #0f172a !important; font-weight: 700; }
         .visually-hidden { position: absolute !important; left: -9999px; width: 1px; height: 1px; overflow: hidden; }
 
-        /* FAQs */
-        .faq details { margin-bottom: 10px; border-radius: 10px; padding: 15px; background: rgba(255, 255, 255, 0.01); border: 1px solid rgba(255, 255, 255, 0.02); }
-        .faq summary { display: flex; justify-content: space-between; align-items: center; cursor: pointer; font-weight: 700; font-size: 14px; color: var(--muted); }
-        .faq summary:hover { color: #fff; }
+        /* Metric Cards */
+        .metric-card { border-left-width: 4px; transition: var(--trans); }
+        .metric-card:hover { transform: translateY(-2px); border-color: white; }
+
+        /* FAQs Styling */
+        .faq details { margin-bottom: 12px; border-radius: 12px; padding: 16px; background: rgba(255, 255, 255, 0.02); border: 1px solid var(--border); transition: var(--trans); }
+        .faq summary { display: flex; justify-content: space-between; align-items: center; cursor: pointer; font-weight: 700; font-size: 15px; color: var(--text); outline: none; }
+        .faq summary:hover { color: var(--accent-from); }
         .faq summary::-webkit-details-marker { display: none; }
-        .faq .faq-arrow { color: var(--muted); transition: transform .18s; }
-        details[open] .faq-arrow { transform: rotate(90deg); }
-        .faq div { margin-top: 10px; font-size: 13px; color: var(--muted); line-height: 1.6; }
+        .faq .faq-arrow { color: var(--muted); transition: transform .18s; font-size: 18px; }
+        details[open] .faq-arrow { transform: rotate(90deg); color: var(--accent-from); }
+        .faq div { margin-top: 12px; font-size: 14px; color: var(--muted); line-height: 1.6; border-top: 1px solid rgba(255, 255, 255, 0.05); padding-top: 12px; }
 
         /* Share Buttons */
-        .share-row { display: flex; justify-content: center; margin: 28px 0; gap: 12px; }
+        .share-row { display: flex; justify-content: center; margin: 36px 0; gap: 16px; }
         .btn-share {
-            display: inline-flex; align-items: center; gap: 12px; padding: 16px 22px; border-radius: 18px;
-            color: white; text-decoration: none; font-weight: 800; font-size: 18px; border: 0;
-            box-shadow: 0 12px 30px rgba(0,0,0,0.14), 0 6px 18px rgba(0,0,0,0.25); transition: transform 0.1s;
+            display: inline-flex; align-items: center; gap: 12px; padding: 16px 24px; border-radius: 18px;
+            color: white; text-decoration: none; font-weight: 800; font-size: 17px; border: 0;
+            box-shadow: 0 12px 30px rgba(0,0,0,0.14), 0 6px 18px rgba(0,0,0,0.25); transition: transform .18s;
         }
         .btn-whatsapp { background: linear-gradient(90deg, #25D366, #128C7E); }
         .btn-reddit { background: linear-gradient(90deg, #FF4500, #CC3700); }
+        .btn-share svg { filter: drop-shadow(0 1px 0 rgba(0,0,0,0.12)); }
         .btn-share:active { transform: translateY(1px); }
 
         /* Footer */
-        footer { margin-top: 60px; padding: 40px 20px; text-align: center; border-top: 1px solid rgba(255, 255, 255, 0.05); }
+        footer { margin-top: 80px; padding: 40px 20px; text-align: center; border-top: 1px solid rgba(255, 255, 255, 0.05); }
         .footer-nav { display: flex; justify-content: center; flex-wrap: wrap; gap: 20px; margin-bottom: 16px; }
         .footer-nav a { color: #94a3b8; text-decoration: none; font-size: 0.9rem; transition: color 0.2s; }
         .footer-nav a:hover { color: #fff; }
         .copyright { color: #475569; font-size: 0.85rem; }
 
-        @media(min-width:768px){.grid-cols-custom { grid-template-columns: repeat(4, 1fr); }}
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+        .animate-fade { animation: fadeIn 0.4s ease forwards; }
     </style>
 </head>
 <body>
@@ -172,22 +136,22 @@
         <!-- Tool Hero -->
         <section class="hero-section">
             <h1 id="hero-title" class="text-white font-black text-2xl md:text-3xl leading-tight">ScrollStop: Thumbnail UX Analyzer</h1>
-            <p class="lead">Stop the scroll. Analyze your thumbnails using client-side UX psychology to ensure maximum stop-rate.</p>
+            <p class="lead">Predict viewer retention with local pixel analysis and UX psychology heuristics.</p>
             
             <!-- Upload Zone -->
             <div id="upload-zone" class="w-full max-w-xl mx-auto aspect-video glass-panel rounded-2xl border-2 border-dashed border-slate-700 flex flex-col items-center justify-center cursor-pointer hover:border-sky-500 hover:bg-sky-500/5 transition-all group">
                 <div class="w-16 h-16 bg-sky-500/10 rounded-2xl flex items-center justify-center mb-4 group-hover:scale-110 transition-transform">
                     <svg class="w-8 h-8 text-sky-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
                 </div>
-                <span class="text-slate-400 font-bold uppercase tracking-widest text-xs">Drop Thumbnail Here</span>
+                <span class="text-slate-400 font-bold uppercase tracking-widest text-xs">Drop Thumbnail Image</span>
                 <p class="text-[10px] text-slate-500 mt-2">Analysis is 100% private. No images are uploaded.</p>
                 <input id="file-input" type="file" hidden accept="image/*">
             </div>
         </section>
 
-        <!-- Analysis Results (Hidden by default) -->
+        <!-- Analysis Results -->
         <div id="results-container" class="mt-8 grid grid-cols-1 lg:grid-cols-12 gap-6 hidden">
-            <!-- Left: Visuals -->
+            <!-- Left Column: Visuals -->
             <div class="lg:col-span-5 space-y-4">
                 <div class="glass-panel rounded-2xl p-2 relative overflow-hidden">
                     <div class="flex gap-1 absolute top-3 left-3 z-20">
@@ -205,7 +169,17 @@
                     </div>
                 </div>
 
-                <!-- Color & Mobile Section -->
+                <!-- Heatmap Explanation Panel -->
+                <div id="heatmap-info" class="glass-panel rounded-2xl p-4 bg-red-500/5 border-red-500/10 hidden animate-fade">
+                    <h3 class="text-[10px] font-black uppercase text-red-400 tracking-widest mb-3 flex items-center gap-2">🎯 Predicted Fixation Strategy</h3>
+                    <div class="space-y-2 text-[11px] text-slate-400 leading-relaxed">
+                        <p>• <b>Visual Analysis:</b> The app divides your image into a 3x3 grid and calculates the "luminance weight" (brightness and detail density) of each section.</p>
+                        <p>• <b>Color Overlays:</b> The red areas represent where a viewer's eye is most likely to land first during high-velocity scrolling.</p>
+                        <p>• <b>Opacity:</b> The more intense (opaque) the red block, the higher the visual "pull" of that area. Aim for high opacity on your primary hook.</p>
+                    </div>
+                </div>
+
+                <!-- Contextual Section -->
                 <div class="grid grid-cols-2 gap-4">
                     <div class="glass-panel rounded-2xl p-4 flex flex-col items-center text-center">
                         <div id="color-swatch" class="w-10 h-10 rounded-full border border-white/10 mb-2"></div>
@@ -216,13 +190,13 @@
                         <div id="mobile-sim-frame" class="shadow-lg border border-white/5 rounded-md overflow-hidden bg-black relative w-12 aspect-video mb-2">
                             <img id="mobile-preview-img" class="absolute inset-0 w-full h-full object-cover" src="" alt="Mobile Survival">
                         </div>
-                        <div class="text-[10px] font-black uppercase text-slate-500 mb-1">Mobile survival</div>
+                        <div class="text-[10px] font-black uppercase text-slate-500 mb-1">Mobile Survival</div>
                         <div id="survival-score-display" class="text-[11px] font-bold text-sky-400">--%</div>
                     </div>
                 </div>
             </div>
 
-            <!-- Right: Data -->
+            <!-- Right Column: Data & Metrics -->
             <div class="lg:col-span-7 space-y-4">
                 <div class="glass-panel rounded-2xl p-6 flex items-center gap-8">
                     <div class="relative w-24 h-24 flex shrink-0">
@@ -239,53 +213,65 @@
                         <div id="verdict-pill" class="inline-flex text-[10px] font-black uppercase tracking-widest text-sky-400 bg-sky-400/10 px-3 py-1 rounded-full border border-sky-400/20">
                             Verdict: <span id="verdict-text">--</span>
                         </div>
+                        <p class="text-[10px] text-slate-500 mt-2 italic leading-tight">Heuristic-based prediction of pattern-breaking potential in high-velocity feeds.</p>
                     </div>
                 </div>
 
+                <!-- Tabs -->
                 <div class="flex p-1 bg-white/[0.03] border border-white/[0.06] rounded-xl">
-                    <button id="tab-metrics" class="tab-btn flex-1 py-2 rounded-lg text-[11px] font-black uppercase active-tab-btn">Audit</button>
-                    <button id="tab-strategy" class="tab-btn flex-1 py-2 rounded-lg text-[11px] font-black uppercase text-slate-500">A/B Path</button>
+                    <button id="tab-metrics" class="tab-btn flex-1 py-2 rounded-lg text-[11px] font-black uppercase active-tab-btn">Audit Details</button>
+                    <button id="tab-strategy" class="tab-btn flex-1 py-2 rounded-lg text-[11px] font-black uppercase text-slate-500">A/B Strategy</button>
                 </div>
 
-                <div id="pane-metrics" class="space-y-3">
-                    <div id="metrics-grid" class="grid grid-cols-1 md:grid-cols-2 gap-3"></div>
-                </div>
-
-                <div id="pane-strategy" class="glass-panel rounded-2xl p-4 hidden-tab text-center">
-                    <div class="grid grid-cols-2 gap-4">
-                        <div class="space-y-2">
-                            <div class="text-[9px] font-black text-slate-500 uppercase">Original</div>
-                            <img id="strat-original-img" src="" class="rounded-lg border border-white/5 mx-auto" alt="Original">
-                            <div id="strat-original-score" class="text-sm font-black">--</div>
-                        </div>
-                        <div class="space-y-2">
-                            <div class="text-[9px] font-black text-sky-500 uppercase">Target</div>
-                            <img id="strat-improved-img" src="" class="rounded-lg border border-sky-500/30 mx-auto" alt="Target">
-                            <div id="strat-improved-score" class="text-sm font-black text-green-400">--</div>
-                        </div>
+                <!-- Audit Tab Content -->
+                <div id="pane-metrics" class="space-y-3 animate-fade">
+                    <div class="flex gap-2 mb-2 p-1 bg-black/20 rounded-lg w-fit">
+                        <button id="sub-original" class="subview-btn px-4 py-2 rounded-md text-[9px] font-black uppercase bg-white/10 text-white">Original Image</button>
+                        <button id="sub-optimized" class="subview-btn px-4 py-2 rounded-md text-[9px] font-black uppercase text-slate-500">Optimized Path</button>
+                    </div>
+                    <div id="metrics-grid" class="grid grid-cols-1 md:grid-cols-2 gap-3">
+                        <!-- Detailed Cards Rendered Here -->
                     </div>
                 </div>
 
-                <div class="flex gap-3">
-                    <button id="reset-btn" class="flex-1 bg-slate-800 py-3 rounded-xl text-[11px] font-black uppercase hover:bg-slate-700 transition-colors">New Analysis</button>
-                    <button id="copy-btn" class="flex-1 bg-sky-600 py-3 rounded-xl text-[11px] font-black uppercase hover:bg-sky-500 shadow-lg shadow-sky-900/40 transition-all">Copy Report</button>
+                <!-- Strategy Tab Content -->
+                <div id="pane-strategy" class="glass-panel rounded-2xl p-6 hidden-tab text-center animate-fade">
+                    <div class="grid grid-cols-2 gap-6">
+                        <div class="space-y-3">
+                            <div class="text-[10px] font-black text-slate-500 uppercase tracking-widest">Original Feed Check</div>
+                            <img id="strat-original-img" src="" class="rounded-lg border border-white/5 mx-auto" alt="Original">
+                            <div class="text-sm font-black text-white"><span id="strat-original-score">--</span> Index</div>
+                        </div>
+                        <div class="space-y-3">
+                            <div class="text-[10px] font-black text-sky-500 uppercase tracking-widest">Target Optimization</div>
+                            <img id="strat-improved-img" src="" class="rounded-lg border border-sky-500/30 mx-auto" alt="Target">
+                            <div class="text-sm font-black text-green-400"><span id="strat-improved-score">--</span> Index</div>
+                        </div>
+                    </div>
+                    <p class="text-[11px] text-slate-500 mt-6 leading-relaxed italic">Simulating pro-level edits: focal vignette, high-frequency edge sharpening, and luminance normalization.</p>
+                </div>
+
+                <!-- Action Buttons -->
+                <div class="flex gap-3 pt-2">
+                    <button id="reset-btn" class="flex-1 bg-slate-800 py-4 rounded-xl text-[11px] font-black uppercase hover:bg-slate-700 transition-colors">Start New Analysis</button>
+                    <button id="copy-btn" class="flex-1 bg-sky-600 py-4 rounded-xl text-[11px] font-black uppercase hover:bg-sky-500 shadow-lg shadow-sky-900/40 transition-all">Copy Full Report</button>
                 </div>
             </div>
         </div>
 
-        <!-- Shares Row - Outside container so it's visible always -->
+        <!-- Shares Row -->
         <div class="share-row">
             <a id="whatsappShare" class="btn-share btn-whatsapp" href="#" target="_blank">
-                <svg width="20" height="20" viewBox="0 0 24 24" fill="white"><path d="M17.472 14.382c-.297-.148-1.758-.867-2.03-.967-.273-.099-.472-.148-.672.148-.198.297-.768.967-.942 1.164-.173.198-.347.223-.644.074-.297-.148-1.255-.462-2.39-1.476-.885-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.447-.52.15-.174.198-.297.298-.495.099-.198.05-.371-.025-.519-.074-.148-.672-1.622-.919-2.222-.242-.583-.487-.504-.672-.513l-.573-.01c-.198 0-.519.074-.792.371s-1.04 1.016-1.04 2.479 1.065 2.876 1.213 3.074c.148.198 2.095 3.2 5.073 4.487 0 0 .084.037.198.018.131-.02 1.758-.719 2.006-.799.247-.083.397-.12.571.074.174.198.672.768.863.992.198.223.347.248.644.148.297-.099 1.758-.647 2.006-.901.247-.248.247-.463.173-.647-.074-.184-.272-.297-.569-.445z"/></svg>
-                WhatsApp
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none"><path d="M21.47 2.53A11.99 11.99 0 0012 0C5.373 0 .001 5.373.001 12a11.63 11.63 0 001.64 6.05L0 24l6.23-1.62A11.97 11.97 0 0012 24c6.627 0 12-5.373 12-12 0-3.2-1.09-6.17-2.53-8.47z" fill="#fff" opacity=".06"/><path d="M17.472 14.382c-.297-.148-1.758-.867-2.03-.967-.273-.099-.472-.148-.672.148-.198.297-.768.967-.942 1.164-.173.198-.347.223-.644.074-.297-.148-1.255-.462-2.39-1.476-.885-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.447-.52.15-.174.198-.297.298-.495.099-.198.05-.371-.025-.519-.074-.148-.672-1.622-.919-2.222-.242-.583-.487-.504-.672-.513l-.573-.01c-.198 0-.519.074-.792.371s-1.04 1.016-1.04 2.479 1.065 2.876 1.213 3.074c.148.198 2.095 3.2 5.073 4.487 0 0 .084.037.198.018.131-.02 1.758-.719 2.006-.799.247-.083.397-.12.571.074.174.198.672.768.863.992.198.223.347.248.644.148.297-.099 1.758-.647 2.006-.901.247-.248.247-.463.173-.647-.074-.184-.272-.297-.569-.445z" fill="#fff"/></svg>
+                <span>WhatsApp</span>
             </a>
             <a id="redditShare" class="btn-share btn-reddit" href="#" target="_blank">
-                <svg width="20" height="20" viewBox="0 0 24 24" fill="white"><path d="M24 11.5c0-1.65-1.35-3-3-3-.41 0-.8.09-1.15.24C18.16 7.42 15.65 6.5 12.85 6.42l.93-4.4 3.07.65c.03.82.7 1.48 1.52 1.48.83 0 1.5-.67 1.5-1.5s-.67-1.5-1.5-1.5c-.6 0-1.12.35-1.38.86L13.9 1.3c-.11-.03-.22-.01-.31.04-.09.05-.16.14-.18.25L12.42 6.4C9.58 6.47 7.03 7.4 5.3 8.74c-.34-.14-.73-.24-1.14-.24-1.65 0-3 1.35-3 3 0 1.13.63 2.11 1.56 2.62-.03.13-.06.26-.06.38 0 3.31 4.03 6 9 6s9-2.69 9-6c0-.12-.03-.25-.06-.38.93-.51 1.56-1.49 1.56-2.62zM9 13c.83 0 1.5.67 1.5 1.5S9.83 16 9 16s-1.5-.67-1.5-1.5S8.17 13 9 13zm7.83 4.71c-1.13 1.13-3.23 1.18-4.83 1.18-1.6 0-3.7-.05-4.83-1.18-.1-.1-.1-.26 0-.36.1-.1.26-.1.36 0 .93.93 2.76.99 4.47.99 1.71 0 3.54-.06 4.47-.99.1-.1.26-.1.36 0 .11.1.11.26.01.36zM15 16c-.83 0-1.5-.67-1.5-1.5s.67-1.5 1.5-1.5 1.5.67 1.5 1.5-.67 1.5-1.5 1.5z"/></svg>
-                Reddit
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="white"><path d="M24 11.5c0-1.65-1.35-3-3-3-.41 0-.8.09-1.15.24C18.16 7.42 15.65 6.5 12.85 6.42l.93-4.4 3.07.65c.03.82.7 1.48 1.52 1.48.83 0 1.5-.67 1.5-1.5s-.67-1.5-1.5-1.5c-.6 0-1.12.35-1.38.86L13.9 1.3c-.11-.03-.22-.01-.31.04-.09.05-.16.14-.18.25L12.42 6.4C9.58 6.47 7.03 7.4 5.3 8.74c-.34-.14-.73-.24-1.14-.24-1.65 0-3 1.35-3 3 0 1.13.63 2.11 1.56 2.62-.03.13-.06.26-.06.38 0 3.31 4.03 6 9 6s9-2.69 9-6c0-.12-.03-.25-.06-.38.93-.51 1.56-1.49 1.56-2.62zM9 13c.83 0 1.5.67 1.5 1.5S9.83 16 9 16s-1.5-.67-1.5-1.5S8.17 13 9 13zm7.83 4.71c-1.13 1.13-3.23 1.18-4.83 1.18-1.6 0-3.7-.05-4.83-1.18-.1-.1-.1-.26 0-.36.1-.1.26-.1.36 0 .93.93 2.76.99 4.47.99 1.71 0 3.54-.06 4.47-.99.1-.1.26-.1.36 0 .11.1.11.26.01.36zM15 16c-.83 0-1.5-.67-1.5-1.5s.67-1.5 1.5-1.5 1.5.67 1.5 1.5-.67 1.5-1.5 1.5z"/></svg>
+                <span>Reddit</span>
             </a>
         </div>
 
-        <!-- About Area - Outside container so it's visible always -->
+        <!-- Static About Block -->
         <article class="content-area mt-12 bg-slate-900/50 p-8 rounded-3xl border border-white/5">
             <h2 class="text-white font-black text-xl mb-4">About ScrollStop Technology</h2>
             <p class="text-slate-400 text-sm mb-6 leading-relaxed">ScrollStop is a professional audit tool built on **UX psychology heuristics**. It simulates the human visual system's "First Pass" processing—the 100ms window where the lizard brain decides whether an image is worth conscious attention in a high-velocity feed.</p>
@@ -306,13 +292,12 @@
             </div>
         </article>
 
-        <!-- FAQs Area - Outside container so it's visible always -->
+        <!-- FAQs Always Visible -->
         <section class="faq mt-12">
             <h3 class="text-white font-black text-center mb-8">Frequently Asked Questions</h3>
             <div id="faq-list"></div>
         </section>
 
-        <!-- Footer -->
         <footer>
             <nav class="footer-nav" aria-label="Footer Policy Links">
                 <a href="/about-us">About Us</a>
@@ -328,25 +313,62 @@
     <canvas id="internal-canvas" style="display: none;"></canvas>
 
     <script>
-        /** STATE & LOGIC **/
-        let state = { image: null, results: null, viewMode: 'original', activeTab: 'metrics', metricsView: 'original', aspectRatio: '16/9' };
+        /** STATE & CONFIG **/
+        let state = { 
+            image: null, 
+            results: null, 
+            viewMode: 'original', 
+            activeTab: 'metrics', 
+            metricsView: 'original', 
+            aspectRatio: '16/9' 
+        };
+        
         const Verdicts = { WATCH_STOPPING: 'Watch-Stopping', RISKY: 'Risky', SKIPPABLE: 'Skippable' };
-
-        const FAQ_CONTENT = [
-            { q: "How does ScrollStop calculate the Global Index score?", a: "The score is a weighted average of Contrast (30%), Focal Dominance (30%), Mobile Survival (20%), and Asymmetry (20%). High-noise or high-text density images receive penalties because they increase cognitive load, making the brain more likely to skip the image." },
-            { q: "Is my image uploaded to any server?", a: "No. All pixel analysis happens 100% locally in your browser's memory using Canvas API and Javascript. Your data never leaves your machine, ensuring total privacy." },
-            { q: "What is Focal Dominance?", a: "Focal Dominance is the measure of 'Hero' strength. It looks for clear points of entry in the visual field. If weight is scattered evenly, it is often ignored as background noise." },
-            { q: "Why is contrast the most important metric?", a: "Human evolution prioritized edge detection for survival. High contrast defines depth and object separation, signaling to the brain that there is something 'real' or 'important' to look at." },
-            { q: "What does the heatmap actually visualize?", a: "The heatmap represents predicted eye fixation. We divide the image into a 3x3 grid and calculate the 'visual weight' based on luminance and edge density." },
-            { q: "How is 'Mobile Survival' different?", a: "It simulates extreme downscaling to roughly 120 pixels. We check if primary edges and luminance peaks remain detectable on small 6-inch screens." },
-            { q: "Why is asymmetry recommended?", a: "Asymmetry creates a 'curiosity gap'—the brain feels a slight tension that it wants to resolve by looking closer. This is the foundation of dynamic visual storytelling." },
-            { q: "What is the 'Lizard Brain Color' signal?", a: "Color groups trigger emotional responses. Warm palettes signal urgency or energy, while Cold palettes signal professionalism or trust." },
-            { q: "Does it work for Instagram or TikTok thumbnails?", a: "Yes. While the UI simulates a frame for platform context, the heuristic engine works for any aspect ratio. Principles are universal." },
-            { q: "What does the 'Optimization Strategy' simulate?", a: "It uses filters to apply 'Pro' fixes: vignette application to force focus, saturation boosts for appeal, and frequency adjustments." }
-        ];
-
         const $ = (id) => document.getElementById(id);
         const $$ = (sel) => document.querySelectorAll(sel);
+
+        const METRIC_DEFS = [
+            { id: 'contrast', name: 'Luminance Contrast', direction: 'higher', importance: 'Defines how subjects stand out from background noise.' },
+            { id: 'dominance', name: 'Focal Dominance', direction: 'higher', importance: 'Strength of the single biggest point of interest.' },
+            { id: 'noise', name: 'Visual Noise', direction: 'lower', importance: 'High-frequency clutter that slows down recognition.' },
+            { id: 'text', name: 'Cognitive Load', direction: 'lower', importance: 'Complex patterns or excessive text that brain ignores.' },
+            { id: 'asymmetry', name: 'Dynamic Balance', direction: 'higher', importance: 'Asymmetric layouts trigger more curiosity.' },
+            { id: 'survival', name: 'Mobile survival', direction: 'higher', importance: 'Legibility when scaled down to 120px height.' }
+        ];
+
+        const FAQ_CONTENT = [
+            { q: "How does ScrollStop calculate the Global Index score?", a: "The score is a weighted average of Contrast (30%), Focal Dominance (30%), Mobile Survival (20%), and Asymmetry (20%). High-noise or high-text density images receive penalties because they increase cognitive load." },
+            { q: "Is my image uploaded to any server?", a: "No. All pixel analysis happens 100% locally in your browser's memory using Canvas API and Javascript. Your data never leaves your machine, ensuring total privacy." },
+            { q: "What is Focal Dominance?", a: "Focal Dominance is the measure of 'Hero' strength. It looks for clear points of entry in the visual field. If visual weight is scattered, viewers skip." },
+            { q: "Why is contrast the most important metric?", a: "Human evolution prioritized edge detection for survival. High contrast defines depth and object separation, signaling 'important content'." },
+            { q: "What does the heatmap actually visualize?", a: "It represents predicted eye fixation. We divide the image into a 3x3 grid and calculate the 'visual weight' based on luminance and edge density." },
+            { q: "How is 'Mobile Survival' different?", a: "It simulates extreme downscaling to roughly 120 pixels. We check if primary edges and peaks remain detectable on small smartphone screens." },
+            { q: "Why is asymmetry recommended?", a: "Asymmetry creates a 'curiosity gap'—the brain feels a slight tension that it wants to resolve by looking closer. It aids dynamic storytelling." },
+            { q: "What is the 'Lizard Brain Color' signal?", a: "Color groups trigger emotional responses. Warm palettes signal urgency or energy, while Cold palettes signal professionalism or trust." },
+            { q: "Does it work for Instagram or TikTok thumbnails?", a: "Yes. While our UI frame approximates standard platforms, the heuristic principles of vision are universal across all feeds." },
+            { q: "What does the 'Optimization Strategy' simulate?", a: "It uses digital filters to apply common 'Pro' fixes: radial vignettes to force focus, saturation boosts for appeal, and frequency adjustments." }
+        ];
+
+        /** INITIALIZE STATIC CONTENT **/
+        function initStaticContent() {
+            const fl = $('faq-list');
+            if (fl) {
+                fl.innerHTML = '';
+                FAQ_CONTENT.forEach(f => {
+                    const d = document.createElement('details');
+                    d.innerHTML = `<summary>${f.q} <span class="faq-arrow">›</span></summary><div>${f.a}</div>`;
+                    fl.appendChild(d);
+                });
+            }
+
+            const curUrl = window.location.href;
+            const wa = $('whatsappShare');
+            if (wa) wa.href = `https://wa.me/?text=${encodeURIComponent("Check out this Thumbnail UX Analyzer: " + curUrl)}`;
+            const rs = $('redditShare');
+            if (rs) rs.href = `https://www.reddit.com/submit?url=${encodeURIComponent(curUrl)}&title=${encodeURIComponent("ScrollStop - Free Thumbnail UX Analyzer")}`;
+        }
+
+        document.addEventListener('DOMContentLoaded', initStaticContent);
 
         /** ANALYSIS ENGINE **/
         const analyzeImageData = (imageData) => {
@@ -361,6 +383,7 @@
             let varSum = 0;
             for (let i = 0; i < lums.length; i++) varSum += Math.pow(lums[i] - meanLum, 2);
             const contrast = Math.min(100, Math.sqrt(varSum / lums.length) * 250);
+            
             const grid = Array(9).fill(0);
             const cellW = width / 3, cellH = height / 3;
             for (let y = 0; y < height; y++) {
@@ -372,6 +395,7 @@
             }
             const gridAvg = grid.map(v => v / (cellW * cellH));
             const dominance = Math.min(100, (Math.max(...gridAvg) / (meanLum || 0.01) - 1) * 50);
+            
             let edgeCount = 0, textCluster = 0;
             for (let i = 0; i < lums.length - 1; i++) {
                 const edge = Math.abs(lums[i] - lums[i+1]);
@@ -379,9 +403,11 @@
             }
             const noise = Math.min(100, (edgeCount / lums.length) * 500);
             const text = Math.min(100, (textCluster / lums.length) * 2000);
+            
             let lS = 0, rS = 0;
             for (let i = 0; i < lums.length; i++) { if ((i % width) < width / 2) lS += lums[i]; else rS += lums[i]; }
             const asymmetry = Math.min(100, (Math.abs(lS - rS) / (lS + rS || 1)) * 400);
+            
             return { contrast, dominance, noise, text, asymmetry, heatmap: gridAvg };
         };
 
@@ -399,11 +425,40 @@
             return { group: 'Neutral', signal: 'Minimalism/Clutter', hex };
         };
 
+        /** METRIC CARD RENDERING **/
+        const createMetricCard = (def, score, diff = 0) => {
+            const isGood = def.direction === 'higher' ? score > 70 : score < 30;
+            const isMid = def.direction === 'higher' ? score > 40 : score < 60;
+            const color = isGood ? '#22c55e' : isMid ? '#eab308' : '#ef4444';
+            
+            const div = document.createElement('div');
+            div.className = 'glass-panel rounded-2xl p-4 metric-card animate-fade';
+            div.style.borderLeftColor = color;
+            
+            div.innerHTML = `
+                <div class="flex justify-between items-start mb-2">
+                    <div class="flex-1">
+                        <div class="flex items-center gap-2 mb-1">
+                            <h4 class="text-xs font-black uppercase text-white tracking-tight">${def.name}</h4>
+                            <span class="text-[8px] font-black uppercase px-1.5 py-0.5 rounded ${def.direction === 'higher' ? 'bg-green-500/10 text-green-400' : 'bg-blue-500/10 text-blue-400'}">Target: ${def.direction === 'higher' ? '↑' : '↓'}</span>
+                        </div>
+                        <p class="text-[10px] text-slate-500 leading-tight">${def.importance}</p>
+                    </div>
+                    <div class="text-right ml-3 shrink-0">
+                        <div class="text-xl font-black text-white leading-none">${Math.round(score)}%</div>
+                        ${diff !== 0 ? `<div class="text-[9px] font-bold mt-1 ${diff > 0 ? 'text-green-400' : 'text-red-400'}">${diff > 0 ? '+' : ''}${Math.round(diff)}pts</div>` : ''}
+                    </div>
+                </div>
+            `;
+            return div;
+        };
+
         const handleFileUpload = (file) => {
             if (!file) return;
             $('upload-zone').classList.add('hidden');
             $('loading-overlay').classList.remove('hidden');
             $('results-container').classList.remove('hidden');
+            
             const reader = new FileReader();
             reader.onload = (e) => {
                 const url = e.target.result;
@@ -415,29 +470,38 @@
                     const ctx = canvas.getContext('2d');
                     ctx.drawImage(img, 0, 0);
                     state.aspectRatio = (img.width / img.height) < 0.8 ? '9/16' : '16/9';
+                    
                     const imgData = ctx.getImageData(0, 0, canvas.width, canvas.height);
                     const stats = analyzeImageData(imgData);
                     const color = getColorBias(imgData.data);
+                    
                     const survival = Math.round(Math.min(100, stats.contrast * 0.7 + stats.dominance * 0.3));
                     const score = Math.round((stats.contrast * 0.3) + (stats.dominance * 0.3) + (survival * 0.2) + (stats.asymmetry * 0.2));
                     const verdict = score > 75 ? Verdicts.WATCH_STOPPING : score > 50 ? Verdicts.RISKY : Verdicts.SKIPPABLE;
+                    
+                    // Optimized Path Simulation
                     const improvedCanvas = document.createElement('canvas');
                     improvedCanvas.width = canvas.width; improvedCanvas.height = canvas.height;
                     const impCtx = improvedCanvas.getContext('2d');
-                    impCtx.filter = 'contrast(1.2) saturate(1.15) brightness(1.05)';
+                    impCtx.filter = 'contrast(1.25) saturate(1.15) brightness(1.02)';
                     impCtx.drawImage(img, 0, 0);
+                    
+                    // Add subtle vignette
                     const grad = impCtx.createRadialGradient(canvas.width/2, canvas.height/2, 0, canvas.width/2, canvas.height/2, canvas.width*0.8);
                     grad.addColorStop(0, 'transparent'); grad.addColorStop(1, 'rgba(0,0,0,0.3)');
                     impCtx.fillStyle = grad; impCtx.fillRect(0, 0, canvas.width, canvas.height);
+                    
                     const impData = impCtx.getImageData(0, 0, improvedCanvas.width, improvedCanvas.height);
                     const impStats = analyzeImageData(impData);
                     const impSurvival = Math.round(Math.min(100, impStats.contrast * 0.7 + impStats.dominance * 0.3));
                     const impScore = Math.round((impStats.contrast * 0.3) + (impStats.dominance * 0.3) + (impSurvival * 0.2) + (impStats.asymmetry * 0.2));
+                    
                     state.results = {
                         original: { score, probability: Math.min(99, Math.round(score * 0.95)), verdict, stats, color, survival },
                         improved: { score: impScore, stats: impStats, survival: impSurvival },
                         improvedUrl: improvedCanvas.toDataURL('image/jpeg', 0.85)
                     };
+                    
                     updateUI();
                     $('loading-overlay').classList.add('hidden');
                 };
@@ -448,47 +512,85 @@
 
         const updateUI = () => {
             const res = state.results;
-            const cur = state.metricsView === 'original' ? res.original : { ...res.original, ...res.improved, stats: res.improved.stats };
+            if (!res) return;
+            
+            const isOptView = state.metricsView === 'optimized';
+            const curData = isOptView ? { ...res.original, ...res.improved, stats: res.improved.stats } : res.original;
+            
             $('main-preview-img').src = state.viewMode === 'improved' ? res.improvedUrl : state.image;
-            $('mobile-preview-img').src = state.metricsView === 'original' ? state.image : res.improvedUrl;
-            $('main-preview-img').style.filter = state.viewMode === 'heatmap' ? 'grayscale(1) opacity(0.3)' : 'none';
+            $('mobile-preview-img').src = isOptView ? res.improvedUrl : state.image;
+            $('main-preview-img').style.filter = state.viewMode === 'heatmap' ? 'grayscale(1) opacity(0.25)' : 'none';
+            
+            // Heatmap Overlay - Red
             const overlay = $('heatmap-overlay'); overlay.innerHTML = '';
             if (state.viewMode === 'heatmap') {
                 overlay.classList.remove('hidden');
+                $('heatmap-info').classList.remove('hidden');
                 res.original.stats.heatmap.forEach(w => {
                     const div = document.createElement('div'); div.className = 'heatmap-cell';
-                    div.style.backgroundColor = `rgba(239, 68, 68, ${Math.min(0.85, w * 0.9)})`;
+                    // User requested red heatmap
+                    div.style.backgroundColor = `rgba(239, 68, 68, ${Math.min(0.85, w * 1.1)})`;
                     div.style.border = '1px solid rgba(255,255,255,0.05)'; overlay.appendChild(div);
                 });
-            } else { overlay.classList.add('hidden'); }
+            } else { 
+                overlay.classList.add('hidden'); 
+                $('heatmap-info').classList.add('hidden');
+            }
+            
+            // Score Display
             $('global-score-text').innerText = res.original.score;
             $('global-score-circle').style.strokeDashoffset = 276 * (1 - res.original.score / 100);
             $('prob-text').innerText = `${res.original.probability}% Stop Probability`;
             $('verdict-text').innerText = res.original.verdict;
+            
+            // Sub-context
             $('mobile-sim-frame').className = `shadow-lg border border-white/5 rounded-md overflow-hidden bg-black relative mb-2 ${state.aspectRatio === '9/16' ? 'w-8 aspect-[9/16]' : 'w-12 aspect-video'}`;
-            $('survival-score-display').innerText = `${cur.survival}%`;
-            $('color-swatch').style.backgroundColor = cur.color.hex;
-            $('color-group-text').innerText = `${cur.color.group} - ${cur.color.signal}`;
+            $('survival-score-display').innerText = `${curData.survival}%`;
+            $('color-swatch').style.backgroundColor = curData.color.hex;
+            $('color-group-text').innerText = `${curData.color.group} - ${curData.color.signal}`;
+            
+            // Detailed Metrics Grid
             const grid = $('metrics-grid'); grid.innerHTML = '';
-            const ms = [
-                { n: 'Contrast', s: Math.round(cur.stats.contrast), d: 'higher' },
-                { n: 'Focal strength', s: Math.round(cur.stats.dominance), d: 'higher' },
-                { n: 'Visual noise', s: Math.round(cur.stats.noise), d: 'lower' },
-                { n: 'Text load', s: Math.round(cur.stats.text), d: 'lower' }
-            ];
-            ms.forEach(m => {
-                const div = document.createElement('div');
-                div.className = 'glass-panel rounded-xl p-3 flex justify-between items-center';
-                div.innerHTML = `<div class="text-[10px] font-bold text-slate-400 uppercase">${m.n}</div><div class="text-xs font-black text-white">${m.s}%</div>`;
-                grid.appendChild(div);
+            METRIC_DEFS.forEach(def => {
+                const score = def.id === 'survival' ? curData.survival : curData.stats[def.id];
+                const originalScore = def.id === 'survival' ? res.original.survival : res.original.stats[def.id];
+                const diff = isOptView ? score - originalScore : 0;
+                grid.appendChild(createMetricCard(def, score, diff));
             });
-            $('strat-original-img').src = state.image; $('strat-original-score').innerText = res.original.score;
-            $('strat-improved-img').src = res.improvedUrl; $('strat-improved-score').innerText = res.improved.score;
+            
+            // Strategy Tab Sync
+            $('strat-original-img').src = state.image;
+            $('strat-original-score').innerText = res.original.score;
+            $('strat-improved-img').src = res.improvedUrl;
+            $('strat-improved-score').innerText = res.improved.score;
         };
 
-        /** INTERACTION **/
+        /** RESET HANDLER **/
+        const resetAnalysis = () => {
+            state.image = null;
+            state.results = null;
+            state.viewMode = 'original';
+            state.metricsView = 'original';
+            
+            // Reset visibility
+            $('results-container').classList.add('hidden');
+            $('upload-zone').classList.remove('hidden');
+            $('file-input').value = '';
+            
+            // Reset toggles
+            $$('.view-toggle').forEach(b => b.classList.remove('active-view-btn'));
+            $$('.view-toggle[data-view="original"]').forEach(b => b.classList.add('active-view-btn'));
+            
+            $('sub-original').classList.add('bg-white/10', 'text-white'); 
+            $('sub-optimized').classList.remove('bg-white/10', 'text-white');
+            
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        };
+
+        /** INTERACTION HANDLERS **/
         $('upload-zone').onclick = () => $('file-input').click();
         $('file-input').onchange = (e) => handleFileUpload(e.target.files[0]);
+        
         $$('.view-toggle').forEach(btn => {
             btn.onclick = () => {
                 state.viewMode = btn.dataset.view;
@@ -496,25 +598,45 @@
                 btn.classList.add('active-view-btn'); updateUI();
             };
         });
-        $('tab-metrics').onclick = () => { state.activeTab = 'metrics'; $('pane-metrics').classList.remove('hidden-tab'); $('pane-strategy').classList.add('hidden-tab'); $('tab-metrics').classList.add('active-tab-btn'); $('tab-strategy').classList.remove('active-tab-btn'); };
-        $('tab-strategy').onclick = () => { state.activeTab = 'strategy'; $('pane-metrics').classList.add('hidden-tab'); $('pane-strategy').classList.remove('hidden-tab'); $('tab-strategy').classList.add('active-tab-btn'); $('tab-metrics').classList.remove('active-tab-btn'); };
-        $('sub-original').onclick = () => { state.metricsView = 'original'; $('sub-original').classList.add('bg-white/10', 'text-white'); $('sub-optimized').classList.remove('bg-white/10', 'text-white'); updateUI(); };
-        $('sub-optimized').onclick = () => { state.metricsView = 'optimized'; $('sub-optimized').classList.add('bg-white/10', 'text-white'); $('sub-original').classList.remove('bg-white/10', 'text-white'); updateUI(); };
-        $('reset-btn').onclick = () => location.reload();
-        $('copy-btn').onclick = () => { const t = `ScrollStop Audit: ${state.results.original.score}/100. Stop probability: ${state.results.original.probability}%`; navigator.clipboard.writeText(t); alert('Report summary copied!'); };
-
-        // Shares
-        const curUrl = window.location.href;
-        $('whatsappShare').href = `https://wa.me/?text=${encodeURIComponent("Stop the scroll. Analyze your thumbnails with ScrollStop: " + curUrl)}`;
-        $('redditShare').href = `https://www.reddit.com/submit?url=${encodeURIComponent(curUrl)}&title=${encodeURIComponent("ScrollStop - Free YouTube Thumbnail & Video UX Analyzer")}`;
-
-        // FAQs
-        const fl = $('faq-list');
-        FAQ_CONTENT.forEach(f => {
-            const d = document.createElement('details');
-            d.innerHTML = `<summary>${f.q} <span class="faq-arrow">›</span></summary><div>${f.a}</div>`;
-            fl.appendChild(d);
-        });
+        
+        $('tab-metrics').onclick = () => { 
+            state.activeTab = 'metrics'; 
+            $('pane-metrics').classList.remove('hidden-tab'); 
+            $('pane-strategy').classList.add('hidden-tab'); 
+            $('tab-metrics').classList.add('active-tab-btn'); 
+            $('tab-strategy').classList.remove('active-tab-btn'); 
+        };
+        
+        $('tab-strategy').onclick = () => { 
+            state.activeTab = 'strategy'; 
+            $('pane-metrics').classList.add('hidden-tab'); 
+            $('pane-strategy').classList.remove('hidden-tab'); 
+            $('tab-strategy').classList.add('active-tab-btn'); 
+            $('tab-metrics').classList.remove('active-tab-btn'); 
+        };
+        
+        $('sub-original').onclick = () => { 
+            state.metricsView = 'original'; 
+            $('sub-original').classList.add('bg-white/10', 'text-white'); 
+            $('sub-optimized').classList.remove('bg-white/10', 'text-white'); 
+            updateUI(); 
+        };
+        
+        $('sub-optimized').onclick = () => { 
+            state.metricsView = 'optimized'; 
+            $('sub-optimized').classList.add('bg-white/10', 'text-white'); 
+            $('sub-original').classList.remove('bg-white/10', 'text-white'); 
+            updateUI(); 
+        };
+        
+        $('reset-btn').onclick = resetAnalysis;
+        
+        $('copy-btn').onclick = () => { 
+            if (!state.results) return;
+            const t = `ScrollStop Full Audit Report\nScore: ${state.results.original.score}/100\nVerdict: ${state.results.original.verdict}\nStop Probability: ${state.results.original.probability}%\nAnalyzed via SocialMediaToolsHub.`; 
+            navigator.clipboard.writeText(t); 
+            alert('Full Report summary copied to clipboard!'); 
+        };
     </script>
 </body>
 </html>
