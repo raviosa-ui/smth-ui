@@ -1,46 +1,124 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
-
   <url>
     <loc>https://socialmediatoolshub.com/</loc>
-    <lastmod>2025-12-04</lastmod>
+    <lastmod>2025-12-22</lastmod>
     <changefreq>daily</changefreq>
     <priority>1.0</priority>
   </url>
-
-  <!-- Core Tools -->
-  <url><loc>https://socialmediatoolshub.com/caption-counter</loc><priority>0.8</priority></url>
-  <url><loc>https://socialmediatoolshub.com/aspect-ratio-detector</loc><priority>0.8</priority></url>
-  <url><loc>https://socialmediatoolshub.com/safe-zone-overlay</loc><priority>0.8</priority></url>
-  <url><loc>https://socialmediatoolshub.com/full-frame-border-blur</loc><priority>0.8</priority></url>
-  <url><loc>https://socialmediatoolshub.com/hashtag-cleaner</loc><priority>0.8</priority></url>
-  <url><loc>https://socialmediatoolshub.com/youtube-thumbnail-previewer</loc><priority>0.8</priority></url>
-  <url><loc>https://socialmediatoolshub.com/instagram-grid-splitter</loc><priority>0.8</priority></url>
-  <url><loc>https://socialmediatoolshub.com/line-break</loc><priority>0.8</priority></url>
-  <url><loc>https://socialmediatoolshub.com/ascii-art-generator</loc><priority>0.8</priority></url>
-  <url><loc>https://socialmediatoolshub.com/glitched-zalgo</loc><priority>0.8</priority></url>
-  <url><loc>https://socialmediatoolshub.com/profile-ring-creator</loc><priority>0.8</priority></url>
-  <url><loc>https://socialmediatoolshub.com/tiktok-earning-estimator</loc><priority>0.8</priority></url>
-  <url><loc>https://socialmediatoolshub.com/watermark-video-tool</loc><priority>0.8</priority></url>
-  <url><loc>https://socialmediatoolshub.com/youtube-chapter-formatter</loc><priority>0.8</priority></url>
-  <url><loc>https://socialmediatoolshub.com/case-converter</loc><priority>0.8</priority></url>
-  <url><loc>https://socialmediatoolshub.com/stylish-text</loc><priority>0.8</priority></url>
-  <url><loc>https://socialmediatoolshub.com/emoji-counter</loc><priority>0.8</priority></url>
-  <url><loc>https://socialmediatoolshub.com/aesthetic-text-formatter</loc><priority>0.8</priority></url>
-  <url><loc>https://socialmediatoolshub.com/svg-asmr-record</loc><priority>0.8</priority></url>
-  <url><loc>https://socialmediatoolshub.com/brainrot-translator</loc><priority>0.8</priority></url>
-  <url><loc>https://socialmediatoolshub.com/aura-digital-sanctuary</loc><priority>0.8</priority></url>
+  <!--  Core Tools  -->
+  <url>
+    <loc>https://socialmediatoolshub.com/caption-counter</loc>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://socialmediatoolshub.com/aspect-ratio-detector</loc>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://socialmediatoolshub.com/safe-zone-overlay</loc>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://socialmediatoolshub.com/full-frame-border-blur</loc>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://socialmediatoolshub.com/hashtag-cleaner</loc>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://socialmediatoolshub.com/youtube-thumbnail-previewer</loc>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://socialmediatoolshub.com/instagram-grid-splitter</loc>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://socialmediatoolshub.com/line-break</loc>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://socialmediatoolshub.com/ascii-art-generator</loc>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://socialmediatoolshub.com/glitched-zalgo</loc>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://socialmediatoolshub.com/profile-ring-creator</loc>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://socialmediatoolshub.com/tiktok-earning-estimator</loc>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://socialmediatoolshub.com/watermark-video-tool</loc>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://socialmediatoolshub.com/youtube-chapter-formatter</loc>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://socialmediatoolshub.com/case-converter</loc>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://socialmediatoolshub.com/stylish-text</loc>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://socialmediatoolshub.com/emoji-counter</loc>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://socialmediatoolshub.com/aesthetic-text-formatter</loc>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://socialmediatoolshub.com/svg-asmr-record</loc>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://socialmediatoolshub.com/brainrot-translator</loc>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://socialmediatoolshub.com/aura-digital-sanctuary</loc>
+    <priority>0.8</priority>
+  </url>
   <url>
     <loc>https://socialmediatoolshub.com/youtube-thumbnail-ctr-analyzer</loc>
+    <lastmod>2025-12-22</lastmod>
     <priority>0.9</priority>
   </url>
-  <url><loc>https://socialmediatoolshub.com/digital-detox-tool</loc><priority>0.8</priority></url>
-
-  <!-- Utility Pages -->
-  <url><loc>https://socialmediatoolshub.com/about-us</loc><priority>0.5</priority></url>
-  <url><loc>https://socialmediatoolshub.com/contact-us</loc><priority>0.5</priority></url>
-  <url><loc>https://socialmediatoolshub.com/privacy</loc><priority>0.5</priority></url>
-  <url><loc>https://socialmediatoolshub.com/terms</loc><priority>0.5</priority></url>
-  <url><loc>https://socialmediatoolshub.com/cookie-policy</loc><priority>0.5</priority></url>
-
+  <url>
+    <loc>https://socialmediatoolshub.com/digital-detox-tool</loc>
+    <priority>0.8</priority>
+  </url>
+  <!--  Utility Pages  -->
+  <url>
+    <loc>https://socialmediatoolshub.com/about-us</loc>
+    <priority>0.5</priority>
+  </url>
+  <url>
+    <loc>https://socialmediatoolshub.com/contact-us</loc>
+    <priority>0.5</priority>
+  </url>
+  <url>
+    <loc>https://socialmediatoolshub.com/privacy</loc>
+    <priority>0.5</priority>
+  </url>
+  <url>
+    <loc>https://socialmediatoolshub.com/terms</loc>
+    <priority>0.5</priority>
+  </url>
+  <url>
+    <loc>https://socialmediatoolshub.com/cookie-policy</loc>
+    <priority>0.5</priority>
+  </url>
 </urlset>
