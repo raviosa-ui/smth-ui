@@ -12,21 +12,21 @@
     </script>
     
     <meta name="viewport" content="width=device-width,initial-scale=1" />
-    <title>ScrollStop: Free YouTube Thumbnail & Video UX Analyzer | SocialMediaToolsHub</title>
-    <meta name="description" content="Predict viewer retention with ScrollStop. Use client-side pixel analysis and UX psychology to optimize YouTube thumbnails and TikTok videos for maximum stop-rate." />
-    <link rel="canonical" href="https://socialmediatoolshub.com/scrollstop-thumbnail-analyzer" />
+    <title>YouTube Thumbnail CTR Checker & Viral Heatmap Analyzer | SocialMediaToolsHub</title>
+    <meta name="description" content="Predict your YouTube CTR with the Viral Thumbnail Lab. Our UX heuristic engine uses pixel analysis to generate attention heatmaps and stop-probability scores. Audit thumbnails locally for 10x viral potential." />
+    <link rel="canonical" href="https://socialmediatoolshub.com/youtube-thumbnail-ctr-analyzer" />
 
     <!-- Open Graph / Facebook -->
     <meta property="og:type" content="website">
-    <meta property="og:url" content="https://socialmediatoolshub.com/scrollstop-thumbnail-analyzer">
-    <meta property="og:title" content="ScrollStop: Free YouTube Thumbnail & Video UX Analyzer">
-    <meta property="og:description" content="Predict viewer retention with ScrollStop. Analyze your thumbnails using client-side UX psychology to maximize your CTR.">
+    <meta property="og:url" content="https://socialmediatoolshub.com/youtube-thumbnail-ctr-analyzer">
+    <meta property="og:title" content="YouTube Thumbnail CTR Checker & Viral Heatmap Analyzer">
+    <meta property="og:description" content="Predict your YouTube CTR with the Viral Thumbnail Lab. Analyze your thumbnails using client-side UX psychology to maximize your CTR.">
     <meta property="og:image" content="https://socialmediatoolshub.com/assets/og-smth.jpg"> 
     
     <!-- Twitter -->
     <meta name="twitter:card" content="summary_large_image">
-    <meta name="twitter:title" content="ScrollStop: Free YouTube Thumbnail & Video UX Analyzer">
-    <meta name="twitter:description" content="Predict viewer retention with client-side UX psychology and local pixel analysis.">
+    <meta name="twitter:title" content="YouTube Thumbnail CTR Checker & Viral Heatmap Analyzer">
+    <meta name="twitter:description" content="Predict viewer retention with client-side UX psychology and local heatmap analysis.">
     <meta name="twitter:image" content="https://socialmediatoolshub.com/assets/og-smth.jpg">
 
     <!-- Favicons -->
@@ -135,8 +135,8 @@
 
         <!-- Tool Hero -->
         <section class="hero-section">
-            <h1 id="hero-title" class="text-white font-black text-2xl md:text-3xl leading-tight">ScrollStop: Thumbnail UX Analyzer</h1>
-            <p class="lead">Predict viewer retention with local pixel analysis and UX psychology heuristics.</p>
+            <h1 id="hero-title" class="text-white font-black text-2xl md:text-3xl leading-tight">YouTube Thumbnail CTR & Heatmap Analyzer</h1>
+            <p class="lead">Predict your click-through rate with Thumbnail Lab. 100% private UX psychology auditing.</p>
             
             <!-- Upload Zone -->
             <div id="upload-zone" class="w-full max-w-xl mx-auto aspect-video glass-panel rounded-2xl border-2 border-dashed border-slate-700 flex flex-col items-center justify-center cursor-pointer hover:border-sky-500 hover:bg-sky-500/5 transition-all group">
@@ -144,7 +144,7 @@
                     <svg class="w-8 h-8 text-sky-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
                 </div>
                 <span class="text-slate-400 font-bold uppercase tracking-widest text-xs">Drop Thumbnail Image</span>
-                <p class="text-[10px] text-slate-500 mt-2">Analysis is 100% private. No images are uploaded.</p>
+                <p class="text-[10px] text-slate-500 mt-2">No images are uploaded. Private local analysis.</p>
                 <input id="file-input" type="file" hidden accept="image/*">
             </div>
         </section>
@@ -157,25 +157,25 @@
                     <div class="flex gap-1 absolute top-3 left-3 z-20">
                         <button data-view="original" class="view-toggle px-3 py-1.5 rounded-lg text-[9px] uppercase font-black border border-white/10 bg-black/60 text-white active-view-btn">Original</button>
                         <button data-view="heatmap" class="view-toggle px-3 py-1.5 rounded-lg text-[9px] uppercase font-black border border-white/10 bg-black/60 text-white">Heatmap</button>
-                        <button data-view="improved" class="view-toggle px-3 py-1.5 rounded-lg text-[9px] uppercase font-black border border-white/10 bg-black/60 text-white">Improved</button>
+                        <button data-view="improved" class="view-toggle px-3 py-1.5 rounded-lg text-[9px] uppercase font-black border border-white/10 bg-black/60 text-white">Target Fix</button>
                     </div>
                     <div id="preview-frame" class="relative w-full rounded-xl overflow-hidden shadow-2xl bg-slate-900">
-                        <img id="main-preview-img" class="w-full h-auto" src="" alt="Thumbnail Analysis">
+                        <img id="main-preview-img" class="w-full h-auto" src="" alt="CTR Analysis">
                         <div id="heatmap-overlay" class="absolute inset-0 grid grid-cols-3 grid-rows-3 hidden"></div>
                     </div>
                     <div id="loading-overlay" class="absolute inset-0 bg-slate-950/80 backdrop-blur-md flex flex-col items-center justify-center z-50 hidden">
                         <div class="w-10 h-10 border-4 border-sky-500 border-t-transparent rounded-full animate-spin mb-4"></div>
-                        <div class="font-black text-sky-500 uppercase tracking-widest text-[10px]">Processing Pixels...</div>
+                        <div class="font-black text-sky-500 uppercase tracking-widest text-[10px]">Decoding Image...</div>
                     </div>
                 </div>
 
                 <!-- Heatmap Explanation Panel -->
                 <div id="heatmap-info" class="glass-panel rounded-2xl p-4 bg-red-500/5 border-red-500/10 hidden animate-fade">
-                    <h3 class="text-[10px] font-black uppercase text-red-400 tracking-widest mb-3 flex items-center gap-2">🎯 Predicted Fixation Strategy</h3>
+                    <h3 class="text-[10px] font-black uppercase text-red-400 tracking-widest mb-3 flex items-center gap-2">🎯 Attention Pattern Analysis</h3>
                     <div class="space-y-2 text-[11px] text-slate-400 leading-relaxed">
-                        <p>• <b>Visual Analysis:</b> The app divides your image into a 3x3 grid and calculates the "luminance weight" (brightness and detail density) of each section.</p>
-                        <p>• <b>Color Overlays:</b> The red areas represent where a viewer's eye is most likely to land first during high-velocity scrolling.</p>
-                        <p>• <b>Opacity:</b> The more intense (opaque) the red block, the higher the visual "pull" of that area. Aim for high opacity on your primary hook.</p>
+                        <p>• <b>Visual Scrutiny:</b> We calculate "luminance weight" in a 3x3 grid to detect where viewer attention is likely to lock in the first 100ms.</p>
+                        <p>• <b>CTR Hotspots:</b> Intense red areas mark your thumbnail's high-gravity zones. Ideally, your primary hook (face or text) should be deep red.</p>
+                        <p>• <b>Opacity Signal:</b> Higher opacity means stronger visual "pull". Low contrast areas remain transparent, signaling potential for viewer skip.</p>
                     </div>
                 </div>
 
@@ -183,7 +183,7 @@
                 <div class="grid grid-cols-2 gap-4">
                     <div class="glass-panel rounded-2xl p-4 flex flex-col items-center text-center">
                         <div id="color-swatch" class="w-10 h-10 rounded-full border border-white/10 mb-2"></div>
-                        <div class="text-[10px] font-black uppercase text-slate-500 mb-1">Color Signal</div>
+                        <div class="text-[10px] font-black uppercase text-slate-500 mb-1">Psychological Signal</div>
                         <div id="color-group-text" class="text-[11px] font-bold text-white">--</div>
                     </div>
                     <div class="glass-panel rounded-2xl p-4 flex flex-col items-center text-center">
@@ -198,7 +198,8 @@
 
             <!-- Right Column: Data & Metrics -->
             <div class="lg:col-span-7 space-y-4">
-                <div class="glass-panel rounded-2xl p-6 flex items-center gap-8">
+                <div class="glass-panel rounded-2xl p-6 flex items-center gap-8 relative overflow-hidden">
+                    <div id="opt-badge" class="absolute top-0 right-0 px-3 py-1 bg-green-500 text-slate-950 text-[8px] font-black uppercase tracking-widest hidden">Optimized Stats</div>
                     <div class="relative w-24 h-24 flex shrink-0">
                         <svg class="w-full h-full -rotate-90">
                             <circle cx="48" cy="48" r="44" fill="none" stroke="rgba(255,255,255,0.03)" stroke-width="8" />
@@ -209,25 +210,25 @@
                         </div>
                     </div>
                     <div class="flex-1">
-                        <div id="prob-text" class="text-xl font-black text-white mb-1">--% Stop Probability</div>
+                        <div id="prob-text" class="text-xl font-black text-white mb-1">--% Predicted CTR Index</div>
                         <div id="verdict-pill" class="inline-flex text-[10px] font-black uppercase tracking-widest text-sky-400 bg-sky-400/10 px-3 py-1 rounded-full border border-sky-400/20">
-                            Verdict: <span id="verdict-text">--</span>
+                            Result: <span id="verdict-text">--</span>
                         </div>
-                        <p class="text-[10px] text-slate-500 mt-2 italic leading-tight">Heuristic-based prediction of pattern-breaking potential in high-velocity feeds.</p>
+                        <p class="text-[10px] text-slate-500 mt-2 italic leading-tight">Heuristic prediction of pattern-breaking potential in high-velocity feeds.</p>
                     </div>
                 </div>
 
                 <!-- Tabs -->
                 <div class="flex p-1 bg-white/[0.03] border border-white/[0.06] rounded-xl">
                     <button id="tab-metrics" class="tab-btn flex-1 py-2 rounded-lg text-[11px] font-black uppercase active-tab-btn">Audit Details</button>
-                    <button id="tab-strategy" class="tab-btn flex-1 py-2 rounded-lg text-[11px] font-black uppercase text-slate-500">A/B Strategy</button>
+                    <button id="tab-strategy" class="tab-btn flex-1 py-2 rounded-lg text-[11px] font-black uppercase text-slate-500">Target Comparison</button>
                 </div>
 
                 <!-- Audit Tab Content -->
                 <div id="pane-metrics" class="space-y-3 animate-fade">
                     <div class="flex gap-2 mb-2 p-1 bg-black/20 rounded-lg w-fit">
-                        <button id="sub-original" class="subview-btn px-4 py-2 rounded-md text-[9px] font-black uppercase bg-white/10 text-white">Original Image</button>
-                        <button id="sub-optimized" class="subview-btn px-4 py-2 rounded-md text-[9px] font-black uppercase text-slate-500">Optimized Path</button>
+                        <button id="sub-original" class="subview-btn px-4 py-2 rounded-md text-[9px] font-black uppercase bg-white/10 text-white">Original View</button>
+                        <button id="sub-optimized" class="subview-btn px-4 py-2 rounded-md text-[9px] font-black uppercase text-slate-500">Optimized View</button>
                     </div>
                     <div id="metrics-grid" class="grid grid-cols-1 md:grid-cols-2 gap-3">
                         <!-- Detailed Cards Rendered Here -->
@@ -248,13 +249,13 @@
                             <div class="text-sm font-black text-green-400"><span id="strat-improved-score">--</span> Index</div>
                         </div>
                     </div>
-                    <p class="text-[11px] text-slate-500 mt-6 leading-relaxed italic">Simulating pro-level edits: focal vignette, high-frequency edge sharpening, and luminance normalization.</p>
+                    <p class="text-[11px] text-slate-500 mt-6 leading-relaxed italic">The optimized target simulates common Pro-level edits: focal vignette application, saturation boost, and frequency edge-sharpening.</p>
                 </div>
 
                 <!-- Action Buttons -->
                 <div class="flex gap-3 pt-2">
-                    <button id="reset-btn" class="flex-1 bg-slate-800 py-4 rounded-xl text-[11px] font-black uppercase hover:bg-slate-700 transition-colors">Start New Analysis</button>
-                    <button id="copy-btn" class="flex-1 bg-sky-600 py-4 rounded-xl text-[11px] font-black uppercase hover:bg-sky-500 shadow-lg shadow-sky-900/40 transition-all">Copy Full Report</button>
+                    <button id="reset-btn" class="flex-1 bg-slate-800 py-4 rounded-xl text-[11px] font-black uppercase hover:bg-slate-700 transition-colors">Analyze New Image</button>
+                    <button id="copy-btn" class="flex-1 bg-sky-600 py-4 rounded-xl text-[11px] font-black uppercase hover:bg-sky-500 shadow-lg shadow-sky-900/40 transition-all">Copy Result Report</button>
                 </div>
             </div>
         </div>
@@ -273,28 +274,28 @@
 
         <!-- Static About Block -->
         <article class="content-area mt-12 bg-slate-900/50 p-8 rounded-3xl border border-white/5">
-            <h2 class="text-white font-black text-xl mb-4">About ScrollStop Technology</h2>
-            <p class="text-slate-400 text-sm mb-6 leading-relaxed">ScrollStop is a professional audit tool built on **UX psychology heuristics**. It simulates the human visual system's "First Pass" processing—the 100ms window where the lizard brain decides whether an image is worth conscious attention in a high-velocity feed.</p>
+            <h2 class="text-white font-black text-xl mb-4">Science of the Click: Viral Thumbnail Lab</h2>
+            <p class="text-slate-400 text-sm mb-6 leading-relaxed">Thumbnail Lab is a professional-grade CTR auditor built on validated **UX psychology heuristics**. We simulate the human visual system's "First Pass" processing—the 100ms window where the lizard brain decides whether a thumbnail is worth conscious attention in a crowded feed.</p>
             <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div class="p-4 bg-white/5 rounded-2xl border border-white/5">
                     <h3 class="text-sky-400 font-bold text-xs uppercase mb-2">Psychological Anchors</h3>
                     <ul class="text-[11px] text-slate-400 space-y-1">
-                        <li>• Contrast Variance & Edge Detection</li>
-                        <li>• Hero Dominance (Focal Points)</li>
-                        <li>• Cognitive Load Balancing</li>
-                        <li>• Curiosity Tension (Asymmetry)</li>
+                        <li>• Contrast Variance & Depth Detection</li>
+                        <li>• Focal Point Dominance (Entry Point)</li>
+                        <li>• Cognitive Load & Pattern Recognition</li>
+                        <li>• Curiosity Gap (Asymmetry)</li>
                     </ul>
                 </div>
                 <div class="p-4 bg-white/5 rounded-2xl border border-white/5">
-                    <h3 class="text-sky-400 font-bold text-xs uppercase mb-2">Pixel Privacy</h3>
-                    <p class="text-[11px] text-slate-400 leading-relaxed">Unlike AI tools, ScrollStop works 100% locally. We process the raw pixels using your browser's Canvas API. No data is ever sent to a server.</p>
+                    <h3 class="text-sky-400 font-bold text-xs uppercase mb-2">100% Client-Side Privacy</h3>
+                    <p class="text-[11px] text-slate-400 leading-relaxed">Unlike server-based AI tools, Thumbnail Lab works entirely in your browser. We process raw pixels using the Canvas API. Your creative assets never leave your machine.</p>
                 </div>
             </div>
         </article>
 
         <!-- FAQs Always Visible -->
         <section class="faq mt-12">
-            <h3 class="text-white font-black text-center mb-8">Frequently Asked Questions</h3>
+            <h3 class="text-white font-black text-center mb-8">Viral CTR Mastery: FAQs</h3>
             <div id="faq-list"></div>
         </section>
 
@@ -306,7 +307,7 @@
                 <a href="/terms">Terms of Service</a>
                 <a href="/cookie-policy">Cookie Policy</a>
             </nav>
-            <div class="copyright">© 2025 SocialMediaToolsHub. Built for speed.</div>
+            <div class="copyright">© 2025 SocialMediaToolsHub. Built for high-performance creators.</div>
         </footer>
     </div>
 
@@ -333,20 +334,20 @@
             { id: 'noise', name: 'Visual Noise', direction: 'lower', importance: 'High-frequency clutter that slows down recognition.' },
             { id: 'text', name: 'Cognitive Load', direction: 'lower', importance: 'Complex patterns or excessive text that brain ignores.' },
             { id: 'asymmetry', name: 'Dynamic Balance', direction: 'higher', importance: 'Asymmetric layouts trigger more curiosity.' },
-            { id: 'survival', name: 'Mobile survival', direction: 'higher', importance: 'Legibility when scaled down to 120px height.' }
+            { id: 'survival', name: 'Mobile Survival', direction: 'higher', importance: 'Legibility when scaled down to 120px height.' }
         ];
 
         const FAQ_CONTENT = [
-            { q: "How does ScrollStop calculate the Global Index score?", a: "The score is a weighted average of Contrast (30%), Focal Dominance (30%), Mobile Survival (20%), and Asymmetry (20%). High-noise or high-text density images receive penalties because they increase cognitive load." },
-            { q: "Is my image uploaded to any server?", a: "No. All pixel analysis happens 100% locally in your browser's memory using Canvas API and Javascript. Your data never leaves your machine, ensuring total privacy." },
-            { q: "What is Focal Dominance?", a: "Focal Dominance is the measure of 'Hero' strength. It looks for clear points of entry in the visual field. If visual weight is scattered, viewers skip." },
-            { q: "Why is contrast the most important metric?", a: "Human evolution prioritized edge detection for survival. High contrast defines depth and object separation, signaling 'important content'." },
-            { q: "What does the heatmap actually visualize?", a: "It represents predicted eye fixation. We divide the image into a 3x3 grid and calculate the 'visual weight' based on luminance and edge density." },
-            { q: "How is 'Mobile Survival' different?", a: "It simulates extreme downscaling to roughly 120 pixels. We check if primary edges and peaks remain detectable on small smartphone screens." },
-            { q: "Why is asymmetry recommended?", a: "Asymmetry creates a 'curiosity gap'—the brain feels a slight tension that it wants to resolve by looking closer. It aids dynamic storytelling." },
-            { q: "What is the 'Lizard Brain Color' signal?", a: "Color groups trigger emotional responses. Warm palettes signal urgency or energy, while Cold palettes signal professionalism or trust." },
-            { q: "Does it work for Instagram or TikTok thumbnails?", a: "Yes. While our UI frame approximates standard platforms, the heuristic principles of vision are universal across all feeds." },
-            { q: "What does the 'Optimization Strategy' simulate?", a: "It uses digital filters to apply common 'Pro' fixes: radial vignettes to force focus, saturation boosts for appeal, and frequency adjustments." }
+            { q: "How does Thumbnail Lab calculate the Predicted CTR score?", a: "The score is a weighted average of Contrast (30%), Focal Dominance (30%), Mobile Survival (20%), and Asymmetry (20%). Penalties are applied for high visual noise which increases cognitive load." },
+            { q: "Is my image uploaded to any server?", a: "No. Thumbnail Lab is a privacy-first tool. All pixel analysis happens 100% locally in your browser's memory. Your data never leaves your computer." },
+            { q: "What is Focal Dominance?", a: "Focal Dominance measures how strongly one specific point of interest grabs the eye. If visual weight is scattered too evenly, viewers don't know where to look and continue scrolling." },
+            { q: "Why is contrast critical for YouTube Thumbnails?", a: "The human eye is evolved for edge detection. High contrast defines depth and subject separation, signaling to the brain that the content is 'important' and worth clicking." },
+            { q: "What does the heatmap visualize?", a: "It simulates a first-pass gaze tracking. We divide the frame into a 3x3 grid and calculate 'visual weight' using luminance and detail density to predict where eyes land first." },
+            { q: "How does 'Mobile Survival' work?", a: "It simulates extreme downscaling to approximately 120px height. We check if primary focal points and high-contrast edges remain detectable to the human eye on small screens." },
+            { q: "Why is asymmetry better for thumbnails?", a: "Perfectly centered thumbnails can feel 'closed' or static. Asymmetry creates a 'curiosity gap'—the brain feels a slight tension it wants to resolve by clicking the video." },
+            { q: "What is the 'Psychological Color' signal?", a: "Color groups trigger emotional states. Warm palettes signal urgency or energy (high CTR for entertainment), while Cold palettes signal trust or education." },
+            { q: "Does this work for TikTok and Instagram?", a: "Yes. While the layout defaults to 16:9, the heuristic engine processes 9:16 and 1:1 ratios using the same universal principles of human visual psychology." },
+            { q: "What does 'Target Fix' simulate?", a: "It applies a 'Pro Edit' filter stack: subtle radial vignette to boost the hero subject, saturation normalization, and frequency edge-sharpening to increase visual gravity." }
         ];
 
         /** INITIALIZE STATIC CONTENT **/
@@ -363,9 +364,9 @@
 
             const curUrl = window.location.href;
             const wa = $('whatsappShare');
-            if (wa) wa.href = `https://wa.me/?text=${encodeURIComponent("Check out this Thumbnail UX Analyzer: " + curUrl)}`;
+            if (wa) wa.href = `https://wa.me/?text=${encodeURIComponent("Predict your YouTube CTR with this Heatmap Analyzer: " + curUrl)}`;
             const rs = $('redditShare');
-            if (rs) rs.href = `https://www.reddit.com/submit?url=${encodeURIComponent(curUrl)}&title=${encodeURIComponent("ScrollStop - Free Thumbnail UX Analyzer")}`;
+            if (rs) rs.href = `https://www.reddit.com/submit?url=${encodeURIComponent(curUrl)}&title=${encodeURIComponent("YouTube Thumbnail CTR & Heatmap Analyzer - Thumbnail Lab")}`;
         }
 
         document.addEventListener('DOMContentLoaded', initStaticContent);
@@ -421,8 +422,8 @@
             const avg = (v) => Math.floor(v / (data.length / 4)).toString(16).padStart(2, '0');
             const hex = `#${avg(rT)}${avg(gT)}${avg(bT)}`;
             if (w > c && w > n) return { group: 'Warm', signal: 'Urgency & Energy', hex };
-            if (c > w && c > n) return { group: 'Cold', signal: 'Professionalism & Trust', hex };
-            return { group: 'Neutral', signal: 'Minimalism/Clutter', hex };
+            if (c > w && c > n) return { group: 'Cold', signal: 'Authority & Trust', hex };
+            return { group: 'Neutral', signal: 'Minimalism/Clean', hex };
         };
 
         /** METRIC CARD RENDERING **/
@@ -479,26 +480,26 @@
                     const score = Math.round((stats.contrast * 0.3) + (stats.dominance * 0.3) + (survival * 0.2) + (stats.asymmetry * 0.2));
                     const verdict = score > 75 ? Verdicts.WATCH_STOPPING : score > 50 ? Verdicts.RISKY : Verdicts.SKIPPABLE;
                     
-                    // Optimized Path Simulation
+                    // Optimized Path Simulation (Pro Edit simulation)
                     const improvedCanvas = document.createElement('canvas');
                     improvedCanvas.width = canvas.width; improvedCanvas.height = canvas.height;
                     const impCtx = improvedCanvas.getContext('2d');
-                    impCtx.filter = 'contrast(1.25) saturate(1.15) brightness(1.02)';
+                    impCtx.filter = 'contrast(1.25) saturate(1.2) brightness(1.05)';
                     impCtx.drawImage(img, 0, 0);
                     
-                    // Add subtle vignette
                     const grad = impCtx.createRadialGradient(canvas.width/2, canvas.height/2, 0, canvas.width/2, canvas.height/2, canvas.width*0.8);
-                    grad.addColorStop(0, 'transparent'); grad.addColorStop(1, 'rgba(0,0,0,0.3)');
+                    grad.addColorStop(0, 'transparent'); grad.addColorStop(1, 'rgba(0,0,0,0.35)');
                     impCtx.fillStyle = grad; impCtx.fillRect(0, 0, canvas.width, canvas.height);
                     
                     const impData = impCtx.getImageData(0, 0, improvedCanvas.width, improvedCanvas.height);
                     const impStats = analyzeImageData(impData);
                     const impSurvival = Math.round(Math.min(100, impStats.contrast * 0.7 + impStats.dominance * 0.3));
                     const impScore = Math.round((impStats.contrast * 0.3) + (impStats.dominance * 0.3) + (impSurvival * 0.2) + (impStats.asymmetry * 0.2));
+                    const impProbability = Math.min(99, Math.round(impScore * 0.95));
                     
                     state.results = {
                         original: { score, probability: Math.min(99, Math.round(score * 0.95)), verdict, stats, color, survival },
-                        improved: { score: impScore, stats: impStats, survival: impSurvival },
+                        improved: { score: impScore, probability: impProbability, stats: impStats, survival: impSurvival },
                         improvedUrl: improvedCanvas.toDataURL('image/jpeg', 0.85)
                     };
                     
@@ -517,19 +518,19 @@
             const isOptView = state.metricsView === 'optimized';
             const curData = isOptView ? { ...res.original, ...res.improved, stats: res.improved.stats } : res.original;
             
+            // Image Visual Updates
             $('main-preview-img').src = state.viewMode === 'improved' ? res.improvedUrl : state.image;
             $('mobile-preview-img').src = isOptView ? res.improvedUrl : state.image;
-            $('main-preview-img').style.filter = state.viewMode === 'heatmap' ? 'grayscale(1) opacity(0.25)' : 'none';
+            $('main-preview-img').style.filter = state.viewMode === 'heatmap' ? 'grayscale(1) opacity(0.2)' : 'none';
             
-            // Heatmap Overlay - Red
+            // Heatmap Overlay
             const overlay = $('heatmap-overlay'); overlay.innerHTML = '';
             if (state.viewMode === 'heatmap') {
                 overlay.classList.remove('hidden');
                 $('heatmap-info').classList.remove('hidden');
                 res.original.stats.heatmap.forEach(w => {
                     const div = document.createElement('div'); div.className = 'heatmap-cell';
-                    // User requested red heatmap
-                    div.style.backgroundColor = `rgba(239, 68, 68, ${Math.min(0.85, w * 1.1)})`;
+                    div.style.backgroundColor = `rgba(239, 68, 68, ${Math.min(0.85, w * 1.2)})`;
                     div.style.border = '1px solid rgba(255,255,255,0.05)'; overlay.appendChild(div);
                 });
             } else { 
@@ -537,13 +538,20 @@
                 $('heatmap-info').classList.add('hidden');
             }
             
-            // Score Display
-            $('global-score-text').innerText = res.original.score;
-            $('global-score-circle').style.strokeDashoffset = 276 * (1 - res.original.score / 100);
-            $('prob-text').innerText = `${res.original.probability}% Stop Probability`;
-            $('verdict-text').innerText = res.original.verdict;
+            // GLOBAL SCORE DISPLAY - FIX: Dynamically show optimized score if in optimized view
+            const displayScore = isOptView ? res.improved.score : res.original.score;
+            const displayProb = isOptView ? res.improved.probability : res.original.probability;
             
-            // Sub-context
+            $('global-score-text').innerText = displayScore;
+            $('global-score-circle').style.strokeDashoffset = 276 * (1 - displayScore / 100);
+            $('prob-text').innerText = `${displayProb}% Predicted CTR Index`;
+            $('verdict-text').innerText = isOptView ? 'Optimized Target' : res.original.verdict;
+            
+            // Optimized Badge
+            if (isOptView) $('opt-badge').classList.remove('hidden');
+            else $('opt-badge').classList.add('hidden');
+            
+            // Sub-context Cards
             $('mobile-sim-frame').className = `shadow-lg border border-white/5 rounded-md overflow-hidden bg-black relative mb-2 ${state.aspectRatio === '9/16' ? 'w-8 aspect-[9/16]' : 'w-12 aspect-video'}`;
             $('survival-score-display').innerText = `${curData.survival}%`;
             $('color-swatch').style.backgroundColor = curData.color.hex;
@@ -558,7 +566,7 @@
                 grid.appendChild(createMetricCard(def, score, diff));
             });
             
-            // Strategy Tab Sync
+            // Comparison Panel
             $('strat-original-img').src = state.image;
             $('strat-original-score').innerText = res.original.score;
             $('strat-improved-img').src = res.improvedUrl;
@@ -571,19 +579,13 @@
             state.results = null;
             state.viewMode = 'original';
             state.metricsView = 'original';
-            
-            // Reset visibility
             $('results-container').classList.add('hidden');
             $('upload-zone').classList.remove('hidden');
             $('file-input').value = '';
-            
-            // Reset toggles
             $$('.view-toggle').forEach(b => b.classList.remove('active-view-btn'));
             $$('.view-toggle[data-view="original"]').forEach(b => b.classList.add('active-view-btn'));
-            
             $('sub-original').classList.add('bg-white/10', 'text-white'); 
             $('sub-optimized').classList.remove('bg-white/10', 'text-white');
-            
             window.scrollTo({ top: 0, behavior: 'smooth' });
         };
 
@@ -633,7 +635,7 @@
         
         $('copy-btn').onclick = () => { 
             if (!state.results) return;
-            const t = `ScrollStop Full Audit Report\nScore: ${state.results.original.score}/100\nVerdict: ${state.results.original.verdict}\nStop Probability: ${state.results.original.probability}%\nAnalyzed via SocialMediaToolsHub.`; 
+            const t = `YouTube CTR Audit Report (via Thumbnail Lab)\nScore: ${state.results.original.score}/100\nStop Probability: ${state.results.original.probability}%\nVerdict: ${state.results.original.verdict}\nAudit your thumbnails locally at SocialMediaToolsHub.`; 
             navigator.clipboard.writeText(t); 
             alert('Full Report summary copied to clipboard!'); 
         };
