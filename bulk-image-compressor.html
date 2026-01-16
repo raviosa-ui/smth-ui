@@ -43,6 +43,12 @@
       /* Header */
       .header { display: flex; align-items: center; justify-content: space-between; padding: 10px 0; }
       .brand { display: flex; align-items: center; gap: 10px; font-weight: 700; font-size: 20px; text-decoration: none; }
+      .brand-emoji {
+        background: linear-gradient(135deg, var(--accent-from), var(--accent-to));
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        font-size: 26px;
+      }
       .logo-text { background: linear-gradient(90deg, var(--accent-from), var(--accent-to)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
       .topnav { display: flex; gap: 15px; }
       .topnav a { color: var(--muted); text-decoration: none; font-size: 14px; transition: 0.2s; }
@@ -110,8 +116,9 @@
       .btn-whatsapp { background: #25D366; color: white; padding: 15px 30px; border-radius: 50px; text-decoration: none; font-weight: 800; display: inline-flex; align-items: center; gap: 10px; }
 
       footer { border-top: 1px solid var(--border); padding: 40px 0; text-align: center; color: var(--muted); font-size: 13px; }
-      .footer-nav { display: flex; justify-content: center; gap: 20px; margin-bottom: 20px; }
+      .footer-nav { display: flex; justify-content: center; flex-wrap: wrap; gap: 20px; margin-bottom: 20px; }
       .footer-nav a { color: var(--muted); text-decoration: none; }
+      .footer-nav a:hover { color: white; }
     </style>
 <script type="importmap">
 {
@@ -188,6 +195,7 @@
             };
 
             const compressAll = async () => {
+                if (files.length === 0) return;
                 setIsProcessing(true);
                 const pending = files.filter(f => f.status !== 'completed');
                 for (const f of pending) {
@@ -197,25 +205,38 @@
             };
 
             const downloadZip = async () => {
+                if (typeof JSZip === 'undefined') {
+                    alert('Zip library not loaded yet');
+                    return;
+                }
                 const zip = new JSZip();
                 const completed = files.filter(f => f.status === 'completed' && f.compressedBlob);
+                
+                if (completed.length === 0) {
+                    alert('No compressed images ready for download');
+                    return;
+                }
+
                 completed.forEach(f => {
                     const ext = f.format.split('/')[1];
-                    zip.file(`smth-${f.name.split('.')[0]}.${ext}`, f.compressedBlob);
+                    const cleanName = f.name.split('.')[0];
+                    zip.file(`smth-${cleanName}.${ext}`, f.compressedBlob);
                 });
+
                 const blob = await zip.generateAsync({ type: 'blob' });
                 const url = URL.createObjectURL(blob);
                 const a = document.createElement('a');
                 a.href = url;
-                a.download = 'smth-optimized-images.zip';
+                a.download = 'socialmediatoolshub-bulk.zip';
                 a.click();
+                URL.revokeObjectURL(url);
             };
 
             const stats = useMemo(() => {
                 const done = files.filter(f => f.status === 'completed');
                 if (!done.length) return null;
                 const orig = done.reduce((a, b) => a + b.originalSize, 0);
-                const comp = done.reduce((a, b) => a + b.compressedSize, 0);
+                const comp = done.reduce((a, b) => a + (b.compressedSize || 0), 0);
                 return {
                     orig: formatSize(orig),
                     comp: formatSize(comp),
@@ -223,11 +244,13 @@
                 };
             }, [files]);
 
+            const hasCompleted = useMemo(() => files.some(f => f.status === 'completed'), [files]);
+
             return (
                 <div className="container">
                     <header className="header">
                         <a href="/" className="brand">
-                            <span style={{fontSize: '24px'}}>⚡</span>
+                            <span className="brand-emoji">⚡</span>
                             <span className="logo-text">SocialMediaToolsHub</span>
                         </a>
                         <nav className="topnav">
@@ -258,11 +281,11 @@
                             <div className="processing-header">
                                 <div style={{fontWeight: 800}}>Queue: {files.length} items</div>
                                 <div style={{display:'flex', gap:'10px'}}>
-                                    <button className="btn" style={{color:'var(--muted)'}} onClick={() => setFiles([])}>Clear</button>
+                                    <button className="btn" style={{color:'var(--muted)'}} onClick={() => setFiles([])}>Clear All</button>
                                     <button className="btn btn-primary" onClick={compressAll} disabled={isProcessing}>
-                                        {isProcessing ? 'Working...' : 'Compress All 🚀'}
+                                        {isProcessing ? 'Optimizing...' : 'Compress All 🚀'}
                                     </button>
-                                    {files.some(f => f.status === 'completed') && (
+                                    {hasCompleted && (
                                         <button className="btn btn-success" onClick={downloadZip}>Download ZIP 📦</button>
                                     )}
                                 </div>
@@ -270,9 +293,9 @@
 
                             {stats && (
                                 <div className="stats-bar">
-                                    <div className="stat"><span className="stat-label">Original</span><span className="stat-val">{stats.orig}</span></div>
-                                    <div className="stat"><span className="stat-label">Optimized</span><span className="stat-val">{stats.comp}</span></div>
-                                    <div className="stat"><span className="stat-label">Savings</span><span className="stat-val" style={{color:'var(--accent-from)'}}>{stats.savings}</span></div>
+                                    <div className="stat"><span className="stat-label">Original Total</span><span className="stat-val">{stats.orig}</span></div>
+                                    <div className="stat"><span className="stat-label">Optimized Total</span><span className="stat-val">{stats.comp}</span></div>
+                                    <div className="stat"><span className="stat-label">Net Savings</span><span className="stat-val" style={{color:'var(--accent-from)'}}>{stats.savings}</span></div>
                                 </div>
                             )}
 
@@ -297,7 +320,7 @@
                                             <div className="control">
                                                 <div className="label">Format</div>
                                                 <select value={f.format} onChange={e => updateFile(f.id, { format: e.target.value })}>
-                                                    <option value="image/jpeg">JPG</option>
+                                                    <option value="image/jpeg">JPEG</option>
                                                     <option value="image/png">PNG</option>
                                                     <option value="image/webp">WebP</option>
                                                 </select>
@@ -318,16 +341,16 @@
                                                 <input type="range" min="1" max="100" value={f.quality} onChange={e => updateFile(f.id, { quality: e.target.value, targetSizeKb: 'auto' })} disabled={f.targetSizeKb !== 'auto'} />
                                             </div>
                                             <button className="btn btn-primary" style={{height:'38px', padding:'0 15px'}} onClick={() => compressSingle(f)} disabled={f.status === 'processing'}>
-                                                {f.status === 'processing' ? '...' : 'Go'}
+                                                {f.status === 'processing' ? '...' : 'Go ⚡'}
                                             </button>
                                         </div>
                                         
                                         {f.status === 'processing' && (
                                             <div className="progress-bg"><div className="progress-fill" style={{width: `${f.progress}%`}}></div></div>
                                         )}
-                                        {f.status === 'completed' && (
+                                        {f.status === 'completed' && f.compressedBlob && (
                                             <div style={{textAlign:'right', marginTop:'10px'}}>
-                                                <a href={URL.createObjectURL(f.compressedBlob)} download={`smth-${f.name}`} style={{fontSize:'12px', color:'var(--accent-from)', fontWeight:700}}>Download Single 💾</a>
+                                                <a href={URL.createObjectURL(f.compressedBlob)} download={`smth-${f.name}`} style={{fontSize:'12px', color:'var(--accent-from)', fontWeight:700, textDecoration: 'underline'}}>Download File 💾</a>
                                             </div>
                                         )}
                                     </div>
@@ -340,42 +363,40 @@
                         <a href="#" className="btn-whatsapp" onClick={(e) => {
                             e.preventDefault();
                             const url = encodeURIComponent(window.location.href);
-                            window.open(`https://wa.me/?text=Check out this awesome Bulk Image Compressor: ${url}`, '_blank');
+                            window.open(`https://wa.me/?text=Check out the Bulk Image Compressor on SocialMediaToolsHub: ${url}`, '_blank');
                         }}>
-                            <span>Share to WhatsApp</span>
+                            <span>Share SocialMediaToolsHub</span>
                         </a>
                     </div>
 
                     <div className="content-area">
-                        <h3>How to use the SocialMediaToolsHub Compressor</h3>
+                        <h3>How to use the SocialMediaToolsHub Bulk Compressor</h3>
                         <p>Batch optimize your visual assets for social platforms like Instagram and TikTok without compromising on quality.</p>
                         <div className="faq">
                             <details open>
-                                <summary>1. Upload Your Files <span style={{color:'var(--muted)'}}>›</span></summary>
-                                <p>Drag and drop up to 50 images at once. We support JPG, PNG, and WebP.</p>
+                                <summary>1. Select Your Images <span style={{color:'var(--muted)'}}>›</span></summary>
+                                <p>Drag and drop your images into the zone above. We support JPG, PNG, and WebP for bulk processing.</p>
                             </details>
                             <details>
-                                <summary>2. Pick Your Target <span style={{color:'var(--muted)'}}>›</span></summary>
-                                <p>Choose "Auto Quality" or set a hard limit like "Under 50 KB" if you're dealing with strict platform constraints.</p>
+                                <summary>2. Adjust Your Settings <span style={{color:'var(--muted)'}}>›</span></summary>
+                                <p>Set quality manually or pick a target size like "Under 50 KB". Our smart algorithm handles the rest locally.</p>
                             </details>
                             <details>
-                                <summary>3. Export <span style={{color:'var(--muted)'}}>›</span></summary>
-                                <p>Optimized images can be downloaded individually or as a neat ZIP archive.</p>
+                                <summary>3. Process and Save <span style={{color:'var(--muted)'}}>›</span></summary>
+                                <p>Click "Compress All" and download individual files or the whole batch as a single ZIP file.</p>
                             </details>
                         </div>
 
                         <h3 style={{marginTop:'40px'}}>More Creator Tools</h3>
                         <div className="grid-tools">
-                            <a href="#" className="tool-card"><strong>🧾 Caption Counter</strong><p>Count chars and words.</p></a>
-                            <a href="#" className="tool-card"><strong>🎯 Safe Zone Overlay</strong><p>Preview Reels/Shorts.</p></a>
-                            <a href="#" className="tool-card"><strong>🧼 Hashtag Cleaner</strong><p>Remove duplicates.</p></a>
-                            <a href="#" className="tool-card"><strong>✨ Stylish Text</strong><p>Fancy font generator.</p></a>
+                            <a href="#" className="tool-card"><strong>🧾 Caption Counter</strong><p>Character, word and line counters.</p></a>
+                            <a href="#" className="tool-card"><strong>🎯 Safe Zone Overlay</strong><p>Preview Reels, Shorts & posts.</p></a>
                         </div>
 
                         <h3 style={{marginTop:'40px'}}>Frequently Asked Questions</h3>
                         <div className="faq">
-                            <details><summary>Is this tool private? <span>›</span></summary><p>Yes! 100% of the compression happens inside your browser. Your data never leaves your computer.</p></details>
-                            <details><summary>What is 'Under KB' target? <span>›</span></summary><p>Our algorithm tries multiple passes to ensure your image stays below a specific file size limit automatically.</p></details>
+                            <details><summary>Is this tool private? <span>›</span></summary><p>Yes! 100% of the compression happens inside your browser. No files are uploaded to any server.</p></details>
+                            <details><summary>What formats are supported? <span>›</span></summary><p>We support JPG, PNG, and WebP for input and output. You can convert between them freely.</p></details>
                         </div>
                     </div>
 
@@ -383,10 +404,11 @@
                         <div className="footer-nav">
                             <a href="/about-us">About Us</a>
                             <a href="/contact-us">Contact</a>
-                            <a href="/privacy">Privacy</a>
-                            <a href="/terms">Terms</a>
+                            <a href="/privacy-policy">Privacy Policy</a>
+                            <a href="/terms-of-service">Terms of Service</a>
+                            <a href="/cookie-policy">Cookie Policy</a>
                         </div>
-                        <div>© 2025 SocialMediaToolsHub. Built for speed.</div>
+                        <div style={{color: '#475569'}}>© 2025 SocialMediaToolsHub. Built for speed.</div>
                     </footer>
                 </div>
             );
