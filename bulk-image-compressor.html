@@ -1,166 +1,262 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>Bulk Image Compressor – Fast, Private, Browser-only | SocialMediaToolsHub</title>
+    <meta name="description" content="Compress JPG, PNG & WebP images in bulk right in your browser. Perfect for Instagram, TikTok, YouTube creators. 100% private – no uploads." />
+    
+    <!-- Open Graph / Facebook -->
+    <meta property="og:title" content="Bulk Image Compressor | SocialMediaToolsHub" />
+    <meta property="og:description" content="Fast batch image compression in-browser. Optimize photos for social media without uploading anywhere." />
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content="https://socialmediatoolshub.com/bulk-image-compressor" />
+    <meta property="og:image" content="https://socialmediatoolshub.com/og-bulk-compressor.jpg" /> <!-- replace with real image -->
 
-<title>Bulk Image Compressor | SocialMediaToolsHub</title>
-<meta name="description" content="Batch compress JPG, PNG, and WebP images instantly in your browser. No uploads, no tracking.">
-<link rel="canonical" href="https://socialmediatoolshub.com/bulk-image-compressor">
+    <!-- Twitter -->
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="Bulk Image Compressor | SocialMediaToolsHub" />
+    <meta name="twitter:description" content="Compress multiple images instantly – 100% in your browser." />
 
-<script src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
-<script src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
-<script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/browser-image-compression@2.0.2/dist/browser-image-compression.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
+    <!-- Favicon (you should add real files) -->
+    <link rel="icon" href="/favicon.ico" />
+    <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
 
-<style>
-:root {
-  --bg:#0f172a;--card:#1e293b;--text:#f8fafc;--muted:#94a3b8;
-  --border:#334155;--accent:#38bdf8;--accent2:#818cf8;
-  font-family:system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto;
-}
-*{box-sizing:border-box}
-body{margin:0;background:var(--bg);color:var(--text)}
-.container{max-width:1100px;margin:auto;padding:20px}
-.header{display:flex;justify-content:space-between;align-items:center}
-.brand{font-weight:800;font-size:20px;text-decoration:none;color:white}
-.hero{background:var(--card);padding:25px;border-radius:20px;margin:20px 0}
-.dropzone{border:2px dashed var(--border);padding:60px 20px;border-radius:20px;text-align:center;cursor:pointer}
-.processing-container{margin-top:30px;background:var(--card);border-radius:16px;overflow:hidden}
-.processing-header{padding:20px;border-bottom:1px solid var(--border);display:flex;flex-wrap:wrap;gap:10px;justify-content:space-between}
-.file-row{padding:20px;border-bottom:1px solid var(--border)}
-.file-main{display:flex;justify-content:space-between;gap:15px}
-.file-name{font-weight:700;font-size:14px}
-.file-size{font-size:12px;color:var(--muted)}
-.settings-bar{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:15px;margin-top:15px}
-.label{font-size:11px;color:var(--muted);font-weight:700}
-select,input[type=range]{background:var(--bg);color:white;border:1px solid var(--border);padding:6px;border-radius:6px}
-.btn{padding:10px 16px;border-radius:10px;border:0;font-weight:700;cursor:pointer}
-.btn-primary{background:linear-gradient(90deg,var(--accent),var(--accent2))}
-.btn-success{background:#10b981;color:white}
-.btn-danger{background:none;color:#ef4444}
-.progress-bg{height:6px;background:#0003;border-radius:3px;margin-top:10px}
-.progress-fill{height:100%;background:var(--accent)}
-</style>
+    <!-- JSON-LD (basic SoftwareApplication schema) -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "WebApplication",
+      "name": "Bulk Image Compressor",
+      "url": "https://socialmediatoolshub.com/bulk-image-compressor",
+      "description": "Free browser-based bulk image compressor for social media creators. Supports JPG, PNG, WebP. No server uploads.",
+      "applicationCategory": "UtilityApplication",
+      "operatingSystem": "All",
+      "offers": {
+        "@type": "Offer",
+        "price": "0",
+        "priceCurrency": "USD"
+      }
+    }
+    </script>
+
+    <!-- Libraries -->
+    <script src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
+    <script src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/browser-image-compression@2.0.2/dist/browser-image-compression.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
+
+    <link rel="stylesheet" href="style.css" />
+    
+    <style>
+      :root {
+        --golden: #f59e0b;
+      }
+      .brand-emoji {
+        color: var(--golden);
+        font-size: 32px;
+      }
+      .dropzone {
+        border: 2px dashed var(--border);
+        border-radius: var(--r-lg);
+        padding: 70px 20px;
+        text-align: center;
+        cursor: pointer;
+        transition: var(--trans);
+        background: rgba(255,255,255,0.015);
+      }
+      .dropzone:hover {
+        border-color: var(--accent-from);
+        background: rgba(56,189,248,0.08);
+      }
+      .btn-success {
+        background: #10b981;
+      }
+      .btn-success:hover {
+        background: #059669;
+      }
+      .queue-list {
+        padding: 0 20px 20px;
+      }
+    </style>
 </head>
-
 <body>
+
 <div id="root"></div>
 
 <script type="text/babel">
-const {useState,useMemo,useRef} = React;
+const { useState, useMemo, useRef } = React;
 
-const formatSize = b =>
-  b ? (b<1024?`${b} B`:(b<1048576?`${(b/1024).toFixed(2)} KB`:`${(b/1048576).toFixed(2)} MB`)) : "0 B";
+const formatSize = (bytes) => {
+  if (!bytes) return '—';
+  const units = ['B', 'KB', 'MB', 'GB'];
+  let size = bytes;
+  let unitIndex = 0;
+  while (size >= 1024 && unitIndex < units.length - 1) {
+    size /= 1024;
+    unitIndex++;
+  }
+  return size.toFixed(2) + ' ' + units[unitIndex];
+};
 
 const App = () => {
-  const [files,setFiles] = useState([]);
-  const [isProcessing,setIsProcessing] = useState(false);
-  const fileInputRef = useRef();
+  const [files, setFiles] = useState([]);
+  const [isProcessing, setIsProcessing] = useState(false);
+  const fileInputRef = useRef(null);
 
-  const updateFile = (id, updates) => {
-    setFiles(prev => prev.map(f => f.id===id ? {...f,...updates} : f));
+  const addFiles = (newFiles) => {
+    const valid = Array.from(newFiles)
+      .filter(f => f.type.startsWith('image/'))
+      .map(file => ({
+        id: crypto.randomUUID?.() || Math.random().toString(36).slice(2),
+        file,
+        name: file.name,
+        originalSize: file.size,
+        compressedSize: null,
+        compressedBlob: null,
+        status: 'pending',
+        progress: 0,
+        quality: 78,
+        format: 'image/webp',
+        targetSizeKb: 'auto'
+      }));
+    setFiles(prev => [...prev, ...valid]);
   };
 
-  const addFiles = (list) => {
-    const mapped = Array.from(list)
-      .filter(f=>f.type.startsWith("image/"))
-      .map(file=>({
-        id:crypto.randomUUID(),
-        file,
-        name:file.name,
-        originalSize:file.size,
-        compressedSize:null,
-        compressedBlob:null,
-        status:"pending",
-        progress:0,
-        quality:80,
-        format:"image/jpeg",
-        targetSizeKb:"auto"
-      }));
-    setFiles(prev=>[...prev,...mapped]);
+  const updateFile = (id, updates) => {
+    setFiles(prev => prev.map(f => f.id === id ? { ...f, ...updates } : f));
+  };
+
+  const removeFile = (id) => {
+    setFiles(prev => prev.filter(f => f.id !== id));
   };
 
   const compressSingle = async (item) => {
-    updateFile(item.id,{status:"processing",progress:0});
-    try{
-      const options={
-        initialQuality:item.quality/100,
-        maxSizeMB:item.targetSizeKb==="auto"?undefined:item.targetSizeKb/1024,
-        fileType:item.format,
-        useWebWorker:true,
-        onProgress:p=>updateFile(item.id,{progress:p})
+    if (item.status === 'processing') return;
+    updateFile(item.id, { status: 'processing', progress: 0 });
+
+    try {
+      const options = {
+        maxSizeMB: item.targetSizeKb === 'auto' ? undefined : Number(item.targetSizeKb) / 1024,
+        initialQuality: item.quality / 100,
+        useWebWorker: true,
+        fileType: item.format,
+        onProgress: (p) => updateFile(item.id, { progress: p })
       };
-      const out = await imageCompression(item.file,options);
-      updateFile(item.id,{
-        status:"completed",
-        progress:100,
-        compressedBlob:out,
-        compressedSize:out.size
+
+      const output = await imageCompression(item.file, options);
+      updateFile(item.id, {
+        status: 'completed',
+        progress: 100,
+        compressedSize: output.size,
+        compressedBlob: output
       });
-    }catch{
-      updateFile(item.id,{status:"error"});
+    } catch (err) {
+      console.error(err);
+      updateFile(item.id, { status: 'error', progress: 0 });
     }
   };
 
   const compressAll = async () => {
-    if(!files.length) return;
+    if (files.length === 0) return;
     setIsProcessing(true);
-    for(const f of files){
-      if(f.status!=="completed") await compressSingle(f);
+    for (const file of files) {
+      if (file.status !== 'completed') {
+        await compressSingle(file);
+      }
     }
     setIsProcessing(false);
   };
 
   const downloadZip = async () => {
+    const completed = files.filter(f => f.status === 'completed' && f.compressedBlob);
+    if (completed.length === 0) return alert('No compressed files ready.');
+
     const zip = new JSZip();
-    const done = files.filter(f=>f.status==="completed" && f.compressedBlob);
-    if(!done.length) return alert("No completed files.");
-    done.forEach(f=>{
-      const ext = f.format.split("/")[1]||"jpg";
-      const base = f.name.replace(/\.[^/.]+$/,"");
-      zip.file(`smth-${base}.${ext}`,f.compressedBlob);
+
+    completed.forEach(f => {
+      const ext = f.format.split('/')[1] || 'jpg';
+      const name = `optimized-${f.name.replace(/\.[^/.]+$/, "")}.${ext}`;
+      zip.file(name, f.compressedBlob);
     });
-    const blob = await zip.generateAsync({type:"blob"});
+
+    const blob = await zip.generateAsync({ type: 'blob' });
     const url = URL.createObjectURL(blob);
-    const a=document.createElement("a");
-    a.href=url;a.download="socialmediatoolshub-images.zip";a.click();
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = 'socialmediatoolshub-bulk-compressed.zip';
+    a.click();
     URL.revokeObjectURL(url);
   };
 
-  const hasCompleted = files.some(f=>f.status==="completed");
+  const stats = useMemo(() => {
+    const completed = files.filter(f => f.status === 'completed' && f.compressedSize);
+    if (completed.length === 0) return null;
+
+    const orig = completed.reduce((sum, f) => sum + f.originalSize, 0);
+    const comp = completed.reduce((sum, f) => sum + f.compressedSize, 0);
+    const savings = orig > 0 ? ((orig - comp) / orig * 100).toFixed(1) : 0;
+
+    return { orig, comp, savings };
+  }, [files]);
+
+  const hasAnyCompleted = files.some(f => f.status === 'completed' && f.compressedBlob);
 
   return (
     <div className="container">
-      <div className="header">
-        <a className="brand" href="/">⚡ SocialMediaToolsHub</a>
+      <header className="header">
+        <a href="/" className="brand">
+          <span className="brand-emoji">⚡</span>
+          <span className="logo-text">SocialMediaToolsHub</span>
+        </a>
+        <nav className="topnav">
+          <a href="/about-us">About</a>
+          <a href="/contact-us">Contact</a>
+        </nav>
+      </header>
+
+      <section className="hero">
+        <div className="hero-inner">
+          <div>
+            <h1>Bulk Image Compressor</h1>
+            <p className="lead">
+              Compress JPG, PNG & WebP images in bulk — 100% in your browser.<br/>
+              Perfect for Instagram, TikTok, Reels & YouTube creators.
+            </p>
+          </div>
+        </div>
+      </section>
+
+      <div 
+        className="dropzone"
+        onDragOver={e => e.preventDefault()}
+        onDrop={e => { e.preventDefault(); addFiles(e.dataTransfer.files); }}
+        onClick={() => fileInputRef.current?.click()}
+      >
+        <input 
+          type="file" 
+          multiple 
+          accept="image/jpeg,image/png,image/webp" 
+          hidden 
+          ref={fileInputRef} 
+          onChange={e => addFiles(e.target.files)} 
+        />
+        <div style={{fontSize: '64px', marginBottom: '16px'}}>📸</div>
+        <h2>Drop images here or click to select</h2>
+        <p>Supports JPG • PNG • WebP • Batch processing</p>
       </div>
 
-      <div className="hero">
-        <h1>Bulk Image Compressor</h1>
-        <p style={{color:"var(--muted)"}}>100% browser-based. No uploads.</p>
-      </div>
-
-      <div className="dropzone"
-        onClick={()=>fileInputRef.current.click()}
-        onDragOver={e=>e.preventDefault()}
-        onDrop={e=>{e.preventDefault();addFiles(e.dataTransfer.files);}}>
-        <input ref={fileInputRef} hidden type="file" multiple accept="image/*"
-          onChange={e=>addFiles(e.target.files)} />
-        <h2>Drop images or click to browse</h2>
-      </div>
-
-      {!!files.length && (
-        <div className="processing-container">
-          <div className="processing-header">
-            <strong>{files.length} files</strong>
-            <div style={{display:"flex",gap:"10px"}}>
-              <button className="btn" onClick={()=>setFiles([])}>Clear</button>
-              <button className="btn btn-primary" disabled={isProcessing} onClick={compressAll}>
-                {isProcessing?"Processing…":"Compress All"}
+      {files.length > 0 && (
+        <div className="processing-container" style={{marginTop:'24px'}}>
+          <div className="processing-header" style={{padding:'16px', display:'flex', justifyContent:'space-between', flexWrap:'wrap', gap:'12px'}}>
+            <div style={{fontWeight:600}}>Files: {files.length}</div>
+            <div style={{display:'flex', gap:'10px', flexWrap:'wrap'}}>
+              <button className="btn" onClick={() => setFiles([])}>Clear All</button>
+              <button className="btn btn-cta" onClick={compressAll} disabled={isProcessing}>
+                {isProcessing ? 'Compressing...' : 'Compress All ⚡'}
               </button>
-              {hasCompleted && !isProcessing && (
+              {hasAnyCompleted && (
                 <button className="btn btn-success" onClick={downloadZip}>
                   Download ZIP
                 </button>
@@ -168,68 +264,192 @@ const App = () => {
             </div>
           </div>
 
-          {files.map(f=>(
-            <div className="file-row" key={f.id}>
-              <div className="file-main">
-                <div>
-                  <div className="file-name">{f.name}</div>
-                  <div className="file-size">
-                    {formatSize(f.originalSize)}
-                    {f.compressedSize && ` → ${formatSize(f.compressedSize)}`}
+          {stats && (
+            <div style={{
+              display: 'grid',
+              gridTemplateColumns: 'repeat(auto-fit, minmax(140px, 1fr))',
+              gap: '1px',
+              background: 'var(--border)',
+              margin: '0 20px 20px'
+            }}>
+              <div style={{background:'var(--card)', padding:'16px', textAlign:'center'}}>
+                <div style={{fontSize:'11px', color:'var(--muted)'}}>Original</div>
+                <div style={{fontSize:'18px', fontWeight:700}}>{formatSize(stats.orig)}</div>
+              </div>
+              <div style={{background:'var(--card)', padding:'16px', textAlign:'center'}}>
+                <div style={{fontSize:'11px', color:'var(--muted)'}}>Compressed</div>
+                <div style={{fontSize:'18px', fontWeight:700}}>{formatSize(stats.comp)}</div>
+              </div>
+              <div style={{background:'var(--card)', padding:'16px', textAlign:'center'}}>
+                <div style={{fontSize:'11px', color:'var(--muted)'}}>Savings</div>
+                <div style={{fontSize:'18px', fontWeight:700, color:'var(--accent-from)'}}>{stats.savings}%</div>
+              </div>
+            </div>
+          )}
+
+          <div className="queue-list">
+            {files.map(f => (
+              <div key={f.id} style={{
+                padding: '16px',
+                borderBottom: '1px solid var(--border)',
+                background: f.status === 'processing' ? 'rgba(56,189,248,0.06)' : 'transparent'
+              }}>
+                <div style={{display:'flex', justifyContent:'space-between', alignItems:'center', marginBottom:'12px'}}>
+                  <div style={{display:'flex', alignItems:'center', gap:'12px'}}>
+                    <div style={{fontSize:'28px'}}>🖼️</div>
+                    <div>
+                      <div style={{fontWeight:600, maxWidth:'320px', overflow:'hidden', textOverflow:'ellipsis', whiteSpace:'nowrap'}}>
+                        {f.name}
+                      </div>
+                      <div style={{fontSize:'13px', color:'var(--muted)'}}>
+                        {formatSize(f.originalSize)}
+                        {f.compressedSize && <> → <strong style={{color:'var(--accent-from)'}}>{formatSize(f.compressedSize)}</strong></>}
+                      </div>
+                    </div>
+                  </div>
+
+                  <div style={{display:'flex', gap:'10px'}}>
+                    {f.status === 'completed' && f.compressedBlob && (
+                      <button 
+                        className="btn btn-success"
+                        onClick={() => {
+                          const url = URL.createObjectURL(f.compressedBlob);
+                          const a = document.createElement('a');
+                          a.href = url;
+                          const ext = f.format.split('/')[1] || 'jpg';
+                          a.download = `optimized-${f.name.replace(/\.[^/.]+$/, "")}.${ext}`;
+                          a.click();
+                          URL.revokeObjectURL(url);
+                        }}
+                      >
+                        Download
+                      </button>
+                    )}
+                    <button 
+                      style={{background:'transparent', color:'#ef4444', border:'none', cursor:'pointer', fontSize:'18px'}}
+                      onClick={() => removeFile(f.id)}
+                    >×</button>
                   </div>
                 </div>
-                <div style={{display:"flex",gap:"10px"}}>
-                  {f.status==="completed" && (
-                    <button className="btn btn-success" onClick={()=>{
-                      const url=URL.createObjectURL(f.compressedBlob);
-                      const a=document.createElement("a");
-                      const ext=f.format.split("/")[1]||"jpg";
-                      a.href=url;
-                      a.download=`smth-${f.name.replace(/\.[^/.]+$/,"")}.${ext}`;
-                      a.click();
-                      URL.revokeObjectURL(url);
-                    }}>Download</button>
-                  )}
-                  <button className="btn-danger" onClick={()=>setFiles(p=>p.filter(x=>x.id!==f.id))}>✕</button>
-                </div>
-              </div>
 
-              <div className="settings-bar">
-                <div>
-                  <div className="label">Format</div>
-                  <select value={f.format}
-                    onChange={e=>updateFile(f.id,{format:e.target.value,status:"pending",compressedBlob:null,compressedSize:null})}>
-                    <option value="image/jpeg">JPEG</option>
-                    <option value="image/png">PNG</option>
-                    <option value="image/webp">WebP</option>
-                  </select>
-                </div>
-                <div>
-                  <div className="label">Quality ({f.quality}%)</div>
-                  <input type="range" min="1" max="100" value={f.quality}
-                    onChange={e=>updateFile(f.id,{quality:+e.target.value,targetSizeKb:"auto",status:"pending",compressedBlob:null,compressedSize:null})}/>
-                </div>
-                <button className="btn btn-primary"
-                  disabled={f.status==="processing"}
-                  onClick={()=>compressSingle(f)}>
-                  Go
-                </button>
-              </div>
+                {/* Settings + Compress button */}
+                <div style={{display:'grid', gridTemplateColumns:'repeat(auto-fit, minmax(140px,1fr))', gap:'12px', marginTop:'8px'}}>
+                  <div>
+                    <label style={{fontSize:'11px', color:'var(--muted)', display:'block', marginBottom:'4px'}}>Format</label>
+                    <select 
+                      value={f.format} 
+                      onChange={e => updateFile(f.id, {format: e.target.value})}
+                      style={{width:'100%', padding:'8px', borderRadius:'8px'}}
+                    >
+                      <option value="image/jpeg">JPEG</option>
+                      <option value="image/png">PNG</option>
+                      <option value="image/webp">WebP</option>
+                    </select>
+                  </div>
 
-              {f.status==="processing" && (
-                <div className="progress-bg">
-                  <div className="progress-fill" style={{width:`${f.progress}%`}}></div>
+                  <div>
+                    <label style={{fontSize:'11px', color:'var(--muted)', display:'block', marginBottom:'4px'}}>Target Size</label>
+                    <select 
+                      value={f.targetSizeKb} 
+                      onChange={e => updateFile(f.id, { targetSizeKb: e.target.value === 'auto' ? 'auto' : Number(e.target.value) })}
+                      style={{width:'100%', padding:'8px', borderRadius:'8px'}}
+                    >
+                      <option value="auto">Auto (quality based)</option>
+                      <option value="30">~30 KB</option>
+                      <option value="60">~60 KB</option>
+                      <option value="120">~120 KB</option>
+                      <option value="250">~250 KB</option>
+                    </select>
+                  </div>
+
+                  <div>
+                    <label style={{fontSize:'11px', color:'var(--muted)', display:'block', marginBottom:'4px'}}>
+                      Quality {f.quality}%
+                    </label>
+                    <input 
+                      type="range" 
+                      min="10" 
+                      max="100" 
+                      step="1"
+                      value={f.quality}
+                      onChange={e => updateFile(f.id, { quality: Number(e.target.value), targetSizeKb: 'auto' })}
+                      disabled={f.targetSizeKb !== 'auto'}
+                      style={{width:'100%'}}
+                    />
+                  </div>
+
+                  <button 
+                    className="btn btn-cta"
+                    style={{alignSelf:'end', height:'38px'}}
+                    onClick={() => compressSingle(f)}
+                    disabled={f.status === 'processing' || f.status === 'completed'}
+                  >
+                    {f.status === 'processing' ? '...' : 'Compress'}
+                  </button>
                 </div>
-              )}
-            </div>
-          ))}
+
+                {f.status === 'processing' && (
+                  <div style={{
+                    height:'6px', 
+                    background:'rgba(255,255,255,0.08)', 
+                    borderRadius:'3px', 
+                    marginTop:'12px', 
+                    overflow:'hidden'
+                  }}>
+                    <div style={{
+                      height:'100%', 
+                      width:`${f.progress}%`, 
+                      background:'var(--accent-from)',
+                      transition:'width 0.2s'
+                    }} />
+                  </div>
+                )}
+
+                {f.status === 'completed' && (
+                  <div style={{color:'#10b981', fontSize:'13px', marginTop:'8px', textAlign:'right'}}>
+                    ✓ Ready
+                  </div>
+                )}
+              </div>
+            ))}
+          </div>
         </div>
       )}
+
+      <div className="content-area">
+        <h3>How to Use</h3>
+        <ol style={{paddingLeft:'20px', color:'var(--muted)'}}>
+          <li>Drag & drop or select your images</li>
+          <li>Choose format, quality or target size</li>
+          <li>Compress individually or all at once</li>
+          <li>Download single files or ZIP archive</li>
+        </ol>
+
+        <h3 style={{marginTop:'40px'}}>Frequently Asked Questions</h3>
+        <div className="faq">
+          <details open><summary>Is my data private and safe?</summary><p>Yes — 100% client-side. No image ever leaves your device.</p></details>
+          <details><summary>What image formats can I compress?</summary><p>JPEG, PNG and WebP are fully supported for both input and output.</p></details>
+          <details><summary>Can I convert between formats?</summary><p>Yes! You can turn PNG → WebP, JPG → WebP, etc. during compression.</p></details>
+          <details><summary>Is there a file size limit?</summary><p>No hard limit, but very large files (50MB+) may be slow in the browser.</p></details>
+          <details><summary>Why WebP as default?</summary><p>WebP usually gives best quality/size ratio — perfect for social media.</p></details>
+          <details><summary>Can I use this tool offline?</summary><p>After first visit — yes! (if you save the page or use PWA install)</p></details>
+        </div>
+      </div>
+
+      <footer>
+        <div style={{marginBottom:'16px'}}>
+          <a href="/about-us">About Us</a> • 
+          <a href="/contact-us"> Contact</a> • 
+          <a href="/privacy-policy"> Privacy</a> • 
+          <a href="/terms-of-service"> Terms</a>
+        </div>
+        <div>© 2025 SocialMediaToolsHub. Built for creators.</div>
+      </footer>
     </div>
   );
 };
 
-ReactDOM.createRoot(document.getElementById("root")).render(<App/>);
+ReactDOM.createRoot(document.getElementById('root')).render(<App />);
 </script>
 </body>
 </html>
