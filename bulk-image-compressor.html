@@ -43,15 +43,22 @@
       
       /* Header */
       .header { display: flex; align-items: center; justify-content: space-between; padding: 10px 0; }
-      .brand { display: flex; align-items: center; gap: 10px; font-weight: 700; font-size: 20px; text-decoration: none; }
+    .brand { 
+  display: flex; 
+  align-items: center; 
+  gap: 10px; 
+  font-weight: 600; /* Changed from 700 */
+  font-size: 18px;  /* Changed from 20px */
+  text-decoration: none; 
+  white-space: nowrap;
+}
       
-      .brand-emoji {
-        background: linear-gradient(135deg, var(--accent-from), var(--accent-to));
-        -webkit-background-clip: text;
-        -webkit-text-fill-color: transparent;
-        font-size: 28px;
-        display: inline-block;
-      }
+     .brand-emoji {
+  font-size: 28px; /* Keep it slightly larger if you want, or remove this line to match text size exactly */
+  display: flex;
+  align-items: center;
+  /* Removed: background, webkit-background-clip, webkit-text-fill-color */
+}
       .logo-text { background: linear-gradient(90deg, var(--accent-from), var(--accent-to)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
       .topnav { display: flex; gap: 15px; }
       .topnav a { color: var(--muted); text-decoration: none; font-size: 14px; transition: 0.2s; }
