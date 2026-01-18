@@ -50,13 +50,31 @@
     <link rel="stylesheet" href="style.css" />
     
     <style>
-      :root {
-        --golden: #f59e0b;
+     :root {
+    --golden: #f59e0b;           /* optional fallback color */
+    --accent-from: #38bdf8;
+    --accent-to: #818cf8;
       }
-      .brand-emoji {
-        color: var(--golden);
-        font-size: 28px;
-      }
+     .brand {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-weight: 700;
+    font-size: 20px;
+    text-decoration: none;
+  }
+        .brand-emoji {
+    font-size: 28px;                    /* ← same size as homepage */
+    background: linear-gradient(135deg, var(--accent-from), var(--accent-to));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    display: inline-block;
+  }
+        .logo-text {
+    background: linear-gradient(90deg, var(--accent-from), var(--accent-to));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+  }
       .dropzone {
         border: 2px dashed var(--border);
         border-radius: var(--r-lg);
@@ -205,16 +223,16 @@ const App = () => {
 
   return (
     <div className="container">
-      <header className="header">
-        <a href="/" className="brand">
-          <span className="brand-emoji">⚡</span>
-          <span className="logo-text">SocialMediaToolsHub</span>
-        </a>
-        <nav className="topnav">
-          <a href="/about-us">About</a>
-          <a href="/contact-us">Contact</a>
-        </nav>
-      </header>
+     <header class="header">
+  <a href="/" class="brand">
+    <span class="brand-emoji" aria-hidden="true">⚡</span>
+    <span class="logo-text">SocialMediaToolsHub</span>
+  </a>
+  <nav class="topnav">
+    <a href="/about-us">About Us</a>
+    <a href="/contact-us">Contact Us</a>
+  </nav>
+</header>
 
       <section className="hero">
         <div className="hero-inner">
