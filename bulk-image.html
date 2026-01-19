@@ -477,7 +477,16 @@
 
                         <h3 style={{marginTop:'40px'}}>Frequently Asked Questions</h3>
                         <div className="faq">
-                            <details><summary>Is this tool private? <span>›</span></summary><p>Yes! 100% of the compression happens inside your browser. No files are ever uploaded to any server. Your photos never leave your device.</p></details>
+                            <details>
+    <summary>Why is it hard to hit 20KB or 50KB, and why do images look blocky? <span class="faq-arrow">›</span></summary>
+    <p>Hitting extreme file sizes like 20KB requires a trade-off. A standard 2MB image contains millions of pixels and colors. To fit that into 20KB, the compressor must discard massive amounts of data.</p>
+    <p><strong>1. The "Blocky" Look:</strong> When you lower "Quality" to 1%, the algorithm turns detailed areas into solid square blocks (Macroblocking) to save space. This keeps the resolution high but makes the image look pixelated.</p>
+    <p><strong>2. The Solution (Resizing):</strong> Instead of ruining the quality with blocks, it is often better to reduce the <em>Dimensions</em> (e.g., resizing from 2000px to 600px). This naturally drops the file size to 20KB while keeping the text and details sharp.</p>
+</details>
+                            <details>
+    <summary>Is my data private when compressing images? <span class="faq-arrow">›</span></summary>
+    <p>Yes. Unlike other bulk compressors, SocialMediaToolsHub processes your images <strong>locally within your browser</strong>. Your photos are never sent to our servers, ensuring 100% privacy for your personal or professional assets.</p>
+</details>
                             <details><summary>What formats are supported? <span>›</span></summary><p>We support JPG, PNG, and WebP for input and output. You can convert between them freely.</p></details>
                             <details><summary>Why can't I get under 20KB? <span>›</span></summary><p>Some images are too detailed to compress that much without resizing. If our tool fails to hit 20KB, click the "Force Resize" button that appears. This shrinks the dimensions to guarantee the small file size.</p></details>
                             <details><summary>Does this work on Mobile? <span>›</span></summary><p>Yes, this tool works perfectly on iPhone (iOS) and Android devices directly in Chrome, Safari, or Samsung Internet.</p></details>
