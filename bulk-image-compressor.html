@@ -1,22 +1,44 @@
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     
-    <!-- SEO & Canonical -->
-    <title>Bulk Image Compressor | SocialMediaToolsHub (Fast & Private)</title>
-    <meta name="description" content="Batch compress JPG, PNG, and WebP images instantly on SocialMediaToolsHub. Privacy-focused image optimization for Instagram, TikTok, and YouTube. No server uploads." />
+    <title>Compress Image to 20kb, 50kb & Converter (JPG, PNG, WebP) | SocialMediaToolsHub</title>
+    <meta name="description" content="Batch compress JPG, PNG, and WebP images to specific sizes (20kb, 50kb). Private, browser-based image optimization for Instagram, TikTok, and forms." />
+    <meta name="keywords" content="bulk image compressor, compress image to 20kb, image optimizer, reduce image size, private image compressor" />
     <link rel="canonical" href="https://socialmediatoolshub.com/bulk-image-compressor" />
     
-    <!-- Social Meta Tags -->
-    <meta property="og:title" content="Bulk Image Compressor | SocialMediaToolsHub">
-    <meta property="og:description" content="Fast, bulk image compression that happens entirely in your browser. Perfect for social media creators.">
-    <meta property="og:type" content="website">
-    <meta property="twitter:card" content="summary_large_image">
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>⚡</text></svg>">
 
-    <!-- Libraries -->
+    <meta property="og:title" content="Bulk Image Compressor & Converter | SocialMediaToolsHub">
+    <meta property="og:description" content="Compress images to 20kb, 50kb or 100kb instantly in your browser. No server uploads.">
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://socialmediatoolshub.com/bulk-image-compressor">
+    <meta property="og:image" content="https://socialmediatoolshub.com/assets/og-compressor.jpg">
+    <meta property="og:site_name" content="SocialMediaToolsHub">
+
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="Bulk Image Compressor & Converter | SocialMediaToolsHub">
+    <meta name="twitter:description" content="Fast, private image compression. Reduce file sizes for official forms and social media.">
+    <meta name="twitter:image" content="https://socialmediatoolshub.com/assets/og-compressor.jpg">
+
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "SoftwareApplication",
+      "name": "Bulk Image Compressor",
+      "operatingSystem": "Any",
+      "applicationCategory": "MultimediaApplication",
+      "offers": {
+        "@type": "Offer",
+        "price": "0",
+        "priceCurrency": "USD"
+      },
+      "description": "A browser-based tool to bulk compress JPG, PNG, and WebP images. Supports target file sizes like 20kb and 50kb for application forms."
+    }
+    </script>
+
     <script src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
     <script src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
     <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
@@ -32,6 +54,7 @@
         --border: #334155;
         --accent-from: #38bdf8;
         --accent-to: #818cf8;
+        --warning: #f59e0b;
         --r-lg: 24px;
         --r-md: 16px;
         --trans: 260ms cubic-bezier(.2, .9, .3, 1);
@@ -43,23 +66,17 @@
       
       /* Header */
       .header { display: flex; align-items: center; justify-content: space-between; padding: 10px 0; }
-    .brand { 
-  display: flex; 
-  align-items: center; 
-  gap: 10px; 
-  font-weight: 600; /* Changed from 700 */
-  font-size: 18px;  /* Changed from 20px */
-  text-decoration: none; 
-  white-space: nowrap;
-}
-      
-     .brand-emoji {
-  font-size: 28px; /* Keep it slightly larger if you want, or remove this line to match text size exactly */
-  display: flex;
-  align-items: center;
-  /* Removed: background, webkit-background-clip, webkit-text-fill-color */
-}
-      .logo-text { background: linear-gradient(90deg, var(--accent-from), var(--accent-to)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+      .brand { 
+        display: flex; 
+        align-items: center; 
+        gap: 10px; 
+        font-weight: 600;
+        font-size: 18px; 
+        text-decoration: none; 
+        white-space: nowrap;
+      }
+      .brand-emoji { font-size: 28px; display: flex; align-items: center; }
+      .logo-text { background: linear-gradient(90deg, var(--accent-from), var(--accent-to)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; color: transparent; }
       .topnav { display: flex; gap: 15px; }
       .topnav a { color: var(--muted); text-decoration: none; font-size: 14px; transition: 0.2s; }
       .topnav a:hover { color: white; }
@@ -84,7 +101,16 @@
       .processing-header { padding: 20px; border-bottom: 1px solid var(--border); display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 15px; }
       .file-row { padding: 20px; border-bottom: 1px solid var(--border); transition: 0.2s; }
       .file-row:hover { background: rgba(255,255,255,0.02); }
-      .file-main { display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px; }
+      
+      .file-main { 
+        display: flex; 
+        justify-content: space-between; 
+        align-items: center; 
+        margin-bottom: 15px; 
+        flex-wrap: wrap;   /* Allows wrapping on mobile */
+        gap: 10px;         /* Adds space when wrapped */
+      }
+      
       .file-meta { display: flex; align-items: center; gap: 12px; }
       .file-icon { font-size: 24px; background: rgba(255,255,255,0.05); padding: 8px; border-radius: 8px; }
       .file-name { font-weight: 600; font-size: 14px; max-width: 250px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
@@ -107,6 +133,8 @@
       .btn-success { background: #10b981; color: white; }
       .btn-success:hover { transform: translateY(-2px); box-shadow: 0 5px 15px rgba(16, 185, 129, 0.4); }
       .btn-danger { background: transparent; color: #ef4444; padding: 5px; }
+      .btn-warning { background: rgba(245, 158, 11, 0.2); color: var(--warning); border: 1px solid var(--warning); padding: 6px 12px; font-size: 12px; }
+      .btn-warning:hover { background: var(--warning); color: #000; }
       
       /* Stats */
       .stats-bar { display: grid; grid-template-columns: repeat(3, 1fr); background: var(--border); gap: 1px; }
@@ -125,6 +153,19 @@
       
       .share-row { text-align: center; margin: 40px 0; }
       .btn-whatsapp { background: #25D366; color: white; padding: 15px 30px; border-radius: 50px; text-decoration: none; font-weight: 800; display: inline-flex; align-items: center; gap: 10px; }
+
+      /* Visual Steps (New) */
+      .steps-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 15px; margin-top: 20px; }
+      .step-card { background: rgba(255,255,255,0.02); padding: 20px; border-radius: 16px; border: 1px solid var(--border); text-align: left; }
+      .step-head { color: var(--accent-from); font-weight: 800; font-size: 14px; margin-bottom: 8px; display: block; text-transform: uppercase; letter-spacing: 0.5px; }
+      .step-desc { font-size: 14px; color: var(--muted); line-height: 1.5; margin: 0; }
+
+      /* Info Block (New) */
+      .info-block { max-width: 800px; margin: 60px auto 40px; border-top: 1px solid var(--border); padding-top: 40px; color: var(--muted); font-size: 14px; }
+      .info-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 30px; margin-top: 20px; }
+      .info-grid h3 { color: var(--text); font-size: 16px; margin-top: 0; }
+      .info-grid ul { padding-left: 20px; line-height: 1.6; }
+      .info-grid li { margin-bottom: 8px; }
 
       footer { border-top: 1px solid var(--border); padding: 40px 0; text-align: center; color: var(--muted); font-size: 13px; }
       .footer-nav { display: flex; justify-content: center; flex-wrap: wrap; gap: 20px; margin-bottom: 20px; }
@@ -145,7 +186,7 @@
     <div id="root"></div>
 
     <script type="text/babel">
-        const { useState, useMemo, useCallback, useRef } = React;
+        const { useState, useMemo, useCallback, useRef, useEffect } = React;
 
         const formatSize = (bytes) => {
             if (bytes === 0) return '0 B';
@@ -160,6 +201,22 @@
             const [isProcessing, setIsProcessing] = useState(false);
             const fileInputRef = useRef(null);
 
+            // Dynamic Page Titles for specific tasks
+            useEffect(() => {
+                const params = new URLSearchParams(window.location.search);
+                const task = params.get('task');
+                
+                if (task === '20kb') {
+                    document.title = "Compress Image to 20KB Online - Fast & Free";
+                    const h1 = document.querySelector('h1');
+                    if(h1) h1.innerText = "Compress Images to 20KB";
+                } else if (task === 'webp-to-png') {
+                    document.title = "Convert WebP to PNG Online - Bulk Converter";
+                    const h1 = document.querySelector('h1');
+                    if(h1) h1.innerText = "WebP to PNG Converter";
+                }
+            }, []);
+
             const addFiles = (newFiles) => {
                 const mapped = Array.from(newFiles).filter(f => f.type.startsWith('image/')).map(file => ({
                     id: Math.random().toString(36).substr(2, 9),
@@ -168,7 +225,7 @@
                     originalSize: file.size,
                     compressedSize: null,
                     compressedBlob: null,
-                    status: 'pending',
+                    status: 'pending', // pending, processing, completed, error, warning
                     progress: 0,
                     quality: 80,
                     format: 'image/jpeg',
@@ -177,25 +234,48 @@
                 setFiles(prev => [...prev, ...mapped]);
             };
 
-           const updateFile = (id, updates) => {
-    setFiles(prev => prev.map(f => f.id === id ? { ...f, ...updates } : f));
-};
+            const updateFile = (id, updates) => {
+                setFiles(prev => prev.map(f => f.id === id ? { ...f, ...updates } : f));
+            };
 
             const removeFile = (id) => setFiles(prev => prev.filter(f => f.id !== id));
 
-            const compressSingle = async (item) => {
+            const compressSingle = async (item, forceResize = false) => {
                 updateFile(item.id, { status: 'processing', progress: 0 });
                 try {
+                    let dynamicMaxWidth = undefined;
+
+                    // If "Force Resize" is clicked OR user sets specific limit, we use logic
+                    if (forceResize) {
+                        // Aggressive resizing to guarantee size drop
+                        if (item.targetSizeKb <= 20) dynamicMaxWidth = 600;
+                        else if (item.targetSizeKb <= 50) dynamicMaxWidth = 800;
+                        else dynamicMaxWidth = 1000;
+                    }
+
                     const options = {
                         maxSizeMB: item.targetSizeKb === 'auto' ? undefined : item.targetSizeKb / 1024,
                         initialQuality: item.quality / 100,
                         useWebWorker: true,
                         fileType: item.format,
+                        maxWidthOrHeight: dynamicMaxWidth,
                         onProgress: (p) => updateFile(item.id, { progress: p })
                     };
+
                     const out = await imageCompression(item.file, options);
+                    
+                    // Logic Check: Did we meet the target?
+                    let newStatus = 'completed';
+                    if (!forceResize && item.targetSizeKb !== 'auto') {
+                        const sizeKB = out.size / 1024;
+                        // If result is > target by 10% tolerance, show warning
+                        if (sizeKB > (item.targetSizeKb * 1.1)) {
+                            newStatus = 'warning';
+                        }
+                    }
+
                     updateFile(item.id, { 
-                        status: 'completed', 
+                        status: newStatus, 
                         progress: 100, 
                         compressedSize: out.size, 
                         compressedBlob: out 
@@ -209,7 +289,7 @@
             const compressAll = async () => {
                 if (files.length === 0) return;
                 setIsProcessing(true);
-                const pending = files.filter(f => f.status !== 'completed');
+                const pending = files.filter(f => f.status !== 'completed' && f.status !== 'warning');
                 for (const f of pending) {
                     await compressSingle(f);
                 }
@@ -222,7 +302,7 @@
                     return;
                 }
                 const zip = new JSZip();
-                const completed = files.filter(f => f.status === 'completed' && f.compressedBlob);
+                const completed = files.filter(f => (f.status === 'completed' || f.status === 'warning') && f.compressedBlob);
                 
                 if (completed.length === 0) {
                     alert('No compressed files ready yet.');
@@ -245,7 +325,7 @@
             };
 
             const stats = useMemo(() => {
-                const done = files.filter(f => f.status === 'completed');
+                const done = files.filter(f => f.status === 'completed' || f.status === 'warning');
                 if (!done.length) return null;
                 const orig = done.reduce((a, b) => a + b.originalSize, 0);
                 const comp = done.reduce((a, b) => a + (b.compressedSize || 0), 0);
@@ -256,7 +336,7 @@
                 };
             }, [files]);
 
-            const hasCompleted = useMemo(() => files.some(f => f.status === 'completed'), [files]);
+            const hasCompleted = useMemo(() => files.some(f => f.status === 'completed' || f.status === 'warning'), [files]);
 
             return (
                 <div className="container">
@@ -272,7 +352,7 @@
                     </header>
 
                     <section className="hero">
-                        <h1>Bulk Image Compressor</h1>
+                        <h1>Bulk Image Compressor & Converter (20KB, 50KB)</h1>
                         <p className="lead">Optimize your images for Social Media in seconds. Privacy-first: no files are uploaded to any server.</p>
                     </section>
 
@@ -316,17 +396,26 @@
                                     <div key={f.id} className="file-row">
                                         <div className="file-main">
                                             <div className="file-meta">
-                                                <div className="file-icon">🖼️</div>
+                                                <div className="file-icon">
+                                                    {f.status === 'warning' ? '⚠️' : '🖼️'}
+                                                </div>
                                                 <div>
                                                     <div className="file-name">{f.name}</div>
                                                     <div className="file-size">
                                                         {formatSize(f.originalSize)} 
-                                                        {f.compressedSize && <span style={{color:'var(--accent-from)', fontWeight:700}}> → {formatSize(f.compressedSize)}</span>}
+                                                        {f.compressedSize && <span style={{color: f.status === 'warning' ? '#f59e0b' : 'var(--accent-from)', fontWeight:700}}> → {formatSize(f.compressedSize)}</span>}
                                                     </div>
                                                 </div>
                                             </div>
-                                            <div style={{display:'flex', gap:'15px', alignItems:'center'}}>
-                                                {f.status === 'completed' && f.compressedBlob && (
+                                            <div style={{display:'flex', gap:'8px', alignItems:'center', flexWrap:'wrap', justifyContent:'flex-end', marginLeft:'auto'}}>
+                                                {f.status === 'warning' && (
+                                                    <div style={{display:'flex', gap:'10px', alignItems:'center'}}>
+                                                        <span style={{fontSize:'12px', color:'var(--warning)'}}>Missed Target</span>
+                                                        <button className="btn btn-warning" onClick={() => compressSingle(f, true)}>Force Resize 📉</button>
+                                                    </div>
+                                                )}
+
+                                                {(f.status === 'completed' || f.status === 'warning') && f.compressedBlob && (
                                                     <button 
                                                         className="btn btn-success" 
                                                         style={{padding:'6px 12px', fontSize:'12px', borderRadius:'8px'}}
@@ -350,7 +439,7 @@
                                         <div className="settings-bar">
                                             <div className="control">
                                                 <div className="label">Format</div>
-                                                <select value={f.format} onChange={e => updateFile(f.id, { format: e.target.value })}>
+                                                <select value={f.format} onChange={e => updateFile(f.id, { format: e.target.value, status: 'pending', progress: 0 })}>
                                                     <option value="image/jpeg">JPEG</option>
                                                     <option value="image/png">PNG</option>
                                                     <option value="image/webp">WebP</option>
@@ -358,7 +447,7 @@
                                             </div>
                                             <div className="control">
                                                 <div className="label">Target Size</div>
-                                               <select value={f.targetSizeKb} onChange={e => updateFile(f.id, { targetSizeKb: e.target.value === 'auto' ? 'auto' : parseInt(e.target.value), status: 'pending', progress: 0 })}>
+                                                <select value={f.targetSizeKb} onChange={e => updateFile(f.id, { targetSizeKb: e.target.value === 'auto' ? 'auto' : parseInt(e.target.value), status: 'pending', progress: 0 })}>
                                                     <option value="auto">Auto Quality</option>
                                                     <option value="20">Under 20 KB</option>
                                                     <option value="50">Under 50 KB</option>
@@ -369,7 +458,7 @@
                                             </div>
                                             <div className="control">
                                                 <div className="label">Quality ({f.quality}%)</div>
-                                               <input type="range" min="1" max="100" value={f.quality} onChange={e => updateFile(f.id, { quality: e.target.value, targetSizeKb: 'auto', status: 'pending', progress: 0 })} disabled={f.targetSizeKb !== 'auto'} />
+                                                <input type="range" min="1" max="100" value={f.quality} onChange={e => updateFile(f.id, { quality: e.target.value, targetSizeKb: 'auto', status: 'pending', progress: 0 })} disabled={f.targetSizeKb !== 'auto'} />
                                             </div>
                                             <button className="btn btn-primary" style={{height:'38px', padding:'0 15px'}} onClick={() => compressSingle(f)} disabled={f.status === 'processing'}>
                                                 {f.status === 'processing' ? '...' : 'Go ⚡'}
@@ -401,33 +490,74 @@
                     </div>
 
                     <div className="content-area">
-                        <h3>How to use the SocialMediaToolsHub Bulk Compressor</h3>
+                        <h3>How to use the Bulk Compressor</h3>
                         <p>Batch optimize your visual assets for social platforms like Instagram and TikTok without compromising on quality.</p>
-                        <div className="faq">
-                            <details open>
-                                <summary>1. Select Your Images <span style={{color:'var(--muted)'}}>›</span></summary>
-                                <p>Drag and drop your images into the zone above. We support JPG, PNG, and WebP for bulk processing.</p>
-                            </details>
-                            <details>
-                                <summary>2. Adjust Your Settings <span style={{color:'var(--muted)'}}>›</span></summary>
-                                <p>Set quality manually or pick a target size like "Under 50 KB". Our smart algorithm handles the rest locally.</p>
-                            </details>
-                            <details>
-                                <summary>3. Process and Save <span style={{color:'var(--muted)'}}>›</span></summary>
-                                <p>Click "Compress All" and download individual files or the whole batch as a single ZIP file.</p>
-                            </details>
+                        
+                        <div className="steps-grid">
+                            <div className="step-card">
+                                <span className="step-head">1. Select Images</span>
+                                <p className="step-desc">Drag and drop your images into the zone above. We support JPG, PNG, and WebP for bulk processing.</p>
+                            </div>
+                            <div className="step-card">
+                                <span className="step-head">2. Adjust Settings</span>
+                                <p className="step-desc">Set quality manually or pick a target size like "Under 50 KB". Our smart algorithm handles the rest.</p>
+                            </div>
+                            <div className="step-card">
+                                <span className="step-head">3. Process & Save</span>
+                                <p className="step-desc">Click "Compress All" and download individual files or the whole batch as a single ZIP file.</p>
+                            </div>
+                        </div>
+
+                        <div className="info-block">
+                            <h2>Free Online Image Converter & Optimizer</h2>
+                            <p>
+                                Need to <strong>compress JPG to 20kb</strong> for an online application? Or maybe <strong>convert WebP to PNG</strong> for editing? SocialMediaToolsHub is an all-in-one tool that handles both compression and format conversion locally in your browser.
+                            </p>
+                            
+                            <div className="info-grid">
+                                <div>
+                                    <h3>Compress to Specific Sizes</h3>
+                                    <ul>
+                                        <li><strong>Compress image to 20kb:</strong> Perfect for government portals, signatures, and thumbprints.</li>
+                                        <li><strong>Compress image to 50kb:</strong> Ideal for ID cards and profile pictures.</li>
+                                        <li><strong>Compress to 100kb/200kb:</strong> Best for high-quality social media posts.</li>
+                                    </ul>
+                                </div>
+                                <div>
+                                    <h3>Bulk Format Converter</h3>
+                                    <ul>
+                                        <li><strong>Convert JPG to WebP:</strong> Reduce file size by 30% for websites.</li>
+                                        <li><strong>Convert PNG to JPG:</strong> Remove transparency for compatibility.</li>
+                                        <li><strong>Convert WebP to PNG:</strong> Turn web images into editable formats.</li>
+                                    </ul>
+                                </div>
+                            </div>
                         </div>
 
                         <h3 style={{marginTop:'40px'}}>More Creator Tools</h3>
                         <div className="grid-tools">
-                            <a href="#" className="tool-card"><strong>🧾 Caption Counter</strong><p>Character, word and line counters.</p></a>
-                            <a href="#" className="tool-card"><strong>🎯 Safe Zone Overlay</strong><p>Preview Reels, Shorts & posts.</p></a>
+                            <a href="https://socialmediatoolshub.com/caption-counter" className="tool-card"><strong>🧾 Caption Counter</strong><p>Character, word and line counters.</p></a>
+                            <a href="https://socialmediatoolshub.com/safe-zone-overlay" className="tool-card"><strong>🎯 Safe Zone Overlay</strong><p>Preview Reels, Shorts & posts.</p></a>
                         </div>
 
                         <h3 style={{marginTop:'40px'}}>Frequently Asked Questions</h3>
                         <div className="faq">
-                            <details><summary>Is this tool private? <span>›</span></summary><p>Yes! 100% of the compression happens inside your browser. No files are ever uploaded to any server.</p></details>
+                            <details>
+                                <summary>Why is it hard to hit 20KB or 50KB, and why do images look blocky? <span className="faq-arrow">›</span></summary>
+                                <p>Hitting extreme file sizes like 20KB requires a trade-off. A standard 2MB image contains millions of pixels and colors. To fit that into 20KB, the compressor must discard massive amounts of data.</p>
+                                <p><strong>1. The "Blocky" Look:</strong> When you lower "Quality" to 1%, the algorithm turns detailed areas into solid square blocks (Macroblocking) to save space. This keeps the resolution high but makes the image look pixelated.</p>
+                                <p><strong>2. The Solution (Resizing):</strong> Instead of ruining the quality with blocks, it is often better to reduce the <em>Dimensions</em> (e.g., resizing from 2000px to 600px). This naturally drops the file size to 20KB while keeping the text and details sharp.</p>
+                            </details>
+                            <details>
+                                <summary>Is my data private when compressing images? <span className="faq-arrow">›</span></summary>
+                                <p>Yes. Unlike other bulk compressors, SocialMediaToolsHub processes your images <strong>locally within your browser</strong>. Your photos are never sent to our servers, ensuring 100% privacy for your personal or professional assets.</p>
+                            </details>
                             <details><summary>What formats are supported? <span>›</span></summary><p>We support JPG, PNG, and WebP for input and output. You can convert between them freely.</p></details>
+                            <details><summary>Why can't I get under 20KB? <span>›</span></summary><p>Some images are too detailed to compress that much without resizing. If our tool fails to hit 20KB, click the "Force Resize" button that appears. This shrinks the dimensions to guarantee the small file size.</p></details>
+                            <details><summary>Does this work on Mobile? <span>›</span></summary><p>Yes, this tool works perfectly on iPhone (iOS) and Android devices directly in Chrome, Safari, or Samsung Internet.</p></details>
+                            <details><summary>Is there a limit on file count? <span>›</span></summary><p>There is no hard limit, but compressing 50+ images at once depends on your device's RAM. We recommend batches of 10-20 for the best speed.</p></details>
+                            <details><summary>How does "Force Resize" work? <span>›</span></summary><p>If you need a strict file size (like 20KB or 50KB for government forms), "Force Resize" reduces the pixel width (e.g., to 600px) to ensure the file size requirement is met.</p></details>
+                            <details><summary>Can I convert PNG to JPG? <span>›</span></summary><p>Yes. Just upload your PNGs, select "JPEG" in the format dropdown for each file (or leave defaults if we auto-detect), and click Compress.</p></details>
                         </div>
                     </div>
 
