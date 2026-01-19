@@ -101,7 +101,14 @@
       .processing-header { padding: 20px; border-bottom: 1px solid var(--border); display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 15px; }
       .file-row { padding: 20px; border-bottom: 1px solid var(--border); transition: 0.2s; }
       .file-row:hover { background: rgba(255,255,255,0.02); }
-      .file-main { display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px; }
+     .file-main { 
+    display: flex; 
+    justify-content: space-between; 
+    align-items: center; 
+    margin-bottom: 15px; 
+    flex-wrap: wrap;   /* NEW: Allows wrapping on mobile */
+    gap: 10px;         /* NEW: Adds space when wrapped */
+}
       .file-meta { display: flex; align-items: center; gap: 12px; }
       .file-icon { font-size: 24px; background: rgba(255,255,255,0.05); padding: 8px; border-radius: 8px; }
       .file-name { font-weight: 600; font-size: 14px; max-width: 250px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
@@ -369,7 +376,7 @@
                                                     </div>
                                                 </div>
                                             </div>
-                                            <div style={{display:'flex', gap:'15px', alignItems:'center'}}>
+                                          <div style={{display:'flex', gap:'8px', alignItems:'center', flexWrap:'wrap', justifyContent:'flex-end', marginLeft:'auto'}}>
                                                 {f.status === 'warning' && (
                                                     <div style={{display:'flex', gap:'10px', alignItems:'center'}}>
                                                         <span style={{fontSize:'12px', color:'var(--warning)'}}>Missed Target</span>
