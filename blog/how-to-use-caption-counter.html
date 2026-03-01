@@ -119,11 +119,42 @@ article a:hover {
     }
     .tool-link {
   text-align: center;
-  margin: 28px 0;
+  margin: 32px 0;
 }
 
-.tool-link a {
+.border-link {
   display: inline-block;
+  padding: 14px 24px;
+  font-weight: 700;
+  text-decoration: none;
+  color: var(--text);
+  border-radius: 14px;
+  position: relative;
+  background: rgba(255,255,255,0.02);
+  transition: all 0.25s ease;
+}
+
+/* Gradient border effect */
+.border-link::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  padding: 2px; /* border thickness */
+  border-radius: 14px;
+  background: linear-gradient(90deg, #38bdf8, #818cf8);
+  -webkit-mask: 
+    linear-gradient(#000 0 0) content-box, 
+    linear-gradient(#000 0 0);
+  -webkit-mask-composite: xor;
+          mask-composite: exclude;
+  pointer-events: none;
+}
+
+/* Hover effect */
+.border-link:hover {
+  background: linear-gradient(90deg, #38bdf8, #818cf8);
+  color: #0f172a;
+  transform: translateY(-2px);
 }
   </style>
 </head>
@@ -204,9 +235,10 @@ article a:hover {
   </a>
 </p>
 
-      <h2>Real Example</h2>
+    
 
       <figure class="article-image">
+          <h2>Real Example</h2>
         <img
           src="/assets/blog/caption-counter-example.png"
           alt="Caption counter interface showing character and emoji count"
