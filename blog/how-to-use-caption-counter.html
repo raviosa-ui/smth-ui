@@ -117,44 +117,37 @@ article a:hover {
       display: inline-block;
       padding: 4px 0;
     }
-    .tool-link {
+  .tool-link {
   text-align: center;
-  margin: 32px 0;
+  margin: 36px 0;
 }
 
-.border-link {
-  display: inline-block;
-  padding: 14px 24px;
+/* Normal inline links */
+article a:not(.border-link) {
+  background: linear-gradient(90deg, #38bdf8, #818cf8);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
   font-weight: 700;
   text-decoration: none;
-  color: var(--text);
+}
+
+/* CTA Button */
+.border-link {
+  display: inline-block;
+  padding: 14px 26px;
   border-radius: 14px;
-  position: relative;
-  background: rgba(255,255,255,0.02);
+  font-weight: 700;
+  text-decoration: none;
+  background: linear-gradient(90deg, #38bdf8, #818cf8);
+  color: #0f172a !important;   /* force override */
   transition: all 0.25s ease;
+  box-shadow: 0 8px 24px rgba(56,189,248,0.25);
 }
 
-/* Gradient border effect */
-.border-link::before {
-  content: "";
-  position: absolute;
-  inset: 0;
-  padding: 2px; /* border thickness */
-  border-radius: 14px;
-  background: linear-gradient(90deg, #38bdf8, #818cf8);
-  -webkit-mask: 
-    linear-gradient(#000 0 0) content-box, 
-    linear-gradient(#000 0 0);
-  -webkit-mask-composite: xor;
-          mask-composite: exclude;
-  pointer-events: none;
-}
-
-/* Hover effect */
+/* Hover */
 .border-link:hover {
-  background: linear-gradient(90deg, #38bdf8, #818cf8);
-  color: #0f172a;
-  transform: translateY(-2px);
+  transform: translateY(-3px);
+  box-shadow: 0 12px 32px rgba(56,189,248,0.4);
 }
   </style>
 </head>
