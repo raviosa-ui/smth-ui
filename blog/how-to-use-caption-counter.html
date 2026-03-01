@@ -56,11 +56,18 @@
       margin-left: 20px;
     }
 
-    article a {
-      color: var(--accent-from);
-      text-decoration: none;
-      font-weight: 600;
-    }
+  article a {
+  background: linear-gradient(90deg, #38bdf8, #818cf8);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  font-weight: 700;
+  text-decoration: none;
+  transition: opacity 0.2s ease;
+}
+
+article a:hover {
+  opacity: 0.8;
+}
 
     article a:hover {
       text-decoration: underline;
