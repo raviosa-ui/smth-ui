@@ -84,18 +84,20 @@ article a:hover {
       color: var(--text);
     }
 
-    .article-image {
-      margin: 32px 0;
-      text-align: center;
-    }
+   .article-image {
+  margin: 32px 0;
+  text-align: center;
+}
 
-    .article-image img {
-      max-width: 100%;
-      height: auto;
-      border-radius: 14px;
-      border: 1px solid rgba(255,255,255,0.08);
-      background: #020617;
-    }
+.article-image img {
+  display: block;
+  margin: 0 auto;
+  max-width: 100%;
+  height: auto;
+  border-radius: 14px;
+  border: 1px solid rgba(255,255,255,0.08);
+  background: #020617;
+}
 
     .article-image figcaption {
       margin-top: 10px;
@@ -115,6 +117,14 @@ article a:hover {
       display: inline-block;
       padding: 4px 0;
     }
+    .tool-link {
+  text-align: center;
+  margin: 28px 0;
+}
+
+.tool-link a {
+  display: inline-block;
+}
   </style>
 </head>
 
@@ -188,11 +198,11 @@ article a:hover {
         <li>Emoji count</li>
       </ul>
 
-      <p>
-        👉 <a href="https://socialmediatoolshub.com/caption-counter">
-        Use the SocialMediaToolsHub Caption Counter Tool
-        </a>
-      </p>
+     <p class="tool-link">
+  👉 <a href="https://socialmediatoolshub.com/caption-counter">
+  Use the SocialMediaToolsHub Caption Counter Tool
+  </a>
+</p>
 
       <h2>Real Example</h2>
 
