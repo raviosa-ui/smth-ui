@@ -1,0 +1,601 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  
+  <title>Collab Pitch Card & Media Kit Generator | SocialMediaToolsHub</title>
+  <meta name="title" content="Collab Pitch Card & Media Kit Generator | SocialMediaToolsHub">
+  <meta name="description" content="Generate a professional, high-resolution influencer pitch card and mini media kit in 60 seconds. Auto-calculate engagement, add QR codes, and land brand deals." />
+  <meta name="keywords" content="collab pitch generator, media kit maker, influencer rate card, brand deal pitch, engagement rate calculator, creator tools">
+  <meta name="author" content="SocialMediaToolsHub">
+  <meta name="robots" content="index, follow">
+  <link rel="canonical" href="https://socialmediatoolshub.com/collab-pitch-card-generator" />
+   
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-TV63D6J6RW"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', 'G-TV63D6J6RW');
+  </script>
+
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://socialmediatoolshub.com/collab-pitch-card-generator">
+  <meta property="og:title" content="Collab Pitch Card & Media Kit Generator">
+  <meta property="og:description" content="Generate a professional influencer pitch card in 60 seconds. Auto-calculate engagement, add QR codes, and land brand deals.">
+  <meta property="og:image" content="https://socialmediatoolshub.com/assets/og-smth.jpg"> 
+
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:url" content="https://socialmediatoolshub.com/collab-pitch-card-generator">
+  <meta name="twitter:title" content="Collab Pitch Card & Media Kit Generator">
+  <meta name="twitter:description" content="Create a high-res media kit graphic instantly. Free browser tool for creators.">
+  <meta name="twitter:image" content="https://socialmediatoolshub.com/assets/og-smth.jpg">
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+  <link rel="icon" href="/favicon.ico" type="image/x-icon">
+  <link rel="manifest" href="/site.webmanifest">
+  <meta name="theme-color" content="#0f172a" />
+
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "WebApplication",
+    "name": "Collab Pitch Card Generator",
+    "url": "https://socialmediatoolshub.com/collab-pitch-card-generator",
+    "applicationCategory": "BusinessApplication",
+    "operatingSystem": "All",
+    "offers": {
+      "@type": "Offer",
+      "price": "0",
+      "priceCurrency": "USD"
+    },
+    "description": "A client-side tool to generate professional influencer media kit cards, complete with engagement calculators and QR codes."
+  }
+  </script>
+
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    "mainEntity": [
+      {
+        "@type": "Question",
+        "name": "How does the engagement rate calculator work?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Simply enter your total followers/subscribers and your average views or likes per post. The tool automatically divides average views by total followers and multiplies by 100 to give brands an accurate engagement percentage."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "What is the QR Code used for?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "If you are pitching in person or sending a PDF, a brand manager can scan the QR code on your pitch card to instantly open your YouTube channel, Instagram profile, or a specific viral video."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "Why should I include 'Trusted By' logos?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Adding logos of brands you have previously collaborated with provides instant social proof. It tells new brands that you are professional and trusted by the industry."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "What are Smart Labels?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "When you select your primary platform (e.g., YouTube vs. Instagram), the tool automatically updates the metric labels to match industry standards, such as swapping 'Followers' to 'Subscribers'."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "Is my data and are my images uploaded to your servers?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "No. The entire rendering process, including image uploads and QR code generation, happens locally in your web browser. Your data is 100% private."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "How should I send this to brands?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "You can attach the downloaded high-resolution PNG directly to your outreach emails, embed it in a PDF media kit, or send it in DMs to brand managers on LinkedIn or Instagram."
+        }
+      }
+    ]
+  }
+  </script>
+
+  <link rel="stylesheet" href="style.css">
+  
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+
+  <style>
+    .brand-link { display: flex; align-items: center; text-decoration: none; color: inherit; gap: 8px; }
+    
+    .tool-layout { display: grid; grid-template-columns: 1fr 1.2fr; gap: 40px; margin-top: 30px; }
+    @media (max-width: 900px) { .tool-layout { grid-template-columns: 1fr; } }
+
+    /* Form Panel Styling */
+    .form-panel { background: var(--card); padding: 30px; border-radius: var(--r-lg); border: 1px solid rgba(255, 255, 255, 0.05); }
+    .form-panel h2 { margin-top: 0; color: var(--text); font-size: 1.3rem; margin-bottom: 20px;}
+    .form-panel h3 { margin-top: 25px; color: var(--accent-from); font-size: 0.9rem; text-transform: uppercase; letter-spacing: 1px;}
+    .form-panel label { display: block; margin: 12px 0 6px; font-weight: 600; color: var(--muted); font-size: 0.85rem;}
+    
+    .form-panel input[type="text"], .form-panel input[type="number"], .form-panel select, .form-panel textarea {
+      width: 100%; padding: 12px; border-radius: 8px; box-sizing: border-box;
+      background: var(--bg); border: 1px solid rgba(255,255,255,0.1); color: #fff; outline: none;
+      font-family: inherit; font-size: 0.95rem; transition: border-color 0.2s;
+    }
+    .form-panel input:focus, .form-panel textarea:focus, .form-panel select:focus { border-color: var(--accent-from); }
+    .form-panel textarea { resize: vertical; min-height: 60px; }
+    
+    .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+    .grid-3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; }
+
+    .btn-export {
+      width: 100%; padding: 16px; background: linear-gradient(90deg, var(--accent-from), var(--accent-to)); color: #000;
+      border: none; border-radius: 12px; font-weight: 800; font-size: 1.05rem;
+      cursor: pointer; margin-top: 30px; transition: transform 0.1s, box-shadow 0.2s; box-shadow: 0 6px 18px rgba(8,12,30,0.6);
+    }
+    .btn-export:hover { transform: translateY(-3px); box-shadow: 0 10px 25px rgba(56,189,248,0.2); }
+
+    .color-picker-wrap { display: flex; align-items: center; gap: 10px; margin-bottom: 10px;}
+    .color-picker-wrap input[type="color"] { width: 40px; height: 40px; border: none; border-radius: 8px; cursor: pointer; padding: 0; background: transparent; }
+
+    /* Output Panel */
+    .preview-panel { display: flex; flex-direction: column; align-items: center; padding-top: 10px; position: sticky; top: 20px;}
+    
+    /* Pitch Card UI Variables mapped to JS */
+    :root {
+      --pc-accent: #38bdf8;
+      --pc-bg: #0f172a;
+      --pc-card: #1e293b;
+    }
+
+    .pitch-card {
+      width: 100%; max-width: 480px; background: linear-gradient(145deg, var(--pc-card), var(--pc-bg));
+      border-radius: 20px; border: 2px solid var(--pc-accent); padding: 30px; box-sizing: border-box;
+      box-shadow: 0 25px 50px rgba(0,0,0,0.5), 0 0 40px rgba(var(--pc-accent), 0.1);
+      font-family: system-ui, -apple-system, sans-serif; color: #fff; position: relative; overflow: hidden;
+    }
+
+    /* Glow Effect */
+    .pitch-card::before {
+      content: ''; position: absolute; top: -100px; right: -100px; width: 250px; height: 250px;
+      background: radial-gradient(circle, var(--pc-accent) 0%, transparent 70%); opacity: 0.15; border-radius: 50%; pointer-events: none;
+    }
+
+    /* Top Section */
+    .pc-top { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 20px; }
+    .pc-profile { display: flex; gap: 16px; align-items: center;}
+    .pc-avatar { width: 70px; height: 70px; border-radius: 50%; object-fit: cover; border: 2px solid var(--pc-accent); background: #333; }
+    .pc-name { font-size: 1.4rem; font-weight: 800; margin: 0 0 2px 0; letter-spacing: -0.5px;}
+    .pc-handle { color: var(--pc-accent); font-weight: 600; font-size: 0.9rem; margin: 0 0 4px 0;}
+    .pc-persona { display: inline-block; background: rgba(255,255,255,0.1); padding: 3px 8px; border-radius: 6px; font-size: 0.75rem; color: #e2e8f0; text-transform: uppercase; letter-spacing: 0.5px; font-weight: 700;}
+    
+    .pc-qr-box { background: #fff; padding: 6px; border-radius: 8px; box-shadow: 0 4px 10px rgba(0,0,0,0.3); }
+    #qrcode img { display: block; width: 64px; height: 64px; }
+
+    /* Spotlight Banner */
+    .pc-spotlight { background: rgba(255,255,255,0.03); border-left: 4px solid var(--pc-accent); padding: 12px 16px; border-radius: 0 8px 8px 0; font-size: 0.95rem; font-style: italic; margin-bottom: 20px; line-height: 1.4;}
+
+    /* Metrics Grid */
+    .pc-metrics { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; margin-bottom: 20px; }
+    .pc-metric-box { background: rgba(0,0,0,0.2); border: 1px solid rgba(255,255,255,0.05); padding: 12px; border-radius: 10px; text-align: center; }
+    .pc-val { display: block; font-size: 1.3rem; font-weight: 800; color: #fff; margin-bottom: 2px;}
+    .pc-lbl { display: block; font-size: 0.7rem; color: #94a3b8; text-transform: uppercase; font-weight: 700; letter-spacing: 0.5px;}
+
+    /* Package Deal */
+    .pc-package { border: 1px dashed rgba(255,255,255,0.2); border-radius: 12px; padding: 16px; margin-bottom: 20px;}
+    .pc-package-title { font-size: 0.8rem; text-transform: uppercase; color: var(--pc-accent); font-weight: 800; margin-bottom: 6px; letter-spacing: 1px;}
+    .pc-package-text { font-size: 0.95rem; line-height: 1.4; color: #e2e8f0; font-weight: 500;}
+
+    /* Trusted By Logos */
+    .pc-trusted { border-top: 1px solid rgba(255,255,255,0.1); padding-top: 16px;}
+    .pc-trusted-title { font-size: 0.7rem; text-transform: uppercase; color: #94a3b8; text-align: center; margin-bottom: 12px; font-weight: 700; letter-spacing: 1px;}
+    .pc-logos { display: flex; justify-content: space-evenly; align-items: center; gap: 10px;}
+    .pc-logo-img { height: 30px; width: auto; max-width: 90px; object-fit: contain; filter: grayscale(100%) brightness(200%); opacity: 0.8;}
+
+    /* Utility Sections */
+    .disclaimer { font-size: 0.75rem; color: var(--muted); margin-top: 20px; text-align: center; line-height: 1.5; }
+    .how-to-use { margin-top: 60px; background: var(--card); padding: 30px; border-radius: var(--r-lg); }
+    .how-to-use ol { padding-left: 20px; color: var(--muted); }
+    .how-to-use li { margin-bottom: 10px; }
+    
+    /* FAQ & Share additions matching index */
+    .faq details{margin-bottom:10px;border-radius:10px;padding:10px;background:rgba(255,255,255,0.01);border:1px solid rgba(255,255,255,0.02)}
+    .faq summary{display:flex;justify-content:space-between;align-items:center;cursor:pointer;font-weight:700}
+    .faq summary::-webkit-details-marker{display:none}
+    .faq .faq-arrow{color:var(--muted);transition:transform .18s}
+    details[open] .faq-arrow{transform:rotate(90deg)}
+    .share-row{display:flex;justify-content:center;margin:28px 0;gap:12px}
+    .btn-whatsapp{ display:inline-flex; align-items:center; gap:12px; padding:16px 22px; border-radius:18px; background:linear-gradient(90deg,#25D366,#128C7E); color:white; font-weight:800; font-size:18px; border:0; box-shadow:0 12px 30px rgba(18,140,126,0.14), 0 6px 18px rgba(0,0,0,0.25); }
+    
+    /* Footer tweaks */
+    footer { margin-top: 60px; padding: 40px 20px; text-align: center; border-top: 1px solid rgba(255, 255, 255, 0.05); }
+    .footer-nav { display: flex; justify-content: center; flex-wrap: wrap; gap: 20px; margin-bottom: 16px; }
+    .footer-nav a { color: #94a3b8; font-size: 0.9rem; transition: color 0.2s ease; }
+    .footer-nav a:hover { color: #ffffff; }
+    .copyright { color: #475569; font-size: 0.85rem; }
+  </style>
+</head>
+
+<body>
+  <div class="container">
+
+    <header class="header" role="banner">
+      <a href="/" class="brand-link" aria-label="SocialMediaToolsHub Home">
+        <span class="brand-emoji" aria-hidden="true">⚡</span>
+        <span class="logo-text">SocialMediaToolsHub</span>
+      </a>
+      <nav class="topnav" role="navigation" aria-label="Primary">
+        <a href="/about-us">About Us</a>
+        <a class="menu-contact" href="/contact-us">Contact Us</a>
+      </nav>
+    </header>
+
+    <main>
+      <section class="hero" aria-labelledby="hero-title">
+        <div class="hero-inner">
+          <div class="hero-copy" style="text-align: center; width: 100%;">
+            <h1 id="hero-title">Collab Pitch Card & Media Kit Generator</h1>
+            <p class="lead" style="margin-top: 5px;">Build a high-conversion, professional influencer pitch graphic in 60 seconds.</p>
+          </div>
+        </div>
+      </section>
+
+      <section class="tool-layout">
+        
+        <div class="form-panel">
+          <h2>Design Your Pitch</h2>
+          
+          <div class="grid-2">
+            <div>
+              <label>Primary Platform (Smart Labels)</label>
+              <select id="inPlatform" onchange="applySmartLabels()">
+                <option value="youtube">📺 YouTube</option>
+                <option value="instagram">📸 Instagram</option>
+                <option value="tiktok">📱 TikTok</option>
+                <option value="custom">⚙️ Custom</option>
+              </select>
+            </div>
+            <div>
+              <label>Brand Accent Color</label>
+              <div class="color-picker-wrap">
+                <input type="color" id="inColor" value="#38bdf8" oninput="updateUI()">
+                <span style="font-size: 0.85rem; color: var(--muted);">Pick your vibe</span>
+              </div>
+            </div>
+          </div>
+
+          <h3>1. Identity</h3>
+          <div class="grid-2">
+            <div><label>Creator / Channel Name</label><input type="text" id="inName" value="Ravi Kumar" oninput="updateUI()"></div>
+            <div><label>Social Handle</label><input type="text" id="inHandle" value="@ravicodes" oninput="updateUI()"></div>
+          </div>
+          <div class="grid-2">
+            <div><label>Audience Tagline (e.g., Gen-Z Tech)</label><input type="text" id="inPersona" value="Tech & Automation" oninput="updateUI()"></div>
+            <div><label>Profile Picture</label><input type="file" accept="image/*" onchange="loadAvatar(event)"></div>
+          </div>
+
+          <h3>2. Auto-Engagement Calculator</h3>
+          <p style="font-size: 0.75rem; color: var(--muted); margin-top: 0;">We'll calculate your true engagement rate automatically.</p>
+          <div class="grid-2">
+            <div><label>Total Followers/Subs</label><input type="number" id="inTotalSubs" value="15000" oninput="calculateEngagement()"></div>
+            <div><label>Avg Views per Post</label><input type="number" id="inAvgViews" value="2500" oninput="calculateEngagement()"></div>
+          </div>
+
+          <h3>3. Core Metrics</h3>
+          <div class="grid-3">
+            <div>
+              <label>Label 1</label><input type="text" id="lbl1" value="Subscribers" oninput="updateUI()">
+              <input type="text" id="val1" value="15K" style="margin-top:4px;" oninput="updateUI()">
+            </div>
+            <div>
+              <label>Label 2 (Auto)</label><input type="text" id="lbl2" value="Engagement" oninput="updateUI()">
+              <input type="text" id="val2" value="16.6%" style="margin-top:4px;" oninput="updateUI()">
+            </div>
+            <div>
+              <label>Label 3</label><input type="text" id="lbl3" value="Top Demo" oninput="updateUI()">
+              <input type="text" id="val3" value="India (65%)" style="margin-top:4px;" oninput="updateUI()">
+            </div>
+          </div>
+
+          <h3>4. The Pitch</h3>
+          <label>Recent Win / Spotlight Banner</label>
+          <input type="text" id="inSpotlight" value="Latest tutorial reached 85K organic views in 48 hours." oninput="updateUI()">
+          
+          <label>Proposed Deliverable Package</label>
+          <textarea id="inPackage" oninput="updateUI()">🏆 Platinum Tier:
+• 1x 60-Second Dedicated Integration
+• 1x Community Post with Link
+• Pinned Comment & Description Link for 30 Days</textarea>
+
+          <label>Channel URL (For QR Code)</label>
+          <input type="text" id="inUrl" value="https://youtube.com/@ravicodes" oninput="generateQR()">
+
+          <h3>5. Social Proof (Trusted By)</h3>
+          <p style="font-size: 0.75rem; color: var(--muted); margin-top: 0;">Upload up to 3 brand logos you've worked with (PNGs work best).</p>
+          <div class="grid-3">
+            <input type="file" accept="image/*" onchange="loadBrandLogo(event, 'logo1')">
+            <input type="file" accept="image/*" onchange="loadBrandLogo(event, 'logo2')">
+            <input type="file" accept="image/*" onchange="loadBrandLogo(event, 'logo3')">
+          </div>
+
+          <button class="btn-export" onclick="downloadImage()">Download Media Kit (PNG) 🚀</button>
+
+          <div class="disclaimer">
+            All rendering happens securely in your browser. No data is saved to our servers.
+          </div>
+        </div>
+
+        <div class="preview-panel">
+          <div class="pitch-card" id="captureArea">
+            
+            <div class="pc-top">
+              <div class="pc-profile">
+                <img id="outAvatar" class="pc-avatar" src="data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='70' height='70'><rect width='70' height='70' fill='%23334155'/></svg>">
+                <div>
+                  <h2 class="pc-name" id="outName">Ravi Kumar</h2>
+                  <p class="pc-handle" id="outHandle">📺 @ravicodes</p>
+                  <span class="pc-persona" id="outPersona">Tech & Automation</span>
+                </div>
+              </div>
+              <div class="pc-qr-box" id="qrcode"></div>
+            </div>
+
+            <div class="pc-spotlight" id="outSpotlight">
+              Latest tutorial reached 85K organic views in 48 hours.
+            </div>
+
+            <div class="pc-metrics">
+              <div class="pc-metric-box"><span class="pc-val" id="outVal1">15K</span><span class="pc-lbl" id="outLbl1">Subscribers</span></div>
+              <div class="pc-metric-box"><span class="pc-val" id="outVal2">16.6%</span><span class="pc-lbl" id="outLbl2">Engagement</span></div>
+              <div class="pc-metric-box"><span class="pc-val" id="outVal3">India (65%)</span><span class="pc-lbl" id="outLbl3">Top Demo</span></div>
+            </div>
+
+            <div class="pc-package">
+              <div class="pc-package-title">Proposed Package</div>
+              <div class="pc-package-text" id="outPackage">🏆 Platinum Tier:<br>• 1x 60-Second Dedicated Integration<br>• 1x Community Post with Link<br>• Pinned Comment & Description Link</div>
+            </div>
+
+            <div class="pc-trusted" id="trustedSection" style="display:none;">
+              <div class="pc-trusted-title">Trusted By / Past Collabs</div>
+              <div class="pc-logos">
+                <img class="pc-logo-img" id="logo1" style="display:none;">
+                <img class="pc-logo-img" id="logo2" style="display:none;">
+                <img class="pc-logo-img" id="logo3" style="display:none;">
+              </div>
+            </div>
+
+          </div>
+        </div>
+
+      </section>
+
+      <section class="how-to-use">
+        <h3 style="color: var(--text); margin-top:0;">How to Land Deals with this Media Kit</h3>
+        <p style="color: var(--muted); font-size: 14px;">Brands receive hundreds of text emails a day. Attaching a clean, data-driven visual graphic makes you stand out instantly.</p>
+        <ol>
+          <li><strong>Set the Vibe:</strong> Pick an accent color that matches your brand or the brand you are pitching.</li>
+          <li><strong>Let us do the Math:</strong> Enter your followers and average views. We will calculate your true engagement rate—the #1 metric brands look for.</li>
+          <li><strong>Define the Package:</strong> Don't leave them guessing. List exactly what you will deliver (e.g., "1 YouTube Video + 1 Insta Story").</li>
+          <li><strong>Social Proof:</strong> Upload logos of software or products you've worked with to build instant trust.</li>
+          <li><strong>Export & Attach:</strong> Download the PNG and attach it directly to your pitch email. If pitching in person, they can scan your custom QR code!</li>
+        </ol>
+      </section>
+
+      <section class="tools" style="margin-top: 40px;">
+        <h2>You Might Also Like</h2>
+        <div class="grid" style="grid-template-columns: 1fr 1fr;">
+          <a class="card" href="/social-comment-card-generator" role="listitem">
+            <div class="emoji" aria-hidden="true">💬</div>
+            <div>
+              <h3>Comment Card Generator</h3>
+              <p>Generate high-res, pixel-perfect comment graphics for YouTube & IG.</p>
+            </div>
+          </a>
+          <a class="card" href="/caption-counter" role="listitem">
+            <div class="emoji" aria-hidden="true">🧾</div>
+            <div>
+              <h3>Caption Counter</h3>
+              <p>Live character, word and line counters to avoid truncated text.</p>
+            </div>
+          </a>
+        </div>
+      </section>
+
+      <div class="share-row" aria-hidden="false">
+        <a id="whatsappShare" class="btn-whatsapp" href="#" target="_blank" rel="noopener noreferrer" aria-label="Share to WhatsApp">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M21.47 2.53A11.99 11.99 0 0012 0C5.373 0 .001 5.373.001 12a11.63 11.63 0 001.64 6.05L0 24l6.23-1.62A11.97 11.97 0 0012 24c6.627 0 12-5.373 12-12 0-3.2-1.09-6.17-2.53-8.47z" fill="#fff" opacity=".06"/><path d="M17.472 14.382c-.297-.148-1.758-.867-2.03-.967-.273-.099-.472-.148-.672.148-.198.297-.768.967-.942 1.164-.173.198-.347.223-.644.074-.297-.148-1.255-.462-2.39-1.476-.885-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.447-.52.15-.174.198-.297.298-.495.099-.198.05-.371-.025-.519-.074-.148-.672-1.622-.919-2.222-.242-.583-.487-.504-.672-.513l-.573-.01c-.198 0-.519.074-.792.371s-1.04 1.016-1.04 2.479 1.065 2.876 1.213 3.074c.148.198 2.095 3.2 5.073 4.487 0 0 .084.037.198.018.131-.02 1.758-.719 2.006-.799.247-.083.397-.12.571.074.174.198.672.768.863.992.198.223.347.248.644.148.297-.099 1.758-.647 2.006-.901.247-.248.247-.463.173-.647-.074-.184-.272-.297-.569-.445z" fill="#fff"/></svg>
+          <span>Share Tool</span>
+        </a>
+      </div>
+
+      <article class="content-area">
+        <h3>Frequently Asked Questions</h3>
+        <div class="faq" aria-live="polite">
+          <details>
+            <summary>How does the engagement rate calculator work? <span class="faq-arrow">›</span></summary>
+            <div>Simply enter your total followers/subscribers and your average views or likes per post. The tool automatically divides average views by total followers and multiplies by 100 to give brands an accurate engagement percentage.</div>
+          </details>
+          <details>
+            <summary>What is the QR Code used for? <span class="faq-arrow">›</span></summary>
+            <div>If you are pitching in person or sending a PDF, a brand manager can scan the QR code on your pitch card to instantly open your YouTube channel, Instagram profile, or a specific viral video link.</div>
+          </details>
+          <details>
+            <summary>Why should I include 'Trusted By' logos? <span class="faq-arrow">›</span></summary>
+            <div>Adding logos of brands you have previously collaborated with provides instant social proof. It tells new brands that you are professional, reliable, and trusted by the industry.</div>
+          </details>
+          <details>
+            <summary>What are Smart Labels? <span class="faq-arrow">›</span></summary>
+            <div>When you select your primary platform (e.g., YouTube vs. Instagram), the tool automatically updates the metric labels to match industry standards, such as swapping 'Followers' to 'Subscribers'.</div>
+          </details>
+          <details>
+            <summary>Is my data uploaded to your servers? <span class="faq-arrow">›</span></summary>
+            <div>No. The entire rendering process, including image uploads and QR code generation, happens locally in your web browser. Your data is 100% private.</div>
+          </details>
+          <details>
+            <summary>How should I send this to brands? <span class="faq-arrow">›</span></summary>
+            <div>You can attach the downloaded high-resolution PNG directly to your outreach emails, embed it in a PDF media kit, or send it in DMs to brand managers on LinkedIn or Instagram.</div>
+          </details>
+        </div>
+      </article>
+
+    </main>
+
+    <footer>
+      <nav class="footer-nav" aria-label="Footer Policy Links">
+        <a href="/about-us">About Us</a>
+        <a href="/contact-us">Contact</a>
+        <a href="/privacy">Privacy Policy</a>
+        <a href="/terms">Terms of Service</a>
+        <a href="/cookie-policy">Cookie Policy</a>
+      </nav>
+      <div class="copyright">
+        © 2026 SocialMediaToolsHub. Built for speed.
+      </div>
+    </footer>
+  </div>
+
+  <script>
+    let qrcode = null;
+    let logosUploaded = 0;
+
+    function applySmartLabels() {
+      const platform = document.getElementById('inPlatform').value;
+      const lbl1 = document.getElementById('lbl1');
+      const handleInput = document.getElementById('inHandle');
+      
+      let prefix = "";
+      if(platform === 'youtube') { lbl1.value = "Subscribers"; prefix = "📺 "; }
+      else if(platform === 'instagram') { lbl1.value = "Followers"; prefix = "📸 "; }
+      else if(platform === 'tiktok') { lbl1.value = "Followers"; prefix = "📱 "; }
+      
+      // Auto prepend icon to handle if not custom
+      if(platform !== 'custom') {
+        let cleanHandle = handleInput.value.replace(/^[📺📸📱\s]+/, "");
+        handleInput.value = prefix + cleanHandle;
+      }
+      
+      updateUI();
+    }
+
+    function calculateEngagement() {
+      const subs = parseFloat(document.getElementById('inTotalSubs').value) || 0;
+      const views = parseFloat(document.getElementById('inAvgViews').value) || 0;
+      
+      if(subs > 0) {
+        const rate = ((views / subs) * 100).toFixed(1);
+        document.getElementById('val2').value = rate + "%";
+        // Also auto format the Sub display value (e.g. 15000 -> 15K)
+        let displaySubs = subs;
+        if(subs >= 1000000) displaySubs = (subs/1000000).toFixed(1) + "M";
+        else if(subs >= 1000) displaySubs = (subs/1000).toFixed(1) + "K";
+        document.getElementById('val1').value = displaySubs;
+      }
+      updateUI();
+    }
+
+    function updateUI() {
+      // Colors
+      const color = document.getElementById('inColor').value;
+      document.documentElement.style.setProperty('--pc-accent', color);
+
+      // Text Fields
+      document.getElementById('outName').textContent = document.getElementById('inName').value;
+      document.getElementById('outHandle').textContent = document.getElementById('inHandle').value;
+      document.getElementById('outPersona').textContent = document.getElementById('inPersona').value;
+      document.getElementById('outSpotlight').textContent = document.getElementById('inSpotlight').value;
+      
+      // Metrics
+      document.getElementById('outLbl1').textContent = document.getElementById('lbl1').value;
+      document.getElementById('outVal1').textContent = document.getElementById('val1').value;
+      document.getElementById('outLbl2').textContent = document.getElementById('lbl2').value;
+      document.getElementById('outVal2').textContent = document.getElementById('val2').value;
+      document.getElementById('outLbl3').textContent = document.getElementById('lbl3').value;
+      document.getElementById('outVal3').textContent = document.getElementById('val3').value;
+
+      // Package text (handle line breaks)
+      const pkgText = document.getElementById('inPackage').value;
+      document.getElementById('outPackage').innerHTML = pkgText.replace(/\n/g, "<br>");
+    }
+
+    function generateQR() {
+      const url = document.getElementById('inUrl').value;
+      const qrContainer = document.getElementById("qrcode");
+      qrContainer.innerHTML = ""; // Clear existing
+      
+      if(url.trim() !== "") {
+        qrcode = new QRCode(qrContainer, {
+          text: url,
+          width: 64,
+          height: 64,
+          colorDark : "#0f172a",
+          colorLight : "#ffffff",
+          correctLevel : QRCode.CorrectLevel.L
+        });
+      }
+    }
+
+    function loadAvatar(event) {
+      const file = event.target.files[0];
+      if (file) {
+        const reader = new FileReader();
+        reader.onload = function(e) {
+          document.getElementById('outAvatar').src = e.target.result;
+        }
+        reader.readAsDataURL(file);
+      }
+    }
+
+    function loadBrandLogo(event, targetId) {
+      const file = event.target.files[0];
+      if (file) {
+        const reader = new FileReader();
+        reader.onload = function(e) {
+          const img = document.getElementById(targetId);
+          img.src = e.target.result;
+          img.style.display = "block";
+          
+          document.getElementById('trustedSection').style.display = "block";
+        }
+        reader.readAsDataURL(file);
+      }
+    }
+
+    function downloadImage() {
+      html2canvas(document.getElementById('captureArea'), {
+        backgroundColor: null,
+        scale: 2 
+      }).then(canvas => {
+        const link = document.createElement('a');
+        link.download = `collab-pitch-card.png`;
+        link.href = canvas.toDataURL('image/png');
+        link.click();
+      });
+    }
+
+    // Set WhatsApp Share Link dynamically
+    document.addEventListener('DOMContentLoaded', function(){
+      var wa = document.getElementById('whatsappShare');
+      if(wa){
+        var text = "Build professional Media Kits for brand deals: " + location.href;
+        wa.setAttribute('href', "https://wa.me/?text=" + encodeURIComponent(text));
+      }
+      // Initial Setup
+      generateQR();
+      updateUI();
+    });
+  </script>
+</body>
+</html>
