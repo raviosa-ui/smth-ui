@@ -1,0 +1,623 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  
+  <title>Universal Social Comment Card Generator | SocialMediaToolsHub</title>
+  <meta name="title" content="Universal Social Comment Card Generator | SocialMediaToolsHub">
+  <meta name="description" content="Generate high-resolution, pixel-perfect social media comment graphics for Community posts, Stories, and Reels. Supports multiple video and photo app layouts." />
+  <meta name="keywords" content="social media comment generator, fake comment maker, youtube comment screenshot, instagram comment graphic, tiktok comment card, creator tools">
+  <meta name="author" content="SocialMediaToolsHub">
+  <meta name="robots" content="index, follow">
+  <link rel="canonical" href="https://socialmediatoolshub.com/social-comment-card-generator" />
+   
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-TV63D6J6RW"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', 'G-TV63D6J6RW');
+  </script>
+
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://socialmediatoolshub.com/social-comment-card-generator">
+  <meta property="og:title" content="Universal Social Comment Card Generator">
+  <meta property="og:description" content="Generate high-resolution, pixel-perfect social media comment graphics for Community posts, Stories, and Reels.">
+  <meta property="og:image" content="https://socialmediatoolshub.com/assets/og-smth.jpg"> 
+
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:url" content="https://socialmediatoolshub.com/social-comment-card-generator">
+  <meta name="twitter:title" content="Universal Social Comment Card Generator">
+  <meta name="twitter:description" content="Create crisp comment cards for your videos instantly. 100% free browser tool.">
+  <meta name="twitter:image" content="https://socialmediatoolshub.com/assets/og-smth.jpg">
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+  <link rel="icon" href="/favicon.ico" type="image/x-icon">
+  <link rel="manifest" href="/site.webmanifest">
+  <meta name="theme-color" content="#0f172a" />
+
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "WebApplication",
+    "name": "Universal Social Comment Card Generator",
+    "url": "https://socialmediatoolshub.com/social-comment-card-generator",
+    "applicationCategory": "DesignApplication",
+    "operatingSystem": "All",
+    "offers": {
+      "@type": "Offer",
+      "price": "0",
+      "priceCurrency": "USD"
+    },
+    "description": "Generate high-resolution, pixel-perfect social media comment graphics for Community posts, Stories, and Reels without needing Photoshop."
+  }
+  </script>
+
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    "mainEntity": [
+      {
+        "@type": "Question",
+        "name": "Is this comment generator free to use?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Yes, our Universal Comment Card Generator is 100% free. There are no limits on how many graphics you can create."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "Are there any watermarks on the final image?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "No. We believe creator tools should be clean. The downloaded PNG will be completely watermark-free."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "Why do the layout options have generic names?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "To respect corporate trademarks and community guidelines, we use descriptive layout names (like 'Video App Style') rather than official brand names. The visual output remains highly accurate to your favorite platforms."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "Does this tool upload my images to a server?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "No. All image processing and rendering happens entirely within your web browser using HTML5 Canvas. Your uploaded avatars and texts remain completely private and are never sent to our servers."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "How do I highlight a username in blue?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Simply type the @ symbol followed by the username in the text box (e.g., @socialmediatoolshub). The tool will automatically detect it and color it blue to mimic native platform behavior."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "What is the Creator Liked Badge?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "On certain photo-sharing apps, when the author of a post likes a comment, a tiny profile picture with a red heart appears next to the timestamp. Our tool lets you toggle this on for maximum realism."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "Can I use these images for commercial videos?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Yes. You can use the generated graphics in your YouTube videos, Shorts, TikToks, and Instagram Reels."
+        }
+      }
+    ]
+  }
+  </script>
+
+  <link rel="stylesheet" href="style.css">
+  
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+
+  <style>
+    /* Clickable Brand Logo Styling */
+    .brand-link { display: flex; align-items: center; text-decoration: none; color: inherit; gap: 8px; }
+    
+    /* Layout Variables */
+    :root {
+      --out-bg: #ffffff;
+      --out-text: #000000;
+      --out-muted: #737373;
+      --out-blue: #00376b;
+    }
+
+    /* Tool Grid Area */
+    .tool-layout {
+      display: grid; grid-template-columns: 1fr 1.2fr; gap: 40px; margin-top: 30px;
+    }
+    @media (max-width: 800px) { .tool-layout { grid-template-columns: 1fr; } }
+
+    /* Forms */
+    .form-panel { background: var(--card); padding: 30px; border-radius: var(--r-md); border: 1px solid rgba(255, 255, 255, 0.05); }
+    .form-panel h2 { margin-top: 0; color: var(--text); font-size: 1.4rem; }
+    .form-panel label { display: block; margin: 15px 0 6px; font-weight: 600; color: var(--muted); font-size: 0.85rem;}
+    .form-panel input[type="text"], .form-panel textarea, .form-panel select {
+      width: 100%; padding: 12px; border-radius: 8px; box-sizing: border-box;
+      background: var(--bg); border: 1px solid rgba(255,255,255,0.1); color: #fff; outline: none;
+      font-family: inherit; font-size: 0.95rem; transition: border-color 0.2s;
+    }
+    .form-panel input:focus, .form-panel textarea:focus, .form-panel select:focus { border-color: var(--accent-from); }
+    .form-panel textarea { resize: vertical; min-height: 80px; }
+    
+    .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+    .checkbox-label { display:flex; align-items:center; gap:8px; cursor:pointer; margin-top:10px; color: #fff; font-size: 0.9rem;}
+
+    .btn-export {
+      width: 100%; padding: 16px; background: linear-gradient(90deg, var(--accent-from), var(--accent-to)); color: #000;
+      border: none; border-radius: 12px; font-weight: 800; font-size: 1.05rem;
+      cursor: pointer; margin-top: 25px; transition: transform 0.1s, box-shadow 0.2s; box-shadow: 0 6px 18px rgba(8,12,30,0.6);
+    }
+    .btn-export:hover { transform: translateY(-3px); box-shadow: 0 10px 25px rgba(56,189,248,0.2); }
+
+    /* Output Panel */
+    .preview-panel { display: flex; flex-direction: column; align-items: center; justify-content: flex-start; padding-top: 20px; }
+    
+    .export-wrapper {
+      background: var(--out-bg); color: var(--out-text); padding: 24px 30px; border-radius: 16px;
+      box-shadow: 0 25px 50px rgba(0,0,0,0.5); width: 100%; max-width: 500px; box-sizing: border-box;
+      transition: all 0.3s ease; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    }
+
+    /* Target Layout Primitives */
+    .c-avatar { width: 40px; height: 40px; border-radius: 50%; object-fit: cover; flex-shrink: 0; background: #333; }
+    .c-highlight { color: var(--out-blue); cursor: pointer; }
+
+    /* Video App Layout (YouTube Style) */
+    .yt-layout { display: flex; gap: 16px; }
+    .yt-content { display: flex; flex-direction: column; width: 100%; }
+    .yt-header { display: flex; align-items: center; gap: 6px; margin-bottom: 4px; }
+    .yt-name { font-size: 13px; font-weight: 500; }
+    .yt-badge { background: var(--out-muted); color: var(--out-bg); font-size: 10px; padding: 1px 5px; border-radius: 10px; font-weight: 700; display: none;}
+    .yt-time { color: var(--out-muted); font-size: 12px; }
+    .yt-edited { color: var(--out-muted); font-size: 12px; margin-left: 2px; display: none;}
+    .yt-text { font-size: 14px; line-height: 1.4; white-space: pre-wrap; word-wrap: break-word; margin-bottom: 4px; }
+    .yt-read-more { color: var(--out-muted); font-size: 14px; margin-bottom: 10px; font-weight: 500; display: none;}
+    .yt-translate { color: var(--out-blue); font-size: 13px; font-weight: 500; margin-bottom: 10px; display: none;}
+    .yt-actions { display: flex; align-items: center; gap: 16px; font-size: 12px; font-weight: 500; }
+    .yt-icon { display: flex; align-items: center; gap: 6px; color: var(--out-text); }
+    .yt-icon svg { width: 16px; height: 16px; fill: currentColor; }
+    
+    /* Photo App Layout (Instagram Style) */
+    .ig-layout { display: flex; gap: 12px; width: 100%; align-items: flex-start; }
+    .ig-content { display: flex; flex-direction: column; flex-grow: 1; margin-top: 2px;}
+    .ig-header { display: flex; align-items: center; gap: 6px; margin-bottom: 2px; flex-wrap: wrap;}
+    .ig-name { font-size: 13px; font-weight: 600; color: var(--out-text); }
+    .ig-verified { color: #0095f6; display: none; align-items: center;}
+    .ig-verified svg { width: 12px; height: 12px; fill: currentColor; }
+    .ig-time { font-size: 13px; color: var(--out-muted); font-weight: 400;}
+    
+    .ig-creator-like { position: relative; display: none; align-items: center; margin-left: 2px; }
+    .ig-creator-avatar { width: 16px; height: 16px; border-radius: 50%; object-fit: cover; border: 1px solid var(--out-bg);}
+    .ig-creator-heart { position: absolute; bottom: -2px; right: -4px; width: 10px; height: 10px; fill: #ff3040; background: var(--out-bg); border-radius: 50%; padding: 1px;}
+    
+    .ig-text { font-size: 14px; line-height: 1.3; margin-bottom: 8px; color: var(--out-text); word-break: break-word;}
+    .ig-actions { font-size: 12px; font-weight: 600; color: var(--out-muted); }
+    .ig-right { display: flex; flex-direction: column; align-items: center; gap: 4px; color: var(--out-muted); font-size: 11px; padding-top: 6px; }
+    .ig-right svg { width: 14px; height: 14px; fill: transparent; stroke: currentColor; stroke-width: 2; }
+
+    /* Short-Form App Layout (TikTok Style) */
+    .tt-layout { display: flex; gap: 12px; align-items: flex-start; }
+    .tt-content { display: flex; flex-direction: column; flex-grow: 1; }
+    .tt-name { font-size: 13px; font-weight: 600; color: var(--out-muted); margin-bottom: 4px; }
+    .tt-text { font-size: 15px; line-height: 1.4; margin-bottom: 8px; }
+    .tt-actions { display: flex; align-items: center; gap: 16px; color: var(--out-muted); font-size: 13px; font-weight: 500; }
+    .tt-heart { display: flex; flex-direction: column; align-items: center; color: var(--out-muted); font-size: 12px; gap: 2px;}
+    .tt-heart svg { width: 20px; height: 20px; fill: currentColor; }
+
+    /* Utility Sections */
+    .disclaimer { font-size: 0.75rem; color: var(--muted); margin-top: 20px; padding: 10px; background: rgba(255,255,255,0.02); border-radius: 8px; border: 1px solid rgba(255,255,255,0.05); line-height: 1.5; text-align: center; }
+    .how-to-use { margin-top: 60px; background: var(--card); padding: 30px; border-radius: var(--r-lg); }
+    .how-to-use ol { padding-left: 20px; color: var(--muted); }
+    .how-to-use li { margin-bottom: 10px; }
+    
+    /* FAQ & Share additions matching index */
+    .faq details{margin-bottom:10px;border-radius:10px;padding:10px;background:rgba(255,255,255,0.01);border:1px solid rgba(255,255,255,0.02)}
+    .faq summary{display:flex;justify-content:space-between;align-items:center;cursor:pointer;font-weight:700}
+    .faq summary::-webkit-details-marker{display:none}
+    .faq .faq-arrow{color:var(--muted);transition:transform .18s}
+    details[open] .faq-arrow{transform:rotate(90deg)}
+    .share-row{display:flex;justify-content:center;margin:28px 0;gap:12px}
+    .btn-whatsapp{ display:inline-flex; align-items:center; gap:12px; padding:16px 22px; border-radius:18px; background:linear-gradient(90deg,#25D366,#128C7E); color:white; font-weight:800; font-size:18px; border:0; box-shadow:0 12px 30px rgba(18,140,126,0.14), 0 6px 18px rgba(0,0,0,0.25); }
+    
+    /* Footer tweaks */
+    footer { margin-top: 60px; padding: 40px 20px; text-align: center; border-top: 1px solid rgba(255, 255, 255, 0.05); }
+    .footer-nav { display: flex; justify-content: center; flex-wrap: wrap; gap: 20px; margin-bottom: 16px; }
+    .footer-nav a { color: #94a3b8; font-size: 0.9rem; transition: color 0.2s ease; }
+    .footer-nav a:hover { color: #ffffff; }
+    .copyright { color: #475569; font-size: 0.85rem; }
+  </style>
+</head>
+
+<body>
+  <div class="container">
+
+    <header class="header" role="banner">
+      <a href="/" class="brand-link" aria-label="SocialMediaToolsHub Home">
+        <span class="brand-emoji" aria-hidden="true">⚡</span>
+        <span class="logo-text">SocialMediaToolsHub</span>
+      </a>
+      <nav class="topnav" role="navigation" aria-label="Primary">
+        <a href="/about-us">About Us</a>
+        <a class="menu-contact" href="/contact-us">Contact Us</a>
+      </nav>
+    </header>
+
+    <main>
+      <section class="hero" aria-labelledby="hero-title">
+        <div class="hero-inner">
+          <div class="hero-copy" style="text-align: center; width: 100%;">
+            <h1 id="hero-title">Universal Social Comment Card Generator</h1>
+            <p class="lead" style="margin-top: 5px;">Build pixel-perfect comment graphics for Community posts, Stories, and Reels instantly.</p>
+          </div>
+        </div>
+      </section>
+
+      <section class="tool-layout">
+        
+        <div class="form-panel">
+          <h2>Comment Details</h2>
+          
+          <div class="grid-2">
+            <div>
+              <label>App Format</label>
+              <select id="inPlatform" onchange="renderTemplate()">
+                <option value="instagram">📸 Photo App Style (IG)</option>
+                <option value="youtube">📺 Video App Style (YT)</option>
+                <option value="tiktok">📱 Short-Form Style (TK)</option>
+              </select>
+            </div>
+            <div>
+              <label>Visual Theme</label>
+              <select id="inTheme" onchange="applyTheme()">
+                <option value="dark">Dark Mode</option>
+                <option value="light">Light Mode</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="grid-2">
+            <div>
+              <label>Username</label>
+              <input type="text" id="inName" value="anjalikaparivar" oninput="updateContent()">
+            </div>
+            <div>
+              <label>Time Ago</label>
+              <input type="text" id="inTime" value="22h" oninput="updateContent()">
+            </div>
+          </div>
+
+          <label>Comment Text (Use @ to tag)</label>
+          <textarea id="inText" oninput="updateContent()">This tool completely changed my workflow! Awesome job 🔥</textarea>
+
+          <div class="grid-2">
+            <div>
+              <label>Likes</label>
+              <input type="text" id="inLikes" value="5,529" oninput="updateContent()">
+            </div>
+          </div>
+
+          <div style="margin-top: 15px; padding: 15px; background: rgba(0,0,0,0.2); border-radius: 8px;">
+            <div style="font-size: 0.8rem; text-transform: uppercase; color: var(--accent-from); font-weight: 700; margin-bottom: 10px;">Platform Modifiers</div>
+            
+            <label class="checkbox-label">
+              <input type="checkbox" id="inVerified" onchange="updateContent()" style="width:auto;"> Verified Badge
+            </label>
+
+            <div class="yt-controls" style="display:none;">
+              <label class="checkbox-label"><input type="checkbox" id="inEdited" onchange="updateContent()" style="width:auto;"> Show "(edited)"</label>
+              <label class="checkbox-label"><input type="checkbox" id="inReadMore" onchange="updateContent()" style="width:auto;"> Show "Read more"</label>
+              <label class="checkbox-label"><input type="checkbox" id="inTranslate" onchange="updateContent()" style="width:auto;"> Show "Translate to English"</label>
+            </div>
+
+            <div class="ig-controls">
+              <label class="checkbox-label">
+                <input type="checkbox" id="inCreatorLiked" onchange="updateContent()" checked style="width:auto;"> Show Creator Liked Badge
+              </label>
+            </div>
+          </div>
+
+          <div class="grid-2">
+            <div>
+              <label>Commenter Profile Pic</label>
+              <input type="file" accept="image/*" onchange="loadAvatar(event, '.c-avatar')">
+            </div>
+            <div>
+              <label>Channel Pic (For Badges)</label>
+              <input type="file" accept="image/*" onchange="loadAvatar(event, '.channel-avatar')">
+            </div>
+          </div>
+
+          <button class="btn-export" onclick="downloadImage()">Download Graphic (PNG) 📸</button>
+
+          <div class="disclaimer">
+            <strong>Disclaimer:</strong> This tool generates generic social media layout graphics strictly for educational and content creation purposes. It is not affiliated with, maintained, authorized, or endorsed by Meta, Alphabet, or ByteDance.
+          </div>
+        </div>
+
+        <div class="preview-panel">
+          <div class="export-wrapper" id="captureArea">
+            </div>
+        </div>
+
+      </section>
+
+      <section class="how-to-use">
+        <h3 style="color: var(--text); margin-top:0;">How to Use This Tool</h3>
+        <p style="color: var(--muted); font-size: 14px;">This generator creates clean, high-resolution comment cards without taking messy screenshots from your phone.</p>
+        <ol>
+          <li><strong>Select the Layout:</strong> Choose a generic style that matches where the comment came from (e.g., Video App Style for YouTube).</li>
+          <li><strong>Input the Data:</strong> Type the username, exact text, and likes. Use the <code>@</code> symbol to automatically highlight usernames in blue.</li>
+          <li><strong>Upload Avatars:</strong> Upload the commenter's profile picture. If applicable to the layout, upload your own logo for the "Creator Liked" badge.</li>
+          <li><strong>Toggle Features:</strong> Add verified badges, timestamps, or "edited" marks to make it look authentic.</li>
+          <li><strong>Download:</strong> Click the export button to instantly download a transparent, high-res PNG file. No watermarks!</li>
+        </ol>
+      </section>
+
+      <section class="tools" style="margin-top: 40px;">
+        <h2>You Might Also Like</h2>
+        <div class="grid" style="grid-template-columns: 1fr 1fr;">
+          <a class="card" href="/caption-counter" role="listitem">
+            <div class="emoji" aria-hidden="true">🧾</div>
+            <div>
+              <h3>Caption Counter</h3>
+              <p>Live character, word and line counters with export options.</p>
+            </div>
+          </a>
+          <a class="card" href="/youtube-thumbnail-previewer" role="listitem">
+            <div class="emoji" aria-hidden="true">📺</div>
+            <div>
+              <h3>Thumbnail Previewer</h3>
+              <p>Preview thumbnails on mobile & desktop to check legibility.</p>
+            </div>
+          </a>
+        </div>
+      </section>
+
+      <div class="share-row" aria-hidden="false">
+        <a id="whatsappShare" class="btn-whatsapp" href="#" target="_blank" rel="noopener noreferrer" aria-label="Share to WhatsApp">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M21.47 2.53A11.99 11.99 0 0012 0C5.373 0 .001 5.373.001 12a11.63 11.63 0 001.64 6.05L0 24l6.23-1.62A11.97 11.97 0 0012 24c6.627 0 12-5.373 12-12 0-3.2-1.09-6.17-2.53-8.47z" fill="#fff" opacity=".06"/><path d="M17.472 14.382c-.297-.148-1.758-.867-2.03-.967-.273-.099-.472-.148-.672.148-.198.297-.768.967-.942 1.164-.173.198-.347.223-.644.074-.297-.148-1.255-.462-2.39-1.476-.885-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.447-.52.15-.174.198-.297.298-.495.099-.198.05-.371-.025-.519-.074-.148-.672-1.622-.919-2.222-.242-.583-.487-.504-.672-.513l-.573-.01c-.198 0-.519.074-.792.371s-1.04 1.016-1.04 2.479 1.065 2.876 1.213 3.074c.148.198 2.095 3.2 5.073 4.487 0 0 .084.037.198.018.131-.02 1.758-.719 2.006-.799.247-.083.397-.12.571.074.174.198.672.768.863.992.198.223.347.248.644.148.297-.099 1.758-.647 2.006-.901.247-.248.247-.463.173-.647-.074-.184-.272-.297-.569-.445z" fill="#fff"/></svg>
+          <span>Share Tool</span>
+        </a>
+      </div>
+
+      <article class="content-area">
+        <h3>Frequently Asked Questions</h3>
+        <div class="faq" aria-live="polite">
+          <details>
+            <summary>Is this comment generator free to use? <span class="faq-arrow">›</span></summary>
+            <div>Yes, our Universal Comment Card Generator is 100% free. There are no limits on how many graphics you can create.</div>
+          </details>
+          <details>
+            <summary>Are there any watermarks on the final image? <span class="faq-arrow">›</span></summary>
+            <div>No. We believe creator tools should be clean. The downloaded PNG will be completely watermark-free.</div>
+          </details>
+          <details>
+            <summary>Why do the layout options have generic names? <span class="faq-arrow">›</span></summary>
+            <div>To respect corporate trademarks and community guidelines, we use descriptive layout names (like "Video App Style") rather than official brand names. The visual output remains highly accurate to your favorite platforms.</div>
+          </details>
+          <details>
+            <summary>Does this tool upload my images to a server? <span class="faq-arrow">›</span></summary>
+            <div>No. All image processing and rendering happens entirely within your web browser using HTML5 Canvas. Your uploaded avatars and texts remain completely private and are never sent to our servers.</div>
+          </details>
+          <details>
+            <summary>How do I highlight a username in blue? <span class="faq-arrow">›</span></summary>
+            <div>Simply type the @ symbol followed by the username in the text box (e.g., @socialmediatoolshub). The tool will automatically detect it and color it blue to mimic native platform behavior.</div>
+          </details>
+          <details>
+            <summary>What is the Creator Liked Badge? <span class="faq-arrow">›</span></summary>
+            <div>On certain photo-sharing apps, when the author of a post likes a comment, a tiny profile picture with a red heart appears next to the timestamp. Our tool lets you toggle this on for maximum realism.</div>
+          </details>
+          <details>
+            <summary>Can I use these images for commercial videos? <span class="faq-arrow">›</span></summary>
+            <div>Yes. You can use the generated graphics in your YouTube videos, Shorts, TikToks, and Instagram Reels.</div>
+          </details>
+        </div>
+      </article>
+
+    </main>
+
+    <footer>
+      <nav class="footer-nav" aria-label="Footer Policy Links">
+        <a href="/about-us">About Us</a>
+        <a href="/contact-us">Contact</a>
+        <a href="/privacy">Privacy Policy</a>
+        <a href="/terms">Terms of Service</a>
+        <a href="/cookie-policy">Cookie Policy</a>
+      </nav>
+      <div class="copyright">
+        © 2026 SocialMediaToolsHub. Built for speed.
+      </div>
+    </footer>
+  </div>
+
+  <script>
+    // Theme configurations
+    const themes = {
+      youtube: { light: { bg: '#ffffff', text: '#0f0f0f', muted: '#606060', blue: '#065fd4' }, dark:  { bg: '#0f0f0f', text: '#f1f1f1', muted: '#aaaaaa', blue: '#3ea6ff' } },
+      instagram: { light: { bg: '#ffffff', text: '#000000', muted: '#737373', blue: '#00376b' }, dark:  { bg: '#000000', text: '#f5f5f5', muted: '#a8a8a8', blue: '#e0f1ff' } },
+      tiktok: { light: { bg: '#ffffff', text: '#161823', muted: '#16182380', blue: '#fe2c55' }, dark:  { bg: '#121212', text: '#ffffff', muted: '#ffffff80', blue: '#fe2c55' } }
+    };
+
+    let currentAvatarBase64 = "data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='40' height='40'><rect width='40' height='40' fill='%23555'/></svg>";
+    let currentChannelBase64 = "data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='40' height='40'><rect width='40' height='40' fill='%2338bdf8'/></svg>";
+
+    // Platform Specific HTML Templates
+    const templates = {
+      instagram: `
+        <div class="ig-layout">
+          <img class="c-avatar" style="width:36px; height:36px;" src="{AVATAR}">
+          <div class="ig-content">
+            <div class="ig-header">
+              <span class="ig-name" id="outName">{NAME}</span>
+              <span class="ig-verified" id="outVerified"><svg viewBox="0 0 24 24"><path d="M12 2C6.5 2 2 6.5 2 12s4.5 10 10 10 10-4.5 10-10S17.5 2 12 2zm-1.9 14.7L6 12.6l1.5-1.5 2.6 2.6 6.4-6.4 1.5 1.5-7.9 7.9z" fill="currentColor"/></svg></span>
+              <span class="ig-time" id="outTime">{TIME}</span>
+              <div class="ig-creator-like" id="outCreatorLiked">
+                <img class="ig-creator-avatar channel-avatar" src="{CHANNEL_AVATAR}">
+                <svg class="ig-creator-heart" viewBox="0 0 24 24"><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/></svg>
+              </div>
+            </div>
+            <div class="ig-text" id="outText">{TEXT}</div>
+            <div class="ig-actions">
+              <span>Reply</span>
+            </div>
+          </div>
+          <div class="ig-right">
+             <svg viewBox="0 0 24 24"><path d="M16.792 3.904A4.989 4.989 0 0121.5 9.122c0 3.072-2.652 4.959-5.197 7.222-2.512 2.243-3.865 3.469-4.303 3.752-.438-.283-1.791-1.509-4.303-3.752C5.152 14.081 2.5 12.194 2.5 9.122a4.989 4.989 0 014.708-5.218 4.21 4.21 0 013.675 1.941c.84 1.175.98 1.763 1.12 1.763s.278-.588 1.11-1.766a4.17 4.17 0 013.679-1.938m0-2a6.04 6.04 0 00-4.797 2.127 6.052 6.052 0 00-4.787-2.127A6.985 6.985 0 00.5 9.122c0 3.61 2.55 5.827 5.015 7.97.283.246.569.494.853.747l1.027.918a44.998 44.998 0 003.518 3.018l.325.269a.495.495 0 00.524 0l.325-.269a44.998 44.998 0 003.518-3.018l1.027-.918c.285-.253.57-.5.854-.747 2.464-2.143 5.015-4.36 5.015-7.97A6.985 6.985 0 0016.792 1.904z"/></svg>
+             <span id="outLikes">{LIKES}</span>
+          </div>
+        </div>
+      `,
+      youtube: `
+        <div class="yt-layout">
+          <img class="c-avatar" src="{AVATAR}">
+          <div class="yt-content">
+            <div class="yt-header">
+              <span class="yt-name" id="outName">{NAME}</span>
+              <span class="yt-badge" id="outVerified">✓</span>
+              <span class="yt-time" id="outTime">{TIME}</span>
+              <span class="yt-edited" id="outEdited">(edited)</span>
+            </div>
+            <div class="yt-text" id="outText">{TEXT}</div>
+            <div class="yt-read-more" id="outReadMore">Read more</div>
+            <div class="yt-translate" id="outTranslate">Translate to English</div>
+            <div class="yt-actions">
+              <div class="yt-icon">
+                <svg viewBox="0 0 24 24"><path d="M1 21h4V9H1v12zm22-11c0-1.1-.9-2-2-2h-6.31l.95-4.57.03-.32c0-.41-.17-.79-.44-1.06L14.17 1 7.59 7.59C7.22 7.95 7 8.45 7 9v10c0 1.1.9 2 2 2h9c.83 0 1.54-.5 1.84-1.22l3.02-7.05c.09-.23.14-.47.14-.73v-2z" fill="currentColor"/></svg>
+                <span id="outLikes">{LIKES}</span>
+              </div>
+              <div class="yt-icon">
+                <svg viewBox="0 0 24 24"><path d="M15 3H6c-.83 0-1.54.5-1.84 1.22l-3.02 7.05c-.09.23-.14.47-.14.73v2c0 1.1.9 2 2 2h6.31l-.95 4.57-.03.32c0 .41.17.79.44 1.06L9.83 23l6.59-6.59c.36-.36.58-.86.58-1.41V5c0-1.1-.9-2-2-2zm4 0v12h4V3h-4z" fill="currentColor"/></svg>
+              </div>
+              <span>Reply</span>
+            </div>
+          </div>
+        </div>
+      `,
+      tiktok: `
+        <div class="tt-layout">
+          <img class="c-avatar" src="{AVATAR}">
+          <div class="tt-content">
+            <div class="tt-name" id="outName">{NAME}</div>
+            <div class="tt-text" id="outText">{TEXT}</div>
+            <div class="tt-actions">
+              <span id="outTime">{TIME}</span>
+              <span>Reply</span>
+            </div>
+          </div>
+          <div class="tt-heart">
+            <svg viewBox="0 0 48 48"><path d="M24 41.95s-17-11.45-17-21.9A8.06 8.06 0 0115.05 12c3.55 0 6.65 2.3 7.95 5.55A8.52 8.52 0 0131 12c4.45 0 8.05 3.6 8.05 8.05 0 10.45-15.05 21.9-15.05 21.9z" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            <span id="outLikes">{LIKES}</span>
+          </div>
+        </div>
+      `
+    };
+
+    function applyTheme() {
+      const platform = document.getElementById('inPlatform').value;
+      const themeMode = document.getElementById('inTheme').value;
+      const colors = themes[platform][themeMode];
+      
+      const root = document.documentElement;
+      root.style.setProperty('--out-bg', colors.bg);
+      root.style.setProperty('--out-text', colors.text);
+      root.style.setProperty('--out-muted', colors.muted);
+      root.style.setProperty('--out-blue', colors.blue);
+    }
+
+    function renderTemplate() {
+      const platform = document.getElementById('inPlatform').value;
+      document.getElementById('captureArea').innerHTML = templates[platform];
+      
+      document.querySelector('.yt-controls').style.display = platform === 'youtube' ? 'block' : 'none';
+      document.querySelector('.ig-controls').style.display = platform === 'instagram' ? 'block' : 'none';
+
+      applyTheme();
+      updateContent();
+    }
+
+    function updateContent() {
+      const platform = document.getElementById('inPlatform').value;
+
+      document.getElementById('outName').textContent = document.getElementById('inName').value;
+      document.getElementById('outTime').textContent = document.getElementById('inTime').value;
+      if(document.getElementById('outLikes')) document.getElementById('outLikes').textContent = document.getElementById('inLikes').value;
+
+      const rawText = document.getElementById('inText').value;
+      document.getElementById('outText').innerHTML = rawText.replace(/(@\w+)/g, '<span class="c-highlight">$1</span>');
+
+      const badge = document.getElementById('outVerified');
+      if(badge) badge.style.display = document.getElementById('inVerified').checked ? 'inline-flex' : 'none';
+
+      if(platform === 'youtube') {
+        document.getElementById('outEdited').style.display = document.getElementById('inEdited').checked ? 'inline-block' : 'none';
+        document.getElementById('outReadMore').style.display = document.getElementById('inReadMore').checked ? 'block' : 'none';
+        document.getElementById('outTranslate').style.display = document.getElementById('inTranslate').checked ? 'block' : 'none';
+      }
+
+      if(platform === 'instagram') {
+        document.getElementById('outCreatorLiked').style.display = document.getElementById('inCreatorLiked').checked ? 'flex' : 'none';
+      }
+
+      const avatarTargets = document.querySelectorAll('.c-avatar');
+      avatarTargets.forEach(img => img.src = currentAvatarBase64);
+
+      const channelTargets = document.querySelectorAll('.channel-avatar');
+      channelTargets.forEach(img => img.src = currentChannelBase64);
+    }
+
+    function loadAvatar(event, targetClass) {
+      const file = event.target.files[0];
+      if (file) {
+        const reader = new FileReader();
+        reader.onload = function(e) {
+          if (targetClass === '.c-avatar') currentAvatarBase64 = e.target.result;
+          if (targetClass === '.channel-avatar') currentChannelBase64 = e.target.result;
+          
+          const targets = document.querySelectorAll(targetClass);
+          targets.forEach(img => img.src = e.target.result);
+        }
+        reader.readAsDataURL(file);
+      }
+    }
+
+    function downloadImage() {
+      html2canvas(document.getElementById('captureArea'), {
+        backgroundColor: null,
+        scale: 2 
+      }).then(canvas => {
+        const link = document.createElement('a');
+        link.download = `social-comment-card.png`;
+        link.href = canvas.toDataURL('image/png');
+        link.click();
+      });
+    }
+
+    // Set WhatsApp Share Link dynamically
+    document.addEventListener('DOMContentLoaded', function(){
+      var wa = document.getElementById('whatsappShare');
+      if(wa){
+        var text = "Create pixel-perfect comment graphics for free: " + location.href;
+        wa.setAttribute('href', "https://wa.me/?text=" + encodeURIComponent(text));
+      }
+    });
+
+    renderTemplate();
+  </script>
+</body>
+</html>
