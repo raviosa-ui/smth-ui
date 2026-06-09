@@ -6,6 +6,11 @@
     <changefreq>daily</changefreq>
     <priority>1.0</priority>
   </url>
+   <url>
+    <loc>https://socialmediatoolshub.com/social-comment-card-generator</loc>
+    <lastmod>2026-06-09</lastmod>
+    <priority>0.8</priority>
+  </url>
   <url>
     <loc>https://socialmediatoolshub.com/caption-counter</loc>
     <lastmod>2026-01-24</lastmod>
