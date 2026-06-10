@@ -1,0 +1,815 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Video Quality Checker — Fix Blurry Uploads | SocialMediaToolsHub</title>
+  <meta name="description" content="Why does your video look blurry after uploading to TikTok, Reels or Shorts? Check your video's bitrate, resolution, codec and FPS against platform specs and get exact re-export settings. Free, 100% in-browser.">
+  <link rel="canonical" href="https://socialmediatoolshub.com/video-quality-checker">
+
+  <!-- Google tag (gtag.js) -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-TV63D6J6RW"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+
+    gtag('config', 'G-TV63D6J6RW');
+  </script>
+
+  <meta name="theme-color" content="#0f172a">
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-title" content="SocialMediaToolsHub">
+  <!-- SEO / Crawling -->
+  <meta name="robots" content="index, follow">
+
+  <!-- Open Graph -->
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://socialmediatoolshub.com/video-quality-checker">
+  <meta property="og:title" content="Video Quality Checker — Fix Blurry Uploads">
+  <meta property="og:description" content="Check your video's bitrate, resolution, codec and FPS against TikTok, Reels and Shorts specs before uploading. Get exact re-export settings. Free & private.">
+  <meta property="og:image" content="https://socialmediatoolshub.com/assets/og-video-quality.jpg">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+
+  <!-- Twitter Card -->
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Video Quality Checker — Fix Blurry Uploads">
+  <meta name="twitter:description" content="Find out why your video looks blurry after upload. Bitrate, codec & FPS check vs platform specs, with exact re-export settings. Free, no upload, no signup.">
+  <meta name="twitter:image" content="https://socialmediatoolshub.com/assets/og-video-quality.jpg">
+
+  <!-- Favicons -->
+  <link rel="icon" href="/favicon.ico" type="image/x-icon">
+  <link rel="apple-touch-icon" href="/apple-touch-icon.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+  <link rel="manifest" href="/site.webmanifest">
+
+  <!-- Structured data (JSON-LD) -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "WebPage",
+    "url": "https://socialmediatoolshub.com/video-quality-checker",
+    "name": "Video Quality Checker",
+    "headline": "Video Quality Checker — Fix Blurry Uploads | SocialMediaToolsHub",
+    "description": "Analyze your video's bitrate, resolution, codec and frame rate against TikTok, Instagram Reels and YouTube Shorts specifications before uploading. Get exact re-export settings. Runs 100% in your browser.",
+    "inLanguage": "en-US",
+    "isPartOf": {
+      "@type": "WebSite",
+      "name": "SocialMediaToolsHub",
+      "url": "https://socialmediatoolshub.com/"
+    },
+    "mainEntity": {
+      "@type": "SoftwareApplication",
+      "name": "Video Quality Checker",
+      "operatingSystem": "All",
+      "applicationCategory": "Tools",
+      "offers": {
+        "@type": "Offer",
+        "price": "0",
+        "priceCurrency": "USD"
+      }
+    },
+    "publisher": {
+      "@type": "Organization",
+      "name": "SocialMediaToolsHub",
+      "logo": {
+        "@type": "ImageObject",
+        "url": "https://socialmediatoolshub.com/assets/logo.png"
+      }
+    }
+  }
+  </script>
+
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    "itemListElement": [
+      {"@type": "ListItem", "position": 1, "name": "Home", "item": "https://socialmediatoolshub.com/"},
+      {"@type": "ListItem", "position": 2, "name": "Video Quality Checker", "item": "https://socialmediatoolshub.com/video-quality-checker"}
+    ]
+  }
+  </script>
+
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    "mainEntity": [
+      {"@type": "Question","name": "Why does my video look blurry after uploading to TikTok, Reels or Shorts?","acceptedAnswer": {"@type": "Answer","text": "Every platform re-encodes your video on upload, compressing it further. If your export bitrate is too low, the re-encode stacks compression on compression and the result looks soft or blocky. Uploading at a higher bitrate (10–12 Mbps for 1080p vertical video) gives the platform's encoder more detail to preserve."}},
+      {"@type": "Question","name": "What bitrate should I upload for Reels, TikTok and Shorts?","acceptedAnswer": {"@type": "Answer","text": "For 1080×1920 at 30fps, export at 10–12 Mbps. For 60fps, use 12–16 Mbps. Below 5 Mbps at 1080p, visible quality loss after the platform re-encode is almost guaranteed."}},
+      {"@type": "Question","name": "Is H.264 or HEVC (H.265) better for social media uploads?","acceptedAnswer": {"@type": "Answer","text": "H.264 is the safest choice — every platform processes it quickly and predictably. HEVC is accepted but can take longer to process and occasionally produces washed-out colors if the color profile isn't handled correctly. If your HEVC upload looks wrong, re-export as H.264."}},
+      {"@type": "Question","name": "Is my video uploaded to your server when I check it?","acceptedAnswer": {"@type": "Answer","text": "No. The tool reads your video file's structure directly in your browser using JavaScript — only small portions of the file are read into memory and nothing is transmitted anywhere. Your video never leaves your device."}},
+      {"@type": "Question","name": "What is variable frame rate (VFR) and why does it cause problems?","acceptedAnswer": {"@type": "Answer","text": "Screen recordings (OBS, phone screen capture) often record with a variable frame rate. Platforms and editors expect constant frame rate (CFR), and VFR footage can cause audio drift and stutter after upload. If your detected FPS is an odd number like 27.43, your footage is likely VFR — re-encode to a constant 30 or 60 fps."}},
+      {"@type": "Question","name": "Which video formats does the checker support?","acceptedAnswer": {"@type": "Answer","text": "Full structural analysis for MP4 and MOV files (the formats exported by Premiere, CapCut, DaVinci Resolve, Final Cut and phones). WebM files get basic analysis. There is no file size limit because the file is read locally, not uploaded."}}
+    ]
+  }
+  </script>
+
+  <!-- Site stylesheet (header, footer, cards, tokens) -->
+  <link rel="stylesheet" href="style.css">
+
+  <style>
+    /* ---------- Video Quality Checker tool styles (extends site tokens) ---------- */
+    :root{
+      --ok:#34d399; --warn:#fbbf24; --fail:#f87171;
+      --ok-bg:rgba(52,211,153,.12); --warn-bg:rgba(251,191,36,.12); --fail-bg:rgba(248,113,113,.12);
+      --mono:ui-monospace,'SF Mono','Cascadia Code',Menlo,Consolas,monospace;
+    }
+    :focus-visible{outline:2px solid var(--accent-from);outline-offset:2px;border-radius:4px}
+    @media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+
+    .privacy-pill{display:inline-flex;align-items:center;gap:8px;margin-top:14px;padding:7px 12px;border:1px solid var(--border);border-radius:999px;font-size:12.5px;font-weight:500;color:var(--ok);background:var(--ok-bg)}
+
+    .drop{margin-top:18px;border:1.5px dashed var(--border);border-radius:var(--r-md);background:var(--card);padding:34px 22px;text-align:center;transition:var(--trans);cursor:pointer}
+    .drop.over{border-color:var(--accent-from);background:rgba(56,189,248,.06)}
+    .drop h2{font-size:17px;margin:0 0 6px}
+    .drop p{color:var(--muted);font-size:13.5px;margin:0 0 16px}
+    .btn-tool{display:inline-block;border:0;border-radius:12px;padding:11px 18px;font-weight:600;font-size:14px;cursor:pointer;transition:transform .18s,box-shadow .18s}
+    .btn-grad{background:linear-gradient(90deg,var(--accent-from),var(--accent-to));color:#06121f;box-shadow:0 6px 18px rgba(8,12,30,.6)}
+    .btn-grad:hover{transform:translateY(-3px);box-shadow:0 10px 30px rgba(8,12,30,.7),0 0 40px rgba(56,189,248,.12)}
+    .btn-ghost{background:transparent;color:var(--muted);border:1px solid var(--border)}
+    .btn-ghost:hover{color:var(--text);border-color:var(--accent-from)}
+    .file-hint{font-size:12px;color:var(--muted);margin-top:12px;min-height:14px}
+
+    .settings{margin-top:14px;display:flex;flex-wrap:wrap;gap:10px;align-items:center}
+    .settings .lbl{font-size:11px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--muted)}
+    .preset{border:1px solid var(--border);background:var(--card);color:var(--muted);border-radius:999px;padding:7px 14px;font-size:13px;font-weight:600;cursor:pointer;transition:var(--trans)}
+    .preset[aria-pressed="true"]{border-color:var(--accent-from);color:var(--text);background:rgba(56,189,248,.1)}
+
+    #results{display:none;margin-top:30px}
+    .section-h{font:700 12px var(--mono);letter-spacing:.14em;text-transform:uppercase;color:var(--muted);margin:28px 0 12px;display:flex;align-items:center;gap:10px}
+    .section-h::after{content:"";flex:1;height:1px;background:var(--border)}
+
+    .verdict{border-radius:var(--r-md);padding:16px 20px;font-size:15px;border:1px solid var(--border);background:var(--card)}
+    .verdict.v-ok{border-color:rgba(52,211,153,.4)}
+    .verdict.v-warn{border-color:rgba(251,191,36,.4)}
+    .verdict.v-fail{border-color:rgba(248,113,113,.4)}
+
+    .spec-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:12px}
+    @media(max-width:860px){.spec-grid{grid-template-columns:repeat(2,1fr)}}
+    .spec{background:var(--card);border:1px solid var(--border);border-radius:var(--r-md);padding:14px 16px}
+    .spec .k{font-size:11px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--muted)}
+    .spec .v{font:700 22px/1.2 var(--mono);margin-top:6px;word-break:break-word}
+    .spec .v small{font-size:13px;color:var(--muted);font-weight:600}
+    .spec .v.ok{color:var(--ok)}.spec .v.warn{color:var(--warn)}.spec .v.fail{color:var(--fail)}
+
+    .check-list{display:flex;flex-direction:column;gap:10px}
+    .check{display:flex;gap:14px;background:var(--card);border:1px solid var(--border);border-radius:var(--r-md);padding:14px 16px;align-items:flex-start}
+    .check .ico{flex:none;width:30px;height:30px;border-radius:8px;display:grid;place-items:center;font-weight:800;font-size:15px}
+    .check.c-ok .ico{background:var(--ok-bg);color:var(--ok)}
+    .check.c-warn .ico{background:var(--warn-bg);color:var(--warn)}
+    .check.c-fail .ico{background:var(--fail-bg);color:var(--fail)}
+    .check b{font-size:14.5px}
+    .check p{margin:3px 0 0;color:var(--muted);font-size:13.5px;line-height:1.5}
+
+    .frame-grid{display:grid;grid-template-columns:240px 1fr;gap:20px;align-items:start}
+    @media(max-width:760px){.frame-grid{grid-template-columns:1fr}}
+    .frame-wrap{background:var(--card);border:1px solid var(--border);border-radius:var(--r-md);padding:12px;text-align:center}
+    .frame-wrap canvas{max-width:100%;border-radius:10px;background:#000}
+    .frame-wrap .cap{font-size:11.5px;color:var(--muted);margin-top:8px}
+
+    .export-box{background:var(--card);border:1px solid var(--border);border-radius:var(--r-md);padding:18px}
+    .export-box h3{margin:0 0 10px;font-size:16px}
+    .export-box pre{background:var(--bg);border:1px solid var(--border);border-radius:10px;padding:14px;font:13px/1.7 var(--mono);color:var(--text);overflow:auto;white-space:pre-wrap;margin:0 0 12px}
+
+    .related{margin-top:34px}
+    .related h2{font-size:16px;margin:0 0 12px}
+
+    .faq details{margin-bottom:10px;border-radius:10px;padding:10px;background:rgba(255,255,255,0.01);border:1px solid rgba(255,255,255,0.02)}
+    .faq summary{display:flex;justify-content:space-between;align-items:center;cursor:pointer;font-weight:700}
+    .faq summary::-webkit-details-marker{display:none}
+    .faq .faq-arrow{color:var(--muted);transition:transform .18s}
+    details[open] .faq-arrow{transform:rotate(90deg)}
+
+    footer{margin-top:60px;padding:40px 20px;text-align:center;border-top:1px solid rgba(255,255,255,0.05)}
+    .footer-nav{display:flex;justify-content:center;flex-wrap:wrap;gap:20px;margin-bottom:16px}
+    .footer-nav a{color:#94a3b8;font-size:.9rem;transition:color .2s ease}
+    .footer-nav a:hover{color:#fff}
+    .copyright{color:#475569;font-size:.85rem}
+  </style>
+</head>
+
+<body>
+  <div class="container">
+
+    <!-- Header -->
+    <header class="header" role="banner">
+      <a class="brand" href="/" aria-label="SocialMediaToolsHub home">
+        <span class="brand-emoji" aria-hidden="true">⚡</span>
+        <span class="logo-text">SocialMediaToolsHub</span>
+      </a>
+      <nav class="topnav" role="navigation" aria-label="Primary">
+        <a href="/">All Tools</a>
+        <a href="/about-us">About Us</a>
+        <a class="menu-contact" href="/contact-us">Contact Us</a>
+      </nav>
+    </header>
+
+    <main>
+      <!-- Hero -->
+      <section class="hero" aria-labelledby="hero-title">
+        <div class="hero-inner">
+          <div class="hero-copy">
+            <h1 id="hero-title">Video Quality Checker — Why Your Video Looks Blurry After Upload</h1>
+            <p class="lead">Platforms re-encode everything you upload. If your export specs are off, that re-encode crushes your quality — and nothing in your editor warns you. Drop your video to check its bitrate, resolution, codec and FPS against platform specs, and get exact re-export settings.</p>
+            <span class="privacy-pill">
+              <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+              Runs 100% in your browser — your video never leaves this device
+            </span>
+          </div>
+        </div>
+      </section>
+
+      <!-- Drop zone -->
+      <div class="drop" id="drop" role="button" tabindex="0" aria-label="Choose or drop a video file">
+        <h2>Drop your video file here</h2>
+        <p>MP4 &amp; MOV (full analysis) · WebM (basic) · No size limit — nothing is uploaded</p>
+        <button class="btn-tool btn-grad" id="browseBtn" type="button">Choose video</button>
+        <input type="file" id="fileInput" accept="video/mp4,video/quicktime,video/webm,.mp4,.mov,.m4v,.webm" hidden>
+        <p class="file-hint" id="fileName"></p>
+      </div>
+
+      <!-- Platform presets -->
+      <div class="settings">
+        <span class="lbl">Target platform</span>
+        <button class="preset plat" data-plat="shorts" aria-pressed="true" type="button">YouTube Shorts</button>
+        <button class="preset plat" data-plat="reels" aria-pressed="false" type="button">Instagram Reels</button>
+        <button class="preset plat" data-plat="tiktok" aria-pressed="false" type="button">TikTok</button>
+        <button class="preset plat" data-plat="youtube" aria-pressed="false" type="button">YouTube (long-form)</button>
+      </div>
+
+      <!-- Results -->
+      <div id="results">
+
+        <div class="section-h">Verdict</div>
+        <div class="verdict" id="verdictBox"></div>
+
+        <div class="section-h">Your video's specs</div>
+        <div class="spec-grid">
+          <div class="spec"><div class="k">Resolution</div><div class="v" id="sRes">–</div></div>
+          <div class="spec"><div class="k">Frame rate</div><div class="v" id="sFps">–</div></div>
+          <div class="spec"><div class="k">Overall bitrate</div><div class="v" id="sBitrate">–</div></div>
+          <div class="spec"><div class="k">Video codec</div><div class="v" id="sCodec">–</div></div>
+          <div class="spec"><div class="k">Duration</div><div class="v" id="sDur">–</div></div>
+          <div class="spec"><div class="k">File size</div><div class="v" id="sSize">–</div></div>
+          <div class="spec"><div class="k">Audio</div><div class="v" id="sAudio">–</div></div>
+          <div class="spec"><div class="k">Container</div><div class="v" id="sContainer">–</div></div>
+        </div>
+
+        <div class="section-h">Checks against <span id="platName" style="color:var(--text)"></span></div>
+        <div class="frame-grid">
+          <div class="frame-wrap">
+            <canvas id="frameCanvas" width="240" height="426" aria-label="Sample frame from your video"></canvas>
+            <div class="cap">Sample frame from your video</div>
+          </div>
+          <div class="check-list" id="checkList"></div>
+        </div>
+
+        <div class="section-h">Recommended export settings</div>
+        <div class="export-box">
+          <h3 id="exportTitle">Re-export with these settings</h3>
+          <pre id="exportSettings"></pre>
+          <button class="btn-tool btn-ghost" id="copyExport" type="button">Copy settings</button>
+        </div>
+
+      </div><!-- /results -->
+
+      <!-- Related tools -->
+      <section class="related tools" aria-labelledby="related-title">
+        <h2 id="related-title">More video &amp; caption tools</h2>
+        <div class="grid" role="list">
+          <a class="card" href="/caption-speed-checker" role="listitem" aria-label="Caption Speed Checker">
+            <div class="emoji" aria-hidden="true">⏱️</div>
+            <div><h3>Caption Speed Checker</h3><p>Flag captions that flash too fast to read (CPS check).</p></div>
+          </a>
+          <a class="card" href="/aspect-ratio-detector" role="listitem" aria-label="Aspect Ratio Detector">
+            <div class="emoji" aria-hidden="true">📐</div>
+            <div><h3>Aspect Ratio Detector</h3><p>Check frame ratios for vertical and horizontal targets.</p></div>
+          </a>
+          <a class="card" href="/safe-zone-overlay" role="listitem" aria-label="Safe zone overlay">
+            <div class="emoji" aria-hidden="true">🎯</div>
+            <div><h3>Safe Zone Overlay</h3><p>Preview posts with on-screen safe zones for Reels &amp; Shorts.</p></div>
+          </a>
+          <a class="card" href="/bulk-image-compressor" role="listitem" aria-label="Bulk Image Compressor">
+            <div class="emoji" aria-hidden="true">🗜️</div>
+            <div><h3>Bulk Image Compressor</h3><p>Compress multiple images at once without major quality loss.</p></div>
+          </a>
+        </div>
+      </section>
+
+      <!-- SEO content + FAQ -->
+      <article class="content-area">
+        <h3>Why uploads look worse than your export</h3>
+        <p>Every social platform re-encodes your video the moment you upload it — your beautiful 200 MB export becomes a 20 MB stream optimized for their servers. That second round of compression is unavoidable, but how much quality survives it depends almost entirely on what you feed the encoder. A 1080p video exported at 4 Mbps has already thrown away detail; the platform's re-encode compounds the loss and the result looks soft, blocky in motion, or muddy in dark scenes. The same video exported at 12 Mbps gives the platform encoder enough information to produce a clean result.</p>
+        <p>This tool reads your video file's actual structure — resolution, frame rate, bitrate, video and audio codecs, container type — directly in your browser, then grades each spec against the requirements of your target platform. It also catches the less obvious upload-killers: variable frame rate from screen recordings, frame rates platforms will halve, aspect ratios that will be cropped or pillarboxed, HEVC color-handling risks, and durations over platform limits. Each failed check comes with a plain-language explanation, and the tool generates a complete export-settings recipe you can copy into Premiere, CapCut, DaVinci Resolve or any encoder.</p>
+        <p>Because the analysis happens locally using the File API, there is no upload, no file size limit, and no waiting — a 4 GB video is analyzed as fast as a 40 MB one, and your footage never leaves your device.</p>
+
+        <h3>Frequently Asked Questions</h3>
+        <div class="faq" aria-live="polite">
+          <details>
+            <summary>Why does my video look blurry after uploading to TikTok, Reels or Shorts? <span class="faq-arrow">›</span></summary>
+            <div>Every platform re-encodes your video on upload, compressing it further. If your export bitrate is too low, the re-encode stacks compression on compression and the result looks soft or blocky. Uploading at a higher bitrate (10–12 Mbps for 1080p vertical video) gives the platform's encoder more detail to preserve.</div>
+          </details>
+          <details>
+            <summary>What bitrate should I upload for Reels, TikTok and Shorts? <span class="faq-arrow">›</span></summary>
+            <div>For 1080×1920 at 30fps, export at 10–12 Mbps. For 60fps, use 12–16 Mbps. Below 5 Mbps at 1080p, visible quality loss after the platform re-encode is almost guaranteed.</div>
+          </details>
+          <details>
+            <summary>Is H.264 or HEVC (H.265) better for social media uploads? <span class="faq-arrow">›</span></summary>
+            <div>H.264 is the safest choice — every platform processes it quickly and predictably. HEVC is accepted but can take longer to process and occasionally produces washed-out colors if the color profile isn't handled correctly. If your HEVC upload looks wrong, re-export as H.264.</div>
+          </details>
+          <details>
+            <summary>Is my video uploaded to your server when I check it? <span class="faq-arrow">›</span></summary>
+            <div>No. The tool reads your video file's structure directly in your browser using JavaScript — only small portions of the file are read into memory and nothing is transmitted anywhere. Your video never leaves your device.</div>
+          </details>
+          <details>
+            <summary>What is variable frame rate (VFR) and why does it cause problems? <span class="faq-arrow">›</span></summary>
+            <div>Screen recordings (OBS, phone screen capture) often record with a variable frame rate. Platforms and editors expect constant frame rate (CFR), and VFR footage can cause audio drift and stutter after upload. If your detected FPS is an odd number like 27.43, your footage is likely VFR — re-encode to a constant 30 or 60 fps.</div>
+          </details>
+          <details>
+            <summary>Which video formats does the checker support? <span class="faq-arrow">›</span></summary>
+            <div>Full structural analysis for MP4 and MOV files (the formats exported by Premiere, CapCut, DaVinci Resolve, Final Cut and phones). WebM files get basic analysis. There is no file size limit because the file is read locally, not uploaded.</div>
+          </details>
+        </div>
+      </article>
+    </main>
+
+    <footer>
+      <nav class="footer-nav" aria-label="Footer Policy Links">
+        <a href="/about-us">About Us</a>
+        <a href="/contact-us">Contact</a>
+        <a href="/privacy">Privacy Policy</a>
+        <a href="/terms">Terms of Service</a>
+        <a href="/cookie-policy">Cookie Policy</a>
+      </nav>
+      <div class="copyright">
+        © 2026 SocialMediaToolsHub. Built for speed.
+      </div>
+    </footer>
+  </div>
+
+  <script>
+  (function(){
+  "use strict";
+
+  /* =============== MP4/MOV structure parser (pure JS, sparse reads) =============== */
+  function fourcc(dv, off){
+    return String.fromCharCode(dv.getUint8(off), dv.getUint8(off+1), dv.getUint8(off+2), dv.getUint8(off+3));
+  }
+  async function topBoxes(read, fileSize){
+    const out = [];
+    let off = 0;
+    while(off + 8 <= fileSize){
+      const dv = await read(off, Math.min(16, fileSize - off));
+      let size = dv.getUint32(0);
+      const type = fourcc(dv, 4);
+      let hdr = 8;
+      if(size === 1){
+        if(dv.byteLength < 16) break;
+        size = Number(dv.getBigUint64(8)); hdr = 16;
+      } else if(size === 0){
+        size = fileSize - off;
+      }
+      if(size < hdr || !/^[\x20-\x7e]{4}$/.test(type)) break;
+      out.push({type, off, size, hdr});
+      off += size;
+    }
+    return out;
+  }
+  function children(dv, start, end){
+    const out = [];
+    let off = start;
+    while(off + 8 <= end){
+      let size = dv.getUint32(off);
+      const type = fourcc(dv, off + 4);
+      let hdr = 8;
+      if(size === 1){ size = Number(dv.getBigUint64(off + 8)); hdr = 16; }
+      else if(size === 0){ size = end - off; }
+      if(size < hdr) break;
+      out.push({type, off, size, hdr, cs: off + hdr, ce: off + size});
+      off += size;
+    }
+    return out;
+  }
+  function find(list, type){ return list.find(b => b.type === type); }
+
+  const CODEC_NAMES = {
+    avc1:"H.264 / AVC", avc3:"H.264 / AVC", hvc1:"H.265 / HEVC", hev1:"H.265 / HEVC",
+    av01:"AV1", vp09:"VP9", vp08:"VP8", mp4v:"MPEG-4 Visual", jpeg:"Motion JPEG",
+    mp4a:"AAC", "ac-3":"Dolby AC-3", "ec-3":"Dolby E-AC-3", opus:"Opus",
+    sowt:"PCM", twos:"PCM", lpcm:"PCM", samr:"AMR", ".mp3":"MP3", mp3:"MP3"
+  };
+
+  function parseVerTsDur(dv, b){
+    const ver = dv.getUint8(b.cs);
+    if(ver === 1) return { timescale: dv.getUint32(b.cs + 20), duration: Number(dv.getBigUint64(b.cs + 24)) };
+    return { timescale: dv.getUint32(b.cs + 12), duration: dv.getUint32(b.cs + 16) };
+  }
+  function parseTrak(dv, trak){
+    const t = { kind:null, codec:null, codecName:null, w:0, h:0, timescale:0, duration:0, samples:0, channels:0, sampleRate:0 };
+    const tc = children(dv, trak.cs, trak.ce);
+    const tkhd = find(tc, "tkhd");
+    if(tkhd){ t.w = dv.getUint32(tkhd.ce - 8) >>> 16; t.h = dv.getUint32(tkhd.ce - 4) >>> 16; }
+    const mdia = find(tc, "mdia");
+    if(!mdia) return t;
+    const mc = children(dv, mdia.cs, mdia.ce);
+    const mdhd = find(mc, "mdhd");
+    if(mdhd){ const m = parseVerTsDur(dv, mdhd); t.timescale = m.timescale; t.duration = m.duration; }
+    const hdlr = find(mc, "hdlr");
+    if(hdlr) t.kind = fourcc(dv, hdlr.cs + 8);
+    const minf = find(mc, "minf");
+    if(!minf) return t;
+    const stbl = find(children(dv, minf.cs, minf.ce), "stbl");
+    if(!stbl) return t;
+    const sc = children(dv, stbl.cs, stbl.ce);
+    const stsd = find(sc, "stsd");
+    if(stsd){
+      const es = stsd.cs + 8;
+      if(es + 8 <= stsd.ce){
+        t.codec = fourcc(dv, es + 4);
+        t.codecName = CODEC_NAMES[t.codec] || t.codec.toUpperCase();
+        if(t.kind === "soun" && es + 36 <= stsd.ce){
+          t.channels = dv.getUint16(es + 24);
+          t.sampleRate = dv.getUint32(es + 32) >>> 16;
+        }
+      }
+    }
+    const stsz = find(sc, "stsz");
+    if(stsz) t.samples = dv.getUint32(stsz.cs + 8);
+    return t;
+  }
+  async function parseMp4(read, fileSize){
+    const tops = await topBoxes(read, fileSize);
+    if(!tops.length) return null;
+    const info = { container:null, fastStart:null, duration:0, video:null, audio:null, fragmented:false };
+    const ftyp = tops.find(b => b.type === "ftyp");
+    if(ftyp){
+      const dv = await read(ftyp.off + ftyp.hdr, Math.min(4, ftyp.size - ftyp.hdr));
+      info.container = fourcc(dv, 0).trim();
+    }
+    const moov = tops.find(b => b.type === "moov");
+    const mdat = tops.find(b => b.type === "mdat");
+    if(!moov) return null;
+    if(mdat) info.fastStart = moov.off < mdat.off;
+    if(tops.some(b => b.type === "moof")) info.fragmented = true;
+    if(moov.size > 60 * 1024 * 1024) return null;
+    const dv = await read(moov.off, moov.size);
+    const mc = children(dv, moov.hdr, moov.size);
+    const mvhd = find(mc, "mvhd");
+    if(mvhd){
+      const m = parseVerTsDur(dv, mvhd);
+      if(m.timescale) info.duration = m.duration / m.timescale;
+    }
+    for(const trak of mc.filter(b => b.type === "trak")){
+      const t = parseTrak(dv, trak);
+      const dur = t.timescale ? t.duration / t.timescale : 0;
+      if(t.kind === "vide" && !info.video){
+        info.video = { codec:t.codec, codecName:t.codecName, w:t.w, h:t.h,
+                       fps:(t.samples && dur) ? t.samples / dur : 0, frames:t.samples, dur };
+      } else if(t.kind === "soun" && !info.audio){
+        info.audio = { codec:t.codec, codecName:t.codecName, channels:t.channels, sampleRate:t.sampleRate };
+      }
+    }
+    return info;
+  }
+
+  /* =============== WebM basic detection =============== */
+  async function sniffWebm(read){
+    const dv = await read(0, 4);
+    if(dv.getUint32(0) !== 0x1A45DFA3) return null;
+    const head = await read(0, 256 * 1024).catch(()=>null);
+    const out = { container:"webm", video:{codec:null, codecName:"Unknown"}, audio:null };
+    if(head){
+      const bytes = new Uint8Array(head.buffer, head.byteOffset, head.byteLength);
+      const ascii = Array.from(bytes, b => (b >= 32 && b < 127) ? String.fromCharCode(b) : ".").join("");
+      if(ascii.includes("V_AV1") || ascii.includes("V_AV01")) out.video = {codec:"av01", codecName:"AV1"};
+      else if(ascii.includes("V_VP9")) out.video = {codec:"vp09", codecName:"VP9"};
+      else if(ascii.includes("V_VP8")) out.video = {codec:"vp08", codecName:"VP8"};
+      else if(ascii.includes("V_MPEG4/ISO/AVC")) out.video = {codec:"avc1", codecName:"H.264 / AVC"};
+      if(ascii.includes("A_OPUS")) out.audio = {codec:"opus", codecName:"Opus"};
+      else if(ascii.includes("A_VORBIS")) out.audio = {codec:"vorbis", codecName:"Vorbis"};
+      else if(ascii.includes("A_AAC")) out.audio = {codec:"mp4a", codecName:"AAC"};
+    }
+    return out;
+  }
+
+  /* =============== platform profiles =============== */
+  const PLATFORMS = {
+    shorts:  { name:"YouTube Shorts",   vertical:true,  maxDur:180,  durNote:"Shorts max length is 3 minutes",
+               idealW:1080, idealH:1920 },
+    reels:   { name:"Instagram Reels",  vertical:true,  maxDur:180,  durNote:"Reels max length is 3 minutes",
+               idealW:1080, idealH:1920 },
+    tiktok:  { name:"TikTok",           vertical:true,  maxDur:600,  durNote:"TikTok uploads max out at 10 minutes for most accounts",
+               idealW:1080, idealH:1920 },
+    youtube: { name:"YouTube (long-form)", vertical:false, maxDur:0, durNote:"",
+               idealW:1920, idealH:1080 }
+  };
+  let plat = "shorts";
+  let lastFile = null, lastInfo = null;
+
+  /* bitrate targets in Mbps by pixel count + fps */
+  function bitrateTargets(w, h, fps){
+    const px = w * h;
+    let pass, rec;
+    if(px >= 3840*2160*0.9){ pass = 35; rec = "35–45 Mbps"; }
+    else if(px >= 2560*1440*0.9){ pass = 16; rec = "16–24 Mbps"; }
+    else if(px >= 1920*1080*0.9){ pass = 8; rec = "10–12 Mbps"; }
+    else { pass = 5; rec = "6–8 Mbps (or better: re-export at 1080p)"; }
+    if(fps > 40){ pass *= 1.5; rec = rec.replace(/(\d+)–(\d+)/, (m,a,b)=> Math.round(a*1.5)+"–"+Math.round(b*1.5)); }
+    return { pass, warn: pass * 0.6, rec };
+  }
+
+  const $ = id => document.getElementById(id);
+  function fmtSize(bytes){
+    if(bytes >= 1e9) return (bytes/1e9).toFixed(2) + " GB";
+    if(bytes >= 1e6) return (bytes/1e6).toFixed(1) + " MB";
+    return Math.round(bytes/1e3) + " KB";
+  }
+  function fmtDur(s){
+    const m = Math.floor(s/60), sec = Math.round(s - m*60);
+    return m + "m " + String(sec).padStart(2,"0") + "s";
+  }
+
+  /* =============== analysis + rendering =============== */
+  function runChecks(info, file, meta){
+    const P = PLATFORMS[plat];
+    const checks = [];
+    const w = meta.w, h = meta.h, fps = meta.fps, dur = meta.dur;
+    const mbps = dur ? (file.size * 8 / dur) / 1e6 : 0;
+    const vcodec = info && info.video ? info.video.codec : null;
+
+    // 1. Resolution
+    const shortSide = Math.min(w, h);
+    if(shortSide >= 1080) checks.push({l:"ok", t:"Resolution: " + w + "×" + h,
+      d:"Full HD or better — the platform won't need to upscale anything."});
+    else if(shortSide >= 720) checks.push({l:"warn", t:"Resolution: " + w + "×" + h + " — below 1080p",
+      d:"The platform will serve this as 720p or upscale it, both of which look soft on modern phones. Re-export at " + P.idealW + "×" + P.idealH + " if your source allows."});
+    else checks.push({l:"fail", t:"Resolution: " + w + "×" + h + " — too low",
+      d:"This will look visibly blurry after upload. Re-export at " + P.idealW + "×" + P.idealH + ", or at minimum 720p."});
+
+    // 2. Aspect ratio
+    if(w && h){
+      const ratio = w / h;
+      const target = P.vertical ? 9/16 : 16/9;
+      if(Math.abs(ratio - target) < 0.02) checks.push({l:"ok", t:"Aspect ratio: " + (P.vertical ? "9:16 vertical" : "16:9 widescreen"),
+        d:"Perfect fit for " + P.name + " — no cropping or bars."});
+      else if(P.vertical && ratio < 1) checks.push({l:"warn", t:"Aspect ratio: " + ratio.toFixed(2) + ":1 — vertical but not 9:16",
+        d:"The platform will crop or letterbox to fit 9:16. Frame your key content centrally, or re-export at exactly " + P.idealW + "×" + P.idealH + "."});
+      else if(P.vertical) checks.push({l:"fail", t:"Aspect ratio: horizontal video for a vertical platform",
+        d:P.name + " will shrink this into the middle of the screen with large empty bars. Re-frame vertically, or use a blurred-background fill."});
+      else if(ratio > 1) checks.push({l:"ok", t:"Aspect ratio: widescreen", d:"Fits YouTube's player natively."});
+      else checks.push({l:"warn", t:"Aspect ratio: vertical video on long-form YouTube",
+        d:"This will display with side bars. Fine if intentional — otherwise consider Shorts."});
+    }
+
+    // 3. Bitrate
+    if(mbps && fps){
+      const bt = bitrateTargets(w, h, fps);
+      if(mbps >= bt.pass) checks.push({l:"ok", t:"Bitrate: " + mbps.toFixed(1) + " Mbps",
+        d:"Plenty of detail for the platform's re-encode to preserve. This is the single biggest factor in post-upload quality — you've got it right."});
+      else if(mbps >= bt.warn) checks.push({l:"warn", t:"Bitrate: " + mbps.toFixed(1) + " Mbps — on the low side",
+        d:"Watchable, but fast motion and detailed scenes will show compression after the platform re-encodes. Recommended for this resolution: " + bt.rec + "."});
+      else checks.push({l:"fail", t:"Bitrate: " + mbps.toFixed(1) + " Mbps — this is why it looks blurry",
+        d:"Far below what this resolution needs. The platform's re-encode will stack compression on compression. Re-export at " + bt.rec + " — this alone will fix most perceived quality loss."});
+    } else if(mbps){
+      checks.push({l:"warn", t:"Bitrate: " + mbps.toFixed(1) + " Mbps (overall)",
+        d:"Couldn't separate video from audio bitrate, but this overall figure is a good guide."});
+    }
+
+    // 4. Frame rate
+    if(fps){
+      const rounded = Math.round(fps);
+      const isStandard = [24,25,30,48,50,60].some(s => Math.abs(fps - s) < 0.8) || Math.abs(fps - 23.976) < 0.1 || Math.abs(fps - 29.97) < 0.1 || Math.abs(fps - 59.94) < 0.1;
+      if(fps > 61) checks.push({l:"warn", t:"Frame rate: " + fps.toFixed(1) + " fps — above 60",
+        d:"Platforms cap playback at 60fps and will re-encode this down. Export at 60fps for predictable results."});
+      else if(!isStandard) checks.push({l:"warn", t:"Frame rate: " + fps.toFixed(2) + " fps — looks like variable frame rate",
+        d:"Non-standard average FPS usually means VFR footage (common in screen recordings). VFR can cause stutter and audio drift after upload. Re-encode to constant " + (fps > 45 ? "60" : "30") + " fps."});
+      else if(fps < 24) checks.push({l:"warn", t:"Frame rate: " + rounded + " fps — below 24",
+        d:"Motion will look choppy. Export at 30fps unless the low frame rate is a deliberate style."});
+      else checks.push({l:"ok", t:"Frame rate: " + (isStandard ? rounded : fps.toFixed(1)) + " fps",
+        d:"A standard frame rate the platform handles natively."});
+    }
+
+    // 5. Codec
+    if(vcodec){
+      const name = info.video.codecName;
+      if(vcodec === "avc1" || vcodec === "avc3") checks.push({l:"ok", t:"Video codec: H.264",
+        d:"The safest, most predictable codec for every platform — fast processing, no color surprises."});
+      else if(vcodec === "hvc1" || vcodec === "hev1") checks.push({l:"warn", t:"Video codec: HEVC (H.265)",
+        d:"Accepted everywhere, but processing takes longer and HDR/color profiles occasionally come out washed-out. If your upload looks wrong, re-export as H.264."});
+      else if(vcodec === "av01") checks.push({l:plat === "youtube" ? "ok" : "warn", t:"Video codec: AV1",
+        d:plat === "youtube" ? "YouTube handles AV1 well." : "Support on " + P.name + " is inconsistent — H.264 is the safer upload."});
+      else checks.push({l:"warn", t:"Video codec: " + name,
+        d:"Not a mainstream upload codec — the platform will transcode it heavily. H.264 is recommended."});
+    }
+
+    // 6. Duration
+    if(P.maxDur && dur > P.maxDur) checks.push({l:"fail", t:"Duration: " + fmtDur(dur) + " — over the limit",
+      d:P.durNote + ". The upload will be rejected or trimmed."});
+    else if(P.maxDur && dur > P.maxDur * 0.95) checks.push({l:"warn", t:"Duration: " + fmtDur(dur) + " — right at the limit",
+      d:P.durNote + ". You're within seconds of it."});
+    else if(dur) checks.push({l:"ok", t:"Duration: " + fmtDur(dur),
+      d:P.maxDur ? "Well within " + P.name + "'s limit." : "No duration concerns for long-form YouTube."});
+
+    // 7. Audio
+    if(info && info.audio){
+      const a = info.audio;
+      if(a.codec === "mp4a") checks.push({l:"ok", t:"Audio: AAC" + (a.sampleRate ? " · " + (a.sampleRate/1000) + " kHz" : "") + (a.channels ? " · " + (a.channels === 1 ? "mono" : a.channels === 2 ? "stereo" : a.channels + "ch") : ""),
+        d:"AAC is the universal standard — no issues." + (a.sampleRate && a.sampleRate < 44100 ? " Though " + (a.sampleRate/1000) + " kHz is low; 48 kHz is ideal." : "")});
+      else checks.push({l:"warn", t:"Audio: " + a.codecName,
+        d:"Will be transcoded to AAC on upload. Exporting AAC 48 kHz directly avoids any surprises."});
+    } else if(info){
+      checks.push({l:"warn", t:"Audio: no audio track detected",
+        d:"Silent videos are deprioritized on some feeds. Add a music bed or ambient track if this wasn't intentional."});
+    }
+
+    // 8. Faststart (info-level)
+    if(info && info.fastStart === false) checks.push({l:"ok", t:"Container: metadata at end of file (normal for exports)",
+      d:"Fine for uploading — platforms re-package everything anyway. Only matters if you self-host the file."});
+
+    return { checks, mbps };
+  }
+
+  function renderResults(info, file, meta){
+    const P = PLATFORMS[plat];
+    $("platName").textContent = P.name;
+    const { checks, mbps } = runChecks(info, file, meta);
+
+    // spec cards
+    $("sRes").textContent = meta.w && meta.h ? meta.w + "×" + meta.h : "—";
+    $("sFps").innerHTML = meta.fps ? meta.fps.toFixed(meta.fps % 1 ? 2 : 0) + '<small> fps</small>' : "—";
+    $("sBitrate").innerHTML = mbps ? mbps.toFixed(1) + '<small> Mbps</small>' : "—";
+    $("sCodec").textContent = info && info.video && info.video.codecName ? info.video.codecName : "—";
+    $("sDur").textContent = meta.dur ? fmtDur(meta.dur) : "—";
+    $("sSize").textContent = fmtSize(file.size);
+    $("sAudio").textContent = info && info.audio ? info.audio.codecName : (info ? "None" : "—");
+    $("sContainer").textContent = info && info.container ? (info.container === "qt" ? "MOV (QuickTime)" : "MP4 (" + info.container + ")") : (file.name.toLowerCase().endsWith(".webm") ? "WebM" : "—");
+
+    // bitrate card color
+    const btEl = $("sBitrate");
+    if(mbps && meta.fps){
+      const bt = bitrateTargets(meta.w, meta.h, meta.fps);
+      btEl.className = "v " + (mbps >= bt.pass ? "ok" : mbps >= bt.warn ? "warn" : "fail");
+    } else btEl.className = "v";
+
+    // checks
+    const list = $("checkList");
+    list.innerHTML = "";
+    for(const c of checks){
+      const div = document.createElement("div");
+      div.className = "check c-" + c.l;
+      const sym = c.l === "ok" ? "✓" : c.l === "warn" ? "!" : "✕";
+      div.innerHTML = '<div class="ico">' + sym + '</div><div><b>' + c.t + '</b><p>' + c.d + '</p></div>';
+      list.appendChild(div);
+    }
+
+    // verdict
+    const fails = checks.filter(c=>c.l==="fail").length;
+    const warns = checks.filter(c=>c.l==="warn").length;
+    const vb = $("verdictBox");
+    if(fails){
+      vb.className = "verdict v-fail";
+      vb.innerHTML = '<b style="color:var(--fail)">' + fails + ' issue' + (fails>1?'s':'') + ' will visibly hurt this upload on ' + P.name + '.</b> ' +
+        'Fix the red items below before posting — the recommended export settings at the bottom solve all of them at once.';
+    } else if(warns){
+      vb.className = "verdict v-warn";
+      vb.innerHTML = '<b style="color:var(--warn)">Uploadable, with ' + warns + ' thing' + (warns>1?'s':'') + ' worth improving.</b> ' +
+        'Nothing will break, but the amber items below are leaving quality on the table.';
+    } else {
+      vb.className = "verdict v-ok";
+      vb.innerHTML = '<b style="color:var(--ok)">This file is ready for ' + P.name + '.</b> ' +
+        'Specs are at or above what the platform needs — any quality loss after upload is on their encoder, not your export.';
+    }
+
+    // export recipe
+    const bt = (meta.w && meta.fps) ? bitrateTargets(meta.w, meta.h, meta.fps) : {rec:"10–12 Mbps"};
+    const fpsOut = meta.fps > 45 ? 60 : 30;
+    $("exportSettings").textContent =
+      "Container:    MP4\n" +
+      "Video codec:  H.264 (High profile)\n" +
+      "Resolution:   " + P.idealW + " × " + P.idealH + (P.vertical ? "  (9:16 vertical)" : "  (16:9)") + "\n" +
+      "Frame rate:   " + fpsOut + " fps, constant (CFR)\n" +
+      "Bitrate:      " + bt.rec + " (VBR, 2-pass if available)\n" +
+      "Color:        Rec.709, 8-bit (avoid HDR unless you've tested it)\n" +
+      "Audio:        AAC, 48 kHz, stereo, 192–320 kbps";
+
+    $("results").style.display = "block";
+    $("results").scrollIntoView({behavior:"smooth", block:"start"});
+  }
+
+  function drawFrame(file, vertical){
+    const url = URL.createObjectURL(file);
+    const v = document.createElement("video");
+    v.muted = true; v.playsInline = true; v.preload = "auto"; v.src = url;
+    v.addEventListener("loadedmetadata", () => { v.currentTime = Math.min(v.duration * 0.25, v.duration - 0.1) || 0; });
+    v.addEventListener("seeked", () => {
+      const c = $("frameCanvas");
+      const ar = v.videoWidth / v.videoHeight || (vertical ? 9/16 : 16/9);
+      c.width = 240; c.height = Math.round(240 / ar);
+      c.getContext("2d").drawImage(v, 0, 0, c.width, c.height);
+      URL.revokeObjectURL(url);
+    }, { once:true });
+    v.addEventListener("error", () => URL.revokeObjectURL(url));
+  }
+
+  /* fallback metadata via <video> element + rVFC fps estimation */
+  function videoElementMeta(file){
+    return new Promise(resolve => {
+      const url = URL.createObjectURL(file);
+      const v = document.createElement("video");
+      v.muted = true; v.playsInline = true; v.src = url;
+      const done = meta => { URL.revokeObjectURL(url); resolve(meta); };
+      v.addEventListener("loadedmetadata", () => {
+        const base = { w: v.videoWidth, h: v.videoHeight, dur: v.duration || 0, fps: 0 };
+        if(!("requestVideoFrameCallback" in HTMLVideoElement.prototype)){ done(base); return; }
+        // estimate fps by counting presented frames over ~700ms
+        let count = 0, t0 = 0;
+        const tick = (now, md) => {
+          if(!t0) t0 = md.mediaTime;
+          count++;
+          if(md.mediaTime - t0 >= 0.7 || count > 80){
+            v.pause();
+            base.fps = count > 2 ? (count - 1) / (md.mediaTime - t0) : 0;
+            done(base);
+            return;
+          }
+          v.requestVideoFrameCallback(tick);
+        };
+        v.requestVideoFrameCallback(tick);
+        v.play().catch(()=> done(base));
+        setTimeout(()=> done(base), 4000); // safety net
+      });
+      v.addEventListener("error", () => done(null));
+    });
+  }
+
+  /* =============== orchestration =============== */
+  async function analyzeFile(file){
+    lastFile = file;
+    $("fileName").textContent = "Reading " + file.name + " (" + fmtSize(file.size) + ") locally…";
+
+    const read = (off, len) => file.slice(off, off + len).arrayBuffer().then(b => new DataView(b));
+    let info = null;
+    try { info = await parseMp4(read, file.size); } catch(e){ info = null; }
+    if(!info){
+      try { info = await sniffWebm(read); } catch(e){ info = null; }
+    }
+    lastInfo = info;
+
+    // metadata: prefer parser, fall back to <video> element
+    let meta = { w:0, h:0, fps:0, dur:0 };
+    if(info && info.video && info.video.w){
+      meta.w = info.video.w; meta.h = info.video.h;
+      meta.fps = info.video.fps || 0; meta.dur = info.duration || info.video.dur || 0;
+    }
+    if(!meta.w || !meta.dur || !meta.fps){
+      const vm = await videoElementMeta(file);
+      if(vm){
+        meta.w = meta.w || vm.w; meta.h = meta.h || vm.h;
+        meta.dur = meta.dur || vm.dur; meta.fps = meta.fps || vm.fps;
+      }
+    }
+    if(!meta.w){
+      $("fileName").textContent = "Couldn't read this file — it may be a format this browser can't decode. MP4 and MOV work best.";
+      return;
+    }
+
+    $("fileName").textContent = file.name + " · " + fmtSize(file.size) + " · analyzed locally";
+    if(typeof gtag === "function") gtag('event', 'analyze_video', { 'tool': 'video-quality-checker', 'platform': plat });
+    renderResults(info, file, meta);
+    drawFrame(file, PLATFORMS[plat].vertical);
+  }
+
+  /* =============== wiring =============== */
+  const drop = $("drop");
+  $("browseBtn").addEventListener("click", e => { e.stopPropagation(); $("fileInput").click(); });
+  drop.addEventListener("click", () => $("fileInput").click());
+  drop.addEventListener("keydown", e => { if(e.key === "Enter" || e.key === " "){ e.preventDefault(); $("fileInput").click(); } });
+  $("fileInput").addEventListener("change", e => { if(e.target.files[0]) analyzeFile(e.target.files[0]); });
+  ["dragover","dragenter"].forEach(ev => drop.addEventListener(ev, e => { e.preventDefault(); drop.classList.add("over"); }));
+  ["dragleave","drop"].forEach(ev => drop.addEventListener(ev, e => { e.preventDefault(); drop.classList.remove("over"); }));
+  drop.addEventListener("drop", e => { const f = e.dataTransfer.files[0]; if(f) analyzeFile(f); });
+
+  document.querySelectorAll(".preset.plat").forEach(btn => {
+    btn.addEventListener("click", () => {
+      document.querySelectorAll(".preset.plat").forEach(b => b.setAttribute("aria-pressed","false"));
+      btn.setAttribute("aria-pressed","true");
+      plat = btn.dataset.plat;
+      if(lastFile) analyzeFile(lastFile);
+    });
+  });
+
+  $("copyExport").addEventListener("click", () => {
+    navigator.clipboard.writeText($("exportSettings").textContent).then(() => {
+      $("copyExport").textContent = "Copied ✓";
+      setTimeout(()=> $("copyExport").textContent = "Copy settings", 1500);
+    });
+  });
+
+  })();
+  </script>
+</body>
+</html>
