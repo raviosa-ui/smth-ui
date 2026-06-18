@@ -2,9 +2,19 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url>
     <loc>https://socialmediatoolshub.com/</loc>
-    <lastmod>2026-06-09</lastmod>
+    <lastmod>2026-06-18</lastmod>
     <changefreq>daily</changefreq>
     <priority>1.0</priority>
+  </url>
+   <url>
+    <loc>https://socialmediatoolshub.com/youtube-tag-splitter</loc>
+    <lastmod>2026-06-18</lastmod>
+    <priority>0.8</priority>
+  </url>
+   <url>
+    <loc>https://socialmediatoolshub.com/collab-pitch-card-generator</loc>
+    <lastmod>2026-06-18</lastmod>
+    <priority>0.8</priority>
   </url>
    <url>
     <loc>https://socialmediatoolshub.com/social-comment-card-generator</loc>
