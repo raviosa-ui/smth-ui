@@ -1,22 +1,25 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+  <!-- Core Site Pages -->
   <url>
     <loc>https://socialmediatoolshub.com/</loc>
     <lastmod>2026-06-18</lastmod>
     <changefreq>daily</changefreq>
     <priority>1.0</priority>
   </url>
-   <url>
+  
+  <!-- Existing Tools -->
+  <url>
     <loc>https://socialmediatoolshub.com/youtube-tag-splitter</loc>
     <lastmod>2026-06-18</lastmod>
     <priority>0.8</priority>
   </url>
-   <url>
+  <url>
     <loc>https://socialmediatoolshub.com/collab-pitch-card-generator</loc>
     <lastmod>2026-06-18</lastmod>
     <priority>0.8</priority>
   </url>
-   <url>
+  <url>
     <loc>https://socialmediatoolshub.com/social-comment-card-generator</loc>
     <lastmod>2026-06-09</lastmod>
     <priority>0.8</priority>
@@ -136,24 +139,64 @@
     <lastmod>2026-01-24</lastmod>
     <priority>0.8</priority>
   </url>
-<url>
+  <url>
     <loc>https://socialmediatoolshub.com/bulk-image-compressor</loc>
     <lastmod>2026-02-12</lastmod>
     <priority>0.8</priority>
   </url>
-<url>
-  <loc>https://socialmediatoolshub.com/blog/how-to-use-caption-counter</loc>
-  <lastmod>2026-03-01</lastmod>
-  <changefreq>monthly</changefreq>
-  <priority>0.7</priority>
-</url>
-  <url>
-  <loc>https://socialmediatoolshub.com/blog/how-to-fix-instagram-line-breaks</loc>
-  <lastmod>2026-01-24</lastmod>
-  <changefreq>monthly</changefreq>
-  <priority>0.7</priority>
-</url>
 
+  <!-- Newly Added Tools (June 22, 2026) -->
+  <url>
+    <loc>https://socialmediatoolshub.com/caption-speed-checker</loc>
+    <lastmod>2026-06-22</lastmod>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://socialmediatoolshub.com/extract-frame-from-video</loc>
+    <lastmod>2026-06-22</lastmod>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://socialmediatoolshub.com/instagram-carousel-splitter</loc>
+    <lastmod>2026-06-22</lastmod>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://socialmediatoolshub.com/remove-silence-from-video</loc>
+    <lastmod>2026-06-22</lastmod>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://socialmediatoolshub.com/subtitle-maker</loc>
+    <lastmod>2026-06-22</lastmod>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://socialmediatoolshub.com/video-quality-checker</loc>
+    <lastmod>2026-06-22</lastmod>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://socialmediatoolshub.com/youtube-chapter-generator</loc>
+    <lastmod>2026-06-22</lastmod>
+    <priority>0.8</priority>
+  </url>
+
+  <!-- Blog Pages -->
+  <url>
+    <loc>https://socialmediatoolshub.com/blog/how-to-use-caption-counter</loc>
+    <lastmod>2026-03-01</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://socialmediatoolshub.com/blog/how-to-fix-instagram-line-breaks</loc>
+    <lastmod>2026-01-24</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+
+  <!-- Legal & Info Pages -->
   <url>
     <loc>https://socialmediatoolshub.com/about-us</loc>
     <lastmod>2026-01-24</lastmod>
