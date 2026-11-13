@@ -3,7 +3,7 @@
   <!-- Core Site Pages -->
   <url>
     <loc>https://socialmediatoolshub.com/</loc>
-    <lastmod>2026-06-18</lastmod>
+    <lastmod>2026-11-13</lastmod>
     <changefreq>daily</changefreq>
     <priority>1.0</priority>
   </url>
@@ -12,6 +12,16 @@
   <url>
     <loc>https://socialmediatoolshub.com/youtube-tag-splitter</loc>
     <lastmod>2026-06-18</lastmod>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://socialmediatoolshub.com/video-to-gif</loc>
+    <lastmod>2026-11-13</lastmod>
+    <priority>0.8</priority>
+  </url>
+    <url>
+    <loc>https://socialmediatoolshub.com/remove-silence-from-video</loc>
+    <lastmod>2026-11-13</lastmod>
     <priority>0.8</priority>
   </url>
   <url>
